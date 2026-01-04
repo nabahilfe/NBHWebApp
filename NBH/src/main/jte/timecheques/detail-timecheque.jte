@@ -10,23 +10,38 @@
 @template.layout.main(content = @`
 
     <h3 class="text-primary">Zeitscheck erstellen für</h3>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
-    <div class="card text-center">
-        <div class="card-header">
-            <h4 class="text-primary">${timeCheque.getAssignedTo().getName()}</h4>
-            <p>${timeCheque.getAssignedTo().getAddress()}</p>
-        </div>
-        <ul class="list-group list-group-flush">
+    <div class="card text-center" style="width: 24rem;">
+
+      <form id="tcForm" action="/timecheques" method="POST">
+
+          <div class="card-header">
+              <h4 class="text-primary">${timeCheque.getAssignedTo().getName()}</h4>
+              <p>${timeCheque.getAssignedTo().getAddress()}</p>
+          </div>
+          <ul class="list-group list-group-flush">
+
             <li class="list-group-item">${timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS ? "Kostenlos bei Eintritt" : "Kauf von Zeitschecks"}</li>
             <li class="list-group-item">${timeCheque.getHours()} h</li>
-        </ul>
-        <div class="card-body">
-            <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
-                data-item-id="${timeCheque.getAssignedTo().getId()}">Erstellen️️</button>
-        </div>
+
+            <li class="list-group-item">
+              <label for="orderDate" class="col-sm-10 col-form-label">Bestelldatum</label>
+              <input type="date" class="form-control" name="orderDate" id="orderDate" value="" required>
+            </li>
+
+          </ul>
+
+          <div class="card-body">
+              <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
+                  data-item-id="${timeCheque.getAssignedTo().getId()}">Erstellen️️</button>
+          </div>
+
+       </form>
+
     </div>
+
+
 
     <!-- Modal confirm delete dialog -->
     <div class="modal fade" id="confirmModal" tabindex="-1">
@@ -41,10 +56,10 @@
             <input type="hidden" id="data-item-id">
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='/members'" data-bs-dismiss="modal">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                 Abbrechen
             </button>
-            <button type="button" id="confirm-btn" class="btn btn-primary" onclick="confirmAction()" data-bs-dismiss="modal">
+            <button type="button" id="confirm-btn" class="btn btn-primary" onclick="confirmAction()">
                 Zuweisen
             </button>
           </div>
@@ -52,10 +67,6 @@
       </div>
     </div>
 
-    <!-- Hidden form so we can submit the action -->
-    <form id="hiddenForm" method="POST" style="display: none;">
-        <input type="hidden" name="timeChequeHidden">
-    </form>
 
     <script>
         var modalPanel = document.getElementById('confirmModal');
@@ -72,13 +83,24 @@
         <!-- submit a post action to controller to handle the item -->
         function confirmAction() {
             const itemId = document.getElementById('data-item-id').value;
-            document.getElementById('hiddenForm').action = '/timecheques';
-            document.getElementById('hiddenForm').submit();
+            const form = document.getElementById('tcForm');
+            form.action = '/timecheques';
+
+            // Use requestSubmit() so browser runs HTML5 form validation (required, etc.).
+            // Fallback: create a temporary hidden submit button and click it (older browsers).
+            if (typeof form.requestSubmit === 'function') {
+                form.requestSubmit();
+            } else {
+                const tmp = document.createElement('button');
+                tmp.type = 'submit';
+                tmp.style.display = 'none';
+                form.appendChild(tmp);
+                tmp.click();
+                form.removeChild(tmp);
+            }
         }
 
     </script>
 
 
 `)
-
-

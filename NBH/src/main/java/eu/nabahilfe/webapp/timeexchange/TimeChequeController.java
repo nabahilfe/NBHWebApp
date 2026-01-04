@@ -1,6 +1,7 @@
 package eu.nabahilfe.webapp.timeexchange;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -70,8 +71,9 @@ public class TimeChequeController {
 
     @PostMapping
     @Transactional
-    String saveTimeCheque(final Model model) {
+    String saveTimeCheque(final Model model, @RequestParam LocalDate orderDate) {
         TimeCheque tc = (TimeCheque) model.getAttribute("timeCheque");
+        tc.setOrderDate(orderDate);
         timeChequeRepository.save(tc);
 
         // Update Member's accumulated hours

@@ -119,7 +119,7 @@
 
           <div class="form-group row">
             <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary bi-floppy"> Speichern</button>
+                <button type="submit" class="btn btn-primary bi-floppy">Speichern</button>
             </div>
           </div>
 

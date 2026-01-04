@@ -30,12 +30,11 @@ public class TimeCheque {
 
     BigDecimal amount;
 
+    LocalDate orderDate;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "assigned_to")
     Member assignedTo;
-
-    @JoinColumn(name = "created_at")
-    LocalDate createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "created_by")
@@ -81,10 +80,17 @@ public class TimeCheque {
         this.createdBy = createdBy;
     }
 
-    //FIXME: es sollte ein Kaufdatum erfasst werden!
-    public String getDateString() {
+    public LocalDate getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDate orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public String getOrderDateString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-        return createdAt.format(formatter);
+        return orderDate.format(formatter);
     }
 
     public Integer getVersion() {

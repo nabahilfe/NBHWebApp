@@ -21,7 +21,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.Size;
 
-// FIXME: Tabelle Umbenennen!!!
 
 @Entity
 @Table(name = "time_transfers")
@@ -79,7 +78,7 @@ public class TimeTransfer {
 
     public String getDateOfServiceString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-		return dateOfService.format(formatter);
+        return dateOfService.format(formatter);
     }
 
     public void setDateOfService(LocalDate dateOfService) {

@@ -133,7 +133,7 @@
               <tbody>
                 @for (TimeCheque tc : purchasedTimeCheques)
                 <tr>
-                  <th scope="row">${tc.getDateString()}</th>
+                  <th scope="row">${tc.getOrderDateString()}</th>
                   <th scope="row" class="text-end">${tc.getHours()}</th>
                 </tr>
                 @endfor
