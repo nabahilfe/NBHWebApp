@@ -1,8 +1,12 @@
+@import java.util.List
+
+
 @import eu.nabahilfe.webapp.NbhConst
 @import eu.nabahilfe.webapp.members.Member
 @import eu.nabahilfe.webapp.timeexchange.TimeCheque
 
 @param TimeCheque timeCheque
+@param List<TimeCheque> purchasedTimeCheques
 
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
@@ -11,7 +15,9 @@
 
     <h3 class="text-primary">Zeitscheck erstellen für</h3>
 
-    <div class="card text-center" style="width: 24rem;">
+    <br/>
+
+    <div class="card">
 
       <form id="tcForm" action="/timecheques" method="POST">
 
@@ -19,16 +25,27 @@
               <h4 class="text-primary">${timeCheque.getAssignedTo().getName()}</h4>
               <p>${timeCheque.getAssignedTo().getAddress()}</p>
           </div>
+
           <ul class="list-group list-group-flush">
-
-            <li class="list-group-item">${timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS ? "Kostenlos bei Eintritt" : "Kauf von Zeitschecks"}</li>
-            <li class="list-group-item">${timeCheque.getHours()} h</li>
-
             <li class="list-group-item">
-              <label for="orderDate" class="col-sm-10 col-form-label">Bestelldatum</label>
-              <input type="date" class="form-control" name="orderDate" id="orderDate" value="" required>
+              Aktuelles Guthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
             </li>
 
+            <li class="list-group-item ">
+              ${timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS ? "Kostenlos bei Eintritt" : "Kauf von Zeitschecks"}:
+              <b>${timeCheque.getHours()} h</b>
+            </li>
+
+            <li class="list-group-item ">
+              <div class="row g-3 align-items-center">
+                <div class="col-auto">
+                  <label for="orderDate" class="col-form-label">Bestelldatum</label>
+                </div>
+                <div class="col-auto">
+                  <input type="date" class="form-control" name="orderDate" id="orderDate" value="" required>
+                </div>
+              </div>
+            </li>
           </ul>
 
           <div class="card-body">
@@ -39,7 +56,36 @@
 
        </form>
 
+     </div>
+
+  <br/>
+
+    <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-primary">Bereits erworbene Zeitschecks</h5>
+            <p class="card-text">Nur die letzten 10</p>
+
+            <table class="table table-striped table-bordered table-hover table-sm mt-4" id="timeChequeTable">
+              <thead class="table-dark">
+                <tr>
+                  <th scope="col">Datum</th>
+                  <th scope="col">erstellt von</th>
+                  <th scope="col" class="text-end">Stunden</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (TimeCheque tc : purchasedTimeCheques)
+                <tr>
+                  <th scope="row">${tc.getOrderDateString()}</th>
+                  <th scope="row">${tc.getCreatedBy().getName()}</th>
+                  <th scope="row" class="text-end">${tc.getHours()}</th>
+                </tr>
+                @endfor
+              </tbody>
+            </table>
+
     </div>
+
 
 
 

@@ -26,12 +26,15 @@ public class TimeChequeController {
 
     private final TimeCheckRepository timeChequeRepository;
     private final MemberRepository memberRepository;
+    private final TimeCheckRepository timeCheckRepository;
 
     private static final Logger log = LoggerFactory.getLogger(TimeChequeController.class);
 
-    public TimeChequeController(TimeCheckRepository timeChequeRepository, MemberRepository memberRepository) {
+    public TimeChequeController(TimeCheckRepository timeChequeRepository, MemberRepository memberRepository,
+            TimeCheckRepository timeCheckRepository) {
         this.timeChequeRepository = timeChequeRepository;
         this.memberRepository = memberRepository;
+        this.timeCheckRepository = timeCheckRepository;
     }
 
     // --------------------
@@ -64,6 +67,7 @@ public class TimeChequeController {
         }
 
         model.addAttribute("timeCheque", tc);
+        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findLast10ByAssignedToIdOrderByOrderDateDesc(memberId));
 
         return "timecheques/detail-timecheque";
     }
