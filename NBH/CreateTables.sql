@@ -1,6 +1,6 @@
 /*
  * Generated with Xtext DataModeler from file "nbh-db.dmodel"
- * Generated at 2026-01-03 23:40:42
+ * Generated at 2026-01-04 20:31:04
  * ModelDescription: NBH Model with Postgres Definitions
  */
 
@@ -119,6 +119,7 @@ create table if not exists time_cheques (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     hours SMALLINT not null /* Anzahl der Stunden, üblicherweise 5 (Beitritt zum Verein) oder 10 */,
     amount NUMERIC(12,2) not null,
+    order_date DATE not null,
     assigned_to BIGINT /* FK id from members(id) */,
     accounting_entry BIGINT /* FK id from accounting_entry(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -208,23 +209,23 @@ add
  * Ruthless drop table statemens
  */
 
-drop table associations cascade;
+drop table if exists associations cascade;
 
-drop table offers cascade;
+drop table if exists offers cascade;
 
-drop table roles cascade;
+drop table if exists roles cascade;
 
-drop table members cascade;
+drop table if exists members cascade;
 
-drop table membership_fee cascade;
+drop table if exists membership_fee cascade;
 
-drop table member_offers cascade;
+drop table if exists member_offers cascade;
 
-drop table time_transfers cascade;
+drop table if exists time_transfers cascade;
 
-drop table time_cheques cascade;
+drop table if exists time_cheques cascade;
 
-drop table accounting_entry cascade;
+drop table if exists accounting_entry cascade;
 
 
 /* end of generated file */
