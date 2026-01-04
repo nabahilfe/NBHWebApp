@@ -1,0 +1,26 @@
+package eu.nabahilfe.webapp;
+
+
+/**
+ * Contains constant definitions for NBH
+ */
+public final class NbhConst {
+
+    public static final int MIN_MEMBER_AGE = 18;
+
+    public static final int PAGINATION_PAGE_SIZE = 15;
+
+    public static final int FIRST_TIME_CHEQUE_HOURS = 5;
+    public static final int REGULAR_TIME_CHEQUE_HOURS = 10;
+
+
+    public static final int MAX_LEN_CODE = 10;
+    public static final int MAX_LEN_LONG_CODE = 20;
+    public static final int MAX_LEN_NAME = 80;
+    public static final int MAX_LEN_SHORT_STRING = 250;
+    public static final int MAX_LEN_LONG_STRING = 4000;
+
+    public static final Integer START_MEMBER_NUMBER = 1000;
+
+
+}
