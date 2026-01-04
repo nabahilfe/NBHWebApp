@@ -1,6 +1,5 @@
 @import java.util.List
 
-
 @import eu.nabahilfe.webapp.NbhConst
 @import eu.nabahilfe.webapp.members.Member
 @import eu.nabahilfe.webapp.timeexchange.TimeCheque
@@ -26,7 +25,7 @@
 
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    Aktuelles Guthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
+                    Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
                 </li>
 
                 <li class="list-group-item ">

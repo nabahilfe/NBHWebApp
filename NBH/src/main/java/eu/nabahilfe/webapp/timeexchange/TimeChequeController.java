@@ -87,6 +87,9 @@ public class TimeChequeController {
 
         model.addAttribute("member", tc.getAssignedTo());
         model.addAttribute("successMessage", "Zeitscheck mit " + tc.getHours() + "h wurde hinzugefügt.");
+        model.addAttribute("purchasedTimeCheques", timeCheckRepository.
+                findLast10ByAssignedToIdOrderByOrderDateDesc(tc.getAssignedTo().getId()));
+
         log.debug("Saved TimeCheque id={} for Member id={}", tc.getId(), tc.getAssignedTo().getId());
 
         return "timecheques/summary-timecheque";
