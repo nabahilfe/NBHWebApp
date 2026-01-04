@@ -16,13 +16,13 @@
 @template.layout.main(
     searchTerm = searchTerm,
     content = @`
-    
-	<!-- Hidden form to handle sorting -->
-	<form id="sortForm" method="get" action="/members">
-  		<input type="hidden" name="orderBy" id="orderBy">
-  		<input type="hidden" name="order" id="order">
-	</form>
-	
+
+  <!-- Hidden form to handle sorting -->
+  <form id="sortForm" method="get" action="/members">
+      <input type="hidden" name="orderBy" id="orderBy">
+      <input type="hidden" name="order" id="order">
+  </form>
+
     <h3 class="text-primary">Liste der Mitglieder</h3>
 
     <!-- Display all Member records -->
@@ -31,16 +31,16 @@
         <thead class="table-dark">
         <tr>
           <th scope="col" data-col="firstName" data-order="${orderBy.equals("firstName") ? order : ""}">
-          	Vorname ${orderBy.equals("firstName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+            Vorname ${orderBy.equals("firstName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
           <th scope="col" data-col="lastName" data-order="${orderBy.equals("lastName") ? order : ""}">
-          	Nachname ${orderBy.equals("lastName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+            Nachname ${orderBy.equals("lastName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
           <th scope="col">Adresse</th>
           <th scope="col" data-col="role.roleName" data-order="${orderBy.equals("role.roleName") ? order : ""}">
-          	Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+            Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
           <th scope="col" class="text-center">Edit</th>
           <th scope="col" class="text-center">Delete</th>
           <th scope="col" class="text-end" data-col="accumulatedHours" data-order="${orderBy.equals("accumulatedHours") ? order : ""}">
-          	Guthaben ${orderBy.equals("accumulatedHours") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+            Guthaben ${orderBy.equals("accumulatedHours") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
           <th scope="col" class="text-center">Zeitscheck</th>
         </tr>
       </thead>
@@ -114,20 +114,20 @@
     <!-- Pagination controls -->
     @if(memberPage.getTotalPages() > 0)
         <nav aria-label="Page navigation example">
-        	<ul class="pagination">
-              	@for(int i = 0; i < memberPage.getTotalPages(); ++i)
-                	<li class="page-item"><a class="page-link" 
-                		href="/members?page=${i}&orderBy=${orderBy}&order=${order}&size=${NbhConst.PAGINATION_PAGE_SIZE}">${i+1}</a>
-                	</li>
-            	@endfor
+          <ul class="pagination">
+                @for(int i = 0; i < memberPage.getTotalPages(); ++i)
+                  <li class="page-item"><a class="page-link"
+                    href="/members?page=${i}&orderBy=${orderBy}&order=${order}&size=${NbhConst.PAGINATION_PAGE_SIZE}">${i+1}</a>
+                  </li>
+              @endfor
             </ul>
         </nav>
     @endif
 
     @template.components.display-statusmessage(successMessage, errorMessage)
-    
 
-	<!-- Script to handle the delete confirmation modal and action -->
+
+  <!-- Script to handle the delete confirmation modal and action -->
     <script>
         var editModal = document.getElementById('confirmModal');
 
@@ -150,43 +150,43 @@
             document.getElementById('hiddenForm').submit();
         }
     </script>
-    
-    
+
+
     <script>
-		document.addEventListener("DOMContentLoaded", () => {
-  			const form = document.getElementById("sortForm");
-  			const orderByInput = document.getElementById("orderBy");
-  			const orderInput = document.getElementById("order");
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("sortForm");
+        const orderByInput = document.getElementById("orderBy");
+        const orderInput = document.getElementById("order");
 
             // Add click listeners to table headers
-  			document.querySelectorAll("#memberTable th[data-col]").forEach(th => {
-		    	th.style.cursor = "pointer";
-		    	th.addEventListener("click", () => {
-		      		const col = th.dataset.col; // eg "Vorname"
-		      
-		      		// Toggle: If currently asc for this column, then desc – otherwise new asc
-		      		const currentOrder = th.dataset.order;
-		      		const newOrder = currentOrder === "asc" ? "desc" : "asc";
-		      
-		      		// rest all headers
-		      		document.querySelectorAll("#memberTable th").forEach(h => {
-		        		h.dataset.order = "";
-		        		h.textContent = h.textContent.replace(/[↕↑↓]/g, ''); // Pfeile entfernen
-		      		});
-		      
-		      		// Set new order and visual feedback
-		      		th.dataset.order = newOrder;
-		      		th.textContent += newOrder === "asc" ? " ↑" : " ↓"; // Visuelles Feedback
-		      
-		      		// Set hidden form values to sort order
-		      		orderByInput.value = col;
-		      		orderInput.value = newOrder;
-		      
-		      		form.submit(); // Seite neu laden mit sortierten Daten
-		    	});
-		  	});
-		});
-	</script>
+        document.querySelectorAll("#memberTable th[data-col]").forEach(th => {
+          th.style.cursor = "pointer";
+          th.addEventListener("click", () => {
+              const col = th.dataset.col; // eg "Vorname"
+
+              // Toggle: If currently asc for this column, then desc – otherwise new asc
+              const currentOrder = th.dataset.order;
+              const newOrder = currentOrder === "asc" ? "desc" : "asc";
+
+              // rest all headers
+              document.querySelectorAll("#memberTable th").forEach(h => {
+                h.dataset.order = "";
+                h.textContent = h.textContent.replace(/[↕↑↓]/g, ''); // Pfeile entfernen
+              });
+
+              // Set new order and visual feedback
+              th.dataset.order = newOrder;
+              th.textContent += newOrder === "asc" ? " ↑" : " ↓"; // Visuelles Feedback
+
+              // Set hidden form values to sort order
+              orderByInput.value = col;
+              orderInput.value = newOrder;
+
+              form.submit(); // Seite neu laden mit sortierten Daten
+          });
+        });
+    });
+  </script>
 
 
 `)

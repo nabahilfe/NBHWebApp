@@ -1,6 +1,8 @@
 package eu.nabahilfe.webapp.timeexchange;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import eu.nabahilfe.webapp.members.Member;
@@ -31,6 +33,9 @@ public class TimeCheque {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "assigned_to")
     Member assignedTo;
+
+    @JoinColumn(name = "created_at")
+    LocalDate createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "created_by")
@@ -74,6 +79,12 @@ public class TimeCheque {
 
     public void setCreatedBy(Member createdBy) {
         this.createdBy = createdBy;
+    }
+
+    //FIXME: es sollte ein Kaufdatum erfasst werden!
+    public String getDateString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        return createdAt.format(formatter);
     }
 
     public Integer getVersion() {

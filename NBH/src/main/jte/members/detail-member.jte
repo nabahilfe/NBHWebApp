@@ -2,9 +2,13 @@
 
 @import eu.nabahilfe.webapp.members.Member
 @import eu.nabahilfe.webapp.members.Role
+@import eu.nabahilfe.webapp.timeexchange.TimeTransfer
+@import eu.nabahilfe.webapp.timeexchange.TimeCheque
 
 @param Member member
 @param List<Role> roles
+@param List<TimeCheque> purchasedTimeCheques
+@param List<TimeTransfer> timeTransfers
 
 @param java.lang.String action
 
@@ -101,14 +105,78 @@
             </div>
           </div>
 
-		  <p/>
+      <p/>
 
-		  @template.components.display-statusmessage(successMessage, errorMessage)
+      @template.components.display-statusmessage(successMessage, errorMessage)
 
         </form>
 
     </div>
 
+  <p/>
+
+  @if(member.getId() != null)
+    <div class="row">
+      <div class="col-sm-3 mb-3 mb-sm-0">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-primary">Erworbene Zeitschecks</h5>
+            <p class="card-text">Nur die letzten 10</p>
+
+            <table class="table table-striped table-bordered table-hover table-sm mt-4" id="timeChequeTable">
+              <thead class="table-dark">
+                <tr>
+                  <th scope="col">Datum</th>
+                  <th scope="col" class="text-end">Stunden</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (TimeCheque tc : purchasedTimeCheques)
+                <tr>
+                  <th scope="row">${tc.getDateString()}</th>
+                  <th scope="row" class="text-end">${tc.getHours()}</th>
+                </tr>
+                @endfor
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-9 mb-3 mb-sm-0">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-primary">Erhaltene und vergebene Zeitschecks</h5>
+            <p class="card-text">Die letzten 10 erhaltenen und vergebenen Zeitschecks</p>
+
+            <table class="table table-striped table-bordered table-hover table-sm mt-4" id="timeTransferTable">
+              <thead class="table-dark">
+                <tr>
+                  <th scope="col">Datum</th>
+                  <th scope="col">von</th>
+                  <th scope="col">an</th>
+                  <th scope="col">Kategorie</th>
+                  <th scope="col" class="text-end">Stunden</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (TimeTransfer tt : timeTransfers)
+                <tr>
+                  <th scope="row">${tt.getDateOfServiceString()}</th>
+                  <th scope="row">${tt.getFromMember().getName()}</th>
+                  <th scope="row">${tt.getToMember().getName()}</th>
+                  <th scope="row">${tt.getOffer().getDescription()}</th>
+                  <th scope="row" class="text-end">${tt.getHours()}</th>
+                </tr>
+                @endfor
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    @endif
 `)
 
 

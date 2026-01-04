@@ -1,5 +1,7 @@
 package eu.nabahilfe.webapp.timeexchange;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.ListCrudRepository;
@@ -15,5 +17,7 @@ public interface TimeCheckRepository extends ListCrudRepository<TimeCheque, Long
     Page<TimeCheque> findAllByAssignedTo(Pageable pageable, Member member);
 
     Integer countByAssignedTo(Member member);
+
+    List<TimeCheque> findLast10ByAssignedToIdOrderByIdDesc(Long assignedTo);
 
 }
