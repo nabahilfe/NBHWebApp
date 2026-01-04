@@ -20,8 +20,8 @@
             <p>${member.getAddress()}</p>
         </div>
         <ul class="list-group list-group-flush">
-        	<li class="list-group-item">
-            	Aktuelles Zeitguthaben: <b>${member.getAccumulatedHours()} h</b>
+         	<li class="list-group-item">
+             	Aktuelles Zeitguthaben: <b>${member.getAccumulatedHours()} h</b>
             </li>
         </ul>
     </div>
@@ -46,9 +46,9 @@
                 <tbody>
                     @for (TimeCheque tc : purchasedTimeCheques)
                     <tr>
-                        <th scope="row">${tc.getOrderDateString()}</th>
-                        <th scope="row">${tc.getCreatedBy().getName()}</th>
-                        <th scope="row" class="text-end">${tc.getHours()}</th>
+                        <td>${tc.getOrderDateString()}</td>
+                        <td>${tc.getCreatedBy().getName()}</td>
+                        <td class="text-end">${tc.getHours()}</td>
                     </tr>
                     @endfor
                 </tbody>

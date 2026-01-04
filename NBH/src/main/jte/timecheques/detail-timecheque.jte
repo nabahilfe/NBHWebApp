@@ -73,9 +73,9 @@
                 <tbody>
                     @for (TimeCheque tc : purchasedTimeCheques)
                     <tr>
-                        <th scope="row">${tc.getOrderDateString()}</th>
-                        <th scope="row">${tc.getCreatedBy().getName()}</th>
-                        <th scope="row" class="text-end">${tc.getHours()}</th>
+                        <td>${tc.getOrderDateString()}</td>
+                        <td>${tc.getCreatedBy().getName()}</td>
+                        <td class="text-end">${tc.getHours()}</td>
                     </tr>
                     @endfor
                 </tbody>
@@ -145,3 +145,4 @@
     </script>
 
 `)
+
