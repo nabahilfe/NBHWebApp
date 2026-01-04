@@ -147,7 +147,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title text-primary">Erhaltene und vergebene Zeitschecks</h5>
-            <p class="card-text">Die letzten 10 erhaltenen und vergebenen Zeitschecks</p>
+            <p class="card-text">Die letzten 10 erhaltenen bzw. vergebenen Zeitschecks</p>
 
             <table class="table table-striped table-bordered table-hover table-sm mt-4" id="timeTransferTable">
               <thead class="table-dark">
