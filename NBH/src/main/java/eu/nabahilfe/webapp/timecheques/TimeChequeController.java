@@ -1,4 +1,4 @@
-package eu.nabahilfe.webapp.timeexchange;
+package eu.nabahilfe.webapp.timecheques;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

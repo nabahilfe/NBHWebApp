@@ -2,7 +2,7 @@
 
 @import eu.nabahilfe.webapp.NbhConst
 @import eu.nabahilfe.webapp.members.Member
-@import eu.nabahilfe.webapp.timeexchange.TimeCheque
+@import eu.nabahilfe.webapp.timecheques.TimeCheque
 
 @param TimeCheque timeCheque
 @param List<TimeCheque> purchasedTimeCheques

@@ -2,8 +2,8 @@
 
 @import eu.nabahilfe.webapp.members.Member
 @import eu.nabahilfe.webapp.members.Role
-@import eu.nabahilfe.webapp.timeexchange.TimeTransfer
-@import eu.nabahilfe.webapp.timeexchange.TimeCheque
+@import eu.nabahilfe.webapp.timecheques.TimeTransfer
+@import eu.nabahilfe.webapp.timecheques.TimeCheque
 
 @param Member member
 @param List<Role> roles

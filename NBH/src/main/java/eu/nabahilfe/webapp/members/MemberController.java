@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import eu.nabahilfe.webapp.NbhConst;
-import eu.nabahilfe.webapp.timeexchange.TimeCheckRepository;
-import eu.nabahilfe.webapp.timeexchange.TimeTransferRepository;
+import eu.nabahilfe.webapp.timecheques.TimeCheckRepository;
+import eu.nabahilfe.webapp.timecheques.TimeTransferRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 

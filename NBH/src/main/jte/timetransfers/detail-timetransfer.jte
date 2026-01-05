@@ -1,6 +1,6 @@
 @import java.util.List
 @import eu.nabahilfe.webapp.org.Offer
-@import eu.nabahilfe.webapp.timeexchange.TimeTransferForm
+@import eu.nabahilfe.webapp.timecheques.TimeTransferForm
 
 @param List<Offer> offers
 @param TimeTransferForm ttf = null
