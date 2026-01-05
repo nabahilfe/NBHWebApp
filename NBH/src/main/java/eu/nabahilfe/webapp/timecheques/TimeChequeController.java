@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +44,28 @@ public class TimeChequeController {
     // --------------------
 
 
+    @GetMapping("/{id}")
+    String viewTimeCheque(final Model model, @PathVariable Long id) {
+
+        Optional<TimeCheque> tc = timeChequeRepository.findById(id);
+        if (! tc.isPresent()) {
+            model.addAttribute("errorMessage", "Zeitscheck mit ID " + id + " nicht gefunden.");
+            return "error";
+        }
+        Optional<Member> member = memberRepository.findById(tc.get().getAssignedTo().getId());
+        if (! member.isPresent()) {
+            model.addAttribute("errorMessage", "Mitglied mit ID " + id + " nicht gefunden.");
+            return "error";
+        }
+
+        model.addAttribute("timeCheque", tc.get());
+        model.addAttribute("member", member.get());
+        model.addAttribute("purchasedTimeCheques", timeCheckRepository.
+                findLast10ByAssignedToIdOrderByOrderDateDesc(member.get().getId()));
+
+        return "timecheques/summary-timecheque";
+
+    }
 
 
     // --------------------
@@ -53,10 +76,14 @@ public class TimeChequeController {
 
     @GetMapping("/new")
     String addTimeCheque(final Model model, @RequestParam Long memberId) {
-        log.debug("addTimeCheque for memberId={}", memberId);
-        Optional<Member> member = memberRepository.findById(memberId);
 
-        // Business Logic - determine TimeCheque hours based on existing TimeCheques
+        Optional<Member> member = memberRepository.findById(memberId);
+        if (! member.isPresent()) {
+            model.addAttribute("errorMessage", "Mitglied mit ID " + memberId + " nicht gefunden.");
+            return "error";
+        }
+
+        // Business Logic: determine TimeCheque hours based on existing TimeCheques
         TimeCheque tc = null;
         int existingTimeCheques = timeChequeRepository.countByAssignedTo(member.get());
         if (existingTimeCheques == 0) {
@@ -80,7 +107,8 @@ public class TimeChequeController {
     }
 
 
-    // Save the new TimeCheque
+
+    // Save the new TimeCheque and update Member's accumulated hours
 
     @PostMapping
     @Transactional
@@ -90,7 +118,7 @@ public class TimeChequeController {
         tc.setOrderDate(orderDate);
         timeChequeRepository.save(tc);
 
-        // Update Member's accumulated hours
+        // BusinessRule: Update Member's accumulated hours
         Integer newHours = tc.getAssignedTo().getAccumulatedHours() + tc.getHours();
         tc.getAssignedTo().setAccumulatedHours(newHours);
         memberRepository.save(tc.getAssignedTo());
@@ -103,22 +131,6 @@ public class TimeChequeController {
     }
 
 
-    @GetMapping("/{id}")
-    String viewTimeCheque(final Model model, @PathVariable Long id) {
-        Optional<TimeCheque> tc = timeChequeRepository.findById(id);
-        if (tc.isPresent()) {
-            model.addAttribute("timeCheque", tc.get());
-            Optional<Member> member = memberRepository.findById(tc.get().getAssignedTo().getId());
-            model.addAttribute("member", member.get());
-            model.addAttribute("purchasedTimeCheques", timeCheckRepository.
-                    findLast10ByAssignedToIdOrderByOrderDateDesc(member.get().getId()));
-
-            return "timecheques/summary-timecheque";
-        } else {
-            model.addAttribute("errorMessage", "Zeitscheck mit ID " + id + " nicht gefunden.");
-            return "error";
-        }
-    }
 
 
     // --------------------
@@ -126,6 +138,7 @@ public class TimeChequeController {
     // --------------------
 
     private TimeCheque createTimeCheque(int timeChequeHours, Member member) {
+
         TimeCheque tc = new TimeCheque();
 
         tc.hours = timeChequeHours;
@@ -144,7 +157,7 @@ public class TimeChequeController {
         // Business Rule: TimeCheques can only be purchased if Member has less than 5 accumulated hours,
         // except for the first TimeCheque, which is free of charge.
         if (member.getAccumulatedHours() >= NbhConst.MIN_HOURS_FOR_TIME_CHEQUE && existingTimeCheques > 0) {
-            return "Zeitschecks können erst bei weniger als 5 Stunden Zeitguthaben erworben werden."+
+            return "Zeitschecks können erst bei weniger als 5 Stunden Zeitguthaben erworben werden." +
                    " Aktuelles Zeitguthaben: " + member.getAccumulatedHours() + " Stunden.";
         }
         return null;
