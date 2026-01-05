@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
@@ -72,7 +73,8 @@ public class TimeTransferController {
     @PostMapping
     @Transactional
     String saveTimeTransfer(final Model model, @RequestParam Long userFromId, @RequestParam Long userToId,
-            @RequestParam Integer hours, @RequestParam Long offerId, @RequestParam LocalDate dateOfService) {
+            @RequestParam Integer hours, @RequestParam Long offerId, @RequestParam LocalDate dateOfService,
+            RedirectAttributes redirectAttributes) {
 
         log.debug("Saving TimeTransfer from user {} to user {} of hours {} for offer {} on date {}",
                 userFromId, userToId, hours, offerId, dateOfService);
@@ -127,8 +129,8 @@ public class TimeTransferController {
         memberTo.setAccumulatedHours(newHoursTo);
         memberRepository.save(memberTo);
 
-        model.addAttribute("successMessage", hours + " Stunden für " + memberTo.getName() + " verbucht.");
-        model.addAttribute("ttf", null);
+        redirectAttributes.addFlashAttribute("successMessage",
+                hours + " Stunden für " + memberTo.getName() + " verbucht.");
 
         return "redirect:/timetransfers/" + tt.getId();
     }
