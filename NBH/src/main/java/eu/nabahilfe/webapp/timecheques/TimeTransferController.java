@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,23 +40,32 @@ public class TimeTransferController {
         this.timeTransferRepository = timeTransferRepository;
     }
 
+
     // --------------------
     // LIST & DETAIL
     // --------------------
 
-
+    @GetMapping("/{id}")
+    String viewTimeTransfer(final Model model, @PathVariable Long id) {
+        TimeTransfer tt = timeTransferRepository.findById(id).orElse(null);
+        if (tt == null) {
+            model.addAttribute("errorMessage", "Zeitübertragung mit ID " + id + " nicht gefunden.");
+            return "error";
+        }
+        model.addAttribute("tt", tt);
+        return "timetransfers/view-timetransfer";
+    }
 
 
     // --------------------
     // CREATE NEW
     // --------------------
 
-
     @GetMapping("/new")
     String addTimeTransfer(final Model model) {
         model.addAttribute("offers", offerRepository.findAll());
         model.addAttribute("ttf", null);
-        return "timetransfers/detail-timetransfer";
+        return "timetransfers/create-timetransfer";
     }
 
 
@@ -91,7 +101,7 @@ public class TimeTransferController {
 
             model.addAttribute("errorMessage", "Leistungsempfänger " + memberFrom.getName()
                     + " hat nicht genügend Stunden (aktuell " + memberFrom.getAccumulatedHours() + " h) für diese Übertragung!");
-            return "timetransfers/detail-timetransfer";
+            return "returntimetransfers/detail-timetransfer";
         }
 
 
@@ -120,7 +130,7 @@ public class TimeTransferController {
         model.addAttribute("successMessage", hours + " Stunden für " + memberTo.getName() + " verbucht.");
         model.addAttribute("ttf", null);
 
-        return "timetransfers/detail-timetransfer";
+        return "redirect:/timetransfers/" + tt.getId();
     }
 
 

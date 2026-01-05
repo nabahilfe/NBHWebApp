@@ -2,11 +2,9 @@ package eu.nabahilfe.webapp.timecheques;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +37,7 @@ public class TimeChequeController {
         this.timeCheckRepository = timeCheckRepository;
     }
 
+
     // --------------------
     // LIST & DETAIL
     // --------------------
@@ -47,21 +46,22 @@ public class TimeChequeController {
     @GetMapping("/{id}")
     String viewTimeCheque(final Model model, @PathVariable Long id) {
 
-        Optional<TimeCheque> tc = timeChequeRepository.findById(id);
-        if (! tc.isPresent()) {
+        TimeCheque tc = timeChequeRepository.findById(id).orElse(null);
+        if (tc == null) {
             model.addAttribute("errorMessage", "Zeitscheck mit ID " + id + " nicht gefunden.");
             return "error";
         }
-        Optional<Member> member = memberRepository.findById(tc.get().getAssignedTo().getId());
-        if (! member.isPresent()) {
+
+        Member member = memberRepository.findById(tc.getAssignedTo().getId()).orElse(null);
+        if (member == null) {
             model.addAttribute("errorMessage", "Mitglied mit ID " + id + " nicht gefunden.");
             return "error";
         }
 
-        model.addAttribute("timeCheque", tc.get());
-        model.addAttribute("member", member.get());
+        model.addAttribute("timeCheque", tc);
+        model.addAttribute("member", member);
         model.addAttribute("purchasedTimeCheques", timeCheckRepository.
-                findLast10ByAssignedToIdOrderByOrderDateDesc(member.get().getId()));
+                findLast10ByAssignedToIdOrderByOrderDateDesc(member.getId()));
 
         return "timecheques/summary-timecheque";
 
@@ -77,27 +77,27 @@ public class TimeChequeController {
     @GetMapping("/new")
     String addTimeCheque(final Model model, @RequestParam Long memberId) {
 
-        Optional<Member> member = memberRepository.findById(memberId);
-        if (! member.isPresent()) {
+        Member member = memberRepository.findById(memberId).orElse(null);
+        if (member == null) {
             model.addAttribute("errorMessage", "Mitglied mit ID " + memberId + " nicht gefunden.");
             return "error";
         }
 
         // Business Logic: determine TimeCheque hours based on existing TimeCheques
         TimeCheque tc = null;
-        int existingTimeCheques = timeChequeRepository.countByAssignedTo(member.get());
+        int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
         if (existingTimeCheques == 0) {
             log.debug("Member id={} has no existing TimeCheques, using first hours of {}", memberId, NbhConst.FIRST_TIME_CHEQUE_HOURS);
-            tc = createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member.get());
+            tc = createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member);
         } else {
-            tc = createTimeCheque(NbhConst.REGULAR_TIME_CHEQUE_HOURS, member.get());
+            tc = createTimeCheque(NbhConst.REGULAR_TIME_CHEQUE_HOURS, member);
             log.debug("Member id={} has {} existing TimeCheques, using regular hours of {}", memberId, existingTimeCheques, NbhConst.REGULAR_TIME_CHEQUE_HOURS);
         }
 
         model.addAttribute("timeCheque", tc);
         model.addAttribute("purchasedTimeCheques", timeCheckRepository.findLast10ByAssignedToIdOrderByOrderDateDesc(memberId));
 
-        String validationError = validateData(member.get(), tc, existingTimeCheques);
+        String validationError = validateData(member, tc, existingTimeCheques);
         if (validationError != null) {
             model.addAttribute("errorMessage", validationError);
             log.debug("Validation error for TimeCheque for Member id={}: {}", memberId, validationError);
