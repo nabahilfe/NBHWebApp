@@ -118,6 +118,9 @@
   @if(member.getId() != null)
     <div class="row">
       <div class="col-sm-3 mb-3 mb-sm-0">
+
+         <!-- FIXME: Daraus sollte nan eine Komponente machen! -->
+
         <div class="card">
           <div class="card-body">
             <h5 class="card-title text-primary">Erworbene Zeitschecks</h5>
@@ -144,7 +147,11 @@
         </div>
       </div>
 
+
+
       <div class="col-sm-9 mb-3 mb-sm-0">
+
+        <!-- FIXME: Daraus sollte nan eine Komponente machen! -->
         <div class="card">
           <div class="card-body">
             <h5 class="card-title text-primary">Erhaltene und vergebene Zeitschecks</h5>

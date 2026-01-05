@@ -20,8 +20,8 @@
             <p>${member.getAddress()}</p>
         </div>
         <ul class="list-group list-group-flush">
-        	<li class="list-group-item">
-            	Aktuelles Zeitguthaben: <b>${member.getAccumulatedHours()} h</b>
+          <li class="list-group-item">
+              Aktuelles Zeitguthaben: <b>${member.getAccumulatedHours()} h</b>
             </li>
         </ul>
     </div>
@@ -29,6 +29,8 @@
     <p/>
 
     @template.components.display-statusmessage(successMessage, errorMessage)
+
+    <!-- FIXME: sollte durch eine Komponente ersetzt werden! -->
 
     <div class="card">
         <div class="card-body">
