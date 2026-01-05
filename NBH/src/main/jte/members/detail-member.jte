@@ -133,8 +133,8 @@
               <tbody>
                 @for (TimeCheque tc : purchasedTimeCheques)
                 <tr>
-                  <th scope="row">${tc.getOrderDateString()}</th>
-                  <th scope="row" class="text-end">${tc.getHours()}</th>
+                  <td scope="row">${tc.getOrderDateString()}</td>
+                  <td scope="row" class="text-end">${tc.getHours()}</td>
                 </tr>
                 @endfor
               </tbody>
@@ -163,11 +163,11 @@
               <tbody>
                 @for (TimeTransfer tt : timeTransfers)
                 <tr>
-                  <th scope="row">${tt.getDateOfServiceString()}</th>
-                  <th scope="row">${tt.getFromMember().getName()}</th>
-                  <th scope="row">${tt.getToMember().getName()}</th>
-                  <th scope="row">${tt.getOffer().getDescription()}</th>
-                  <th scope="row" class="text-end">${tt.getHours()}</th>
+                  <td scope="row">${tt.getDateOfServiceString()}</td>
+                  <td scope="row">${tt.getFromMember().getName()}</td>
+                  <td scope="row">${tt.getToMember().getName()}</td>
+                  <td scope="row">${tt.getOffer().getDescription()}</td>
+                  <td scope="row" class="text-end">${tt.getHours()}</td>
                 </tr>
                 @endfor
               </tbody>

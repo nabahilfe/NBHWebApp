@@ -67,7 +67,7 @@
       <tbody>
         @for (Role role : roles)
         <tr>
-          <th scope="row">${role.getRoleName()}</th>
+          <td scope="row">${role.getRoleName()}</td>
           <td class="text-center">@if(role.getIsBoardMember())<i class="bi bi-check-lg"></i>@endif</td>
           <td class="text-center">@if(role.getIsSecretary())<i class="bi bi-check-lg"></i>@endif</td>
           <td class="text-center">@if(role.getIsTreasurer())<i class="bi bi-check-lg"></i>@endif</td>
