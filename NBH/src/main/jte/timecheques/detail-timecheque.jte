@@ -39,23 +39,26 @@
                             <label for="orderDate" class="col-form-label">Bestelldatum</label>
                         </div>
                         <div class="col-auto">
-                            <input type="date" class="form-control" name="orderDate" id="orderDate" value="" required>
+                            <input type="date" class="form-control" name="orderDate" id="orderDate" value="${timeCheque.getOrderDateString()}" required>
                         </div>
                     </div>
                 </li>
             </ul>
 
-            <div class="card-body">
-                <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
-                    data-item-id="${timeCheque.getAssignedTo().getId()}">Erstellen️️</button>
-            </div>
+            @if (errorMessage == null)
+                <div class="card-body">
+                    <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
+                        data-item-id="${timeCheque.getAssignedTo().getId()}">Erstellen️️</button>
+                </div>
+            @endif
 
         </form>
 
     </div>
 
     <br/>
+    @template.components.display-statusmessage(successMessage, errorMessage)
 
     <div class="card">
         <div class="card-body">

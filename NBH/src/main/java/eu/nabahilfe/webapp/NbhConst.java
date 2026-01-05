@@ -22,5 +22,7 @@ public final class NbhConst {
 
     public static final Integer START_MEMBER_NUMBER = 1000;
 
+    public static final Integer MIN_HOURS_FOR_TIME_CHEQUE = 5;
+
 
 }

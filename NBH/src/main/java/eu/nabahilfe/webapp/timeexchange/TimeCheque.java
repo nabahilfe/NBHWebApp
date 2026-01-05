@@ -89,7 +89,7 @@ public class TimeCheque {
     }
 
     public String getOrderDateString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return orderDate.format(formatter);
     }
 

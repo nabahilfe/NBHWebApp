@@ -77,7 +77,7 @@ public class TimeTransfer {
     }
 
     public String getDateOfServiceString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return dateOfService.format(formatter);
     }
 

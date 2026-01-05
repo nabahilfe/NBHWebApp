@@ -69,9 +69,17 @@ public class TimeChequeController {
         model.addAttribute("timeCheque", tc);
         model.addAttribute("purchasedTimeCheques", timeCheckRepository.findLast10ByAssignedToIdOrderByOrderDateDesc(memberId));
 
+        String validationError = validateData(member.get(), tc, existingTimeCheques);
+        if (validationError != null) {
+            model.addAttribute("errorMessage", validationError);
+            log.debug("Validation error for TimeCheque for Member id={}: {}", memberId, validationError);
+        }
+
         return "timecheques/detail-timecheque";
     }
 
+
+    // Save the new TimeCheque
 
     @PostMapping
     @Transactional
@@ -96,18 +104,35 @@ public class TimeChequeController {
     }
 
 
+    // --------------------
+    // helper methods
+    // --------------------
+
     private TimeCheque createTimeCheque(int timeChequeHours, Member member) {
         TimeCheque tc = new TimeCheque();
 
         tc.hours = timeChequeHours;
-        // FIXME: Richtigen Betrag aus TC-Kosten Tabell holen
+        // FIXME: Richtigen Betrag aus TC-Kosten Tabelle holen
         tc.amount = timeChequeHours <= 5 ? BigDecimal.valueOf(0) : BigDecimal.valueOf(3.60 * timeChequeHours);
         tc.assignedTo = member;
+        tc.orderDate = LocalDate.now();
         // FIXME: must be logged in user!
         tc.createdBy = member;
 
         return tc;
     }
+
+
+    private String validateData(Member member, TimeCheque timeCheque, int existingTimeCheques) {
+        // Business Rule: TimeCheques can only be purchased if Member has less than 5 accumulated hours,
+        // except for the first TimeCheque, which is free of charge.
+        if (member.getAccumulatedHours() >= NbhConst.MIN_HOURS_FOR_TIME_CHEQUE && existingTimeCheques > 0) {
+            return "Zeitschecks können erst bei weniger als 5 Stunden Zeitguthaben erworben werden."+
+                   " Aktuelles Zeitguthaben: " + member.getAccumulatedHours() + " Stunden.";
+        }
+        return null;
+    }
+
 
 
 }
