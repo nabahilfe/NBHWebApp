@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,7 +76,7 @@ public class TimeChequeController {
             log.debug("Validation error for TimeCheque for Member id={}: {}", memberId, validationError);
         }
 
-        return "timecheques/detail-timecheque";
+        return "timecheques/create-timecheque";
     }
 
 
@@ -84,6 +85,7 @@ public class TimeChequeController {
     @PostMapping
     @Transactional
     String saveTimeCheque(final Model model, @RequestParam LocalDate orderDate) {
+
         TimeCheque tc = (TimeCheque) model.getAttribute("timeCheque");
         tc.setOrderDate(orderDate);
         timeChequeRepository.save(tc);
@@ -93,14 +95,29 @@ public class TimeChequeController {
         tc.getAssignedTo().setAccumulatedHours(newHours);
         memberRepository.save(tc.getAssignedTo());
 
-        model.addAttribute("member", tc.getAssignedTo());
         model.addAttribute("successMessage", "Zeitscheck mit " + tc.getHours() + "h wurde hinzugefügt.");
-        model.addAttribute("purchasedTimeCheques", timeCheckRepository.
-                findLast10ByAssignedToIdOrderByOrderDateDesc(tc.getAssignedTo().getId()));
 
-        log.debug("Saved TimeCheque id={} for Member id={}", tc.getId(), tc.getAssignedTo().getId());
+        log.debug("TimeCheque saved: {}", tc);
 
-        return "timecheques/summary-timecheque";
+        return "redirect:/timecheques/" + tc.getId();
+    }
+
+
+    @GetMapping("/{id}")
+    String viewTimeCheque(final Model model, @PathVariable Long id) {
+        Optional<TimeCheque> tc = timeChequeRepository.findById(id);
+        if (tc.isPresent()) {
+            model.addAttribute("timeCheque", tc.get());
+            Optional<Member> member = memberRepository.findById(tc.get().getAssignedTo().getId());
+            model.addAttribute("member", member.get());
+            model.addAttribute("purchasedTimeCheques", timeCheckRepository.
+                    findLast10ByAssignedToIdOrderByOrderDateDesc(member.get().getId()));
+
+            return "timecheques/summary-timecheque";
+        } else {
+            model.addAttribute("errorMessage", "Zeitscheck mit ID " + id + " nicht gefunden.");
+            return "error";
+        }
     }
 
 
