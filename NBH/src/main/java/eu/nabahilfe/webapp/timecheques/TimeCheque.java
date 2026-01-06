@@ -2,7 +2,6 @@ package eu.nabahilfe.webapp.timecheques;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import eu.nabahilfe.webapp.members.Member;
@@ -86,11 +85,6 @@ public class TimeCheque {
 
     public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
-    }
-
-    public String getOrderDateString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return orderDate.format(formatter);
     }
 
     public Integer getVersion() {

@@ -1,10 +1,7 @@
 package eu.nabahilfe.webapp.timecheques;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-
-import org.springframework.format.annotation.DateTimeFormat;
 
 import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.members.Member;
@@ -74,11 +71,6 @@ public class TimeTransfer {
 
     public LocalDate getDateOfService() {
         return dateOfService;
-    }
-
-    public String getDateOfServiceString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return dateOfService.format(formatter);
     }
 
     public void setDateOfService(LocalDate dateOfService) {

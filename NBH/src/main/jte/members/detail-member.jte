@@ -1,4 +1,7 @@
 @import java.util.List
+@import java.time.LocalDate
+
+@import static eu.nabahilfe.webapp.DateFormatter.*
 
 @import eu.nabahilfe.webapp.members.Member
 @import eu.nabahilfe.webapp.members.Role
@@ -136,7 +139,7 @@
               <tbody class="table-group-divider">
                 @for (TimeCheque tc : purchasedTimeCheques)
                 <tr>
-                  <td scope="row">${tc.getOrderDateString()}</td>
+                  <td scope="row">${formatDE(tc.getOrderDate())}</td>
                   <td scope="row" class="text-end">${tc.getHours()}</td>
                 </tr>
                 @endfor
@@ -171,7 +174,7 @@
               <tbody class="table-group-divider">
                 @for (TimeTransfer tt : timeTransfers)
                 <tr>
-                  <td scope="row">${tt.getDateOfServiceString()}</td>
+                  <td scope="row">${formatDE(tt.getDateOfService())}</td>
                   <td scope="row" class="text-center">${tt.getHours()}</td>
                   <td scope="row">${tt.getFromMember().getName()}</td>
                   <td scope="row">${tt.getToMember().getName()}</td>

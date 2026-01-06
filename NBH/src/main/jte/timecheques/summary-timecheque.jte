@@ -1,4 +1,7 @@
 @import java.util.List
+@import java.time.LocalDate
+
+@import static eu.nabahilfe.webapp.DateFormatter.*
 
 @import eu.nabahilfe.webapp.members.Member
 @import eu.nabahilfe.webapp.timecheques.TimeCheque
@@ -48,7 +51,7 @@
                 <tbody class="table-group-divider">
                     @for (TimeCheque tc : purchasedTimeCheques)
                     <tr>
-                        <td>${tc.getOrderDateString()}</td>
+                        <td>${formatDE(tc.getOrderDate())}</td>
                         <td>${tc.getCreatedBy().getName()}</td>
                         <td class="text-end">${tc.getHours()}</td>
                     </tr>

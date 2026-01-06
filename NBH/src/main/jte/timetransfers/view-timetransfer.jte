@@ -1,5 +1,7 @@
 @import java.util.List
 
+@import static eu.nabahilfe.webapp.DateFormatter.*
+
 @import eu.nabahilfe.webapp.timecheques.TimeTransfer
 @import eu.nabahilfe.webapp.members.Member
 @import eu.nabahilfe.webapp.org.Offer
@@ -33,7 +35,7 @@
 
             <label for="dateOfService" class="col-sm-10 col-form-label">Leistungsdatum</label>
             <div class="col-sm-10">
-              <input type="date" class="form-control" readonly value="${tt.getDateOfServiceString()}">
+              <input type="date" class="form-control" readonly value="${formatDE(tt.getDateOfService())}">
             </div>
 
             <!-- Hours selector: choose 1..5 hours. Preselect when ttf provided. -->
