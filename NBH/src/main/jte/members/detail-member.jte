@@ -19,7 +19,7 @@
 
 @template.layout.main(content = @`
 
-    <h3 class="text-primary">
+    <h3>
         ${member.getId() != null ? "Mitglied bearbeiten" : "Neues Mitglied anlegen"}
     </h3>
 
@@ -123,17 +123,17 @@
 
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title text-primary">Erworbene Zeitschecks</h5>
+            <h5>Erworbene Zeitschecks</h5>
             <p class="card-text">Nur die letzten 10</p>
 
-            <table class="table table-striped table-bordered table-hover table-sm mt-4" id="timeChequeTable">
-              <thead class="table-dark">
+            <table class="table table-hover table-sm" id="memberTable">
+              <thead>
                 <tr>
                   <th scope="col">Datum</th>
                   <th scope="col" class="text-end">Stunden</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody class="table-group-divider">
                 @for (TimeCheque tc : purchasedTimeCheques)
                 <tr>
                   <td scope="row">${tc.getOrderDateString()}</td>
@@ -154,31 +154,33 @@
         <!-- FIXME: Daraus sollte nan eine Komponente machen! -->
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title text-primary">Erhaltene und vergebene Zeitschecks</h5>
+            <h5>Erhaltene und vergebene Zeitschecks</h5>
             <p class="card-text">Die letzten 10 erhaltenen bzw. vergebenen Zeitschecks</p>
 
-            <table class="table table-striped table-bordered table-hover table-sm mt-4" id="timeTransferTable">
-              <thead class="table-dark">
+            <div class="table-responsive">
+            <table class="table table-hover table-sm" id="memberTable">
+              <thead>
                 <tr>
                   <th scope="col">Datum</th>
+                  <th scope="col" class="text-center">Stunden</th>
                   <th scope="col">von</th>
                   <th scope="col">an</th>
                   <th scope="col">Kategorie</th>
-                  <th scope="col" class="text-end">Stunden</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody class="table-group-divider">
                 @for (TimeTransfer tt : timeTransfers)
                 <tr>
                   <td scope="row">${tt.getDateOfServiceString()}</td>
+                  <td scope="row" class="text-center">${tt.getHours()}</td>
                   <td scope="row">${tt.getFromMember().getName()}</td>
                   <td scope="row">${tt.getToMember().getName()}</td>
                   <td scope="row">${tt.getOffer().getDescription()}</td>
-                  <td scope="row" class="text-end">${tt.getHours()}</td>
                 </tr>
                 @endfor
               </tbody>
             </table>
+            </div>
 
           </div>
         </div>

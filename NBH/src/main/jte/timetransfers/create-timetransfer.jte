@@ -10,7 +10,7 @@
 
 @template.layout.main(content = @`
 
-    <h3 class="text-primary">Zeitscheck verbuchen</h3>
+    <h3>Zeitscheck verbuchen</h3>
 
     <!--
       Template: Detail form for recording a TimeTransfer (time cheque).

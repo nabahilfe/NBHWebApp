@@ -12,7 +12,8 @@
 
 @template.layout.main(content = @`
 
-    <h3 class="text-primary">Zeitscheck erstellen für</h3>
+    <h3>Zeitscheck erstellen für</h3>
+    <br/>
 
     <div class="card">
 
@@ -62,18 +63,18 @@
 
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title text-primary">Bereits erworbene Zeitschecks</h5>
+            <h5>Bereits erworbene Zeitschecks</h5>
             <p class="card-text">Nur die letzten 10 werden angezeigt</p>
 
-            <table class="table table-striped table-bordered table-hover table-sm mt-4" id="timeChequeTable">
-                <thead class="table-dark">
+            <table class="table table-hover table-sm" id="memberTable">
+                <thead>
                     <tr>
                         <th scope="col">Datum</th>
                         <th scope="col">erstellt von</th>
                         <th scope="col" class="text-end">Stunden</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-group-divider">
                     @for (TimeCheque tc : purchasedTimeCheques)
                     <tr>
                         <td>${tc.getOrderDateString()}</td>

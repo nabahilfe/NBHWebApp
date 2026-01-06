@@ -23,12 +23,12 @@
       <input type="hidden" name="order" id="order">
   </form>
 
-    <h3 class="text-primary">Liste der Mitglieder</h3>
-
+    <h3>Unsere Vereinsmitglieder</h3>
+    <br/>
     <!-- Display all Member records -->
-    <table class="table table-striped table-bordered table-hover table-sm mt-4" id="memberTable">
+    <table class="table table-hover table-sm" id="memberTable">
 
-        <thead class="table-dark">
+        <thead>
         <tr>
           <th scope="col" data-col="firstName" data-order="${orderBy.equals("firstName") ? order : ""}">
             Vorname ${orderBy.equals("firstName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
@@ -45,7 +45,7 @@
         </tr>
       </thead>
 
-      <tbody>
+        <tbody class="table-group-divider">
         @for (Member member : memberPage.getContent())
         <tr>
           <td>${member.getFirstName()}</td>

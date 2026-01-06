@@ -7,11 +7,12 @@
 
 @template.layout.main(content = @`
 
-    <h3 class="text-primary">Rollen und Berechtigungen für Mitglieder
+    <h3>Rollen und Berechtigungen für Mitglieder
         <button type="button" class="btn btn-link" data-bs-toggle="modal"
             data-bs-target="#helpModal" ">Erklärung zu den Rollen und Berechtigungen
         </button>
     </h3>
+    <br/>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
@@ -47,9 +48,8 @@
 
 
     <!-- Display all Role records -->
-    <table class="table table-striped table-bordered table-hover table-sm mt-4">
-
-        <thead class="table-dark">
+    <table class="table table-hover table-sm" id="memberTable">
+      <thead>
         <tr>
           <th scope="col">Rolle und Berechtigungen</th>
           <th scope="col" class="text-center">Vorstand</th>
@@ -64,7 +64,7 @@
         </tr>
       </thead>
 
-      <tbody>
+      <tbody class="table-group-divider">
         @for (Role role : roles)
         <tr>
           <td scope="row">${role.getRoleName()}</td>

@@ -10,9 +10,10 @@
 
 @template.layout.main(content = @`
 
-    <h3 class="text-primary">
+    <h3>
         ${role.getId() != null ? "Rolle bearbeiten" : "Neue Rolle anlegen"}
     </h3>
+    <br/>
 
     <div class="row">
 
