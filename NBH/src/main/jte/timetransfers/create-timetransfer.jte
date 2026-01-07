@@ -13,7 +13,7 @@
 
 @template.layout.main(content = @`
 
-    <h3>Zeitscheck verbuchen !!! ${ttf == null ? "???" : ttf.getUserFromName()}</h3>
+    <h3>Zeitscheck verbuchen</h3>
 
     <!--
       Template: Detail form for recording a TimeTransfer (time cheque).
@@ -85,7 +85,7 @@
                 <div >
                     <select class="form-select" name="hours" id="hoursSelect">
                         @for(int i = 1; i <= 5; i++)
-                            @if((ttf != null && ttf.getHoursSelected()) && ttf.getHoursSelected().equals(String.valueOf(i)))
+                            @if((ttf != null && ttf.getHoursSelected() != null) && ttf.getHoursSelected().equals(String.valueOf(i)))
                                 <option value="${i}" selected>@if(i == 1) 1 Stunde @else ${i} Stunden @endif</option>
                             @else
                                 <option value="${i}">@if(i == 1) 1 Stunde @else ${i} Stunden @endif</option>

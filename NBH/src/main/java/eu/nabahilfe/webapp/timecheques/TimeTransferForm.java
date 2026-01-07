@@ -22,7 +22,7 @@ public class TimeTransferForm {
     }
 
     public String getUserFromName() {
-        return userFromName;
+        return userFromName == null ? "" : userFromName;
     }
 
     public void setUserFromName(String userFromName) {
@@ -30,7 +30,7 @@ public class TimeTransferForm {
     }
 
     public String getUserFromId() {
-        return userFromId.toString();
+        return userFromId == null ? "" : userFromId.toString();
     }
 
     public void setUserFromId(Long userFromId) {
@@ -38,7 +38,7 @@ public class TimeTransferForm {
     }
 
     public String getOfferId() {
-        return offerId.toString();
+        return offerId == null ? "" : offerId.toString();
     }
 
     public void setOfferId(Long offerId) {
@@ -46,7 +46,7 @@ public class TimeTransferForm {
     }
 
     public String getUserToName() {
-        return userToName;
+        return userToName == null ? "" : userToName;
     }
 
     public void setUserToName(String userToName) {
@@ -54,7 +54,7 @@ public class TimeTransferForm {
     }
 
     public String getUserToId() {
-        return userToId.toString();
+        return userToId == null ? "" : userToId.toString();
     }
 
     public void setUserToId(Long userToId) {
@@ -70,7 +70,7 @@ public class TimeTransferForm {
     }
 
     public String getHoursSelected() {
-        return hoursSelected;
+        return hoursSelected == null ? "" : hoursSelected;
     }
 
     public void setHoursSelected(String hoursSelected) {

@@ -70,7 +70,7 @@
     <br/>
 
     <form action="/timetransfers/new" method="get">
-        <button type="submit" class="btn btn-primary">Zeitscheck mit neuem Leistungsempfänger</button>
+        <button type="submit" class="btn btn-primary">Zeitscheck mit anderem Leistungsempfänger</button>
     </form>
 
     <p/>
