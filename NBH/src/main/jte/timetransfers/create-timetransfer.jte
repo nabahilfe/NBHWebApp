@@ -125,15 +125,16 @@
 
         </div>
 
-        <p> </p>
+        <br/>
 
         <!-- Form actions: submit posts the transfer; reset clears client-side inputs -->
         <button id="submitBtn" class="btn btn-primary bi-card-checklist" type="submit"> Zeitscheck verbuchen</button>
         <button class="btn btn-secondary" type="button" onclick="resetInputs()">Eingabe löschen</button>
 
-        <p/>
+        <br/>
 
         @template.components.display-statusmessage(successMessage, errorMessage)
+
 
     </form>
 

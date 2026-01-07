@@ -61,19 +61,19 @@
 
     </div>
 
-    <p>
+    <br/>
 
-     <form action="/timetransfers/new/${tt.getFromMember().getId()}"  method="get">
-        <button type="submit" class="btn btn-primary">Weiteren Zeitscheck mit gleichem Leistungsempfänger</button>
+    <form action="/timetransfers/new/${tt.getFromMember().getId()}"  method="get">
+        <button type="submit" class="btn btn-secondary bi-play-btn"> Weiteren Zeitscheck mit gleichem Leistungsempfänger</button>
     </form>
 
     <br/>
 
     <form action="/timetransfers/new" method="get">
-        <button type="submit" class="btn btn-primary">Zeitscheck mit anderem Leistungsempfänger</button>
+        <button type="submit" class="btn btn-secondary bi-backspace"> Zeitscheck mit anderem Leistungsempfänger</button>
     </form>
 
-    <p/>
+    <br/>
 
     @template.components.display-statusmessage(successMessage, errorMessage)
 

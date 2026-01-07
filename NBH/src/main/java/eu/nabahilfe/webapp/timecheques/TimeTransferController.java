@@ -119,7 +119,7 @@ public class TimeTransferController {
 
             model.addAttribute("errorMessage", "Leistungsempfänger " + memberFrom.getName()
                     + " hat nicht genügend Stunden (aktuell " + memberFrom.getAccumulatedHours() + " h) für diese Übertragung!");
-            return "returntimetransfers/create-timetransfer";
+            return "timetransfers/create-timetransfer";
         }
 
 
@@ -146,7 +146,7 @@ public class TimeTransferController {
         memberRepository.save(memberTo);
 
         redirectAttributes.addFlashAttribute("successMessage",
-                hours + " Stunden für " + memberTo.getName() + " verbucht.");
+                (hours == 1 ? "Eine Stunde für " : hours + " Stunden für ") + memberTo.getName() + " verbucht.");
 
         return "redirect:/timetransfers/" + tt.getId();
     }
