@@ -61,9 +61,8 @@ public class TimeTransferForm {
         this.userToId = userToId;
     }
 
-    public String getServiceDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return serviceDate.format(formatter);
+    public LocalDate getServiceDate() {
+                return serviceDate;
     }
 
     public void setServiceDate(LocalDate serviceDate) {
@@ -78,10 +77,11 @@ public class TimeTransferForm {
         this.hoursSelected = hoursSelected;
     }
 
+
     @Override
     public String toString() {
         return "TimeTransferForm [userFromName=" + userFromName + ", userFromId=" + userFromId + ", offerId=" + offerId
-                + ", serviceDate=" + getServiceDate() + ", hoursSelected=" + hoursSelected + ", userToName=" + userToName
+                + ", serviceDate=" + serviceDate + ", hoursSelected=" + hoursSelected + ", userToName=" + userToName
                 + ", userToId=" + userToId + "]";
     }
 

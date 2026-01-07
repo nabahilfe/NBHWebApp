@@ -62,10 +62,26 @@ public class TimeTransferController {
     // CREATE NEW
     // --------------------
 
-    @GetMapping("/new")
-    String addTimeTransfer(final Model model) {
+    @GetMapping(value = {"/new", "/new/{fromMemberId}"})
+    String addTimeTransfer(final Model model, @PathVariable(required = false) Long fromMemberId) {
+
+        TimeTransferForm ttf = null;
+        log.debug("Adding new TimeTransfer, fromMemberId={}", fromMemberId);
+
+        if (fromMemberId != null) {
+            Member fromMember = memberRepository.findById(fromMemberId).orElse(null);
+            if (fromMember == null) {
+                model.addAttribute("errorMessage", "Mitglied mit ID " + fromMemberId + " nicht gefunden.");
+                return "error";
+            }
+            ttf = new TimeTransferForm();
+            ttf.setUserFromId(fromMemberId);
+            ttf.setUserFromName(fromMember.getNameAndAddress());
+            log.debug("Creating new TimeTransfer, pre-filled form: {}", ttf);
+        }
+
         model.addAttribute("offers", offerRepository.findAll());
-        model.addAttribute("ttf", null);
+        model.addAttribute("ttf", ttf);
         return "timetransfers/create-timetransfer";
     }
 

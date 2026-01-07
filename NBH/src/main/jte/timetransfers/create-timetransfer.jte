@@ -1,4 +1,7 @@
 @import java.util.List
+
+@import static eu.nabahilfe.webapp.DateFormatter.*
+
 @import eu.nabahilfe.webapp.org.Offer
 @import eu.nabahilfe.webapp.timecheques.TimeTransferForm
 
@@ -10,7 +13,7 @@
 
 @template.layout.main(content = @`
 
-    <h3>Zeitscheck verbuchen</h3>
+    <h3>Zeitscheck verbuchen !!! ${ttf == null ? "???" : ttf.getUserFromName()}</h3>
 
     <!--
       Template: Detail form for recording a TimeTransfer (time cheque).
@@ -57,7 +60,7 @@
                     <select class="form-select" name="offerId" id="offerId">
                         <option value="">Auswählen</option>
                         @for(Offer offer : offers)
-                            @if(ttf != null && ttf.getOfferId().equals(offer.getId().toString()))
+                            @if((ttf != null && ttf.getOfferId() != null) && ttf.getOfferId().equals(offer.getId().toString()))
                                 <option value="${offer.getId()}" selected>
                                     ${offer.getCode()} - ${offer.getDescription()}
                                 </option>
@@ -74,7 +77,7 @@
                 <label for="dateOfService" class="col-sm-10 col-form-label">Leistungsdatum</label>
                 <div class="col-sm-10">
                       <input type="date" class="form-control" name="dateOfService" id="dateOfService"
-                          value="${ttf == null ? "" : ttf.getServiceDate()}" required>
+                          value="${ttf == null ? "" : formatDE(ttf.getServiceDate())}" required>
                 </div>
 
                 <!-- Hours selector: choose 1..5 hours. Preselect when ttf provided. -->
@@ -82,7 +85,7 @@
                 <div >
                     <select class="form-select" name="hours" id="hoursSelect">
                         @for(int i = 1; i <= 5; i++)
-                            @if(ttf != null && ttf.getHoursSelected().equals(String.valueOf(i)))
+                            @if((ttf != null && ttf.getHoursSelected()) && ttf.getHoursSelected().equals(String.valueOf(i)))
                                 <option value="${i}" selected>@if(i == 1) 1 Stunde @else ${i} Stunden @endif</option>
                             @else
                                 <option value="${i}">@if(i == 1) 1 Stunde @else ${i} Stunden @endif</option>

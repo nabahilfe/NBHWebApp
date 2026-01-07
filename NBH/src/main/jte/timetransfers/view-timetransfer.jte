@@ -63,9 +63,16 @@
 
     <p>
 
-    <form action="/timetransfers/new" method="get">
-        <button type="submit" class="btn btn-primary bi-card-checklist"> Weiteren Zeitscheck verbuchen</button>
+     <form action="/timetransfers/new/${tt.getFromMember().getId()}"  method="get">
+        <button type="submit" class="btn btn-primary">Weiteren Zeitscheck mit gleichem Leistungsempfänger</button>
     </form>
+
+    <br/>
+
+    <form action="/timetransfers/new" method="get">
+        <button type="submit" class="btn btn-primary">Zeitscheck mit neuem Leistungsempfänger</button>
+    </form>
+
     <p/>
 
     @template.components.display-statusmessage(successMessage, errorMessage)
