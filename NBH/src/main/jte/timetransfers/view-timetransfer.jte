@@ -64,13 +64,13 @@
     <br/>
 
     <form action="/timetransfers/new/${tt.getFromMember().getId()}"  method="get">
-        <button type="submit" class="btn btn-secondary bi-play-btn"> Weiteren Zeitscheck mit gleichem Leistungsempfänger</button>
+        <button type="submit" class="btn btn-outline-primary bi-play-btn"> Weiteren Zeitscheck mit gleichem Leistungsempfänger</button>
     </form>
 
     <br/>
 
     <form action="/timetransfers/new" method="get">
-        <button type="submit" class="btn btn-secondary bi-backspace"> Zeitscheck mit anderem Leistungsempfänger</button>
+        <button type="submit" class="btn btn-outline-primary bi-backspace"> Zeitscheck mit anderem Leistungsempfänger</button>
     </form>
 
     <br/>

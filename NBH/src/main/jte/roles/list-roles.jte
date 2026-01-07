@@ -120,7 +120,7 @@
 
     <!-- add an item -->
     <form action="/roles/new" method="get">
-        <button class="btn btn-primary" type="submit">Rolle hinzufügen</button>
+        <button class="btn btn-outline-primary bi-plus-circle" type="submit"> Rolle hinzufügen</button>
     </form>
 
     <p/>

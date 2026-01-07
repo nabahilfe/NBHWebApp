@@ -106,7 +106,7 @@
 
     <!-- add an item -->
     <form action="/members/new" method="get">
-        <button type="submit" class="btn btn-primary bi-person-add"> Mitglied hinzufügen</button>
+        <button type="submit" class="btn btn-outline-primary bi-plus-circle"> Mitglied hinzufügen</button>
     </form>
 
     <p/>
