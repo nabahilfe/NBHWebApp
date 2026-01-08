@@ -23,7 +23,7 @@
 <div class="card">
     <div class="card-body">
         <h5>Template: Erworbene Zeitschecks</h5>
-        <p class="card-text">Nur die letzten 10</p>
+        <p class="card-text">FIXME: USERNAME</p>
 
         <table class="table table-hover table-sm" id="memberTable">
             <thead>

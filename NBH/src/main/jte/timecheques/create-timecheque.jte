@@ -67,7 +67,7 @@
     <div class="card">
         <div class="card-body">
             <h5>Bereits erworbene Zeitschecks</h5>
-            <p class="card-text">Nur die letzten 10 werden angezeigt</p>
+            <p class="card-text">FIXME: Username</p>
 
             <table class="table table-hover table-sm" id="memberTable">
                 <thead>

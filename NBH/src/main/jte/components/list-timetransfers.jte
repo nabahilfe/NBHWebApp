@@ -22,7 +22,7 @@
 <div class="card">
     <div class="card-body">
         <h5>Erhaltene und vergebene Zeitschecks</h5>
-        <p class="card-text">Die letzten 10 erhaltenen bzw. vergebenen Zeitschecks</p>
+        <p class="card-text">FIXME: USERNAME</p>
         <div class="table-responsive">
 
             <table class="table table-hover table-sm" id="memberTable">
