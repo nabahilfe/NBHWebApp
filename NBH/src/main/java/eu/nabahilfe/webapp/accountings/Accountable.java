@@ -1,4 +1,4 @@
-package eu.nabahilfe.webapp.accounting;
+package eu.nabahilfe.webapp.accountings;
 
 import java.math.BigDecimal;
 

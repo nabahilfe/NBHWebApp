@@ -25,4 +25,7 @@ public final class NbhConst {
     public static final Integer MIN_HOURS_FOR_TIME_CHEQUE = 5;
 
 
+    public static final String ACCOUNTING_INCOMING = "INCOMING";
+    public static final String ACCOUNTING_OUTGOING = "OUTGOING";
+
 }

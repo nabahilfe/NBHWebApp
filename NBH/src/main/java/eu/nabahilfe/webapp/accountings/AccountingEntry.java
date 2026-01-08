@@ -1,33 +1,36 @@
-package eu.nabahilfe.webapp.accounting;
+package eu.nabahilfe.webapp.accountings;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 
+@Entity
+@Table(name = "accounting_entry")
 public class AccountingEntry {
-
-    public final String incoming = "INCOMING";
-    public final String outgoing = "OUTGOING";
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate accountingDate;
-
+    @Column(nullable = false)
     private String accountingType;
 
-    private String accounableEntityName;
+    @Column(nullable = false)
+    private LocalDate accountingDate;
+
+    private String accountableEntityName;
 
     private String description;
 
+    @Column(nullable = false)
     private BigDecimal amount;
 
     @Version
@@ -59,11 +62,11 @@ public class AccountingEntry {
     }
 
     public String getAccounableEntityName() {
-        return accounableEntityName;
+        return accountableEntityName;
     }
 
     public void setAccounableEntityName(String accounableEntityName) {
-        this.accounableEntityName = accounableEntityName;
+        this.accountableEntityName = accounableEntityName;
     }
 
     public String getDescription() {
