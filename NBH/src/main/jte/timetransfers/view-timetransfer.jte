@@ -16,7 +16,7 @@
     <h3>Zeitscheck angelgt</h3>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
     <p/>
 
@@ -28,7 +28,7 @@
             <h5 class="card-title text-primary">Leistungsempfänger</h5>
             <p class="card-text text-success">Gibt Zeitscheck an Leistungserbringer</p>
 
-            <input type="text" class="form-control" readonly value="${tt.getFromMember().getName()}">
+            <input type="text" class="form-control" readonly value="${tt.getFromMember().getNameAndAddress()}">
 
             <label for="offer" class="col-sm-2 col-form-label">Kategorie</label>
             <input type="text" class="form-control" readonly value="${tt.getOffer().getDescription()}">
@@ -53,7 +53,7 @@
             <h5 class="card-title text-primary">Leistungserbringer</h5>
             <p class="card-text text-success">Erhält Zeitscheck vom Leistungsempfänger</p>
 
-            <input type="text" class="form-control" readonly value="${tt.getToMember().getName()}">
+            <input type="text" class="form-control" readonly value="${tt.getToMember().getNameAndAddress()}">
 
           </div>
         </div>
