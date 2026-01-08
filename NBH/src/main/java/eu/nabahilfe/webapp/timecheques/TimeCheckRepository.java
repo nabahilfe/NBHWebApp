@@ -20,10 +20,7 @@ public interface TimeCheckRepository extends ListCrudRepository<TimeCheque, Long
 
     List<TimeCheque> findAllByAssignedToIdOrderByOrderDateDesc(Long assignedTo);
 
-    List<TimeCheque> findTop10ByAssignedToIdOrderByOrderDateDesc(Long assignedTo);
-
     TimeCheque findTopByAssignedToIdOrderByOrderDateDesc(Long assignedTo);
-
 
 
 }

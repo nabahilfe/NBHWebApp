@@ -1,7 +1,6 @@
 package eu.nabahilfe.webapp.timecheques;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class TimeTransferForm {
 

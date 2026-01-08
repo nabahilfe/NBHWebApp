@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import eu.nabahilfe.webapp.accounting.Accountable;
 import eu.nabahilfe.webapp.members.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +20,7 @@ import jakarta.persistence.Version;
 
 @Entity
 @Table(name = "time_cheques")
-public class TimeCheque {
+public class TimeCheque implements Accountable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -124,6 +125,11 @@ public class TimeCheque {
     public String toString() {
         return "TimeCheque [id=" + id + ", hours=" + hours + ", amount=" + amount + ", assignedTo=" + assignedTo
                 + ", createdBy=" + createdBy + ", version=" + version + "]";
+    }
+
+    @Override
+    public String getAccounableEntityName() {
+        return getClass().getName();
     }
 
 

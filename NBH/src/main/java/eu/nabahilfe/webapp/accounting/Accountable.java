@@ -1,0 +1,10 @@
+package eu.nabahilfe.webapp.accounting;
+
+import java.math.BigDecimal;
+
+public interface Accountable {
+
+    public abstract String getAccounableEntityName();
+    public abstract BigDecimal getAmount();
+
+}
