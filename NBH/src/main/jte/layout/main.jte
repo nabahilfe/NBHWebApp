@@ -26,7 +26,7 @@
   <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #77DD77;">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light" style="background-color: #77DD77;">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">NBH Maria Anzbach</a>
 
