@@ -156,7 +156,7 @@
 
         <!-- FIXME: Daraus sollte nan eine Komponente machen! -->
 
-        @template.components.timetransfers(transfers = timeTransfers)
+        @template.components.list-timetransfers(transfers = timeTransfers)
 
 
       </div>
