@@ -61,7 +61,7 @@ public class TimeChequeController {
         model.addAttribute("timeCheque", tc);
         model.addAttribute("member", member);
         model.addAttribute("purchasedTimeCheques", timeCheckRepository.
-                findLast10ByAssignedToIdOrderByOrderDateDesc(member.getId()));
+                findAllByAssignedToIdOrderByOrderDateDesc(member.getId()));
 
         return "timecheques/summary-timecheque";
 
@@ -95,7 +95,7 @@ public class TimeChequeController {
         }
 
         model.addAttribute("timeCheque", tc);
-        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findLast10ByAssignedToIdOrderByOrderDateDesc(memberId));
+        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedToIdOrderByOrderDateDesc(memberId));
 
         String validationError = validateData(member, tc, existingTimeCheques);
         if (validationError != null) {

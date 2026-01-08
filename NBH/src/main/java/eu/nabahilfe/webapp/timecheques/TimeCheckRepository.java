@@ -18,8 +18,12 @@ public interface TimeCheckRepository extends ListCrudRepository<TimeCheque, Long
 
     Integer countByAssignedTo(Member member);
 
-    List<TimeCheque> findLast10ByAssignedToIdOrderByOrderDateDesc(Long assignedTo);
+    List<TimeCheque> findAllByAssignedToIdOrderByOrderDateDesc(Long assignedTo);
+
+    List<TimeCheque> findTop10ByAssignedToIdOrderByOrderDateDesc(Long assignedTo);
 
     TimeCheque findTopByAssignedToIdOrderByOrderDateDesc(Long assignedTo);
+
+
 
 }

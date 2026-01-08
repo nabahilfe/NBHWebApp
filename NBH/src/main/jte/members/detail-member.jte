@@ -122,32 +122,9 @@
     <div class="row">
       <div class="col-sm-3 mb-3 mb-sm-0">
 
-         <!-- FIXME: Daraus sollte nan eine Komponente machen! -->
+         <!-- FIXME Das Template braucht auch den UserNamen um universell verwendbar zu sein -->
+        @template.components.list-timecheques(timeCheques = purchasedTimeCheques)
 
-        <div class="card">
-          <div class="card-body">
-            <h5>Erworbene Zeitschecks</h5>
-            <p class="card-text">Nur die letzten 10</p>
-
-            <table class="table table-hover table-sm" id="memberTable">
-              <thead>
-                <tr>
-                  <th scope="col">Datum</th>
-                  <th scope="col" class="text-end">Stunden</th>
-                </tr>
-              </thead>
-              <tbody class="table-group-divider">
-                @for (TimeCheque tc : purchasedTimeCheques)
-                <tr>
-                  <td scope="row">${formatDE(tc.getOrderDate())}</td>
-                  <td scope="row" class="text-end">${tc.getHours()}</td>
-                </tr>
-                @endfor
-              </tbody>
-            </table>
-
-          </div>
-        </div>
       </div>
 
 

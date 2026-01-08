@@ -130,7 +130,7 @@ public class MemberController {
     String editMember(final Model model, @PathVariable Long id) {
         log.debug("Editing Member: {}", id);
         model.addAttribute("timeTransfers", timeTransferRepository.findLast10ByFromMemberIdOrToMemberIdOrderByDateOfServiceDesc(id, id));
-        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findLast10ByAssignedToIdOrderByOrderDateDesc(id));
+        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedToIdOrderByOrderDateDesc(id));
         return "members/detail-member";
     }
 
