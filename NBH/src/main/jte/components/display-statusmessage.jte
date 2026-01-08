@@ -1,14 +1,26 @@
+<!--
+    A reusable template to display success and error messages.
+
+    Usage:
+    @template.components.display-statusmessage(successMessage, errorMessage)
+
+    Parameters:
+    - successMessage: The success message to display (String or null)
+    - errorMessage: The error message to display (String or null)
+
+-->
+
 @param String successMessage = null
 @param String errorMessage = null
 
 @if(successMessage != null)
     <div id="successAlert" class="alert alert-success py-2 px-3 alert-dismissible fade show" role="alert">
-     	${successMessage}
-  	</div>
+         ${successMessage}
+      </div>
 @endif
 
 @if(errorMessage != null)
      <div class="alert alert-danger py-2 px-3" role="alert">
-     	${errorMessage}
+         ${errorMessage}
      </div>
 @endif

@@ -1,21 +1,19 @@
-@param java.lang.String status = null
+@param java.lang.Integer status = null
 @param java.lang.String error = null
 @param java.lang.String message = null
 
-@template.layout.main(content = @`
+<!--
+    A template to display error messages.
 
-    <div class="container">
+    Parameters:
+    - status: The HTTP status code (Integer)
+    - error: The error message (String)
+    - message: The detailed message (String)
+-->
 
-        <h1>${status}</h1>
-        <p>${error}</p>
-        @if(message != null && message != "")
-            <p>Details: ${message}</p>
-        @endif
+<h1>${status}</h1>
+<h2>${error}</h2>
+<p>${message}</p>
 
-        <p><a href="/">Zurück zur Startseite</a></p>
-    </div>
-
-`)
-
-
+<p><a href="/">Zurück zur Startseite</a></p>
 
