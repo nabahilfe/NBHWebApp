@@ -7,7 +7,7 @@ import org.springframework.data.repository.ListCrudRepository;
 public interface AccountingRepository extends ListCrudRepository<AccountingEntry, Long> {
 
 
-    List<AccountingEntry> findAllByAccountableEntityNameContaining(String name);
+    List<AccountingEntry> findAllByAccountableTableNameContaining(String name);
 
 
 }

@@ -4,7 +4,8 @@ import java.math.BigDecimal;
 
 public interface Accountable {
 
-    public abstract String getAccounableEntityName();
+    public abstract Long getAccountableId();
+    public abstract String getAccountableTableName();
     public abstract BigDecimal getAmount();
 
 }

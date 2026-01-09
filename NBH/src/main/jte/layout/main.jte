@@ -46,6 +46,10 @@
               <a class="nav-link active" aria-current="page" href="/timetransfers/new">Zeitbuchung</a>
             </li>
 
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/timecheques/unaccounted">Zu verbuchen</a>
+            </li>
+
             <!-- Dropdown -->
             <li class="nav-item dropdown">
               <button class="nav-link dropdown-toggle btn btn-link"

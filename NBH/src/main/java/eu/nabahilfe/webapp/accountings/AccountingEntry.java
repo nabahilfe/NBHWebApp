@@ -26,7 +26,7 @@ public class AccountingEntry {
     @Column(nullable = false)
     private LocalDate accountingDate;
 
-    private String accountableEntityName;
+    private String accountableTableName;
 
     private String description;
 
@@ -61,12 +61,12 @@ public class AccountingEntry {
         this.accountingType = accountingType;
     }
 
-    public String getAccounableEntityName() {
-        return accountableEntityName;
+    public String getAccounableTableName() {
+        return accountableTableName;
     }
 
-    public void setAccounableEntityName(String accounableEntityName) {
-        this.accountableEntityName = accounableEntityName;
+    public void setAccounableTableName(String accounableEntityName) {
+        this.accountableTableName = accounableEntityName;
     }
 
     public String getDescription() {

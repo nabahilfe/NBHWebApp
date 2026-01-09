@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import eu.nabahilfe.webapp.accountings.Accountable;
+import eu.nabahilfe.webapp.accountings.AccountingEntry;
 import eu.nabahilfe.webapp.members.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,6 +41,10 @@ public class TimeCheque implements Accountable {
     @JoinColumn(name = "created_by")
     Member createdBy;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "accounting_entry")
+    AccountingEntry accountingEntry;
+
     @Version
     @Column(nullable = false)
     Integer version;
@@ -56,6 +61,7 @@ public class TimeCheque implements Accountable {
         this.hours = hours;
     }
 
+    @Override
     public BigDecimal getAmount() {
         return amount;
     }
@@ -128,8 +134,13 @@ public class TimeCheque implements Accountable {
     }
 
     @Override
-    public String getAccounableEntityName() {
-        return getClass().getName();
+    public String getAccountableTableName() {
+        return this.getClass().getAnnotation(Table.class).name();
+    }
+
+    @Override
+    public Long getAccountableId() {
+        return getId();
     }
 
 
