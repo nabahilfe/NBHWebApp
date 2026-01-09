@@ -23,10 +23,11 @@
       <thead>
         <tr>
           <th scope="col">Bestelldatum</th>
-          <th scope="col">Name</th>
+          <th scope="col">für Mitglied</th>
+          <th scope="col">erstellt von</th>
           <th scope="col" class="text-end">Stunden</th>
-          <th scope="col" class="text-end">Betrag €</th>
-          <th scope="col" class="text-end">Buchen</th>
+          <th scope="col" class="text-end">Betrag</th>
+          <th scope="col" class="text-center">Buchen</th>
         </tr>
       </thead>
 
@@ -35,10 +36,11 @@
         <tr>
           <td scope="row">${formatDE(tc.getOrderDate())}</td>
           <td scope="row">${tc.getAssignedTo().getNameAndAddress()}</td>
+          <td scope="row">${tc.getCreatedBy().getName()}</td>
           <td scope="row" class="text-end">${tc.getHours()}</td>
-          <td scope="row" class="text-end">${tc.getAmount()}</td>
-          <td scope="row" class="text-end">
-            <a class="btn btn-outline-primary btn-sm bi-plus-square"
+          <td scope="row" class="text-end">€ ${tc.getAmount()}</td>
+          <td scope="row" class="text-center">
+            <a class="btn btn-outline-primary btn-sm bi-plus-lg"
                href="/accountings/book-accountable/?accId=${tc.getId()}&accTableName=${tc.getAccountableTableName()}&accAmount=${tc.getAmount()}"
                role="button"></a>
           </td>

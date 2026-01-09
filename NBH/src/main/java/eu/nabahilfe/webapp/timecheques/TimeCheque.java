@@ -45,6 +45,7 @@ public class TimeCheque implements Accountable {
     @JoinColumn(name = "accounting_entry")
     AccountingEntry accountingEntry;
 
+
     @Version
     @Column(nullable = false)
     Integer version;
