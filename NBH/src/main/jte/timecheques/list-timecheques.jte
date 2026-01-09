@@ -24,20 +24,20 @@
         <tr>
           <th scope="col">Bestelldatum</th>
           <th scope="col">Name</th>
-          <th scope="col">Stunden</th>
-          <th scope="col">Betrag</th>
-          <th scope="col">Buchen</th>
+          <th scope="col" class="text-end">Stunden</th>
+          <th scope="col" class="text-end">Betrag €</th>
+          <th scope="col" class="text-end">Buchen</th>
         </tr>
       </thead>
 
       <tbody class="table-group-divider">
         @for (TimeCheque tc : timeCheques)
         <tr>
-          <td>${formatDE(tc.getOrderDate())}</td>
-          <td>${tc.getAssignedTo().getNameAndAddress()}</td>
-          <td>${tc.getHours()}</td>
-          <td>${tc.getAmount()}</td>
-          <td>
+          <td scope="row">${formatDE(tc.getOrderDate())}</td>
+          <td scope="row">${tc.getAssignedTo().getNameAndAddress()}</td>
+          <td scope="row" class="text-end">${tc.getHours()}</td>
+          <td scope="row" class="text-end">${tc.getAmount()}</td>
+          <td scope="row" class="text-end">
             <a class="btn btn-outline-primary btn-sm bi-plus-square"
                href="/accountings/book-accountable/?accId=${tc.getId()}&accTableName=${tc.getAccountableTableName()}&accAmount=${tc.getAmount()}"
                role="button"></a>
