@@ -94,7 +94,7 @@ public class Member {
     }
 
     public String getName() {
-        return firstName + " " + lastName;
+        return lastName + " " + firstName;
     }
 
     public String getNameAndAddress() {
