@@ -75,6 +75,7 @@ public class Member {
     private Integer accumulatedHours;    // Gut-Stunden - kommt aus Gutschrift bei Eintritt, Stundenkauf, Stundenerwerb durch Hilfestellung, ...
     
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "role_id")
     private Role role;    // Nur befüllt wenn zusätlich Rolle zum normalen Mitglied
     
     // Creation timestamp, value is set by Postgres (see Table definition)

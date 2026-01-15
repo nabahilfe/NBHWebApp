@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import eu.nabahilfe.webapp.NbhConst;
+import eu.nabahilfe.webapp.accountings.Accountable;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -22,7 +23,7 @@ import jakarta.transaction.Transactional;
 @Controller
 @RequestMapping("/timecheques")
 @SessionAttributes("timeCheque")
-public class TimeChequeController {
+public class TimeChequeController extends Accountable {
 
     private final TimeCheckRepository timeChequeRepository;
     private final MemberRepository memberRepository;
@@ -151,13 +152,13 @@ public class TimeChequeController {
 
         TimeCheque tc = new TimeCheque();
 
-        tc.hours = timeChequeHours;
+        tc.setHours(timeChequeHours);
         // FIXME: Richtigen Betrag aus TC-Kosten Tabelle holen
-        tc.amount = timeChequeHours <= 5 ? BigDecimal.valueOf(0) : BigDecimal.valueOf(3.60 * timeChequeHours);
-        tc.assignedTo = member;
-        tc.orderDate = LocalDate.now();
+        tc.setAmount(timeChequeHours <= 5 ? BigDecimal.valueOf(0) : BigDecimal.valueOf(3.60 * timeChequeHours));
+        tc.setAssignedTo(member);
+        tc.setOrderDate(LocalDate.now());
         // FIXME: must be logged in user!
-        tc.createdBy = member;
+        tc.setCreatedBy(member);
 
         return tc;
     }

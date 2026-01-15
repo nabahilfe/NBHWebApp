@@ -1,6 +1,6 @@
 /*
- * Generated with Xtext DataModeler from file "nbh.emodel"
- * Generated at 2026-01-15 17:26:59
+ * Generated with Xtext EntityModeller from file "nbh.emodel"
+ * Generated at 2026-01-15 19:03:02
  * ModelDescription: NBH Entity Model with Postgres Definitions - Neu!
  */
 
@@ -58,13 +58,13 @@ create table if not exists ROLES (
 );
 
 
-/* Fachliche konfigurierbare Parameter wie Mitgliedsbeitrag oder Kosten eines Zeitschecks. Der Code wird in einem ENUM definiert */
-create table if not exists DOMAIN_VALUES (
+/* Fachliche konfigurierbare Parameter für Kosten Mitgliedsbeitrag oder Zeitschecks. Der Code wird in einem ENUM definiert */
+create table if not exists AMOUNT_DOMAIN_VALUES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    code VARCHAR(20) not null,
-    amount NUMERIC(12,2) not null,
+    code VARCHAR(20) not null /* aus Enum, z.B TIMECHEQUE MEMBER_FEE, ... */,
+    amount NUMERIC(12,2) not null /* Kosten der jeweiligen Leistung im Gültigkeitszeitraum */,
     valid_from DATE not null,
-    valid_to DATE not null,
+    valid_to DATE not null /* letzter Eintrag hat immer 9999-12-31 */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
@@ -76,7 +76,7 @@ create table if not exists DOMAIN_VALUES (
 /* Die Mitglieder des Vereins. Eine Mitgliedsnummer muss bei Neuanlage automatisch vergeben werden. */
 create table if not exists MEMBERS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    member_nmbr INTEGER not null /* Member ID wird automatisch erzeugt, beginnen mit erstem Wert 1000 wenn noch nichts vorhanden ist */,
+    member_nmbr INTEGER not null /* Member ID muss automatisch erzeugt werden, Startwert 1000 */,
     first_name VARCHAR(80) not null,
     last_name VARCHAR(80) not null,
     birthdate DATE not null,
@@ -185,41 +185,41 @@ create table if not exists ACCOUNTING_ENTRIES (
  */
 
 alter table MEMBERS
-    add constraint fk_MEMBERS_role foreign key (role_id) references ROLES(id)
+    add constraint fk_MEMBERS_role_id foreign key (role_id) references ROLES(id)
     ;
 
 
 alter table MEMBERSHIP_FEES
-    add constraint fk_MEMBERSHIP_FEES_member foreign key (member_id) references MEMBERS(id),
-    add constraint fk_MEMBERSHIP_FEES_accounting_entry foreign key (accounting_entry_id) references ACCOUNTING_ENTRIES(id),
+    add constraint fk_MEMBERSHIP_FEES_member_id foreign key (member_id) references MEMBERS(id),
+    add constraint fk_MEMBERSHIP_FEES_accounting_entry_id foreign key (accounting_entry_id) references ACCOUNTING_ENTRIES(id),
     /* fk ref to Hibernate parent table */
     add constraint fk_MEMBERSHIP_FEES_ACCOUNTABLES_parent foreign key (id) references ACCOUNTABLES(id)
     ;
 
 
 alter table MEMBER_OFFERS
-    add constraint fk_MEMBER_OFFERS_offer foreign key (offer_id) references OFFERS(id),
-    add constraint fk_MEMBER_OFFERS_member foreign key (member_id) references MEMBERS(id)
+    add constraint fk_MEMBER_OFFERS_offer_id foreign key (offer_id) references OFFERS(id),
+    add constraint fk_MEMBER_OFFERS_member_id foreign key (member_id) references MEMBERS(id)
     ;
 
 
 alter table TIME_TRANSFERS
-    add constraint fk_TIME_TRANSFERS_offer foreign key (offer_id) references OFFERS(id),
-    add constraint fk_TIME_TRANSFERS_from_member foreign key (from_member_id) references MEMBERS(id),
-    add constraint fk_TIME_TRANSFERS_to_member foreign key (to_member_id) references MEMBERS(id)
+    add constraint fk_TIME_TRANSFERS_offer_id foreign key (offer_id) references OFFERS(id),
+    add constraint fk_TIME_TRANSFERS_from_member_id foreign key (from_member_id) references MEMBERS(id),
+    add constraint fk_TIME_TRANSFERS_to_member_id foreign key (to_member_id) references MEMBERS(id)
     ;
 
 
 alter table TIME_CHEQUES
-    add constraint fk_TIME_CHEQUES_assigned_to foreign key (assigned_to_id) references MEMBERS(id),
-    add constraint fk_TIME_CHEQUES_accounting_entry foreign key (accounting_entry_id) references ACCOUNTING_ENTRIES(id),
+    add constraint fk_TIME_CHEQUES_assigned_to_id foreign key (assigned_to_id) references MEMBERS(id),
+    add constraint fk_TIME_CHEQUES_accounting_entry_id foreign key (accounting_entry_id) references ACCOUNTING_ENTRIES(id),
     /* fk ref to Hibernate parent table */
     add constraint fk_TIME_CHEQUES_ACCOUNTABLES_parent foreign key (id) references ACCOUNTABLES(id)
     ;
 
 
 alter table ACCOUNTING_ENTRIES
-    add constraint fk_ACCOUNTING_ENTRIES_accountable foreign key (accountable_id) references ACCOUNTABLES(id)
+    add constraint fk_ACCOUNTING_ENTRIES_accountable_id foreign key (accountable_id) references ACCOUNTABLES(id)
     ;
 
 
@@ -266,7 +266,7 @@ drop table if exists OFFERS cascade;
 
 drop table if exists ROLES cascade;
 
-drop table if exists DOMAIN_VALUES cascade;
+drop table if exists AMOUNT_DOMAIN_VALUES cascade;
 
 drop table if exists MEMBERS cascade;
 

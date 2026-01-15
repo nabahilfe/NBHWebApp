@@ -1,58 +1,38 @@
 package eu.nabahilfe.webapp.timecheques;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Objects;
-
 import eu.nabahilfe.webapp.accountings.Accountable;
 import eu.nabahilfe.webapp.accountings.AccountingEntry;
 import eu.nabahilfe.webapp.members.Member;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 
 
+/**
+ * Zeitscheck - wird gekauft, zuerst angelegt und dann später verbucht vom Kassier
+ */
 @Entity
 @Table(name = "time_cheques")
-public class TimeCheque implements Accountable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
-    Integer hours;
-
-    BigDecimal amount;
-
-    LocalDate orderDate;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "assigned_to")
-    Member assignedTo;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "created_by")
-    Member createdBy;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "accounting_entry")
-    AccountingEntry accountingEntry;
-
-
-    @Version
+public class TimeCheque extends Accountable {
     @Column(nullable = false)
-    Integer version;
+    private Integer hours;    // Anzahl der Stunden, üblicherweise 5 (Beitritt zum Verein) oder 10
 
-    public TimeCheque() {
-        super();
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_to_id")
+    private Member assignedTo;    // wem werden die Stunden gutgeschrieben
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "accounting_entry_id")
+    private AccountingEntry accountingEntry;    // referenz auf die Buchung, erst wenn verbucht ist
+
+
+    // -------------------------------------------------
+    // generate setter/getter methodes with Eclipse here
+    // -------------------------------------------------
 
     public Integer getHours() {
         return hours;
@@ -60,15 +40,6 @@ public class TimeCheque implements Accountable {
 
     public void setHours(Integer hours) {
         this.hours = hours;
-    }
-
-    @Override
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
     }
 
     public Member getAssignedTo() {
@@ -79,70 +50,32 @@ public class TimeCheque implements Accountable {
         this.assignedTo = assignedTo;
     }
 
-    public Member getCreatedBy() {
-        return createdBy;
+    public AccountingEntry getAccountingEntry() {
+        return accountingEntry;
     }
 
-    public void setCreatedBy(Member createdBy) {
-        this.createdBy = createdBy;
+    public void setAccountingEntry(AccountingEntry accountingEntry) {
+        this.accountingEntry = accountingEntry;
     }
 
-    public LocalDate getOrderDate() {
-        return orderDate;
-    }
 
-    public void setOrderDate(LocalDate orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        TimeCheque other = (TimeCheque) obj;
-        return Objects.equals(id, other.id);
-    }
+    // -----------------------------------------------
+    // Don't forget to generate toString() for logging
+    // -----------------------------------------------
 
     @Override
     public String toString() {
-        return "TimeCheque [id=" + id + ", hours=" + hours + ", amount=" + amount + ", assignedTo=" + assignedTo
-                + ", createdBy=" + createdBy + ", version=" + version + "]";
+        return "TimeCheque [hours=" + hours + ", assignedTo=" + assignedTo + ", accountingEntry=" + accountingEntry
+                + ", getAmount()=" + getAmount() + ", getOrderDate()=" + getOrderDate() + ", getCreatedAt()="
+                + getCreatedAt() + ", getCreatedBy()=" + getCreatedBy() + ", getUpdatedAt()=" + getUpdatedAt()
+                + ", getUpdatedBy()=" + getUpdatedBy() + "]";
     }
 
-    @Override
-    public String getAccountableTableName() {
-        return this.getClass().getAnnotation(Table.class).name();
-    }
 
-    @Override
-    public Long getAccountableId() {
-        return getId();
-    }
+
+    // -------------------------------
+    // add your business methodes here
+    // -------------------------------
 
 
 }

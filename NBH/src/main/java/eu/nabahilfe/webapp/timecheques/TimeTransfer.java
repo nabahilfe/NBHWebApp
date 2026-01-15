@@ -1,11 +1,15 @@
 package eu.nabahilfe.webapp.timecheques;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.org.Offer;
+
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,47 +23,65 @@ import jakarta.persistence.Version;
 import jakarta.validation.constraints.Size;
 
 
+
+
+/**
+ * Zeitgutschrift von Mitglied A an Mitglied B für erbrachte Leistung.
+ */
 @Entity
 @Table(name = "time_transfers")
 public class TimeTransfer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(nullable = false)
+    private LocalDate dateOfService;    // Wann wurde die Leistung erbracht
 
     @Column(nullable = false)
-    LocalDate dateOfService;
+    private Integer hours;    // Wie viele Stunden, mögliche Werte z.B. 1 .. 5
 
-    @Column(nullable = false)
-    Integer hours;
+    @Size(max = 250)
+    private String note;    // Anmerkung zur erbrachten Leistung
 
-    @Size(max = NbhConst.MAX_LEN_SHORT_STRING)
-    String note;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "offer_id")
+    private Offer offer;    // Art der erbrachten Leistung
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "offer")
-    Offer offer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "from_member_id")
+    private Member fromMember;    // Leistungserbnringer
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "from_member")
-    Member fromMember;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_member_id")
+    private Member toMember;    // Leistungsempfänger
 
+    // Creation timestamp, value is set by Postgres (see Table definition)
+    private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "to_member")
-    Member toMember;
+    // FIXME in Generator: "@Column(nullable = false)"
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "created_by_id")
+    private Member createdBy;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "updated_by_id")
+    private Member updatedBy;
 
     @Version
     @Column(nullable = false)
-    Integer version;
+    private Integer version;
 
-    public Integer getVersion() {
-        return version;
-    }
 
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+
+    // --------------------------------------------------
+    // generate setter/getter methodes with Eclipse here
+    // --------------------------------------------------
 
     public Long getId() {
         return id;
@@ -117,6 +139,58 @@ public class TimeTransfer {
         this.toMember = toMember;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Member getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Member createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Member getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Member updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+
+
+    // --------------------------------
+    // add your business methodes here
+    // --------------------------------
+
+
+
+    // ------------------------------------------------------------------------
+    // generate equals/hasCode methodes with Eclipse here - use ONLY id field!
+    // ------------------------------------------------------------------------
+
     @Override
     public int hashCode() {
         return Objects.hash(id);
@@ -134,11 +208,19 @@ public class TimeTransfer {
         return Objects.equals(id, other.id);
     }
 
+
+    // toString() for debugging
+
     @Override
     public String toString() {
         return "TimeTransfer [id=" + id + ", dateOfService=" + dateOfService + ", hours=" + hours + ", note=" + note
-                + ", offer=" + offer + ", fromMember=" + fromMember + ", toMember=" + toMember + ", version=" + version
-                + "]";
+                + ", offer=" + offer + ", fromMember=" + fromMember + ", toMember=" + toMember + ", createdAt="
+                + createdAt + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt + ", updatedBy=" + updatedBy
+                + ", version=" + version + "]";
     }
+
+
+
+
 
 }

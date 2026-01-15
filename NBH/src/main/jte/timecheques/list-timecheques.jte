@@ -41,7 +41,7 @@
           <td scope="row" class="text-end">€ ${tc.getAmount()}</td>
           <td scope="row" class="text-center">
             <a class="btn btn-outline-primary btn-sm bi-plus-lg"
-               href="/accountings/book-accountable/?accId=${tc.getId()}&accTableName=${tc.getAccountableTableName()}&accAmount=${tc.getAmount()}"
+               href="/accountings/book-accountable/?accId=${tc.getId()}&accAmount=${tc.getAmount()}"
                role="button"></a>
           </td>
         </tr>
