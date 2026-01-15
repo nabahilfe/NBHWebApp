@@ -1,7 +1,7 @@
 /*
- * Generated with Xtext DataModeler from file "nbh-db.dmodel"
- * Generated at 2026-01-04 20:31:04
- * ModelDescription: NBH Model with Postgres Definitions
+ * Generated with Xtext DataModeler from file "nbh.emodel"
+ * Generated at 2026-01-15 17:26:59
+ * ModelDescription: NBH Entity Model with Postgres Definitions - Neu!
  */
 
 
@@ -9,8 +9,8 @@
  * Cretae table statements
  */
 
-/* Enthält die wichtigsten Vereinsinformation */
-create table if not exists associations (
+/* Basisinformationen zum Verein, da fehlt sicher noch einiges, zB Vereinsnummer aus dem Vereinsregister */
+create table if not exists ASSOCIATIONS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(80) not null /* Vereinsname */,
     description VARCHAR(4000),
@@ -19,24 +19,28 @@ create table if not exists associations (
     zip VARCHAR(10) not null,
     city VARCHAR(80) not null,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by BIGINT,
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,                    
     version INTEGER NOT NULL
 );
 
 
-/* Angebote der Mitglieder */
-create table if not exists offers (
+/* Angebote der Mitglieder, wird bei der Verbuchung von Zeitschecks verwendet */
+create table if not exists OFFERS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     code VARCHAR(10) /* z.B. 200, 300, 400 */,
     description VARCHAR(250) /* z.B. Allgemein Hilfe im Haushalt */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by BIGINT,
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,                    
     version INTEGER NOT NULL
 );
 
 
-/* Rollen im Verein */
-create table if not exists roles (
+/* Rollen im Verein. Über die Rollen werden auch die Berechtigungen vergeben. */
+create table if not exists ROLES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     is_board_member BOOLEAN not null /* Hat eine Funktion wie 'Vorstand', 'Kassier' usw. Muss bei der Rolle vergeben werden */,
     is_admin BOOLEAN not null /* Hat weitgehende Rechte, kann Mitglieder verwalten und Zeitschecks ausstellen */,
@@ -47,15 +51,32 @@ create table if not exists roles (
     is_miscellaneous BOOLEAN not null /* Sonstiges, z.B. Ehrenmitglied */,
     role_name VARCHAR(80) not null /* Mitglied, Vorstand, stv. Vorstand, Kassier, stv. Kassier, Rechnungsprüfer, Schriftführer, .... */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by BIGINT,
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,                    
     version INTEGER NOT NULL
 );
 
 
-/* Mitglieder des Vereins - Member ID muss automatisch erzeugt werden, beginnen mit erstem Wert 1000 wenn noch nichts vorhanden ist */
-create table if not exists members (
+/* Fachliche konfigurierbare Parameter wie Mitgliedsbeitrag oder Kosten eines Zeitschecks. Der Code wird in einem ENUM definiert */
+create table if not exists DOMAIN_VALUES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    member_nmbr INTEGER not null,
+    code VARCHAR(20) not null,
+    amount NUMERIC(12,2) not null,
+    valid_from DATE not null,
+    valid_to DATE not null,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,                    
+    version INTEGER NOT NULL
+);
+
+
+/* Die Mitglieder des Vereins. Eine Mitgliedsnummer muss bei Neuanlage automatisch vergeben werden. */
+create table if not exists MEMBERS (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    member_nmbr INTEGER not null /* Member ID wird automatisch erzeugt, beginnen mit erstem Wert 1000 wenn noch nichts vorhanden ist */,
     first_name VARCHAR(80) not null,
     last_name VARCHAR(80) not null,
     birthdate DATE not null,
@@ -68,76 +89,92 @@ create table if not exists members (
     zip VARCHAR(10),
     city VARCHAR(80),
     accumulated_hours INTEGER /* Gut-Stunden - kommt aus Gutschrift bei Eintritt, Stundenkauf, Stundenerwerb durch Hilfestellung, ... */,
-    role BIGINT /* FK id from roles(id) */,
+    role_id BIGINT /* FK id from ROLES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by BIGINT,
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,                    
     version INTEGER NOT NULL
 );
 
 
-/* der jährliche Mitgliedsbeitrag */
-create table if not exists membership_fee (
+/* Dokumentation des jährlicher Mitgliedsbeitrag */
+/* Extends Table ACCOUNTABLES so no fields created_at and created_by_id in this table */
+create table if not exists MEMBERSHIP_FEES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     for_year DATE not null,
-    amount NUMERIC(12,2) not null,
-    member BIGINT /* FK id from members(id) */,
-    accounting_entry BIGINT /* FK id from accounting_entry(id) */,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by BIGINT,
+    member_id BIGINT /* FK id from MEMBERS(id) */,
+    accounting_entry_id BIGINT /* FK id from ACCOUNTING_ENTRIES(id) */,
     version INTEGER NOT NULL
 );
 
 
-/* Angebote die ein Mitglied macht */
-create table if not exists member_offers (
+/* Angebote des Mitglieds. Klären, brauchen wir das überhaupt? */
+create table if not exists MEMBER_OFFERS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    offer BIGINT /* FK id from offers(id) */,
-    member BIGINT /* FK id from members(id) */,
+    offer_id BIGINT /* FK id from OFFERS(id) */,
+    member_id BIGINT /* FK id from MEMBERS(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by BIGINT,
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,                    
     version INTEGER NOT NULL
 );
 
 
-/* Zeitgutschrift von Mitglied X zu Mitglied Y */
-create table if not exists time_transfers (
+/* Zeitgutschrift von Mitglied A an Mitglied B für erbrachte Leistung. */
+create table if not exists TIME_TRANSFERS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     date_of_service DATE not null /* Wann wurde die Leistung erbracht */,
     hours SMALLINT not null /* Wie viele Stunden, mögliche Werte z.B. 1 .. 5 */,
     note VARCHAR(250) /* Anmerkung zur erbrachten Leistung */,
-    offer BIGINT /* FK id from offers(id) */,
-    from_member BIGINT /* FK id from members(id) */,
-    to_member BIGINT /* FK id from members(id) */,
+    offer_id BIGINT /* FK id from OFFERS(id) */,
+    from_member_id BIGINT /* FK id from MEMBERS(id) */,
+    to_member_id BIGINT /* FK id from MEMBERS(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by BIGINT,
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,                    
     version INTEGER NOT NULL
 );
 
 
 /* Zeitscheck - wird gekauft, zuerst angelegt und dann später verbucht vom Kassier */
-create table if not exists time_cheques (
+/* Extends Table ACCOUNTABLES so no fields created_at and created_by_id in this table */
+create table if not exists TIME_CHEQUES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     hours SMALLINT not null /* Anzahl der Stunden, üblicherweise 5 (Beitritt zum Verein) oder 10 */,
+    assigned_to_id BIGINT /* FK id from MEMBERS(id) */,
+    accounting_entry_id BIGINT /* FK id from ACCOUNTING_ENTRIES(id) */,
+    version INTEGER NOT NULL
+);
+
+
+/* Superklasse für alles was verbucht wird (Zeitscheck kauf, Mitgliedschaft...) */
+create table if not exists ACCOUNTABLES (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     amount NUMERIC(12,2) not null,
     order_date DATE not null,
-    assigned_to BIGINT /* FK id from members(id) */,
-    accounting_entry BIGINT /* FK id from accounting_entry(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by BIGINT,
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,                    
     version INTEGER NOT NULL
 );
 
 
 /* Buchungsdatensatz zu Zeitscheck-Kauf, Mitgliedschaft, Weihnachtsessen, usw. */
-create table if not exists accounting_entry (
+create table if not exists ACCOUNTING_ENTRIES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     accounting_date DATE not null /* Buchungsdatum */,
     accounting_type VARCHAR(10) not null /* INCOMING oder OUTGOING */,
-    accountable_entity VARCHAR(80) /* TimeCheque oder MembershipFee oder .... wird automatisch generiert */,
     description VARCHAR(250) /* Verpflichtend wenn keine accountableEntity eingetragen ist */,
     amount NUMERIC(12,2) not null /* Betrag */,
+    accountable_id BIGINT /* FK id from ACCOUNTABLES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by BIGINT,
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,                    
     version INTEGER NOT NULL
 );
 
@@ -147,29 +184,43 @@ create table if not exists accounting_entry (
  * Generate the foreign key constraints
  */
 
-alter table members
-    add constraint fk_members_role foreign key (role) references roles(id);
+alter table MEMBERS
+    add constraint fk_MEMBERS_role foreign key (role_id) references ROLES(id)
+    ;
 
 
-alter table membership_fee
-    add constraint fk_membership_fee_member foreign key (member) references members(id),
-    add constraint fk_membership_fee_accounting_entry foreign key (accounting_entry) references accounting_entry(id);
+alter table MEMBERSHIP_FEES
+    add constraint fk_MEMBERSHIP_FEES_member foreign key (member_id) references MEMBERS(id),
+    add constraint fk_MEMBERSHIP_FEES_accounting_entry foreign key (accounting_entry_id) references ACCOUNTING_ENTRIES(id),
+    /* fk ref to Hibernate parent table */
+    add constraint fk_MEMBERSHIP_FEES_ACCOUNTABLES_parent foreign key (id) references ACCOUNTABLES(id)
+    ;
 
 
-alter table member_offers
-    add constraint fk_member_offers_offer foreign key (offer) references offers(id),
-    add constraint fk_member_offers_member foreign key (member) references members(id);
+alter table MEMBER_OFFERS
+    add constraint fk_MEMBER_OFFERS_offer foreign key (offer_id) references OFFERS(id),
+    add constraint fk_MEMBER_OFFERS_member foreign key (member_id) references MEMBERS(id)
+    ;
 
 
-alter table time_transfers
-    add constraint fk_time_transfers_offer foreign key (offer) references offers(id),
-    add constraint fk_time_transfers_from_member foreign key (from_member) references members(id),
-    add constraint fk_time_transfers_to_member foreign key (to_member) references members(id);
+alter table TIME_TRANSFERS
+    add constraint fk_TIME_TRANSFERS_offer foreign key (offer_id) references OFFERS(id),
+    add constraint fk_TIME_TRANSFERS_from_member foreign key (from_member_id) references MEMBERS(id),
+    add constraint fk_TIME_TRANSFERS_to_member foreign key (to_member_id) references MEMBERS(id)
+    ;
 
 
-alter table time_cheques
-    add constraint fk_time_cheques_assigned_to foreign key (assigned_to) references members(id),
-    add constraint fk_time_cheques_accounting_entry foreign key (accounting_entry) references accounting_entry(id);
+alter table TIME_CHEQUES
+    add constraint fk_TIME_CHEQUES_assigned_to foreign key (assigned_to_id) references MEMBERS(id),
+    add constraint fk_TIME_CHEQUES_accounting_entry foreign key (accounting_entry_id) references ACCOUNTING_ENTRIES(id),
+    /* fk ref to Hibernate parent table */
+    add constraint fk_TIME_CHEQUES_ACCOUNTABLES_parent foreign key (id) references ACCOUNTABLES(id)
+    ;
+
+
+alter table ACCOUNTING_ENTRIES
+    add constraint fk_ACCOUNTING_ENTRIES_accountable foreign key (accountable_id) references ACCOUNTABLES(id)
+    ;
 
 
 
@@ -178,28 +229,28 @@ alter table time_cheques
  * Generate the unique constraints
  */
 
-alter table associations
+alter table ASSOCIATIONS
 add
-    constraint uc_associations unique (name)
+    constraint uc_ASSOCIATIONS unique (name)
 ;
 
 
-alter table membership_fee
+alter table MEMBERSHIP_FEES
 add
-    constraint uc_membership_fee unique (for_year, member)
+    constraint uc_MEMBERSHIP_FEES unique (for_year, member_id)
 ;
 
 
-alter table member_offers
+alter table MEMBER_OFFERS
 add
-    constraint uc_member_offers unique (offer, member)
+    constraint uc_MEMBER_OFFERS unique (offer_id, member_id)
 ;
 
 
 
 
 /*
- * Create the insert / update triggers
+ * Create the insert / update triggers - only AMA/Oracle
  */
 
 
@@ -209,23 +260,27 @@ add
  * Ruthless drop table statemens
  */
 
-drop table if exists associations cascade;
+drop table if exists ASSOCIATIONS cascade;
 
-drop table if exists offers cascade;
+drop table if exists OFFERS cascade;
 
-drop table if exists roles cascade;
+drop table if exists ROLES cascade;
 
-drop table if exists members cascade;
+drop table if exists DOMAIN_VALUES cascade;
 
-drop table if exists membership_fee cascade;
+drop table if exists MEMBERS cascade;
 
-drop table if exists member_offers cascade;
+drop table if exists MEMBERSHIP_FEES cascade;
 
-drop table if exists time_transfers cascade;
+drop table if exists MEMBER_OFFERS cascade;
 
-drop table if exists time_cheques cascade;
+drop table if exists TIME_TRANSFERS cascade;
 
-drop table if exists accounting_entry cascade;
+drop table if exists TIME_CHEQUES cascade;
+
+drop table if exists ACCOUNTABLES cascade;
+
+drop table if exists ACCOUNTING_ENTRIES cascade;
 
 
 /* end of generated file */

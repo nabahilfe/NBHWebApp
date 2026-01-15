@@ -67,7 +67,7 @@
                 data-item-id="${member.getId()}"></button>
           </td>
           <td class="text-end">
-            ${member.getAccumulatedHours() > 0 ? member.getAccumulatedHours() + " h" : ""}
+            ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}
           </td>
           <td class="text-center">
             <a class="btn btn-outline-primary btn-sm bi-plus-lg" href="/timecheques/new?memberId=${member.getId()}"

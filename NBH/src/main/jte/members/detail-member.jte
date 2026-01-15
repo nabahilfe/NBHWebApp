@@ -96,7 +96,7 @@
 
             <p/>
 
-            <b>Zeitguthaben: ${member.getAccumulatedHours()} h</b>
+            <b>Zeitguthaben: ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}</b>
 
           </div>
 
