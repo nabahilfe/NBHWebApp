@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
 
@@ -16,6 +17,7 @@ import jakarta.persistence.Table;
  * Zeitscheck - wird gekauft, zuerst angelegt und dann später verbucht vom Kassier
  */
 @Entity
+@PrimaryKeyJoinColumn(name = "id")
 @Table(name = "TIME_CHEQUES")
 public class TimeCheque extends Accountable {
 
