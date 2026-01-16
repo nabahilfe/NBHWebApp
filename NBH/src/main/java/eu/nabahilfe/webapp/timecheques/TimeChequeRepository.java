@@ -10,7 +10,7 @@ import org.springframework.data.repository.ListCrudRepository;
 import eu.nabahilfe.webapp.members.Member;
 
 
-public interface TimeCheckRepository extends ListCrudRepository<TimeCheque, Long> {
+public interface TimeChequeRepository extends ListCrudRepository<TimeCheque, Long> {
 
 
     Page<TimeCheque> findAll(Pageable pageable);

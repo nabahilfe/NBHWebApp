@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import eu.nabahilfe.webapp.NbhConst;
-import eu.nabahilfe.webapp.timecheques.TimeCheckRepository;
+import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
 import eu.nabahilfe.webapp.timecheques.TimeTransferRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -38,13 +38,13 @@ public class MemberController {
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
     private final TimeTransferRepository timeTransferRepository;
-    private final TimeCheckRepository timeCheckRepository;
+    private final TimeChequeRepository timeCheckRepository;
 
 
     private static final Logger log = LoggerFactory.getLogger(MemberController.class);
 
     public MemberController(MemberRepository memberRepository, RoleRepository roleRepository,
-            TimeTransferRepository timeTransferRepository, TimeCheckRepository timeCheckRepository) {
+            TimeTransferRepository timeTransferRepository, TimeChequeRepository timeCheckRepository) {
         this.memberRepository = memberRepository;
         this.roleRepository = roleRepository;
         this.timeTransferRepository = timeTransferRepository;

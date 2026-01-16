@@ -25,14 +25,14 @@ import jakarta.transaction.Transactional;
 @SessionAttributes("timeCheque")
 public class TimeChequeController extends Accountable {
 
-    private final TimeCheckRepository timeChequeRepository;
+    private final TimeChequeRepository timeChequeRepository;
     private final MemberRepository memberRepository;
-    private final TimeCheckRepository timeCheckRepository;
+    private final TimeChequeRepository timeCheckRepository;
 
     private static final Logger log = LoggerFactory.getLogger(TimeChequeController.class);
 
-    public TimeChequeController(TimeCheckRepository timeChequeRepository, MemberRepository memberRepository,
-            TimeCheckRepository timeCheckRepository) {
+    public TimeChequeController(TimeChequeRepository timeChequeRepository, MemberRepository memberRepository,
+            TimeChequeRepository timeCheckRepository) {
         this.timeChequeRepository = timeChequeRepository;
         this.memberRepository = memberRepository;
         this.timeCheckRepository = timeCheckRepository;

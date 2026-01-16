@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import eu.nabahilfe.webapp.timecheques.TimeCheckRepository;
+import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
@@ -17,10 +17,10 @@ import jakarta.validation.Valid;
 @RequestMapping("/accountings")
 public class AccountingController {
 
-    private final TimeCheckRepository timeCheckRepository;
+    private final TimeChequeRepository timeCheckRepository;
     private final AccountingRepository accountingRepository;
 
-    public AccountingController(TimeCheckRepository timeCheckRepository, AccountingRepository accountingRepository) {
+    public AccountingController(TimeChequeRepository timeCheckRepository, AccountingRepository accountingRepository) {
         this.timeCheckRepository = timeCheckRepository;
         this.accountingRepository = accountingRepository;
     }
