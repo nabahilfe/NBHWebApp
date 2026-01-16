@@ -57,6 +57,7 @@ public class TimeTransfer  {
     private Member toMember;    // Leistungsempfänger
 
     // Creation timestamp, value is set by Postgres (see Table definition)
+    @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
     // FIXME in Generator: "@Column(nullable = false)"

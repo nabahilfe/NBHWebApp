@@ -77,6 +77,7 @@ public class Member  {
     private Role role;    // Nur befüllt wenn zusätlich Rolle zum normalen Mitglied
 
     // Creation timestamp, value is set by Postgres (see Table definition)
+    @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
     // FIXME in Generator: "@Column(nullable = false)"

@@ -58,6 +58,7 @@ public class Role  {
     private String roleName;    // Mitglied, Vorstand, stv. Vorstand, Kassier, stv. Kassier, Rechnungsprüfer, Schriftführer, ....
 
     // Creation timestamp, value is set by Postgres (see Table definition)
+    @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
     // FIXME in Generator: "@Column(nullable = false)"

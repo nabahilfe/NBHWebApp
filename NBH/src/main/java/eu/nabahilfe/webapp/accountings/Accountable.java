@@ -45,6 +45,7 @@ public abstract class Accountable  {
     private AccountingEntry accountingEntry;    // referenz auf die Buchung, erst wenn verbucht ist
 
     // Creation timestamp, value is set by Postgres (see Table definition)
+    @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
     // FIXME in Generator: "@Column(nullable = false)"
