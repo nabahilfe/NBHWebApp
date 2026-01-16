@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import eu.nabahilfe.webapp.NbhConst;
-import eu.nabahilfe.webapp.accountings.Accountable;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -23,7 +22,7 @@ import jakarta.transaction.Transactional;
 @Controller
 @RequestMapping("/timecheques")
 @SessionAttributes("timeCheque")
-public class TimeChequeController extends Accountable {
+public class TimeChequeController {
 
     private final TimeChequeRepository timeChequeRepository;
     private final MemberRepository memberRepository;
@@ -72,7 +71,7 @@ public class TimeChequeController extends Accountable {
     @GetMapping("/unaccounted")
     String listUnaccountedTimeCheques(final Model model) {
         log.debug("Listing unaccounted TimeCheques");
-        model.addAttribute("timeCheques", timeChequeRepository.findAllNotAccountedTimeCheques());
+        model.addAttribute("timeCheques", timeChequeRepository.findAllByAccountingEntryIsNullOrderByOrderDateAsc());
         log.debug("Found {} unaccounted TimeCheques", ((java.util.List<?>) model.getAttribute("timeCheques")).size());
         return "timecheques/list-timecheques";
 
@@ -126,7 +125,7 @@ public class TimeChequeController extends Accountable {
     String saveTimeCheque(final Model model, @RequestParam LocalDate orderDate) {
 
         TimeCheque tc = (TimeCheque) model.getAttribute("timeCheque");
-        tc.setOrderDate(orderDate);
+        tc.setTransactionDate(orderDate);
         timeChequeRepository.save(tc);
 
         // BusinessRule: Update Member's accumulated hours
@@ -156,7 +155,7 @@ public class TimeChequeController extends Accountable {
         // FIXME: Richtigen Betrag aus TC-Kosten Tabelle holen
         tc.setAmount(timeChequeHours <= 5 ? BigDecimal.valueOf(0) : BigDecimal.valueOf(3.60 * timeChequeHours));
         tc.setAssignedTo(member);
-        tc.setOrderDate(LocalDate.now());
+        tc.setTransactionDate(LocalDate.now());
         // FIXME: must be logged in user!
         tc.setCreatedBy(member);
 

@@ -43,7 +43,7 @@
                             <label for="orderDate" class="col-form-label">Bestelldatum</label>
                         </div>
                         <div class="col-auto">
-                            <input type="date" class="form-control" name="orderDate" id="orderDate" value="${timeCheque.getOrderDate().toString()}" required>
+                            <input type="date" class="form-control" name="orderDate" id="orderDate" value="${timeCheque.getTransactionDate().toString()}" required>
                         </div>
                     </div>
                 </li>
@@ -80,7 +80,7 @@
                 <tbody class="table-group-divider">
                     @for (TimeCheque tc : purchasedTimeCheques)
                     <tr>
-                        <td>${formatDE(tc.getOrderDate())}</td>
+                        <td>${formatDE(tc.getTransactionDate())}</td>
                         <td>${tc.getCreatedBy().getName()}</td>
                         <td class="text-end">${tc.getHours()}</td>
                     </tr>

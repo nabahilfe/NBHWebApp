@@ -25,8 +25,6 @@ public interface TimeChequeRepository extends ListCrudRepository<TimeCheque, Lon
 
     TimeCheque findTopByAssignedToIdOrderByOrderDateDesc(Long assignedTo);
 
-    @Query("SELECT t FROM TimeCheque t WHERE (t.accountingEntry IS NULL AND t.amount > 0) ORDER BY t.orderDate ASC")
-    List<TimeCheque> findAllNotAccountedTimeCheques();
 }
 
 

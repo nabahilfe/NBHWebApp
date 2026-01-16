@@ -34,7 +34,7 @@
       <tbody class="table-group-divider">
         @for (TimeCheque tc : timeCheques)
         <tr>
-          <td scope="row">${formatDE(tc.getOrderDate())}</td>
+          <td scope="row">${formatDE(tc.getTransactionDate())}</td>
           <td scope="row">${tc.getAssignedTo().getNameAndAddress()}</td>
           <td scope="row">${tc.getCreatedBy().getName()}</td>
           <td scope="row" class="text-end">${tc.getHours()}</td>
