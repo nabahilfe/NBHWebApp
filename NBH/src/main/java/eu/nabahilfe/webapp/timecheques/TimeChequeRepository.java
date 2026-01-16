@@ -19,18 +19,18 @@ public interface TimeChequeRepository extends ListCrudRepository<TimeCheque, Lon
 
     Integer countByAssignedTo(Member member);
 
-    List<TimeCheque> findAllByAssignedToIdOrderByOrderDateDesc(Long assignedTo);
+    List<TimeCheque> findAllByAssignedTo_IdOrderByTransactionDateDesc(Long assignedTo);
 
-    List<TimeCheque> findAllByAccountingEntryIsNullOrderByOrderDateAsc();
+    List<TimeCheque> findAllByAccountedBy_IdIsNullOrderByTransactionDateAsc();
 
-    TimeCheque findTopByAssignedToIdOrderByOrderDateDesc(Long assignedTo);
+    TimeCheque findTopByAssignedTo_IdOrderByTransactionDateDesc(Long assignedTo);
 
 }
 
 
 /*
-List<TimeCheque> findAllByAccountingEntryIsNullOrderByOrderDateAsc():
+List<TimeCheque> findAllByAccountedByIsNullOrderByOrderDateAsc():
 
-SELECT t FROM TimeCheque t WHERE t.accountingEntry IS NULL ORDER BY t.orderDate ASC
+SELECT t FROM TimeCheque t WHERE t.accountedBy IS NULL ORDER BY t.orderDate ASC
 */
 

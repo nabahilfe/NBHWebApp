@@ -61,7 +61,7 @@ public class TimeChequeController {
         model.addAttribute("timeCheque", tc);
         model.addAttribute("member", member);
         model.addAttribute("purchasedTimeCheques", timeCheckRepository.
-                findAllByAssignedToIdOrderByOrderDateDesc(member.getId()));
+                findAllByAssignedTo_IdOrderByTransactionDateDesc(member.getId()));
 
         return "timecheques/summary-timecheque";
 
@@ -71,10 +71,9 @@ public class TimeChequeController {
     @GetMapping("/unaccounted")
     String listUnaccountedTimeCheques(final Model model) {
         log.debug("Listing unaccounted TimeCheques");
-        model.addAttribute("timeCheques", timeChequeRepository.findAllByAccountingEntryIsNullOrderByOrderDateAsc());
+        model.addAttribute("timeCheques", timeChequeRepository.findAllByAccountedBy_IdIsNullOrderByTransactionDateAsc());
         log.debug("Found {} unaccounted TimeCheques", ((java.util.List<?>) model.getAttribute("timeCheques")).size());
         return "timecheques/list-timecheques";
-
     }
 
 
@@ -105,7 +104,7 @@ public class TimeChequeController {
         }
 
         model.addAttribute("timeCheque", tc);
-        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedToIdOrderByOrderDateDesc(memberId));
+        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(memberId));
 
         String validationError = validateData(member, tc, existingTimeCheques);
         if (validationError != null) {
