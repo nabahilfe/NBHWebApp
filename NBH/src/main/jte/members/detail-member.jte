@@ -118,6 +118,27 @@
 
   <p/>
 
+  @if(member.getId() != null)
+    <div class="row">
+      <div class="col-sm-3 mb-3 mb-sm-0">
+
+         <!-- FIXME Das Template braucht auch den UserNamen um universell verwendbar zu sein -->
+        @template.components.list-timecheques(timeCheques = purchasedTimeCheques)
+
+      </div>
+
+
+
+      <div class="col-sm-9 mb-3 mb-sm-0">
+
+        <!-- FIXME: Daraus sollte nan eine Komponente machen! -->
+
+        @template.components.list-timetransfers(transfers = timeTransfers)
+
+
+      </div>
+    </div>
+    @endif
 
 `)
 
