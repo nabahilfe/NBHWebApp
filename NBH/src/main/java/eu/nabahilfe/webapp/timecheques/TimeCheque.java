@@ -16,18 +16,16 @@ import jakarta.persistence.Table;
  * Zeitscheck - wird gekauft, zuerst angelegt und dann später verbucht vom Kassier
  */
 @Entity
-@Table(name = "time_cheques")
+@Table(name = "TIME_CHEQUES")
 public class TimeCheque extends Accountable {
+
+
     @Column(nullable = false)
     private Integer hours;    // Anzahl der Stunden, üblicherweise 5 (Beitritt zum Verein) oder 10
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assigned_to_id")
     private Member assignedTo;    // wem werden die Stunden gutgeschrieben
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "accounting_entry_id")
-    private AccountingEntry accountingEntry;    // referenz auf die Buchung, erst wenn verbucht ist
 
 
     // -------------------------------------------------
@@ -50,14 +48,6 @@ public class TimeCheque extends Accountable {
         this.assignedTo = assignedTo;
     }
 
-    public AccountingEntry getAccountingEntry() {
-        return accountingEntry;
-    }
-
-    public void setAccountingEntry(AccountingEntry accountingEntry) {
-        this.accountingEntry = accountingEntry;
-    }
-
 
     // -----------------------------------------------
     // Don't forget to generate toString() for logging
@@ -65,7 +55,7 @@ public class TimeCheque extends Accountable {
 
     @Override
     public String toString() {
-        return "TimeCheque [hours=" + hours + ", assignedTo=" + assignedTo + ", accountingEntry=" + accountingEntry
+        return "TimeCheque [hours=" + hours + ", assignedTo=" + assignedTo
                 + ", getAmount()=" + getAmount() + ", getOrderDate()=" + getOrderDate() + ", getCreatedAt()="
                 + getCreatedAt() + ", getCreatedBy()=" + getCreatedBy() + ", getUpdatedAt()=" + getUpdatedAt()
                 + ", getUpdatedBy()=" + getUpdatedBy() + "]";

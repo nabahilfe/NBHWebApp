@@ -10,31 +10,39 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import eu.nabahilfe.webapp.members.Member;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 
 /**
  * Superklasse für alles was verbucht wird (Zeitscheck kauf, Mitgliedschaft...)
  */
-@MappedSuperclass
-public abstract class Accountable {
-
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "ACCOUNTABLES")
+public abstract class Accountable  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false)
     private BigDecimal amount;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
     private LocalDate orderDate;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "accounting_entry_id")
+    private AccountingEntry accountingEntry;    // referenz auf die Buchung, erst wenn verbucht ist
 
     // Creation timestamp, value is set by Postgres (see Table definition)
     private LocalDateTime createdAt;

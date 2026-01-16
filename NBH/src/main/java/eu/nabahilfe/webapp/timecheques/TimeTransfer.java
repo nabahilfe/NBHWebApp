@@ -23,14 +23,12 @@ import jakarta.persistence.Version;
 import jakarta.validation.constraints.Size;
 
 
-
-
 /**
  * Zeitgutschrift von Mitglied A an Mitglied B für erbrachte Leistung.
  */
 @Entity
-@Table(name = "time_transfers")
-public class TimeTransfer {
+@Table(name = "TIME_TRANSFERS")
+public class TimeTransfer  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

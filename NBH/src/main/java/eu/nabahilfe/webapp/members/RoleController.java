@@ -91,7 +91,7 @@ public class RoleController {
         }
 
         roleRepository.save(role);
-        redirectAttributes.addFlashAttribute("successMessage", "Rolle '" + role.roleName + "' wurde gespeichert.");
+        redirectAttributes.addFlashAttribute("successMessage", "Rolle '" + role.getRoleName() + "' wurde gespeichert.");
         log.debug("Role saved: {}", role);
         return "redirect:/roles/" + role.getId();
     }
@@ -114,7 +114,7 @@ public class RoleController {
     String deleteRole(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
         Optional<Role> role = roleRepository.findById(id);
         roleRepository.delete(role.get());
-        redirectAttributes.addFlashAttribute("successMessage", "Rolle " + role.get().roleName + " wurde gelöscht.");
+        redirectAttributes.addFlashAttribute("successMessage", "Rolle " + role.get().getRoleName() + " wurde gelöscht.");
         log.debug("Role with id {} deleted.", id);
         return "redirect:/roles";
     }
@@ -141,13 +141,13 @@ public class RoleController {
 
     private String validateRoleAttributes(Role role) {
 
-        if (role.isAuditor && (role.isAdmin || role.isBoardMember || role.isTimeKeeper || role.isMiscellaneous || role.isTreasurer || role.isSecretary))
+        if (role.getIsAuditor() && (role.getIsAdmin() || role.getIsBoardMember() || role.getIsTimeKeeper() || role.getIsMiscellaneous() || role.getIsTreasurer() || role.getIsSecretary()))
             return "Rolle mit Zuordnung 'Rechnungsrüfer' darf keine andere Zuordnung haben!";
 
-        if (role.isMiscellaneous && (role.isAdmin || role.isBoardMember || role.isTimeKeeper || role.isAuditor || role.isTreasurer || role.isSecretary))
+        if (role.getIsMiscellaneous() && (role.getIsAdmin() || role.getIsBoardMember() || role.getIsTimeKeeper() || role.getIsAuditor() || role.getIsTreasurer() || role.getIsSecretary()))
             return "Rolle mit Zuordnung 'Sonsiges' darf keine andere Zuordnung haben!";
 
-        if (!(role.isAdmin || role.isAuditor || role.isBoardMember || role.isTimeKeeper || role.isMiscellaneous || role.isTreasurer || role.isSecretary))
+        if (!(role.getIsAdmin() || role.getIsAuditor() || role.getIsBoardMember() || role.getIsTimeKeeper() || role.getIsMiscellaneous() || role.getIsTreasurer() || role.getIsSecretary()))
             return "Es muss mindestens eine Zuordnung für die Rolle ausgewählt werden!";
 
         return null;

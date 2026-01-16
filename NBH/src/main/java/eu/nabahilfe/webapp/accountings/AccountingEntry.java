@@ -27,7 +27,7 @@ import jakarta.validation.constraints.Size;
  * Buchungsdatensatz zu Zeitscheck-Kauf, Mitgliedschaft, Weihnachtsessen, usw.
  */
 @Entity
-@Table(name = "accounting_entries")
+@Table(name = "ACCOUNTING_ENTRIES")
 public class AccountingEntry  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
