@@ -29,7 +29,8 @@
 
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
+                    Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours() == null ? 0
+                            : timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
                 </li>
 
                 <li class="list-group-item ">
@@ -40,7 +41,7 @@
                 <li class="list-group-item ">
                     <div class="row g-3 align-items-center">
                         <div class="col-auto">
-                            <label for="orderDate" class="col-form-label">Bestelldatum</label>
+                            <label for="orderDate" class="col-form-label">Erstellungsdatum</label>
                         </div>
                         <div class="col-auto">
                             <input type="date" class="form-control" name="orderDate" id="orderDate" value="${timeCheque.getTransactionDate().toString()}" required>

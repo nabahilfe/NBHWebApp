@@ -7,9 +7,9 @@ import java.time.LocalDate;
  * Interface für alles was verbucht wird (Zeitscheck kauf, Mitgliedschaft...)
  */
 public interface Accountable {
-    public abstract String getAccountableClass();
+    public abstract String getAccountableClass();    // MemberFee, TimeCheque, Transaction, ...
     public abstract Long getAccountableId();
-    public abstract String getTransactionType();
+    public abstract String getTransactionType();    // INCOME oder EXPENSE - muss aus Enum TransactionType kommen
     public abstract LocalDate getTransactionDate();
     public abstract BigDecimal getTransactionAmount();
 }

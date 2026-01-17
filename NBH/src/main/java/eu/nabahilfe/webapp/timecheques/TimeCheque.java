@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import eu.nabahilfe.webapp.accountings.Accountable;
 import eu.nabahilfe.webapp.accountings.AccountingEntry;
+import eu.nabahilfe.webapp.accountings.TransactionType;
 import eu.nabahilfe.webapp.members.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -73,32 +74,27 @@ public class TimeCheque implements Accountable {
 
     @Override
     public String getAccountableClass() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.getClass().getSimpleName();
     }
 
     @Override
     public Long getAccountableId() {
-        // TODO Auto-generated method stub
-        return null;
+        return id;
     }
 
     @Override
     public String getTransactionType() {
-        // TODO Auto-generated method stub
-        return null;
+        return TransactionType.INCOME.name();
     }
 
     @Override
     public LocalDate getTransactionDate() {
-        // TODO Auto-generated method stub
-        return null;
+        return transactionDate;
     }
 
     @Override
     public BigDecimal getTransactionAmount() {
-        // TODO Auto-generated method stub
-        return null;
+        return amount;
     }
 
 

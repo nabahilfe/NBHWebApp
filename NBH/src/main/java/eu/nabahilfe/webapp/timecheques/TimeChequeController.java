@@ -38,6 +38,8 @@ public class TimeChequeController {
     }
 
 
+    // FIXME: add @Attribute methods to populate Model with common data
+
     // --------------------
     // LIST & DETAIL
     // --------------------
@@ -160,6 +162,8 @@ public class TimeChequeController {
         tc.setTransactionDate(LocalDate.now());
         // FIXME: must be logged in user!
         tc.setCreatedBy(member);
+
+        log.debug("\nCreated TimeCheque: {}", tc);
 
         return tc;
     }
