@@ -112,13 +112,15 @@ public class TimeTransferController {
         }
 
         // validate sufficient hours
-        if (memberFrom.getAccumulatedHours() < hours) {
+        if (memberFrom.getAccumulatedHours() == null ||  memberFrom.getAccumulatedHours() < hours) {
             TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo);
             log.debug("\nInsufficient hours for member {}, re-displaying form with error.", memberFrom.getName());
             model.addAttribute("ttf", ttf);
 
             model.addAttribute("errorMessage", "Leistungsempfänger " + memberFrom.getName()
-                    + " hat nicht genügend Stunden (aktuell " + memberFrom.getAccumulatedHours() + " h) für diese Übertragung!");
+                    + " hat nicht genügend Stunden (aktuell "
+                    + (memberFrom.getAccumulatedHours() == null ? "0" : memberFrom.getAccumulatedHours())
+                    + " h) für diese Übertragung!");
             return "timetransfers/create-timetransfer";
         }
 

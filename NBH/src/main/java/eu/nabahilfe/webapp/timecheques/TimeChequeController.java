@@ -128,6 +128,9 @@ public class TimeChequeController {
         timeChequeRepository.save(tc);
 
         // BusinessRule: Update Member's accumulated hours
+        if (tc.getAssignedTo().getAccumulatedHours() == null) {
+            tc.getAssignedTo().setAccumulatedHours(0);
+        }
         Integer newHours = tc.getAssignedTo().getAccumulatedHours() + tc.getHours();
         tc.getAssignedTo().setAccumulatedHours(newHours);
         memberRepository.save(tc.getAssignedTo());
@@ -165,7 +168,7 @@ public class TimeChequeController {
     private String validateData(Member member, TimeCheque timeCheque, int existingTimeCheques) {
         // Business Rule: TimeCheques can only be purchased if Member has less than 5 accumulated hours,
         // except for the first TimeCheque, which is free of charge.
-        if (member.getAccumulatedHours() >= NbhConst.MIN_HOURS_FOR_TIME_CHEQUE && existingTimeCheques > 0) {
+        if (member.getAccumulatedHours() != null && member.getAccumulatedHours() >= NbhConst.MIN_HOURS_FOR_TIME_CHEQUE && existingTimeCheques > 0) {
             return "Zeitschecks können erst bei weniger als 5 Stunden Zeitguthaben erworben werden." +
                    " Aktuelles Zeitguthaben: " + member.getAccumulatedHours() + " Stunden.";
         }
