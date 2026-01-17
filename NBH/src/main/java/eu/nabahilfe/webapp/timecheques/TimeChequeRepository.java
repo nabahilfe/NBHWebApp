@@ -21,7 +21,7 @@ public interface TimeChequeRepository extends ListCrudRepository<TimeCheque, Lon
 
     List<TimeCheque> findAllByAssignedTo_IdOrderByTransactionDateDesc(Long assignedTo);
 
-    List<TimeCheque> findAllByAccountedBy_IdIsNullOrderByTransactionDateAsc();
+    List<TimeCheque> findAllByAccountedBy_IdIsNullAndAmountGreaterThanOrderByTransactionDateAsc(Double amount);
 
     TimeCheque findTopByAssignedTo_IdOrderByTransactionDateDesc(Long assignedTo);
 
