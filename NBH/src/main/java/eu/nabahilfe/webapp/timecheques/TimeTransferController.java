@@ -143,7 +143,8 @@ public class TimeTransferController {
         memberFrom.setAccumulatedHours(newHoursFrom.intValue() == 0 ? null : newHoursFrom);
         memberRepository.save(memberFrom);
 
-        Integer newHoursTo = memberTo.getAccumulatedHours() + hours;
+        Integer newHoursTo = (memberTo.getAccumulatedHours() == null ? hours
+                : memberTo.getAccumulatedHours() + hours);
         memberTo.setAccumulatedHours(newHoursTo);
         memberRepository.save(memberTo);
 
