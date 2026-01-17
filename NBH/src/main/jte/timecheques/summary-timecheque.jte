@@ -36,8 +36,7 @@
 
     <div class="card">
         <div class="card-body">
-            <h5>Bereits erworbene Zeitschecks</h5>
-            <p class="card-text">FIXME: Username</p>
+            <h5>Erworbene Zeitschecks von FIXME: Username</h5>
 
             <table class="table table-hover table-sm" id="memberTable">
                 <thead>
