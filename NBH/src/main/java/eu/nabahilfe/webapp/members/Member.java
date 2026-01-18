@@ -9,6 +9,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,11 +29,23 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "MEMBERS")
 public class Member  {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private Integer memberNmbr;    // Member ID muss automatisch erzeugt werden, Startwert 1000
+
+    @Size(max = 20)
+    @Enumerated(EnumType.STRING)
+    private Salutation salutation;    // Aus Enum Salutation
+
+    @Size(max = 20)
+    private String title;    // Titel, Freitext
+
+    @Size(max = 80)
+    private String institution;    // Institution die das Mitglied vertritt
 
     @Size(max = 80)
     @NotEmpty
@@ -80,7 +94,7 @@ public class Member  {
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    // FIXME in Generator: "@Column(nullable = false)"
+    // FIXME: im Generator: "@Column(nullable = false)"
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "created_by_id")
     private Member createdBy;
@@ -298,10 +312,42 @@ public class Member  {
         return createdAt;
     }
 
+    public Salutation getSalutation() {
+        return salutation;
+    }
+
+
+    public void setSalutation(Salutation salutation) {
+        this.salutation = salutation;
+    }
+
+
+    public String getTitle() {
+        return title;
+    }
+
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+
+    public String getInstitution() {
+        return institution;
+    }
+
+
+    public void setInstitution(String institution) {
+        this.institution = institution;
+    }
+
+
 
     // --------------------------------
     // add your business methodes here
     // --------------------------------
+
+
 
     public String getName() {
         return lastName + " " + firstName;
@@ -315,6 +361,16 @@ public class Member  {
 
     public String getNameAndAddress() {
         return getName() + " - " + getAddress();
+    }
+
+
+    public String getEmailSalutation() {
+        String name = "";
+        if (salutation == Salutation.Herr) name += "Lieber ";
+        else if (salutation == Salutation.Frau) name += "Liebe ";
+        else name += "Hallo ";
+        name += firstName + "!";
+        return name;
     }
 
 
@@ -338,6 +394,18 @@ public class Member  {
             return false;
         Member other = (Member) obj;
         return Objects.equals(id, other.id);
+    }
+
+
+    @Override
+    public String toString() {
+        return "Member [id=" + id + ", memberNmbr=" + memberNmbr + ", salutation=" + salutation + ", title=" + title
+                + ", institution=" + institution + ", firstName=" + firstName + ", lastName=" + lastName
+                + ", birthdate=" + birthdate + ", email=" + email + ", password=" + password + ", joiningDate="
+                + joiningDate + ", resignationDate=" + resignationDate + ", street=" + street + ", number=" + number
+                + ", zip=" + zip + ", city=" + city + ", accumulatedHours=" + accumulatedHours + ", role=" + role
+                + ", createdAt=" + createdAt + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt + ", updatedBy="
+                + updatedBy + ", version=" + version + "]";
     }
 
 }
