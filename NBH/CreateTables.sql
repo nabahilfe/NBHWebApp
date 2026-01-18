@@ -1,7 +1,7 @@
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-01-15 19:03:02
- * ModelDescription: NBH Entity Model with Postgres Definitions - Neu!
+ * Generated at 2026-01-17 22:27:35
+ * ModelDescription: NBH Entity Modell mit Postgres Definitions
  */
 
 
@@ -21,7 +21,7 @@ create table if not exists ASSOCIATIONS (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
-    updated_by_id BIGINT,                    
+    updated_by_id BIGINT,
     version INTEGER NOT NULL
 );
 
@@ -34,7 +34,7 @@ create table if not exists OFFERS (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
-    updated_by_id BIGINT,                    
+    updated_by_id BIGINT,
     version INTEGER NOT NULL
 );
 
@@ -53,7 +53,7 @@ create table if not exists ROLES (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
-    updated_by_id BIGINT,                    
+    updated_by_id BIGINT,
     version INTEGER NOT NULL
 );
 
@@ -68,7 +68,7 @@ create table if not exists AMOUNT_DOMAIN_VALUES (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
-    updated_by_id BIGINT,                    
+    updated_by_id BIGINT,
     version INTEGER NOT NULL
 );
 
@@ -93,18 +93,23 @@ create table if not exists MEMBERS (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
-    updated_by_id BIGINT,                    
+    updated_by_id BIGINT,
     version INTEGER NOT NULL
 );
 
 
-/* Dokumentation des jährlicher Mitgliedsbeitrag */
-/* Extends Table ACCOUNTABLES so no fields created_at and created_by_id in this table */
+/* Dokumentation des jährlicher Mitgliedsbeitrag. TransactionType ist immer INCOME */
 create table if not exists MEMBERSHIP_FEES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     for_year DATE not null,
+    transaction_date DATE not null,
+    amount NUMERIC(12,2) not null,
     member_id BIGINT /* FK id from MEMBERS(id) */,
-    accounting_entry_id BIGINT /* FK id from ACCOUNTING_ENTRIES(id) */,
+    accounted_by_id BIGINT /* FK id from ACCOUNTING_ENTRIES(id) */,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,
     version INTEGER NOT NULL
 );
 
@@ -112,12 +117,13 @@ create table if not exists MEMBERSHIP_FEES (
 /* Angebote des Mitglieds. Klären, brauchen wir das überhaupt? */
 create table if not exists MEMBER_OFFERS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    is_activ BOOLEAN not null /* Akuell aktiv? */,
     offer_id BIGINT /* FK id from OFFERS(id) */,
     member_id BIGINT /* FK id from MEMBERS(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
-    updated_by_id BIGINT,                    
+    updated_by_id BIGINT,
     version INTEGER NOT NULL
 );
 
@@ -134,31 +140,23 @@ create table if not exists TIME_TRANSFERS (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
-    updated_by_id BIGINT,                    
+    updated_by_id BIGINT,
     version INTEGER NOT NULL
 );
 
 
-/* Zeitscheck - wird gekauft, zuerst angelegt und dann später verbucht vom Kassier */
-/* Extends Table ACCOUNTABLES so no fields created_at and created_by_id in this table */
+/* Zeitscheck - zuerst angelegt und dann später verbucht vom Kassier. TransactionType ist immer INCOME */
 create table if not exists TIME_CHEQUES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     hours SMALLINT not null /* Anzahl der Stunden, üblicherweise 5 (Beitritt zum Verein) oder 10 */,
-    assigned_to_id BIGINT /* FK id from MEMBERS(id) */,
-    accounting_entry_id BIGINT /* FK id from ACCOUNTING_ENTRIES(id) */,
-    version INTEGER NOT NULL
-);
-
-
-/* Superklasse für alles was verbucht wird (Zeitscheck kauf, Mitgliedschaft...) */
-create table if not exists ACCOUNTABLES (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    transaction_date DATE not null,
     amount NUMERIC(12,2) not null,
-    order_date DATE not null,
+    assigned_to_id BIGINT /* FK id from MEMBERS(id) */,
+    accounted_by_id BIGINT /* FK id from ACCOUNTING_ENTRIES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
-    updated_by_id BIGINT,                    
+    updated_by_id BIGINT,
     version INTEGER NOT NULL
 );
 
@@ -166,15 +164,32 @@ create table if not exists ACCOUNTABLES (
 /* Buchungsdatensatz zu Zeitscheck-Kauf, Mitgliedschaft, Weihnachtsessen, usw. */
 create table if not exists ACCOUNTING_ENTRIES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    accountable_class VARCHAR(80) /* MemberFee, TimeCheque, Transaction, ... */,
+    accountable_id BIGINT /* id zur Klasse bzw. Tabelle */,
+    accounting_type VARCHAR(10) not null /* INCOME oder EXPENSE - muss aus Enum TransactionType kommen */,
     accounting_date DATE not null /* Buchungsdatum */,
-    accounting_type VARCHAR(10) not null /* INCOMING oder OUTGOING */,
-    description VARCHAR(250) /* Verpflichtend wenn keine accountableEntity eingetragen ist */,
-    amount NUMERIC(12,2) not null /* Betrag */,
-    accountable_id BIGINT /* FK id from ACCOUNTABLES(id) */,
+    accounting_amount NUMERIC(12,2) not null /* Betrag */,
+    description VARCHAR(250) /* Verpflichtend wenn keine orderClass / orderId eingetragen ist */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
-    updated_by_id BIGINT,                    
+    updated_by_id BIGINT,
+    version INTEGER NOT NULL
+);
+
+
+/* Allgemeine Einnahme oder Ausgabe */
+create table if not exists TRANSACTIONS (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    transaction_type VARCHAR(10) not null /* INCOME oder EXPENSE - muss aus Enum TransactionType kommen */,
+    transaction_date DATE not null,
+    amount NUMERIC(12,2) not null,
+    description VARCHAR(250) not null,
+    accounted_by_id BIGINT /* FK id from ACCOUNTING_ENTRIES(id) */,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,
     version INTEGER NOT NULL
 );
 
@@ -191,9 +206,7 @@ alter table MEMBERS
 
 alter table MEMBERSHIP_FEES
     add constraint fk_MEMBERSHIP_FEES_member_id foreign key (member_id) references MEMBERS(id),
-    add constraint fk_MEMBERSHIP_FEES_accounting_entry_id foreign key (accounting_entry_id) references ACCOUNTING_ENTRIES(id),
-    /* fk ref to Hibernate parent table */
-    add constraint fk_MEMBERSHIP_FEES_ACCOUNTABLES_parent foreign key (id) references ACCOUNTABLES(id)
+    add constraint fk_MEMBERSHIP_FEES_accounted_by_id foreign key (accounted_by_id) references ACCOUNTING_ENTRIES(id)
     ;
 
 
@@ -212,14 +225,12 @@ alter table TIME_TRANSFERS
 
 alter table TIME_CHEQUES
     add constraint fk_TIME_CHEQUES_assigned_to_id foreign key (assigned_to_id) references MEMBERS(id),
-    add constraint fk_TIME_CHEQUES_accounting_entry_id foreign key (accounting_entry_id) references ACCOUNTING_ENTRIES(id),
-    /* fk ref to Hibernate parent table */
-    add constraint fk_TIME_CHEQUES_ACCOUNTABLES_parent foreign key (id) references ACCOUNTABLES(id)
+    add constraint fk_TIME_CHEQUES_accounted_by_id foreign key (accounted_by_id) references ACCOUNTING_ENTRIES(id)
     ;
 
 
-alter table ACCOUNTING_ENTRIES
-    add constraint fk_ACCOUNTING_ENTRIES_accountable_id foreign key (accountable_id) references ACCOUNTABLES(id)
+alter table TRANSACTIONS
+    add constraint fk_TRANSACTIONS_accounted_by_id foreign key (accounted_by_id) references ACCOUNTING_ENTRIES(id)
     ;
 
 
@@ -278,9 +289,9 @@ drop table if exists TIME_TRANSFERS cascade;
 
 drop table if exists TIME_CHEQUES cascade;
 
-drop table if exists ACCOUNTABLES cascade;
-
 drop table if exists ACCOUNTING_ENTRIES cascade;
+
+drop table if exists TRANSACTIONS cascade;
 
 
 /* end of generated file */

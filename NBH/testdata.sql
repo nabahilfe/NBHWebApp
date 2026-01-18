@@ -1,7 +1,7 @@
 
 
 
--- Daten für ROLES
+/* Daten für ROLES */
 
 INSERT INTO roles (is_board_member, is_admin, is_treasurer, is_secretary, is_auditor, is_time_keeper, is_miscellaneous, role_name,      version) VALUES
                     (true,          true,       false,          false,       false,      true,           false,          'Obmann',          0),
@@ -19,7 +19,7 @@ INSERT INTO roles (is_board_member, is_admin, is_treasurer, is_secretary, is_aud
 
 
 
--- Daten für Offers / Tätigkeiten
+/* Daten für Offers / Tätigkeiten */
 
 insert into offers (code, description, version) values
 ('000','Vereinstätigkeit', 0),
@@ -36,7 +36,7 @@ insert into offers (code, description, version) values
 
 
 
--- Testdaten Mitglieder
+/* Testdaten Mitglieder */
 
 insert into members (member_nmbr, first_name, last_name, birthdate, street, number, zip, city, version, joining_date) values
 (1000, 'Anna','Müller','1985-03-14','Bahnhofstraße','12','3034','Groß-Raßberg', 0, '2025-12-24'),
@@ -139,4 +139,5 @@ insert into members (member_nmbr, first_name, last_name, birthdate, street, numb
 (1097, 'Nadine','Sperl','2001-11-11','Am See','2','7141','Podersdorf', 0, '2025-12-24'),
 (1098, 'Walter','Feldner','1966-06-18','Bahnweg','14','6460','Imst', 0, '2025-12-24'),
 (1099, 'Alina','Kerschbaumer','2004-05-25','Römerstraße','9','4060','Leonding', 0, '2025-12-24');
+
 
