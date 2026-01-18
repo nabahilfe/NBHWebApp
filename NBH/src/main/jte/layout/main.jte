@@ -84,7 +84,7 @@
     </nav>
 
     <!-- Haupt-Content -->
-    <main class="container mt-4">
+    <main class="container mt-5">
       <div class="bg-body-tertiary p-5 rounded">
         ${content}
       </div>

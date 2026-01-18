@@ -154,7 +154,7 @@ public class MemberController {
     public String saveMember(Model model, @ModelAttribute @Valid Member member,
             @RequestParam(required = false) Long roleId,
             RedirectAttributes redirectAttributes, BindingResult result) {
-
+        log.debug("Will Save Member afer Validation: {}", member);
         if (roleId != null)
             member.setRole(roleRepository.findById(roleId).orElse(null));
         else
@@ -170,6 +170,9 @@ public class MemberController {
             member.setMemberNmbr(getNextMemberNumber());
             member.setJoiningDate(LocalDate.now());
         }
+
+        log.debug("Saving Member: {}", member);
+
         memberRepository.save(member);
         redirectAttributes.addFlashAttribute("successMessage", "Daten für " + member.getName() + " wurden gespeichert.");
 

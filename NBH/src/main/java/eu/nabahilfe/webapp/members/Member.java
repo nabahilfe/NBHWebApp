@@ -9,8 +9,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
@@ -38,8 +37,7 @@ public class Member  {
     private Integer memberNmbr;    // Member ID muss automatisch erzeugt werden, Startwert 1000
 
     @Size(max = 20)
-    @Enumerated(EnumType.STRING)
-    private Salutation salutation;    // Aus Enum Salutation
+    private String salutation;    // Aus Enum Salutation
 
     @Size(max = 20)
     private String title;    // Titel, Freitext
@@ -60,6 +58,7 @@ public class Member  {
     private LocalDate birthdate;
 
     @Size(max = 80)
+    @Email
     private String email;
 
     @Size(max = 250)
@@ -312,12 +311,12 @@ public class Member  {
         return createdAt;
     }
 
-    public Salutation getSalutation() {
+    public String getSalutation() {
         return salutation;
     }
 
 
-    public void setSalutation(Salutation salutation) {
+    public void setSalutation(String salutation) {
         this.salutation = salutation;
     }
 
@@ -366,8 +365,8 @@ public class Member  {
 
     public String getEmailSalutation() {
         String name = "";
-        if (salutation == Salutation.Herr) name += "Lieber ";
-        else if (salutation == Salutation.Frau) name += "Liebe ";
+        if (salutation.equals(Salutation.Herr.name())) name += "Lieber ";
+        else if (salutation.equals(Salutation.Frau.name())) name += "Liebe ";
         else name += "Hallo ";
         name += firstName + "!";
         return name;
