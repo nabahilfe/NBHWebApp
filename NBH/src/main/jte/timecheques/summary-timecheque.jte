@@ -17,7 +17,7 @@
     <h3>Aktuelles Zeitguthaben</h3>
 
     <div class="card">
-        <div class="card-header">
+        <div class="card-body bg-success bg-opacity-10">
             <h4 class="text-primary">${member.getName()}</h4>
             <p>${member.getAddress()}</p>
 

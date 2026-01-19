@@ -21,7 +21,7 @@
 
     <form id="tcForm" action="/timecheques" method="POST">
         <div class="card">
-            <div class="card-header">
+            <div class="card-body bg-success bg-opacity-10">
                 <h4 class="text-primary">${timeCheque.getAssignedTo().getName()}</h4>
                 <p>${timeCheque.getAssignedTo().getAddress()}</p>
 
@@ -48,17 +48,16 @@
 
     @if (errorMessage == null)
         <br/>
-        <div class="card-body">
-            <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
-                data-item-id="${timeCheque.getAssignedTo().getId()}">Erstellen️️</button>
-        </div>
+        <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
+            data-item-id="${timeCheque.getAssignedTo().getId()}">Erstellen️️</button>
     @endif
 
 
     <br/>
     @template.components.display-statusmessage(successMessage, errorMessage)
 
+    <br/>
     <div class="card">
         <div class="card-body">
             <h5>Erworbene Zeitschecks von FIXME: Username</h5>

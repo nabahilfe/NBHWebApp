@@ -37,7 +37,7 @@
             <div class="form-group row">
                 <div class="col">
                 <div class="card">
-                <div class="card-header">
+                <div class="card-body bg-success bg-opacity-10">
 
                     <h5>Persönliche Daten</h5>
 
@@ -96,7 +96,7 @@
 
                 <div class="col">
                 <div class="card">
-                <div class="card-header">
+                <div class="card-body bg-success bg-opacity-10">
 
                     <h5>Kontaktdaten & Adresse</h5>
 
