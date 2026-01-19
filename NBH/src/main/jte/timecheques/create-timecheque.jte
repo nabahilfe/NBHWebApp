@@ -18,49 +18,49 @@
     <h3>Zeitscheck erstellen für</h3>
     <br/>
 
-    <div class="card">
 
-        <form id="tcForm" action="/timecheques" method="POST">
-
+    <form id="tcForm" action="/timecheques" method="POST">
+        <div class="card">
             <div class="card-header">
                 <h4 class="text-primary">${timeCheque.getAssignedTo().getName()}</h4>
                 <p>${timeCheque.getAssignedTo().getAddress()}</p>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours() == null ? 0
+                                : timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
+                    </li>
+
+                    <li class="list-group-item ">
+                        ${timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS ? "Kostenlos bei Eintritt" : "Kauf von Zeitschecks"}:
+                        <b>${timeCheque.getHours()} h</b>
+                    </li>
+
+                    <li class="list-group-item ">
+                        <div class="row g-3 align-items-center">
+                            <div class="col-auto">
+                                <label for="orderDate" class="col-form-label">Erstellungsdatum</label>
+                            </div>
+                            <div class="col-auto">
+                                <input type="date" class="form-control" name="orderDate" id="orderDate" value="${timeCheque.getTransactionDate().toString()}" required>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
+        </div>
+    </form>
 
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours() == null ? 0
-                            : timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
-                </li>
 
-                <li class="list-group-item ">
-                    ${timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS ? "Kostenlos bei Eintritt" : "Kauf von Zeitschecks"}:
-                    <b>${timeCheque.getHours()} h</b>
-                </li>
+    @if (errorMessage == null)
+        <br/>
+        <div class="card-body">
+            <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
+                data-item-id="${timeCheque.getAssignedTo().getId()}">Erstellen️️</button>
+        </div>
+    @endif
 
-                <li class="list-group-item ">
-                    <div class="row g-3 align-items-center">
-                        <div class="col-auto">
-                            <label for="orderDate" class="col-form-label">Erstellungsdatum</label>
-                        </div>
-                        <div class="col-auto">
-                            <input type="date" class="form-control" name="orderDate" id="orderDate" value="${timeCheque.getTransactionDate().toString()}" required>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-
-            @if (errorMessage == null)
-                <div class="card-body">
-                    <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
-                        data-item-id="${timeCheque.getAssignedTo().getId()}">Erstellen️️</button>
-                </div>
-            @endif
-
-        </form>
-
-    </div>
 
     <br/>
     @template.components.display-statusmessage(successMessage, errorMessage)
