@@ -35,7 +35,7 @@
         <div class="row">
           <div class="col-sm-6">
             <div class="card">
-              <div class="card-body">
+              <div class="card-body bg-success bg-opacity-10">
 
                 <h5 class="card-title text-primary">Leistungsempfänger</h5>
                 <p class="card-text text-success">Gibt Zeitscheck an Leistungserbringer</p>
@@ -100,7 +100,7 @@
 
           <div class="col-sm-6">
             <div class="card">
-              <div class="card-body">
+              <div class="card-body bg-success bg-opacity-10">
 
                 <h5 class="card-title text-primary">Leistungserbringer</h5>
                 <p class="card-text text-success">Erhält Zeitscheck vom Leistungsempfänger</p>
