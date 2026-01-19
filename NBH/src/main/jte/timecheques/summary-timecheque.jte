@@ -20,12 +20,9 @@
         <div class="card-header">
             <h4 class="text-primary">${member.getName()}</h4>
             <p>${member.getAddress()}</p>
+
+            <b>Aktuelles Zeitguthaben: ${member.getAccumulatedHours()} h</b>
         </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-              Aktuelles Zeitguthaben: <b>${member.getAccumulatedHours()} h</b>
-            </li>
-        </ul>
     </div>
 
     <p/>

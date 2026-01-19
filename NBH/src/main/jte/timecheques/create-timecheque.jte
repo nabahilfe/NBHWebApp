@@ -25,28 +25,22 @@
                 <h4 class="text-primary">${timeCheque.getAssignedTo().getName()}</h4>
                 <p>${timeCheque.getAssignedTo().getAddress()}</p>
 
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours() == null ? 0
-                                : timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
-                    </li>
+                Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours() == null ? 0
+                        : timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
 
-                    <li class="list-group-item ">
-                        ${timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS ? "Kostenlos bei Eintritt" : "Kauf von Zeitschecks"}:
-                        <b>${timeCheque.getHours()} h</b>
-                    </li>
+                <p>
+                    ${timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS ? "Kostenlos bei Eintritt" : "Kauf von Zeitschecks"}:
+                    <b>${timeCheque.getHours()} h</b>
+                </p>
 
-                    <li class="list-group-item ">
-                        <div class="row g-3 align-items-center">
-                            <div class="col-auto">
-                                <label for="orderDate" class="col-form-label">Erstellungsdatum</label>
-                            </div>
-                            <div class="col-auto">
-                                <input type="date" class="form-control" name="orderDate" id="orderDate" value="${timeCheque.getTransactionDate().toString()}" required>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                <div class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <label for="orderDate" class="col-form-label">Erstellungsdatum:</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="date" class="form-control" name="orderDate" id="orderDate" value="${timeCheque.getTransactionDate().toString()}" required>
+                    </div>
+                </div>
             </div>
         </div>
     </form>
