@@ -37,7 +37,7 @@
             <div class="form-group row">
                 <div class="col">
                 <div class="card">
-                <div class="card-body bg-success bg-opacity-10">
+                <div class="card-header">
 
                     <h5>Persönliche Daten</h5>
 
@@ -45,7 +45,7 @@
                     <div class="col">
                         <select class="form-select" name="salutation" id="salutation">
                             @for(Salutation sal : Salutation.values())
-                                <option value="${sal.name()}" selected="${member.getSalutation().equals(sal.name())}">
+                                <option value="${sal.name()}" selected="${member.getSalutation() != null && member.getSalutation().equals(sal.name())}">
                                     ${sal.name()}
                                 </option>
                             @endfor
@@ -83,10 +83,11 @@
                             @endfor
                         </select>
                     </div>
-                    <br/>
 
-
-                    <b>Zeitguthaben: ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}</b>
+                    @if(member.getId() != null)
+                        <br/>
+                        <b>Zeitguthaben: ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}</b>
+                    @endif
 
 
                 </div>
@@ -95,7 +96,7 @@
 
                 <div class="col">
                 <div class="card">
-                <div class="card-body bg-success bg-opacity-10">
+                <div class="card-header">
 
                     <h5>Kontaktdaten & Adresse</h5>
 
