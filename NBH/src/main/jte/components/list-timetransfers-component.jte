@@ -2,7 +2,7 @@
     A reusable template to display time transfers.
 
     Usage:
-    @template.components.list-timetransfers(transfers = List<TimeTransfer>)
+    @template.components.list-timetransfers-component(transfers = List<TimeTransfer>)
 
     Parameters:
     - timeTransfers: List<TimeTransfer>

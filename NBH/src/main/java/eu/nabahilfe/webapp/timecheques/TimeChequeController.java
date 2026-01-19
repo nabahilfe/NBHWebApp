@@ -75,7 +75,7 @@ public class TimeChequeController {
         log.debug("Listing unaccounted TimeCheques");
         model.addAttribute("timeCheques", timeChequeRepository.findAllByAccountedBy_IdIsNullAndAmountGreaterThanOrderByTransactionDateAsc(0.0));
         log.debug("Found {} unaccounted TimeCheques", ((java.util.List<?>) model.getAttribute("timeCheques")).size());
-        return "timecheques/list-timecheques";
+        return "timecheques/list-unaccounted-timecheques";
     }
 
 

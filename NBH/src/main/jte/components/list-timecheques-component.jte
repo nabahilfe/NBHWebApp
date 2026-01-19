@@ -3,7 +3,7 @@
     This template displays a list of acquired time cheques.
 
     Usage:
-    @template.components.list-timecheques(timeCheques = List<TimeCheque>)
+    @template.components.list-timecheques-component(timeCheques = List<TimeCheque>)
 
     Parameters:
     - timeCheques: List<TimeCheque>

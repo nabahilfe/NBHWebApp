@@ -162,14 +162,14 @@
             <div class="col-sm-3 mb-3 mb-sm-0">
 
                 <!-- FIXME Das Template braucht auch den UserNamen um universell verwendbar zu sein
-                @template.components.list-timecheques(timeCheques = purchasedTimeCheques)-->
+                @template.components.list-timecheques-component(timeCheques = purchasedTimeCheques)-->
 
             </div>
 
             <div class="col-sm-9 mb-3 mb-sm-0">
 
                 <!-- FIXME: Daraus sollte nan eine Komponente machen!
-                @template.components.list-timetransfers(transfers = timeTransfers)-->
+                @template.components.list-timetransfers-component(transfers = timeTransfers)-->
 
             </div>
         </div>
