@@ -45,7 +45,7 @@
           <!-- FIXME: refactor to use AccountableForm insted of URL RequestParams -->
           <td scope="row" class="text-center">
             <a class="btn btn-outline-primary btn-sm bi-plus-lg"
-               href="/accountings/book-accountable?accClass=${TimeCheque.class.getSimpleName()}&accId=${tc.getId()}&trnsType=${TransactionType.INCOME.name()}&trnsDate=${formatISO(tc.getTransactionDate())}&trnsAmount=${tc.getAmount()}"
+               href="/accountings/prepare-accounting?accClass=${TimeCheque.class.getSimpleName()}&accId=${tc.getId()}&trnsType=${TransactionType.INCOME.name()}&trnsDate=${formatISO(tc.getTransactionDate())}&trnsAmount=${tc.getAmount()}"
                role="button"></a>
           </td>
         </tr>

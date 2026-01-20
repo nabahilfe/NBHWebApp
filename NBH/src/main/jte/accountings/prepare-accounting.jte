@@ -19,7 +19,7 @@
     <div class="row">
 
         <script>
-            console.log("Rendering create-accounting.jte");
+            console.log("Rendering prepare-accounting.jte");
             console.log("Accounting Entry: ${accountingEntry.toString()}");
         </script>
 

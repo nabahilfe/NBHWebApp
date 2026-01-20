@@ -30,7 +30,7 @@ import jakarta.validation.Valid;
     public abstract LocalDate getTransactionDate();
     public abstract BigDecimal getTransactionAmount();
 
-    http://localhost:8080/accountings/book-accountable/?accClass=TimeCheque&accId=8&trnsType=INCOME&trnsDate=2026-01-19&trnsAmount=36.00
+    http://localhost:8080/accountings/prepare-accounting/?accClass=TimeCheque&accId=8&trnsType=INCOME&trnsDate=2026-01-19&trnsAmount=36.00
  */
 
 
@@ -83,9 +83,9 @@ public class AccountingController {
 
     }
 
-    // /book-accountable?accClass=TimeCheque&accId=8&trnsType=INCOME&trnsDate=2026-01-19&trnsAmount=36.00
+    // /prepare-accounting?accClass=TimeCheque&accId=8&trnsType=INCOME&trnsDate=2026-01-19&trnsAmount=36.00
     // FIXME: refactor to use AccountableForm insted of URL RequestParams
-    @GetMapping("/book-accountable")
+    @GetMapping("/prepare-accounting")
     public String bookAccountable(final Model model,
             @RequestParam String accClass, @RequestParam Long accId,
             @RequestParam String trnsType, @RequestParam String trnsDate, @RequestParam BigDecimal trnsAmount) {
@@ -102,6 +102,6 @@ public class AccountingController {
 
         model.addAttribute("accountingEntry", accountingEntry);
 
-        return "accountings/create-accounting";
+        return "accountings/prepare-accounting";
     }
 }
