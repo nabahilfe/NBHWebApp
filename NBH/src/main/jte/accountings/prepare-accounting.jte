@@ -14,7 +14,7 @@
 @template.layout.main(content = @`
 
     <h3>Buchungsdatensatz anlegen</h3>
-    <p>Damit wird dokumentiert dass die Buchung auf dem Bankkonto erfasst wurde.</p>
+    <p>Damit wird dokumentiert, dass die Buchung auf dem Bankkonto durchgeführt wurde.</p>
     <br/>
 
     <div class="row">

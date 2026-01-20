@@ -62,7 +62,7 @@ public class AccountingController {
 
     @Transactional
     @PostMapping
-    public String createAccounting(final Model model, @ModelAttribute @Valid AccountingEntry accountingEntry,
+    public String createAccounting(final Model model, @ModelAttribute AccountingEntry accountingEntry,
             RedirectAttributes redirectAttributes, BindingResult result) {
         accountingRepository.save(accountingEntry);
         return "redirect:/accountings/" + accountingEntry.getId();
@@ -73,8 +73,9 @@ public class AccountingController {
     @PostMapping("/{id}")
     public String updateAccounting(final Model model, @ModelAttribute @Valid AccountingEntry accountingEntry,
             RedirectAttributes redirectAttributes, BindingResult result) {
+        log.debug("Updating AccountingEntry: " + accountingEntry.toString());
         accountingRepository.save(accountingEntry);
-        return "redirect:/accountings/" + accountingEntry.getId();
+        return "redirect:/timecheques/unaccounted";
     }
 
 
