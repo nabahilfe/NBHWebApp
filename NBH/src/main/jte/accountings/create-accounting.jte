@@ -14,6 +14,7 @@
 @template.layout.main(content = @`
 
     <h3>Accounting Eintrag anlegen</h3>
+    <br/>
 
     <div class="row">
 
