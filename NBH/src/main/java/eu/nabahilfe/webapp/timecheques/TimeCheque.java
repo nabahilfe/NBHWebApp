@@ -83,6 +83,11 @@ public class TimeCheque implements Accountable {
     }
 
     @Override
+    public Long getAccountableMemberId() {
+        return getAssignedTo() != null ? getAssignedTo().getId() : null;
+    }
+
+    @Override
     public String getTransactionType() {
         return TransactionType.INCOME.name();
     }

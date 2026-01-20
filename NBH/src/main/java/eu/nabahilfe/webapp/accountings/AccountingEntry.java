@@ -40,6 +40,10 @@ public class AccountingEntry  {
 
     private Long accountableId;    // id zur Klasse bzw. Tabelle
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "accountable_member_id")
+    private Member accountableMember;    // id zum Mitglied, optional, nur bei Zeitscheck-Kauf, Mitgliedsbeitrag
+
     @Size(max = 10)
     @NotEmpty
     private String transactionType;    // INCOME oder EXPENSE - muss aus Enum TransactionType kommen
@@ -189,6 +193,14 @@ public class AccountingEntry  {
         this.version = version;
     }
 
+    public Member getAccountableMember() {
+        return accountableMember;
+    }
+
+    public void setAccountableMember(Member accountableMember) {
+        this.accountableMember = accountableMember;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);
@@ -209,10 +221,11 @@ public class AccountingEntry  {
     @Override
     public String toString() {
         return "AccountingEntry [id=" + id + ", accountableClass=" + accountableClass + ", accountableId="
-                + accountableId + ", transactionType=" + transactionType + ", transactionDate=" + transactionDate
-                + ", transactionAmount=" + transactionAmount + ", accountingDate=" + accountingDate + ", description="
-                + description + ", createdAt=" + createdAt + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt
-                + ", updatedBy=" + updatedBy + ", version=" + version + "]";
+                + accountableId + ", accountableMember=" + accountableMember + ", transactionType=" + transactionType
+                + ", transactionDate=" + transactionDate + ", transactionAmount=" + transactionAmount
+                + ", accountingDate=" + accountingDate + ", description=" + description + ", createdAt=" + createdAt
+                + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt + ", updatedBy=" + updatedBy + ", version="
+                + version + "]";
     }
 
 
