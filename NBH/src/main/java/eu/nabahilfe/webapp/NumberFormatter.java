@@ -16,7 +16,7 @@ public class NumberFormatter {
         formatter.setMaximumFractionDigits(2);
     }
 
-    public static String moneyDE(Number n) {
+    public static String numberDE(Number n) {
         return formatter.format(n);
     }
 

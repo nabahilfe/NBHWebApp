@@ -44,7 +44,7 @@
 
             <label for="transactionAmount" class="col-sm-2 col-form-label">Betrag in €</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" name="transactionAmount" id="transactionAmount" value="${moneyDE(accountingEntry.getTransactionAmount())}" disabled readonly>
+              <input type="text" class="form-control" name="transactionAmount" id="transactionAmount" value="${numberDE(accountingEntry.getTransactionAmount())}" disabled readonly>
             </div>
 
             <p></p>

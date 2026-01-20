@@ -40,7 +40,7 @@
           <td scope="row">${tc.getAssignedTo().getNameAndAddress()}</td>
           <td scope="row">${tc.getCreatedBy().getName()}</td>
           <td scope="row" class="text-end">${tc.getHours()}</td>
-          <td scope="row" class="text-end">€ ${moneyDE(tc.getAmount())}</td>
+          <td scope="row" class="text-end">€ ${numberDE(tc.getAmount())}</td>
           <td scope="row" class="text-center">
             <a class="btn btn-outline-primary btn-sm bi-plus-lg"
                href="/accountings/book-accountable?accClass=${TimeCheque.class.getSimpleName()}&accId=${tc.getId()}&trnsType=${TransactionType.INCOME.name()}&trnsDate=${formatISO(tc.getTransactionDate())}&trnsAmount=${tc.getAmount()}"
