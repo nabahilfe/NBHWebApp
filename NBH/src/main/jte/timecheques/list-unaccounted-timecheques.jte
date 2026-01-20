@@ -18,6 +18,7 @@
 
    <h3>Nicht verbuchte Zeitschecks</h3>
 
+    <br/>
 
     <!-- Display all TimeCheque records -->
 

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
+
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
@@ -38,13 +39,11 @@ import jakarta.validation.Valid;
 @RequestMapping("/accountings")
 public class AccountingController {
 
-    private final TimeChequeRepository timeCheckRepository;
     private final AccountingRepository accountingRepository;
 
     private static final Logger log = LoggerFactory.getLogger(AccountingController.class);
 
-    public AccountingController(TimeChequeRepository timeCheckRepository, AccountingRepository accountingRepository) {
-        this.timeCheckRepository = timeCheckRepository;
+    public AccountingController(AccountingRepository accountingRepository) {
         this.accountingRepository = accountingRepository;
 
         LocalDate ld = LocalDate.now();

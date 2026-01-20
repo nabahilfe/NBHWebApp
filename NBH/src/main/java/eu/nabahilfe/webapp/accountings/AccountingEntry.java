@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import eu.nabahilfe.webapp.members.Member;
+import eu.nabahilfe.webapp.timecheques.TimeCheque;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -86,6 +87,13 @@ public class AccountingEntry  {
     }
 
     public String getAccountableClass() {
+        return accountableClass;
+    }
+
+    public String getAccountableClassDisplayName() {
+        if (accountableClass.equals(TimeCheque.class.getSimpleName())) return "Zeitscheck";
+        // TODO: add more Accountables if any is implemented
+
         return accountableClass;
     }
 

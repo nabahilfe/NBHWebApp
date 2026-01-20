@@ -29,7 +29,7 @@
 
             <label for="accountableClass" class="col-sm-2 col-form-label">Buchung für</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" name="accountableClass" id="accountableClass" value="${accountingEntry.getAccountableClass()}" disabled readonly>
+              <input type="text" class="form-control" name="accountableClass" id="accountableClass" value="${accountingEntry.getAccountableClassDisplayName()}" disabled readonly>
             </div>
 
             <label for="transactionType" class="col-sm-2 col-form-label">Buchungsart</label>
