@@ -1,6 +1,6 @@
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-01-17 22:27:35
+ * Generated at 2026-01-19 18:08:53
  * ModelDescription: NBH Entity Modell mit Postgres Definitions
  */
 
@@ -73,10 +73,25 @@ create table if not exists AMOUNT_DOMAIN_VALUES (
 );
 
 
+/* Termine und Veranstaltungen, muss noch ausgearbeitet werden! */
+create table if not exists EVENTS (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    date DATE /* Datum der Veranstaltung */,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,
+    version INTEGER NOT NULL
+);
+
+
 /* Die Mitglieder des Vereins. Eine Mitgliedsnummer muss bei Neuanlage automatisch vergeben werden. */
 create table if not exists MEMBERS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     member_nmbr INTEGER not null /* Member ID muss automatisch erzeugt werden, Startwert 1000 */,
+    salutation VARCHAR(20) /* Aus Enum Salutation */,
+    title VARCHAR(20) /* Titel, Freitext */,
+    institution VARCHAR(80) /* Institution die das Mitglied vertritt */,
     first_name VARCHAR(80) not null,
     last_name VARCHAR(80) not null,
     birthdate DATE not null,
@@ -166,10 +181,11 @@ create table if not exists ACCOUNTING_ENTRIES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     accountable_class VARCHAR(80) /* MemberFee, TimeCheque, Transaction, ... */,
     accountable_id BIGINT /* id zur Klasse bzw. Tabelle */,
-    accounting_type VARCHAR(10) not null /* INCOME oder EXPENSE - muss aus Enum TransactionType kommen */,
+    transaction_type VARCHAR(10) not null /* INCOME oder EXPENSE - muss aus Enum TransactionType kommen */,
+    transaction_date DATE not null /* Buchungsdatum */,
+    transaction_amount NUMERIC(12,2) not null /* Betrag */,
     accounting_date DATE not null /* Buchungsdatum */,
-    accounting_amount NUMERIC(12,2) not null /* Betrag */,
-    description VARCHAR(250) /* Verpflichtend wenn keine orderClass / orderId eingetragen ist */,
+    description VARCHAR(250) /* Verpflichtend wenn keine accountableClass / accountableId eingetragen ist */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
@@ -278,6 +294,8 @@ drop table if exists OFFERS cascade;
 drop table if exists ROLES cascade;
 
 drop table if exists AMOUNT_DOMAIN_VALUES cascade;
+
+drop table if exists EVENTS cascade;
 
 drop table if exists MEMBERS cascade;
 
