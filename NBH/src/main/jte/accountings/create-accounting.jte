@@ -11,7 +11,7 @@
 
 @template.layout.main(content = @`
 
-    <h3>Accounting Eintrag anlegen/bearbeitenn</h3>
+    <h3>Accounting Eintrag anlegen</h3>
 
     <div class="row">
 
@@ -25,26 +25,27 @@
 
           <div class="form-group row">
 
-            <label for="accountableClass" class="col-sm-2 col-form-label">Buchung für<span class="text-danger">*</span></label>
+            <label for="accountableClass" class="col-sm-2 col-form-label">Buchung für</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" name="accountableClass" id="accountableClass" value="${accountingEntry.getAccountableClass()}" required>
+              <input type="text" class="form-control" name="accountableClass" id="accountableClass" value="${accountingEntry.getAccountableClass()}" disabled readonly>
             </div>
 
-            <label for="transactionType" class="col-sm-2 col-form-label">Buchungsart<span class="text-danger">*</span></label>
+            <label for="transactionType" class="col-sm-2 col-form-label">Buchungsart</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" name="transactionType" id="transactionType" value="${accountingEntry.getTransactionType()}" required>
+              <input type="text" class="form-control" name="transactionType" id="transactionType" value="${accountingEntry.getTransactionType()}"  disabled readonly>
             </div>
 
-            <label for="transactionDate" class="col-sm-2 col-form-label">Transaktionsdatum<span class="text-danger">*</span></label>
+            <label for="transactionDate" class="col-sm-2 col-form-label">Transaktionsdatum</label>
             <div class="col-sm-10">
-              <input type="date" class="form-control" name="transactionDate" id="transactionDate" value="${formatISO(accountingEntry.getTransactionDate())}" required>
+              <input type="text" class="form-control" name="transactionDate" id="transactionDate" value="${formatDE(accountingEntry.getTransactionDate())}" disabled readonly>
             </div>
 
-            <label for="transactionAmount" class="col-sm-2 col-form-label">Betrag<span class="text-danger">*</span></label>
+            <label for="transactionAmount" class="col-sm-2 col-form-label">Betrag</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" name="transactionAmount" id="transactionAmount" value="${accountingEntry.getTransactionAmount()}" required>
+              <input type="text" class="form-control" name="transactionAmount" id="transactionAmount" value="${accountingEntry.getTransactionAmount()}" disabled readonly>
             </div>
 
+            <p></p>
 
             <label for="accountingDate" class="col-sm-2 col-form-label">Buchungsdatum<span class="text-danger">*</span></label>
             <div class="col-sm-10">
