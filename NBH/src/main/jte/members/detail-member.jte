@@ -29,7 +29,7 @@
 
     <div class="row">
 
-        <p/>
+        <br/>
 
         <!-- first action is for save, second action is for update -->
         <form action="${member.getId() == null ? "/members" : "/members/" + member.getId()}" method="post">
@@ -139,7 +139,7 @@
 
 
 
-            <p/>
+            <br/>
 
             <div class="form-group row">
                 <div class="col-sm-10">
@@ -147,7 +147,7 @@
                 </div>
             </div>
 
-            <p/>
+            <br/>
 
             @template.components.display-statusmessage(successMessage, errorMessage)
 
@@ -155,7 +155,7 @@
 
     </div>
 
-    <p/>
+    <br/>
 
     @if(member.getId() != null)
         <div class="row">

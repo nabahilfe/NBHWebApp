@@ -52,7 +52,7 @@
         @endfor
       </tbody>
     </table>
-    <p/>
+    <br/>
 
     @template.components.display-statusmessage(successMessage, errorMessage)
 

@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    <p/>
+    <br/>
 
     @template.components.display-statusmessage(successMessage, errorMessage)
 

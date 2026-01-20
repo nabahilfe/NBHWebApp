@@ -120,7 +120,7 @@
         <button class="btn btn-outline-primary bi-plus-circle" type="submit"> Rolle hinzufügen</button>
     </form>
 
-    <p/>
+    <br/>
 
     @template.components.display-statusmessage(successMessage, errorMessage)
 
