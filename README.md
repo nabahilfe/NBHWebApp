@@ -8,5 +8,5 @@ Als IDE wird Eclipse verwendet, es handelt sich also auch um ein Eclipse Projekt
 
 ## Probleme nach Check Out lösen
 
-Zuerst im Project Root ausführen: ./mvnw spring-boot:run
+Zuerst im Project Root ausführen: `./mvnw spring-boot:run`<br>
 Dann in Eclipse: Rechtsklick auf das Projekt „Maven → Update Project…“
