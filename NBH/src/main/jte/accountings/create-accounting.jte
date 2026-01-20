@@ -37,7 +37,7 @@
 
             <label for="transactionDate" class="col-sm-2 col-form-label">Transaktionsdatum</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" name="transactionDate" id="transactionDate" value="${formatDE(accountingEntry.getTransactionDate())}" disabled readonly>
+              <input type="text" class="form-control" name="transactionDate" id="transactionDate" value="${formatReverseDE(accountingEntry.getTransactionDate())}" disabled readonly>
             </div>
 
             <label for="transactionAmount" class="col-sm-2 col-form-label">Betrag</label>
