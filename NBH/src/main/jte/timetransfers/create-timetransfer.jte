@@ -77,7 +77,7 @@
                 <label for="dateOfService" class="col-sm-10 col-form-label">Leistungsdatum</label>
                 <div class="col-sm-10">
                       <input type="date" class="form-control" name="dateOfService" id="dateOfService"
-                          value="${ttf == null ? "" : formatDE(ttf.getServiceDate())}" required>
+                          value="${ttf == null ? "" : dateDE(ttf.getServiceDate())}" required>
                 </div>
 
                 <!-- Hours selector: choose 1..5 hours. Preselect when ttf provided. -->

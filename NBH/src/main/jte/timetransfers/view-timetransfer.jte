@@ -35,7 +35,7 @@
 
             <label for="dateOfService" class="col-sm-10 col-form-label">Leistungsdatum</label>
             <div class="col-sm-10">
-              <input type="date" class="form-control" readonly value="${formatDE(tt.getDateOfService())}">
+              <input type="date" class="form-control" readonly value="${dateDE(tt.getDateOfService())}">
             </div>
 
             <!-- Hours selector: choose 1..5 hours. Preselect when ttf provided. -->

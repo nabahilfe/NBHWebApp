@@ -3,6 +3,7 @@
 @import java.time.LocalDate
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
+@import static eu.nabahilfe.webapp.NumberFormatter.*
 
 @import eu.nabahilfe.webapp.NbhConst
 @import eu.nabahilfe.webapp.timecheques.TimeCheque
@@ -35,11 +36,11 @@
       <tbody class="table-group-divider">
         @for (TimeCheque tc : timeCheques)
         <tr>
-          <td scope="row">${formatDE(tc.getTransactionDate())}</td>
+          <td scope="row">${dateDE(tc.getTransactionDate())}</td>
           <td scope="row">${tc.getAssignedTo().getNameAndAddress()}</td>
           <td scope="row">${tc.getCreatedBy().getName()}</td>
           <td scope="row" class="text-end">${tc.getHours()}</td>
-          <td scope="row" class="text-end">€ ${tc.getAmount()}</td>
+          <td scope="row" class="text-end">€ ${moneyDE(tc.getAmount())}</td>
           <td scope="row" class="text-center">
             <a class="btn btn-outline-primary btn-sm bi-plus-lg"
                href="/accountings/book-accountable?accClass=${TimeCheque.class.getSimpleName()}&accId=${tc.getId()}&trnsType=${TransactionType.INCOME.name()}&trnsDate=${formatISO(tc.getTransactionDate())}&trnsAmount=${tc.getAmount()}"

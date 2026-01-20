@@ -38,7 +38,7 @@
                 <tbody class="table-group-divider">
                     @for (TimeTransfer tt : transfers)
                         <tr>
-                            <td scope="row">${formatDE(tt.getDateOfService())}</td>
+                            <td scope="row">${dateDE(tt.getDateOfService())}</td>
                             <td scope="row" class="text-center">${tt.getHours()}</td>
                             <td scope="row">${tt.getFromMember().getName()}</td>
                             <td scope="row">${tt.getToMember().getName()}</td>
