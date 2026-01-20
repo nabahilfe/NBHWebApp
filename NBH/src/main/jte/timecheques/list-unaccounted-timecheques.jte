@@ -6,6 +6,7 @@
 
 @import eu.nabahilfe.webapp.NbhConst
 @import eu.nabahilfe.webapp.timecheques.TimeCheque
+@import eu.nabahilfe.webapp.accountings.TransactionType
 
 @param List<TimeCheque> timeCheques
 
@@ -41,7 +42,7 @@
           <td scope="row" class="text-end">€ ${tc.getAmount()}</td>
           <td scope="row" class="text-center">
             <a class="btn btn-outline-primary btn-sm bi-plus-lg"
-               href="/accountings/book-accountable/?accId=${tc.getId()}&accAmount=${tc.getAmount()}"
+               href="/accountings/book-accountable/?accClass=${TimeCheque.class.getSimpleName()}&accId=${tc.getId()}&trnsType=${TransactionType.INCOME.name()}&trnsDate=${tc.getTransactionDate().toString()}&trnsAmount=${tc.getAmount()}"
                role="button"></a>
           </td>
         </tr>

@@ -29,28 +29,39 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "ACCOUNTING_ENTRIES")
 public class AccountingEntry  {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Size(max = 80)
+    private String accountableClass;    // MemberFee, TimeCheque, Transaction, ...
+
+    private Long accountableId;    // id zur Klasse bzw. Tabelle
+
+    @Size(max = 10)
+    @NotEmpty
+    private String transactionType;    // INCOME oder EXPENSE - muss aus Enum TransactionType kommen
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(nullable = false)
+    private LocalDate transactionDate;    // Buchungsdatum
+
+    @Column(nullable = false)
+    private BigDecimal transactionAmount;    // Betrag
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
     private LocalDate accountingDate;    // Buchungsdatum
 
-    @Size(max = 10)
-    @NotEmpty
-    private String accountingType;    // INCOMING oder OUTGOING
-
     @Size(max = 250)
-    private String description;    // Verpflichtend wenn keine accountableEntity eingetragen ist
-
-    @Column(nullable = false)
-    private BigDecimal amount;    // Betrag
+    private String description;    // Verpflichtend wenn keine accountableClass / accountableId eingetragen ist
 
     // Creation timestamp, value is set by Postgres (see Table definition)
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    // FIXME in Generator: "@Column(nullable = false)"
+    // FIXME: im Generator: "@Column(nullable = false)"
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "created_by_id")
     private Member createdBy;
@@ -66,18 +77,52 @@ public class AccountingEntry  {
     @Column(nullable = false)
     private Integer version;
 
-
-
-    // --------------------------------------------------
-    // generate setter/getter methodes with Eclipse here
-    // --------------------------------------------------
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAccountableClass() {
+        return accountableClass;
+    }
+
+    public void setAccountableClass(String accountableClass) {
+        this.accountableClass = accountableClass;
+    }
+
+    public Long getAccountableId() {
+        return accountableId;
+    }
+
+    public void setAccountableId(Long accountableId) {
+        this.accountableId = accountableId;
+    }
+
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
+    }
+
+    public LocalDate getTransactionDate() {
+        return transactionDate;
+    }
+
+    public void setTransactionDate(LocalDate transactionDate) {
+        this.transactionDate = transactionDate;
+    }
+
+    public BigDecimal getTransactionAmount() {
+        return transactionAmount;
+    }
+
+    public void setTransactionAmount(BigDecimal transactionAmount) {
+        this.transactionAmount = transactionAmount;
     }
 
     public LocalDate getAccountingDate() {
@@ -88,28 +133,12 @@ public class AccountingEntry  {
         this.accountingDate = accountingDate;
     }
 
-    public String getAccountingType() {
-        return accountingType;
-    }
-
-    public void setAccountingType(String accountingType) {
-        this.accountingType = accountingType;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -152,22 +181,10 @@ public class AccountingEntry  {
         this.version = version;
     }
 
-
-    // --------------------------------
-    // add your business methodes here
-    // --------------------------------
-
-
-
-    // ------------------------------------------------------------------------
-    // generate equals/hasCode methodes with Eclipse here - use ONLY id field!
-    // ------------------------------------------------------------------------
-
     @Override
     public int hashCode() {
         return Objects.hash(id);
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -181,22 +198,19 @@ public class AccountingEntry  {
         return Objects.equals(id, other.id);
     }
 
-
-    // toString() for logging
-
     @Override
     public String toString() {
-        return "AccountingEntry [id=" + id + ", accountingDate=" + accountingDate + ", accountingType=" + accountingType
-                + ", description=" + description + ", amount=" + amount
-                + ", createdAt=" + createdAt + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt + ", updatedBy="
-                + updatedBy + ", version=" + version + "]";
+        return "AccountingEntry [id=" + id + ", accountableClass=" + accountableClass + ", accountableId="
+                + accountableId + ", transactionType=" + transactionType + ", transactionDate=" + transactionDate
+                + ", transactionAmount=" + transactionAmount + ", accountingDate=" + accountingDate + ", description="
+                + description + ", createdAt=" + createdAt + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt
+                + ", updatedBy=" + updatedBy + ", version=" + version + "]";
     }
 
 
-
-
-
-
+    // ------------------------------
+    // add your business methods here
+    // ------------------------------
 
 
 }
