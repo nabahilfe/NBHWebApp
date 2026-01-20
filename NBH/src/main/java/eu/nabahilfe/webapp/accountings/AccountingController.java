@@ -85,6 +85,7 @@ public class AccountingController {
     }
 
     // /book-accountable?accClass=TimeCheque&accId=8&trnsType=INCOME&trnsDate=2026-01-19&trnsAmount=36.00
+    // FIXME: refactor to use AccountableForm insted of URL RequestParams
     @GetMapping("/book-accountable")
     public String bookAccountable(final Model model,
             @RequestParam String accClass, @RequestParam Long accId,
