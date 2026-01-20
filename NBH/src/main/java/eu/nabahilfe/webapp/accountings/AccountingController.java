@@ -84,7 +84,7 @@ public class AccountingController {
 
     }
 
-    // /book-accountable/?accClass=TimeCheque&accId=8&trnsType=INCOME&trnsDate=2026-01-19&trnsAmount=36.00
+    // /book-accountable?accClass=TimeCheque&accId=8&trnsType=INCOME&trnsDate=2026-01-19&trnsAmount=36.00
     @GetMapping("/book-accountable")
     public String bookAccountable(final Model model,
             @RequestParam String accClass, @RequestParam Long accId,
@@ -102,7 +102,6 @@ public class AccountingController {
 
         model.addAttribute("accountingEntry", accountingEntry);
 
-        return "";
-
+        return "accountings/create-accounting";
     }
 }

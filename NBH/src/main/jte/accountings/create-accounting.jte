@@ -15,6 +15,11 @@
 
     <div class="row">
 
+        <script>
+            console.log("Rendering create-accounting.jte");
+            console.log("Accounting Entry: ${accountingEntry}");
+        </script>
+
         <!-- first action is for create, second action is for update -->
         <form action="${accountingEntry.getId() == null ? "/accountings" : "/accountings/" + accountingEntry.getId()}" method="post">
 

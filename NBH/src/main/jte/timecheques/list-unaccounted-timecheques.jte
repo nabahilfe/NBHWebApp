@@ -42,7 +42,7 @@
           <td scope="row" class="text-end">€ ${tc.getAmount()}</td>
           <td scope="row" class="text-center">
             <a class="btn btn-outline-primary btn-sm bi-plus-lg"
-               href="/accountings/book-accountable/?accClass=${TimeCheque.class.getSimpleName()}&accId=${tc.getId()}&trnsType=${TransactionType.INCOME.name()}&trnsDate=${tc.getTransactionDate().toString()}&trnsAmount=${tc.getAmount()}"
+               href="/accountings/book-accountable?accClass=${TimeCheque.class.getSimpleName()}&accId=${tc.getId()}&trnsType=${TransactionType.INCOME.name()}&trnsDate=${tc.getTransactionDate().toString()}&trnsAmount=${tc.getAmount()}"
                role="button"></a>
           </td>
         </tr>
