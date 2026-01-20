@@ -69,7 +69,7 @@
 
                     <label for="birthdate" class="col col-form-label">Gebutsdatum<span class="text-danger">*</span></label>
                     <div class="col">
-                        <input type="date" class="form-control" name="birthdate" id="birthdate" value="${member.getBirthdate() != null ? member.getBirthdate().toString() : ""}" required>
+                        <input type="date" class="form-control" name="birthdate" id="birthdate" value="${formatISO(member.getBirthdate())}" required>
                     </div>
 
                     <label for="role" class="col col-form-label">Rolle</label>

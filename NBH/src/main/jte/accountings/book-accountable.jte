@@ -32,7 +32,7 @@
 
             <label for="accountingDate" class="col-sm-2 col-form-label">Buchungsdatum<span class="text-danger">*</span></label>
             <div class="col-sm-10">
-              <input type="date" class="form-control" name="accountingDate" id="accountingDate" value="${accountingEntry.getAccountingDate().toString()}" required>
+              <input type="date" class="form-control" name="accountingDate" id="accountingDate" value="${formatISO(accountingEntry.getAccountingDate())}" required>
             </div>
 
           </div>

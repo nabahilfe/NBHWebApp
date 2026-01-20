@@ -38,7 +38,7 @@
                         <label for="orderDate" class="col-form-label">Erstellungsdatum:</label>
                     </div>
                     <div class="col-auto">
-                        <input type="date" class="form-control" name="orderDate" id="orderDate" value="${timeCheque.getTransactionDate().toString()}" required>
+                        <input type="date" class="form-control" name="orderDate" id="orderDate" value="${formatISO(timeCheque.getTransactionDate())}" required>
                     </div>
                 </div>
             </div>

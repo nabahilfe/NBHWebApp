@@ -17,7 +17,7 @@
 
         <script>
             console.log("Rendering create-accounting.jte");
-            console.log("Accounting Entry: ${accountingEntry}");
+            console.log("Accounting Entry: ${accountingEntry.toString()}");
         </script>
 
         <!-- first action is for create, second action is for update -->
@@ -37,7 +37,7 @@
 
             <label for="transactionDate" class="col-sm-2 col-form-label">Transaktionsdatum<span class="text-danger">*</span></label>
             <div class="col-sm-10">
-              <input type="date" class="form-control" name="transactionDate" id="transactionDate" value="${accountingEntry.getTransactionDate().toString()}" required>
+              <input type="date" class="form-control" name="transactionDate" id="transactionDate" value="${formatISO(accountingEntry.getTransactionDate())}" required>
             </div>
 
             <label for="transactionAmount" class="col-sm-2 col-form-label">Betrag<span class="text-danger">*</span></label>
@@ -48,7 +48,7 @@
 
             <label for="accountingDate" class="col-sm-2 col-form-label">Buchungsdatum<span class="text-danger">*</span></label>
             <div class="col-sm-10">
-              <input type="date" class="form-control" name="accountingDate" id="accountingDate" value="${accountingEntry.getAccountingDate().toString()}" required>
+              <input type="date" class="form-control" name="accountingDate" id="accountingDate" value="${formatISO(accountingEntry.getAccountingDate())}" required>
             </div>
 
           </div>
