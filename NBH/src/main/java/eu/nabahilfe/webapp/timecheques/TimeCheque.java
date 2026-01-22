@@ -97,10 +97,15 @@ public class TimeCheque implements Accountable {
         return amount;
     }
 
+    @Override
+    public Member getAccountableMember() {
+        return assignedTo;
+    }
 
     // --------------------------------
     // Getter and Setter
     // --------------------------------
+
 
     public Long getId() {
         return id;
