@@ -25,9 +25,8 @@
                service date, hours selector and submit/reset buttons.
     -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
-    <p/>
+    <br/>
 
     <!-- Main form: POST to /timetransfers; server processes the submitted fields -->
     <form action="/timetransfers" method="post">
@@ -138,104 +137,104 @@
     @template.components.display-statusmessage(successMessage, errorMessage)
 
 
-<script>
+    <script>
 
-    /*
-      setupAutocomplete(inputId, hiddenId, resultId)
-      - Binds an input listener on the visible text input.
-      - Performs a fetch to /api/members/search?q=... when at least 2 characters are entered.
-      - Populates the provided UL with clickable LI items. Clicking an item sets the
-        visible input to a readable label and the hidden input to the selected user ID.
-      - Dispatches a 'change' event on the hidden input so other listeners (validation) run.
-    */
-    function setupAutocomplete(inputId, hiddenId, resultId) {
-        const input = document.getElementById(inputId);
-        const hidden = document.getElementById(hiddenId);
-        const results = document.getElementById(resultId);
+        /*
+          setupAutocomplete(inputId, hiddenId, resultId)
+          - Binds an input listener on the visible text input.
+          - Performs a fetch to /api/members/search?q=... when at least 2 characters are entered.
+          - Populates the provided UL with clickable LI items. Clicking an item sets the
+            visible input to a readable label and the hidden input to the selected user ID.
+          - Dispatches a 'change' event on the hidden input so other listeners (validation) run.
+        */
+        function setupAutocomplete(inputId, hiddenId, resultId) {
+            const input = document.getElementById(inputId);
+            const hidden = document.getElementById(hiddenId);
+            const results = document.getElementById(resultId);
 
-        input.addEventListener("input", async () => {
-            const q = input.value.trim();
-            results.innerHTML = "";
-            hidden.value = "";
+            input.addEventListener("input", async () => {
+                const q = input.value.trim();
+                results.innerHTML = "";
+                hidden.value = "";
 
-            if (q.length < 2) return;
+                if (q.length < 2) return;
 
-            const response = await fetch("/api/members/search?q=" + encodeURIComponent(q));
-            const users = await response.json();
+                const response = await fetch("/api/members/search?q=" + encodeURIComponent(q));
+                const users = await response.json();
 
-            users.forEach(user => {
-                const li = document.createElement("li");
-                li.classList.add("list-group-item");
-                li.classList.add("bg-dark-subtle");
-                li.textContent = user.nameAndAdress;
-                li.onclick = () => {
-                    input.value = user.nameAndAdress;
-                    hidden.value = user.id;
-                    hidden.dispatchEvent(new Event('change'));
-                    results.innerHTML = "";
-                };
-                results.appendChild(li);
+                users.forEach(user => {
+                    const li = document.createElement("li");
+                    li.classList.add("list-group-item");
+                    li.classList.add("bg-dark-subtle");
+                    li.textContent = user.nameAndAdress;
+                    li.onclick = () => {
+                        input.value = user.nameAndAdress;
+                        hidden.value = user.id;
+                        hidden.dispatchEvent(new Event('change'));
+                        results.innerHTML = "";
+                    };
+                    results.appendChild(li);
+                });
             });
-        });
-    }
-
-    // Initialize autocompletes for payer and payee
-    setupAutocomplete("userFromName", "userFromId", "userFromResults");
-    setupAutocomplete("userToName", "userToId", "userToResults");
-
-    const userFrom = document.getElementById("userFromId");
-    const userTo = document.getElementById("userToId");
-    const offer = document.getElementById("offerId");
-    const dateOfService = document.getElementById("dateOfService");
-
-    const submitButton = document.getElementById("submitBtn");
-    submitButton.disabled = true;
-
-    document.addEventListener('DOMContentLoaded', checkFields);
-
-    /*
-      checkFields()
-      - Validates that all required fields (userFromId, userToId, offerId, dateOfService)
-        have non-empty values and enables/disables the submit button accordingly.
-      - Called on relevant change/input events and once on DOMContentLoaded.
-    */
-    function checkFields() {
-        if (userFrom.value.trim() !== "" && userTo.value.trim() !== ""
-                && offer.value.trim() !== "" && dateOfService.value.trim() !== "") {
-              submitButton.disabled = false;
-        } else {
-              submitButton.disabled = true;
         }
-    }
 
-    userFrom.addEventListener("change", checkFields);
-    userTo.addEventListener("change", checkFields);
-    offer.addEventListener("change", checkFields);
-    dateOfService.addEventListener("input", checkFields);
+        // Initialize autocompletes for payer and payee
+        setupAutocomplete("userFromName", "userFromId", "userFromResults");
+        setupAutocomplete("userToName", "userToId", "userToResults");
 
-    /*
-      resetInputs()
-      - Clears visible inputs and hidden ids, resets selects to defaults and disables submit.
-      - Note: UL result containers must be cleared via innerHTML = "" because they are
-        list elements and do not have a value property.
-    */
-    function resetInputs() {
-        document.getElementById("userFromName").value = "";
-        document.getElementById("userFromResults").innerHTML = "";
-        document.getElementById("userFromId").value = "";
-        document.getElementById("dateOfService").value = "";
+        const userFrom = document.getElementById("userFromId");
+        const userTo = document.getElementById("userToId");
+        const offer = document.getElementById("offerId");
+        const dateOfService = document.getElementById("dateOfService");
 
-        document.getElementById("userToName").value = "";
-        document.getElementById("userToId").value = "";
-        document.getElementById("userToResults").innerHTML = "";
-
-        document.getElementById("hoursSelect").value = "1";
-        document.getElementById("offerId").value = "";
-
+        const submitButton = document.getElementById("submitBtn");
         submitButton.disabled = true;
-    }
 
-</script>
+        document.addEventListener('DOMContentLoaded', checkFields);
+
+        /*
+          checkFields()
+          - Validates that all required fields (userFromId, userToId, offerId, dateOfService)
+            have non-empty values and enables/disables the submit button accordingly.
+          - Called on relevant change/input events and once on DOMContentLoaded.
+        */
+        function checkFields() {
+            if (userFrom.value.trim() !== "" && userTo.value.trim() !== ""
+                    && offer.value.trim() !== "" && dateOfService.value.trim() !== "") {
+                  submitButton.disabled = false;
+            } else {
+                  submitButton.disabled = true;
+            }
+        }
+
+        userFrom.addEventListener("change", checkFields);
+        userTo.addEventListener("change", checkFields);
+        offer.addEventListener("change", checkFields);
+        dateOfService.addEventListener("input", checkFields);
+
+        /*
+          resetInputs()
+          - Clears visible inputs and hidden ids, resets selects to defaults and disables submit.
+          - Note: UL result containers must be cleared via innerHTML = "" because they are
+            list elements and do not have a value property.
+        */
+        function resetInputs() {
+            document.getElementById("userFromName").value = "";
+            document.getElementById("userFromResults").innerHTML = "";
+            document.getElementById("userFromId").value = "";
+            document.getElementById("dateOfService").value = "";
+
+            document.getElementById("userToName").value = "";
+            document.getElementById("userToId").value = "";
+            document.getElementById("userToResults").innerHTML = "";
+
+            document.getElementById("hoursSelect").value = "1";
+            document.getElementById("offerId").value = "";
+
+            submitButton.disabled = true;
+        }
+
+    </script>
 
 `)
 

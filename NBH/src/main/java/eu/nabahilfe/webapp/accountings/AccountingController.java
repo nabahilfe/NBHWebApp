@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import eu.nabahilfe.webapp.members.MemberRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
@@ -26,11 +27,11 @@ import jakarta.validation.Valid;
  *
  *  public abstract String getAccountableClass();    // MemberFee, TimeCheque, Transaction, ...
     public abstract Long getAccountableId();
-    public abstract String getTransactionType();    // INCOME oder EXPENSE - muss aus Enum TransactionType kommen
+    public abstract String getTransactionType();     // INCOME oder EXPENSE - muss aus Enum TransactionType kommen
     public abstract LocalDate getTransactionDate();
     public abstract BigDecimal getTransactionAmount();
 
-    http://localhost:8080/accountings/book-accountable/?accClass=TimeCheque&accId=8&trnsType=INCOME&trnsDate=2026-01-19&trnsAmount=36.00
+    http://localhost:8080/accountings/prepare-accounting/?accClass=TimeCheque&accId=8&trnsType=INCOME&trnsDate=2026-01-19&trnsAmount=36.00
  */
 
 
@@ -40,11 +41,13 @@ import jakarta.validation.Valid;
 public class AccountingController {
 
     private final AccountingRepository accountingRepository;
+    private final MemberRepository memberRepository;
 
     private static final Logger log = LoggerFactory.getLogger(AccountingController.class);
 
-    public AccountingController(AccountingRepository accountingRepository) {
+    public AccountingController(AccountingRepository accountingRepository, MemberRepository memberRepository) {
         this.accountingRepository = accountingRepository;
+        this.memberRepository = memberRepository;
 
         LocalDate ld = LocalDate.now();
         ld.toString();
@@ -59,7 +62,7 @@ public class AccountingController {
 
     @Transactional
     @PostMapping
-    public String createAccounting(final Model model, @ModelAttribute @Valid AccountingEntry accountingEntry,
+    public String createAccounting(final Model model, @ModelAttribute AccountingEntry accountingEntry,
             RedirectAttributes redirectAttributes, BindingResult result) {
         accountingRepository.save(accountingEntry);
         return "redirect:/accountings/" + accountingEntry.getId();
@@ -70,8 +73,9 @@ public class AccountingController {
     @PostMapping("/{id}")
     public String updateAccounting(final Model model, @ModelAttribute @Valid AccountingEntry accountingEntry,
             RedirectAttributes redirectAttributes, BindingResult result) {
+        log.debug("Updating AccountingEntry: " + accountingEntry.toString());
         accountingRepository.save(accountingEntry);
-        return "redirect:/accountings/" + accountingEntry.getId();
+        return "redirect:/timecheques/unaccounted";
     }
 
 
@@ -83,17 +87,18 @@ public class AccountingController {
 
     }
 
-    // /book-accountable?accClass=TimeCheque&accId=8&trnsType=INCOME&trnsDate=2026-01-19&trnsAmount=36.00
+    // http://localhost:8080/accountings/prepare-accounting?accClass=TimeCheque&accId=2&accMbrId=29&trnsType=INCOME&trnsDate=2026-01-20&trnsAmount=36.00
     // FIXME: refactor to use AccountableForm insted of URL RequestParams
-    @GetMapping("/book-accountable")
+    @GetMapping("/prepare-accounting")
     public String bookAccountable(final Model model,
-            @RequestParam String accClass, @RequestParam Long accId,
+            @RequestParam String accClass, @RequestParam Long accId, @RequestParam Long accMbrId,
             @RequestParam String trnsType, @RequestParam String trnsDate, @RequestParam BigDecimal trnsAmount) {
 
         AccountingEntry accountingEntry = new AccountingEntry();
 
         accountingEntry.setAccountableClass(accClass);
         accountingEntry.setAccountableId(accId);
+        accountingEntry.setAccountableMember(memberRepository.findById(accMbrId).orElse(null));
         accountingEntry.setTransactionType(trnsType);
         accountingEntry.setTransactionDate(LocalDate.parse(trnsDate));
         accountingEntry.setTransactionAmount(trnsAmount);
@@ -101,7 +106,8 @@ public class AccountingController {
         log.debug("AccountingEntry prepared for booking: " + accountingEntry.toString());
 
         model.addAttribute("accountingEntry", accountingEntry);
+        model.addAttribute("memberName", true);
 
-        return "accountings/create-accounting";
+        return "accountings/prepare-accounting";
     }
 }

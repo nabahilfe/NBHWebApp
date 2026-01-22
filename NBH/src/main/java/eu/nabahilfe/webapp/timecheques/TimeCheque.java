@@ -82,6 +82,7 @@ public class TimeCheque implements Accountable {
         return id;
     }
 
+
     @Override
     public String getTransactionType() {
         return TransactionType.INCOME.name();

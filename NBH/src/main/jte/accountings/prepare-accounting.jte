@@ -13,15 +13,11 @@
 
 @template.layout.main(content = @`
 
-    <h3>Accounting Eintrag anlegen</h3>
+    <h3>Buchungsdatensatz anlegen</h3>
+    <p>Damit wird dokumentiert, dass die Buchung auf dem Bankkonto durchgeführt wurde.</p>
     <br/>
 
     <div class="row">
-
-        <script>
-            console.log("Rendering create-accounting.jte");
-            console.log("Accounting Entry: ${accountingEntry.toString()}");
-        </script>
 
         <!-- first action is for create, second action is for update -->
         <form action="${accountingEntry.getId() == null ? "/accountings" : "/accountings/" + accountingEntry.getId()}" method="post">
@@ -47,6 +43,12 @@
             <div class="col-sm-10">
               <input type="text" class="form-control" name="transactionAmount" id="transactionAmount" value="${numberDE(accountingEntry.getTransactionAmount())}" disabled readonly>
             </div>
+
+            <label for="fromMember" class="col-sm-2 col-form-label">Von Mitglied</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="fromMember" id="fromMember" value="${accountingEntry.getAccountableMember().getNameAndAddress()}" disabled readonly>
+            </div>
+
 
             <p></p>
 

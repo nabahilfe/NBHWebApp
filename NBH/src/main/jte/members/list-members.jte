@@ -111,7 +111,7 @@
         <button type="submit" class="btn btn-outline-primary bi-plus-circle"> Mitglied hinzufügen</button>
     </form>
 
-    <p/>
+    <br/>
 
     <!-- Pagination controls -->
     @if(memberPage.getTotalPages() > 0)
