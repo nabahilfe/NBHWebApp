@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -38,6 +40,7 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/accountings")
+@SessionAttributes("accountingEntry")
 public class AccountingController {
 
     private final AccountingRepository accountingRepository;
@@ -48,66 +51,72 @@ public class AccountingController {
     public AccountingController(AccountingRepository accountingRepository, MemberRepository memberRepository) {
         this.accountingRepository = accountingRepository;
         this.memberRepository = memberRepository;
-
-        LocalDate ld = LocalDate.now();
-        ld.toString();
     }
 
+
+    @ModelAttribute("formRowData")
+    public AccountableRowSelectionForm formRowData() {
+        return new AccountableRowSelectionForm();
+    }
 
     @GetMapping("/new")
     public String newAccounting(final Model model) {
         return "accountings/create-accounting";
     }
 
+//
+//    @Transactional
+//    @PostMapping
+//    public String createAccounting(final Model model, @ModelAttribute AccountingEntry accountingEntry,
+//            RedirectAttributes redirectAttributes, BindingResult result) {
+//        accountingRepository.save(accountingEntry);
+//        return "redirect:/accountings/" + accountingEntry.getId();
+//    }
+//
+//
+//    @Transactional
+//    @PostMapping("/{id}")
+//    public String updateAccounting(final Model model, @ModelAttribute AccountingEntry accountingEntry,
+//            RedirectAttributes redirectAttributes, BindingResult result) {
+//        log.debug("Updating AccountingEntry: " + accountingEntry.toString());
+//        accountingRepository.save(accountingEntry);
+//        return "redirect:/timecheques/unaccounted";
+//    }
+//
+//
+//    @GetMapping("/{id}")
+//    public String showAccounting(final Model model, @PathVariable Long id) {
+//        AccountingEntry accountingEntry = accountingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Accounting entry not found with id: " + id));
+//        model.addAttribute("accountingEntry", accountingEntry);
+//        return "accountings/summary-accounting";
+//
+//    }
 
-    @Transactional
-    @PostMapping
-    public String createAccounting(final Model model, @ModelAttribute AccountingEntry accountingEntry,
-            RedirectAttributes redirectAttributes, BindingResult result) {
-        accountingRepository.save(accountingEntry);
-        return "redirect:/accountings/" + accountingEntry.getId();
-    }
 
-
-    @Transactional
-    @PostMapping("/{id}")
-    public String updateAccounting(final Model model, @ModelAttribute @Valid AccountingEntry accountingEntry,
-            RedirectAttributes redirectAttributes, BindingResult result) {
-        log.debug("Updating AccountingEntry: " + accountingEntry.toString());
-        accountingRepository.save(accountingEntry);
-        return "redirect:/timecheques/unaccounted";
-    }
-
-
-    @GetMapping("/{id}")
-    public String showAccounting(final Model model, @PathVariable Long id) {
-        AccountingEntry accountingEntry = accountingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Accounting entry not found with id: " + id));
-        model.addAttribute("accountingEntry", accountingEntry);
-        return "accountings/summary-accounting";
-
-    }
-
-    // http://localhost:8080/accountings/prepare-accounting?accClass=TimeCheque&accId=2&accMbrId=29&trnsType=INCOME&trnsDate=2026-01-20&trnsAmount=36.00
-    // FIXME: refactor to use AccountableForm insted of URL RequestParams
-    @GetMapping("/prepare-accounting")
-    public String bookAccountable(final Model model,
-            @RequestParam String accClass, @RequestParam Long accId, @RequestParam Long accMbrId,
-            @RequestParam String trnsType, @RequestParam String trnsDate, @RequestParam BigDecimal trnsAmount) {
+    @PostMapping("/prepare-accounting")
+    public String prepareAccountable(final Model model, @ModelAttribute @Valid AccountableRowSelectionForm formRowData) {
+        log.debug("Preparing AccountingEntry from form data: " + formRowData.toString());
 
         AccountingEntry accountingEntry = new AccountingEntry();
 
-        accountingEntry.setAccountableClass(accClass);
-        accountingEntry.setAccountableId(accId);
-        accountingEntry.setAccountableMember(memberRepository.findById(accMbrId).orElse(null));
-        accountingEntry.setTransactionType(trnsType);
-        accountingEntry.setTransactionDate(LocalDate.parse(trnsDate));
-        accountingEntry.setTransactionAmount(trnsAmount);
+        accountingEntry.setAccountableClass(formRowData.getAccountableClassName());
+        accountingEntry.setAccountableId(formRowData.getAccountableId());
+        accountingEntry.setAccountableMember(formRowData.getAccountableMemberId() != null ?
+                memberRepository.findById(formRowData.getAccountableMemberId()).orElse(null) : null);
+        accountingEntry.setTransactionType(formRowData.getTransactionType());
+        accountingEntry.setTransactionDate(LocalDate.parse(formRowData.getTransactionISODate()));
+        accountingEntry.setTransactionAmount(formRowData.getTransactionAmount());
+
+        accountingEntry.setId(99999L);  // dummy ID for the moment
 
         log.debug("AccountingEntry prepared for booking: " + accountingEntry.toString());
 
         model.addAttribute("accountingEntry", accountingEntry);
         model.addAttribute("memberName", true);
 
-        return "accountings/prepare-accounting";
+        return "show-accounting";
     }
+
+
+
 }

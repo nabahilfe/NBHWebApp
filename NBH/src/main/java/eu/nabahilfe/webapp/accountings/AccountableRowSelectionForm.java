@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 import eu.nabahilfe.webapp.members.Member;
 
-public class AccountableForm implements Accountable {
+public class AccountableRowSelectionForm implements Accountable {
 
     private String accountableClassName;    	// MemberFee, TimeCheque, Transaction, ...
     private Long accountableId;				// ID der konkreten Accountable Entity, also der accountableClass
@@ -13,7 +13,7 @@ public class AccountableForm implements Accountable {
     private Long accountableMemberId;    	// Nur bei Zeitscheck-Kauf oder Mitgliedsgebühr relevant, sonst null
 
     private String transactionType;    		// INCOME oder EXPENSE - muss aus Enum TransactionType kommen
-    private LocalDate transactionDate;
+    private String transactionISODate;
     private BigDecimal transactionAmount;
 
 
@@ -50,12 +50,12 @@ public class AccountableForm implements Accountable {
         this.transactionType = transactionType;
     }
 
-    public LocalDate getTransactionDate() {
-        return transactionDate;
+    public String getTransactionISODate() {
+        return transactionISODate;
     }
 
-    public void setTransactionDate(LocalDate transactionDate) {
-        this.transactionDate = transactionDate;
+    public void setTransactionDate(String transactionISODate) {
+        this.transactionISODate = transactionISODate;
     }
 
     public BigDecimal getTransactionAmount() {
@@ -71,7 +71,7 @@ public class AccountableForm implements Accountable {
     public String toString() {
         return "AccountableForm [accountableClassName=" + accountableClassName + ", accountableId=" + accountableId
                 + ", accountableMemberId=" + accountableMemberId + ", transactionType=" + transactionType
-                + ", transactionDate=" + transactionDate + ", transactionAmount=" + transactionAmount + "]";
+                + ", transactionISODate=" + transactionISODate + ", transactionAmount=" + transactionAmount + "]";
     }
 
 }

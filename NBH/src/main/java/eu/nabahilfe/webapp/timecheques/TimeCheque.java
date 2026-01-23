@@ -89,6 +89,10 @@ public class TimeCheque implements Accountable {
     }
 
     @Override
+    public String getTransactionISODate() {
+        return transactionDate.toString();
+    }
+
     public LocalDate getTransactionDate() {
         return transactionDate;
     }

@@ -14,6 +14,6 @@ public interface Accountable {
     public abstract Long 		getAccountableMemberId();    	// Nur bei Zeitscheck-Kauf oder Mitgliedsgebühr relevant, sonst null
 
     public abstract String 		getTransactionType();    		// INCOME oder EXPENSE - muss aus Enum TransactionType kommen
-    public abstract LocalDate 	getTransactionDate();
+    public abstract String 		getTransactionISODate();    	// Date as ISO String
     public abstract BigDecimal 	getTransactionAmount();
 }

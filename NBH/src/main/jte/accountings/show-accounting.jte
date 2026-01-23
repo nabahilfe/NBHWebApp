@@ -19,6 +19,10 @@
 
     <div class="row">
 
+        <script>
+        console.log("Accounting Entry: ${accountingEntry.toString()}");
+        </script>
+
         <!-- first action is for create, second action is for update -->
         <form action="${accountingEntry.getId() == null ? "/accountings" : "/accountings/" + accountingEntry.getId()}" method="post">
 
