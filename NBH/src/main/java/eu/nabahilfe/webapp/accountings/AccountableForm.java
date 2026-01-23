@@ -7,10 +7,10 @@ import eu.nabahilfe.webapp.members.Member;
 
 public class AccountableForm implements Accountable {
 
-    private String accountableClass;    	// MemberFee, TimeCheque, Transaction, ...
+    private String accountableClassName;    	// MemberFee, TimeCheque, Transaction, ...
     private Long accountableId;				// ID der konkreten Accountable Entity, also der accountableClass
 
-    private Member accountableMember;    	// Nur bei Zeitscheck-Kauf oder Mitgliedsgebühr relevant, sonst null
+    private Long accountableMemberId;    	// Nur bei Zeitscheck-Kauf oder Mitgliedsgebühr relevant, sonst null
 
     private String transactionType;    		// INCOME oder EXPENSE - muss aus Enum TransactionType kommen
     private LocalDate transactionDate;
@@ -18,12 +18,12 @@ public class AccountableForm implements Accountable {
 
 
 
-    public String getAccountableClass() {
-        return accountableClass;
+    public String getAccountableClassName() {
+        return accountableClassName;
     }
 
-    public void setAccountableClass(String accountableClass) {
-        this.accountableClass = accountableClass;
+    public void setAccountableClassName(String accountableClassName) {
+        this.accountableClassName = accountableClassName;
     }
 
     public Long getAccountableId() {
@@ -34,12 +34,12 @@ public class AccountableForm implements Accountable {
         this.accountableId = accountableId;
     }
 
-    public Member getAccountableMember() {
-        return accountableMember;
+    public Long getAccountableMemberId() {
+        return accountableMemberId;
     }
 
-    public void setAccountableMember(Member accountableMember) {
-        this.accountableMember = accountableMember;
+    public void setAccountableMemberId(Long accountableMemberId) {
+        this.accountableMemberId = accountableMemberId;
     }
 
     public String getTransactionType() {
@@ -69,8 +69,8 @@ public class AccountableForm implements Accountable {
 
     @Override
     public String toString() {
-        return "AccountableForm [accountableClass=" + accountableClass + ", accountableId=" + accountableId
-                + ", accountableMember=" + accountableMember.getName() + ", transactionType=" + transactionType
+        return "AccountableForm [accountableClassName=" + accountableClassName + ", accountableId=" + accountableId
+                + ", accountableMemberId=" + accountableMemberId + ", transactionType=" + transactionType
                 + ", transactionDate=" + transactionDate + ", transactionAmount=" + transactionAmount + "]";
     }
 

@@ -73,7 +73,7 @@ public class TimeCheque implements Accountable {
     private Integer version;
 
     @Override
-    public String getAccountableClass() {
+    public String getAccountableClassName() {
         return this.getClass().getSimpleName();
     }
 
@@ -99,8 +99,8 @@ public class TimeCheque implements Accountable {
     }
 
     @Override
-    public Member getAccountableMember() {
-        return assignedTo;
+    public Long getAccountableMemberId() {
+        return assignedTo.getId();
     }
 
     // --------------------------------
@@ -195,7 +195,7 @@ public class TimeCheque implements Accountable {
 
     @Override
     public String toString() {
-        return "TimeCheque [getAccountableClass()=" + getAccountableClass() + ", getAccountableId()="
+        return "TimeCheque [getAccountableClass()=" + getAccountableClassName() + ", getAccountableId()="
                 + getAccountableId() + ", getTransactionType()=" + getTransactionType() + ", getTransactionDate()="
                 + getTransactionDate() + ", getTransactionAmount()=" + getTransactionAmount() + ", getId()=" + getId()
                 + ", getHours()=" + getHours() + ", getAmount()=" + getAmount() + ", getAssignedTo()=" + getAssignedTo()
