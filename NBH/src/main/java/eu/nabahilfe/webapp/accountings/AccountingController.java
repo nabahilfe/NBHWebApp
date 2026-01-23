@@ -24,23 +24,8 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 
-/*
- *  Interface:
- *
- *  public abstract String getAccountableClass();    // MemberFee, TimeCheque, Transaction, ...
-    public abstract Long getAccountableId();
-    public abstract String getTransactionType();     // INCOME oder EXPENSE - muss aus Enum TransactionType kommen
-    public abstract LocalDate getTransactionDate();
-    public abstract BigDecimal getTransactionAmount();
-
-    http://localhost:8080/accountings/prepare-accounting/?accClass=TimeCheque&accId=8&trnsType=INCOME&trnsDate=2026-01-19&trnsAmount=36.00
- */
-
-
-
 @Controller
 @RequestMapping("/accountings")
-@SessionAttributes("accountingEntry")
 public class AccountingController {
 
     private final AccountingRepository accountingRepository;
@@ -114,7 +99,7 @@ public class AccountingController {
         model.addAttribute("accountingEntry", accountingEntry);
         model.addAttribute("memberName", true);
 
-        return "show-accounting";
+        return "accountings/show-accounting";
     }
 
 
