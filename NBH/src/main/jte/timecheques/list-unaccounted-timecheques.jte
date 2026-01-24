@@ -38,20 +38,13 @@
 
         <tbody class="table-group-divider">
             @for (TimeCheque tc : timeCheques)
-                <form method="post" action="/accountings/prepare-accounting">
+                <form method="post" action="/accountings/new-accountable">
                     <tr>
                         <td scope="row">${dateDE(tc.getTransactionDate())}</td>
                         <td scope="row">${tc.getAssignedTo().getNameAndAddress()}</td>
                         <td scope="row">${tc.getCreatedBy().getName()}</td>
                         <td scope="row" class="text-end">${tc.getHours()}</td>
                         <td scope="row" class="text-end">€ ${numberDE(tc.getAmount())}</td>
-                        <!-- FIXME: refactor to use AccountableForm insted of URL RequestParams -->
-                        <td scope="row" class="text-center">
-                            <a class="btn btn-outline-primary btn-sm bi-plus-lg"
-                                href="/accountings/prepare-accounting?accClass=${TimeCheque.class.getSimpleName()}&accId=${tc.getId()}&accMbrId=${tc.getAssignedTo().getId()}&trnsType=${TransactionType.INCOME.name()}&trnsDate=${formatISO(tc.getTransactionDate())}&trnsAmount=${tc.getAmount()}"
-                                role="button"></a>
-                        </td>
-
                         <td>
                             <input type="hidden" name="accountableClassName" value="${tc.getAccountableClassName()}">
                             <input type="hidden" name="accountableId" value="${tc.getAccountableId()}">
@@ -59,9 +52,10 @@
                             <input type="hidden" name="transactionType" value="${tc.getTransactionType()}">
                             <input type="hidden" name="transactionDate" value="${tc.getTransactionISODate()}">
                             <input type="hidden" name="transactionAmount" value="${tc.getTransactionAmount()}">
-                            <button type="submit" class="btn btn-outline-primary btn-sm bi-plus-lg"> </button>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-outline-primary btn-sm bi-plus-lg"></button>
+                            </div>
                         </td>
-
                     </tr>
                 </form>
             @endfor

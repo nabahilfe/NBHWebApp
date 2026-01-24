@@ -44,42 +44,14 @@ public class AccountingController {
         return new AccountableRowSelectionForm();
     }
 
-    @GetMapping("/new")
-    public String newAccounting(final Model model) {
-        return "accountings/create-accounting";
-    }
 
-//
-//    @Transactional
-//    @PostMapping
-//    public String createAccounting(final Model model, @ModelAttribute AccountingEntry accountingEntry,
-//            RedirectAttributes redirectAttributes, BindingResult result) {
-//        accountingRepository.save(accountingEntry);
-//        return "redirect:/accountings/" + accountingEntry.getId();
-//    }
-//
-//
-//    @Transactional
-//    @PostMapping("/{id}")
-//    public String updateAccounting(final Model model, @ModelAttribute AccountingEntry accountingEntry,
-//            RedirectAttributes redirectAttributes, BindingResult result) {
-//        log.debug("Updating AccountingEntry: " + accountingEntry.toString());
-//        accountingRepository.save(accountingEntry);
-//        return "redirect:/timecheques/unaccounted";
-//    }
-//
-//
-//    @GetMapping("/{id}")
-//    public String showAccounting(final Model model, @PathVariable Long id) {
-//        AccountingEntry accountingEntry = accountingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Accounting entry not found with id: " + id));
-//        model.addAttribute("accountingEntry", accountingEntry);
-//        return "accountings/summary-accounting";
-//
-//    }
+    // --------------------
+    // CREATE NEW, UPDATE
+    // --------------------
 
 
-    @PostMapping("/prepare-accounting")
-    public String prepareAccountable(final Model model, @ModelAttribute @Valid AccountableRowSelectionForm formRowData) {
+    @PostMapping("/new-accountable")
+    public String newAccountable(final Model model, @ModelAttribute @Valid AccountableRowSelectionForm formRowData) {
         log.debug("Preparing AccountingEntry from form data: " + formRowData.toString());
 
         AccountingEntry accountingEntry = new AccountingEntry();
@@ -99,7 +71,7 @@ public class AccountingController {
         model.addAttribute("accountingEntry", accountingEntry);
         model.addAttribute("memberName", true);
 
-        return "accountings/show-accounting";
+        return "accountings/detail-accountable";
     }
 
 
