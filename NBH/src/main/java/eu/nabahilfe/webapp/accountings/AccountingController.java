@@ -20,22 +20,28 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
+import eu.nabahilfe.webapp.timecheques.TimeCheque;
+import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 
 @Controller
 @RequestMapping("/accountings")
+@SessionAttributes("accountingEntry")
 public class AccountingController {
 
     private final AccountingRepository accountingRepository;
     private final MemberRepository memberRepository;
+    private final TimeChequeRepository timeChequeRepository;
 
     private static final Logger log = LoggerFactory.getLogger(AccountingController.class);
 
-    public AccountingController(AccountingRepository accountingRepository, MemberRepository memberRepository) {
+    public AccountingController(AccountingRepository accountingRepository, MemberRepository memberRepository,
+            TimeChequeRepository timeChequeRepository) {
         this.accountingRepository = accountingRepository;
         this.memberRepository = memberRepository;
+        this.timeChequeRepository = timeChequeRepository;
     }
 
 
@@ -46,12 +52,30 @@ public class AccountingController {
 
 
     // --------------------
+    // VIEW
+    // --------------------
+
+    @GetMapping("/view-accounting/{id}")
+    public String viewAccountingEntry(final Model model, @PathVariable Long id) {
+
+        AccountingEntry accountingEntry = accountingRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Accounting entry not found with id: " + id));
+
+        log.debug("Viewing AccountingEntry: " + accountingEntry.toString());
+
+        model.addAttribute("accountingEntry", accountingEntry);
+        return "accountings/view-accounting";
+    }
+
+
+    // --------------------
     // CREATE NEW, UPDATE
     // --------------------
 
 
     @PostMapping("/new-accountable")
     public String newAccountable(final Model model, @ModelAttribute @Valid AccountableRowSelectionForm formRowData) {
+
         log.debug("Preparing AccountingEntry from form data: " + formRowData.toString());
 
         AccountingEntry accountingEntry = new AccountingEntry();
@@ -64,14 +88,46 @@ public class AccountingController {
         accountingEntry.setTransactionDate(LocalDate.parse(formRowData.getTransactionISODate()));
         accountingEntry.setTransactionAmount(formRowData.getTransactionAmount());
 
-        accountingEntry.setId(99999L);  // dummy ID for the moment
 
         log.debug("AccountingEntry prepared for booking: " + accountingEntry.toString());
 
         model.addAttribute("accountingEntry", accountingEntry);
-        model.addAttribute("memberName", true);
 
         return "accountings/detail-accountable";
+    }
+
+
+    @PostMapping("/save-accounting")
+    @Transactional
+    public String saveAccountingEntry(final Model model,  @ModelAttribute @Valid AccountingEntry accountingEntry,
+            BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
+        log.debug("Saving AccountingEntry: " + accountingEntry.toString());
+
+        if (bindingResult.hasErrors()) {
+            log.debug("Validation errors found: " + bindingResult.getAllErrors().toString());
+            model.addAttribute("accountingEntry", accountingEntry);
+            redirectAttributes.addFlashAttribute("errorMessage", bindingResult.getAllErrors().toString());
+            return "accountings/detail-accountable";
+        }
+
+        accountingRepository.save(accountingEntry);
+
+        if (accountingEntry.getAccountableClass().equals(TimeCheque.class.getSimpleName())) {
+            TimeCheque tc = timeChequeRepository.findById(accountingEntry.getAccountableId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid TimeCheque ID: " + accountingEntry.getAccountableId()));
+            tc.setAccountedBy(accountingEntry);
+        }
+        else if (accountingEntry.getAccountableClass().equals("SOME_OTHER_CLASS")) {
+            // FIXME: Handle other accountable classes as needed
+        }
+
+
+        log.debug("AccountingEntry saved with ID: " + accountingEntry.getId());
+
+        model.addAttribute("accountingEntry", accountingEntry);
+        redirectAttributes.addFlashAttribute("successMessage", "Accounting entry saved successfully.");
+        return "redirect:/accountings/view-accounting/" + accountingEntry.getId();
     }
 
 
