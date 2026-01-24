@@ -178,12 +178,12 @@
                 <div class="tab-content" id="memberDetailTabsContent">
                     <div class="tab-pane fade show active" id="timecheques-pane" role="tabpanel" aria-labelledby="timecheques-tab" tabindex="0">
                         <div class="pt-3">
-                            @template.components.list-timecheques-component(timeCheques = purchasedTimeCheques)
+                            @template.components.list-timecheques-component(member = member, timeCheques = purchasedTimeCheques)
                         </div>
                     </div>
                     <div class="tab-pane fade" id="transfers-pane" role="tabpanel" aria-labelledby="transfers-tab" tabindex="0">
                         <div class="pt-3">
-                            @template.components.list-timetransfers-component(transfers = timeTransfers)
+                            @template.components.list-timetransfers-component(member = member, transfers = timeTransfers)
                         </div>
                     </div>
                 </div>
