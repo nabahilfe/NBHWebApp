@@ -138,10 +138,8 @@ public class MemberController {
     @GetMapping("/{id}")
     String editMember(final Model model, @PathVariable Long id) {
         log.debug("Editing Member: {}", id);
-        model.addAttribute("timeTransfers", timeTransferRepository.findAllByOrderByDateOfServiceDesc());
-        log.debug("Loading timeTransfers for Member id={}", id);
-        model.addAttribute("timeTransfers", timeTransferRepository.findTop10ByFromMember_IdOrToMember_IdOrderByDateOfServiceDesc(id, id));
-        log.debug("Loading purchased TimeCheques for Member id={}", id);
+        model.addAttribute("receivedTimeTransfers", timeTransferRepository.findAllByToMember_IdOrderByDateOfServiceDesc(id));
+        model.addAttribute("givenTimeTransfers", timeTransferRepository.findAllByFromMember_IdOrderByDateOfServiceDesc(id));
         model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(id));
         return "members/detail-member";
     }

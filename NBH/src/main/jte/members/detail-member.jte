@@ -12,7 +12,8 @@
 @param Member member
 @param List<Role> roles
 @param List<TimeCheque> purchasedTimeCheques
-@param List<TimeTransfer> timeTransfers
+@param List<TimeTransfer> receivedTimeTransfers
+@param List<TimeTransfer> givenTimeTransfers
 
 @param java.lang.String action
 
@@ -185,7 +186,12 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="transfers-tab" data-bs-toggle="tab" data-bs-target="#transfers-pane" type="button" role="tab" aria-controls="transfers-pane" aria-selected="false">
-                            Zeitübertragungen
+                            Leistungsempfänger
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="received-tab" data-bs-toggle="tab" data-bs-target="#received-pane" type="button" role="tab" aria-controls="received-pane" aria-selected="false">
+                            Leistungserbringer
                         </button>
                     </li>
                 </ul>
@@ -198,16 +204,23 @@
                     </div>
                     <div class="tab-pane fade" id="transfers-pane" role="tabpanel" aria-labelledby="transfers-tab" tabindex="0">
                         <div class="pt-3">
-                            @template.components.list-timetransfers-component(member = member, transfers = timeTransfers)
+                            @template.components.list-timetransfers-component(member = member, transfers = givenTimeTransfers)
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="received-pane" role="tabpanel" aria-labelledby="received-tab" tabindex="0">
+                        <div class="pt-3">
+                            @template.components.list-timetransfers-component(member = member, transfers = receivedTimeTransfers)
                         </div>
                     </div>
                 </div>
+
 
             </div>
         </div>
     @endif
 
 `)
+
 
 
 
