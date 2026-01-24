@@ -43,6 +43,7 @@
                     <label for="salutation" class="col col-form-label">Anrede</label>
                     <div class="col">
                         <select class="form-select" name="salutation" id="salutation">
+                            <option value="">Auswählen</option>
                             @for(Salutation sal : Salutation.values())
                                 <option value="${sal.name()}" selected="${member.getSalutation() != null && member.getSalutation().equals(sal.name())}">
                                     ${sal.name()}
