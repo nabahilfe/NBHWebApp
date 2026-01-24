@@ -117,6 +117,16 @@ public class AccountingEntry  {
         return transactionType;
     }
 
+    public String getTransactionDisplayType() {
+        if (transactionType.contains(TransactionType.INCOME.name())) {
+            return "Einnahme";
+        } else if (transactionType.contains(TransactionType.EXPENSE.name())) {
+            return "Ausgabe";
+        } else {
+            return transactionType;
+        }
+    }
+
     public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
     }

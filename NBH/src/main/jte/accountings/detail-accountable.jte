@@ -27,7 +27,7 @@
 
                 <label for="transactionType" class="col-sm-2 col-form-label">Buchungsart</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="transactionType" id="transactionType" value="${accountingEntry.getTransactionType()}" disabled readonly>
+                    <input type="text" class="form-control" name="transactionType" id="transactionType" value="${accountingEntry.getTransactionDisplayType()}" disabled readonly>
                 </div>
 
                 <label for="transactionDate" class="col-sm-2 col-form-label">Transaktionsdatum</label>

@@ -22,7 +22,7 @@
 
             <label for="transactionType" class="col-sm-2 col-form-label">INCOMING/EXPENSE<span class="text-danger">*</span></label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" name="transactionType" id="transactionType" value="${accountingEntry.getTransactionType()}" required>
+              <input type="text" class="form-control" name="transactionType" id="transactionType" value="${accountingEntry.getTransactionDisplayType()}" required>
             </div>
 
             <label for="transactionAmount" class="col-sm-2 col-form-label">Betrag<span class="text-danger">*</span></label>

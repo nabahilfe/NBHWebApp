@@ -27,7 +27,7 @@
                         <dd class="col-sm-8">${accountingEntry.getAccountableMember() != null ? accountingEntry.getAccountableMember().getNameAndAddress() : "-"}</dd>
 
                         <dt class="col-sm-4">Buchungsart</dt>
-                        <dd class="col-sm-8">${accountingEntry.getTransactionType()}</dd>
+                        <dd class="col-sm-8">${accountingEntry.getTransactionDisplayType()}</dd>
 
                         <dt class="col-sm-4">Transaktionsdatum</dt>
                         <dd class="col-sm-8">${dateReverseDE(accountingEntry.getTransactionDate())}</dd>
