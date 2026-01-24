@@ -19,6 +19,8 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
+@param Integer numberOfTimecheques = null		/* so we can display button to create first TimeCheque only if there are none yet */
+
 
 @template.layout.main(content = @`
 
@@ -147,6 +149,8 @@
                 </div>
             </div>
 
+
+
             <br/>
 
             @template.components.display-statusmessage(successMessage, errorMessage)
@@ -155,9 +159,20 @@
 
     </div>
 
-    <br/>
 
     @if(member.getId() != null)
+
+        @if(numberOfTimecheques != null && numberOfTimecheques == 0)
+            <div class="alert alert-info py-2 px-3" role="alert">
+                Dieses Mitglied hat noch keine Zeitschecks. Erfasse gleich den ersten Gratis-Zeitscheck über den Button unten.
+            </div>
+            <form action="/timecheques/new" method="get">
+                <input type="hidden" name="memberId" value="${member.getId()}">
+                <button type="submit" class="btn btn-outline-primary bi-plus-square"> Ersten Zeitscheck erfassen</button>
+            </form>
+        @endif
+
+        <br/>
 
         <div class="row">
             <div class="col-sm-12 mb-3 mb-sm-0">
@@ -193,6 +208,7 @@
     @endif
 
 `)
+
 
 
 

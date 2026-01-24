@@ -65,6 +65,15 @@ public class MemberController {
     }
 
 
+    @ModelAttribute("numberOfTimecheques")
+    public Integer getNumberOfTimecheques(@ModelAttribute Member member) {
+        if (member.getId() != null)
+            return timeCheckRepository.countByAssignedTo(member);
+        else
+            return 0;
+    }
+
+
     // ----------------------
     // SEARCH, LIST & DETAIL
     // ----------------------
@@ -174,6 +183,8 @@ public class MemberController {
         log.debug("Saving Member: {}", member);
 
         memberRepository.save(member);
+
+        redirectAttributes.addFlashAttribute("numberOfTimecheques", timeCheckRepository.countByAssignedTo(member));
         redirectAttributes.addFlashAttribute("successMessage", "Daten für " + member.getName() + " wurden gespeichert.");
 
         log.debug("Member saved: {}", member);
