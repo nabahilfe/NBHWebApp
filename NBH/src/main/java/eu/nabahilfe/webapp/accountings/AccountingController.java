@@ -125,7 +125,7 @@ public class AccountingController {
 
         log.debug("AccountingEntry saved with ID: " + accountingEntry.getId());
 
-        model.addAttribute("accountingEntry", accountingEntry);
+        redirectAttributes.addFlashAttribute("accountingEntry", accountingEntry);
         redirectAttributes.addFlashAttribute("successMessage", "Accounting entry saved successfully.");
         return "redirect:/accountings/view-accounting/" + accountingEntry.getId();
     }

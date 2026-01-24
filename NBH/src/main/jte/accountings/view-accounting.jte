@@ -1,6 +1,7 @@
 @import java.time.LocalDate
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
+@import static eu.nabahilfe.webapp.NumberFormatter.*
 @import eu.nabahilfe.webapp.accountings.AccountingEntry
 
 @param AccountingEntry accountingEntry
@@ -11,45 +12,49 @@
 
 @template.layout.main(content = @`
 
-    <h3>Accounting Eintrag</h3>
+    <h3>Buchung</h3>
 
-    <div class="row">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header bg-primary text-white">Buchungsdetails</div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Buchung f&uuml;r</dt>
+                        <dd class="col-sm-8">${accountingEntry.getAccountableClassDisplayName()}</dd>
 
+                        <dt class="col-sm-4">Mitglied</dt>
+                        <dd class="col-sm-8">${accountingEntry.getAccountableMember() != null ? accountingEntry.getAccountableMember().getNameAndAddress() : "-"}</dd>
 
-<!--
-        <div class="form-group row">
+                        <dt class="col-sm-4">Buchungsart</dt>
+                        <dd class="col-sm-8">${accountingEntry.getTransactionType()}</dd>
 
-            <label for="transactionType" class="col-sm-2 col-form-label">INCOMING/EXPENSE<span class="text-danger">*</span></label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="transactionType" id="transactionType" value="${accountingEntry.getTransactionType()}" required>
+                        <dt class="col-sm-4">Transaktionsdatum</dt>
+                        <dd class="col-sm-8">${dateReverseDE(accountingEntry.getTransactionDate())}</dd>
+
+                        <dt class="col-sm-4">Betrag</dt>
+                        <dd class="col-sm-8">${numberDE(accountingEntry.getTransactionAmount())}&nbsp;&euro;</dd>
+
+                        <dt class="col-sm-4">Buchungsdatum</dt>
+                        <dd class="col-sm-8">${dateReverseDE(accountingEntry.getAccountingDate())}</dd>
+
+                        <dt class="col-sm-4">Beschreibung</dt>
+                        <dd class="col-sm-8">${accountingEntry.getDescription() != null && !accountingEntry.getDescription().isEmpty() ? accountingEntry.getDescription() : "-"}</dd>
+                    </dl>
+                </div>
             </div>
-
-            <label for="transactionAmount" class="col-sm-2 col-form-label">Betrag<span class="text-danger">*</span></label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="transactionAmount" id="transactionAmount" value="${accountingEntry.getTransactionAmount()}" required>
-            </div>
-
-            <label for="accountingDate" class="col-sm-2 col-form-label">Buchungsdatum<span class="text-danger">*</span></label>
-            <div class="col-sm-10">
-                <input type="date" class="form-control" name="accountingDate" id="accountingDate" value="${formatISO(accountingEntry.getAccountingDate())}" required>
-            </div>
-
         </div>
-
-        <br/>
-
-        <div class="form-group row">
-            <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary bi-floppy"> Speichern</button>
-            </div>
-        </div>
-
-        <br/>
-        @template.components.display-statusmessage(successMessage, errorMessage)
--->
     </div>
 
+
+    <br/>
+
+    <form action="/timecheques/unaccounted" method="get">
+        <button type="submit" class="btn btn-outline-primary bi-list-check"> Offene Zeitschecks anzeigen</button>
+    </form>
+
+    <br/>
+
+    @template.components.display-statusmessage(successMessage, errorMessage)
+
 `)
-
-
-
