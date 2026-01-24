@@ -30,6 +30,8 @@
 
     @template.components.display-statusmessage(successMessage, errorMessage)
 
+
+
     <!-- FIXME: sollte durch eine Komponente ersetzt werden! -->
 
     <div class="card">
@@ -60,6 +62,14 @@
         </div>
     </div>
 
+    <br/>
+
+    <form action="/members/${member.getId()}" method="get">
+        <button type="submit" class="btn btn-outline-primary bi-arrow-left"> Zurück zum Mitglied</button>
+    </form>
+
+
 `)
+
 
 
