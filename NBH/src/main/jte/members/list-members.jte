@@ -49,7 +49,7 @@
         <tbody class="table-group-divider">
         @for (Member member : memberPage.getContent())
         <tr>
-          <td><b>${member.getLastName()}</b></td>
+          <td><a class="text-decoration-none" href="/members/${member.getId()}"><b>${member.getLastName()}</b></a></td>
           <td>${member.getFirstName()}</td>
 
           <td>${member.getAddress()}</td>
@@ -192,5 +192,6 @@
 
 
 `)
+
 
 
