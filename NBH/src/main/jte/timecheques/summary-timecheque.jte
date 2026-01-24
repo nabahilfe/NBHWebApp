@@ -2,6 +2,7 @@
 @import java.time.LocalDate
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
+@import static eu.nabahilfe.webapp.NumberFormatter.*
 
 @import eu.nabahilfe.webapp.members.Member
 @import eu.nabahilfe.webapp.timecheques.TimeCheque
@@ -41,6 +42,7 @@
                         <th scope="col">Datum</th>
                         <th scope="col">erstellt von</th>
                         <th scope="col" class="text-end">Stunden</th>
+                        <th scope="col" class="text-end">Betrag</th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
@@ -49,6 +51,7 @@
                         <td>${dateDE(tc.getTransactionDate())}</td>
                         <td>${tc.getCreatedBy().getName()}</td>
                         <td class="text-end">${tc.getHours()}</td>
+                        <td class="text-end">${numberDE(tc.getAmount())}&nbsp;&euro;</td>
                     </tr>
                     @endfor
                 </tbody>
