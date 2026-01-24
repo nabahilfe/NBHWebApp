@@ -158,24 +158,42 @@
     <br/>
 
     @if(member.getId() != null)
+
         <div class="row">
-            <div class="col-sm-3 mb-3 mb-sm-0">
+            <div class="col-sm-12 mb-3 mb-sm-0">
 
-                <!-- FIXME Das Template braucht auch den UserNamen um universell verwendbar zu sein
-                @template.components.list-timecheques-component(timeCheques = purchasedTimeCheques)-->
+                <ul class="nav nav-tabs" id="memberDetailTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="timecheques-tab" data-bs-toggle="tab" data-bs-target="#timecheques-pane" type="button" role="tab" aria-controls="timecheques-pane" aria-selected="true">
+                            Zeitschecks
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="transfers-tab" data-bs-toggle="tab" data-bs-target="#transfers-pane" type="button" role="tab" aria-controls="transfers-pane" aria-selected="false">
+                            Zeitübertragungen
+                        </button>
+                    </li>
+                </ul>
 
-            </div>
-
-            <div class="col-sm-9 mb-3 mb-sm-0">
-
-                <!-- FIXME: Daraus sollte nan eine Komponente machen!
-                @template.components.list-timetransfers-component(transfers = timeTransfers)-->
+                <div class="tab-content" id="memberDetailTabsContent">
+                    <div class="tab-pane fade show active" id="timecheques-pane" role="tabpanel" aria-labelledby="timecheques-tab" tabindex="0">
+                        <div class="pt-3">
+                            @template.components.list-timecheques-component(timeCheques = purchasedTimeCheques)
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="transfers-pane" role="tabpanel" aria-labelledby="transfers-tab" tabindex="0">
+                        <div class="pt-3">
+                            @template.components.list-timetransfers-component(transfers = timeTransfers)
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>
     @endif
 
 `)
+
 
 
 
