@@ -152,6 +152,13 @@ public class MemberController {
     }
 
 
+    @GetMapping("/login")
+    String loginMember(final Model model) {
+        log.debug("Member login");
+        return "members/login-member";
+    }
+
+
     // --------------------
     // CREATE NEW, UPDATE
     // --------------------

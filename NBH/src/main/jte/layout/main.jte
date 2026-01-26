@@ -59,6 +59,7 @@
                                 <li><a class="dropdown-item" href="/members">Mitglieder verwalten</a></li>
                                 <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
                                 <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/members/login">Anmelden</a></li>
                                 <li><a class="dropdown-item" href="/members/register">Registrieren</a></li>
                             </ul>
                         </li>
