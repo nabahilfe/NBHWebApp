@@ -159,13 +159,9 @@ public class MemberController {
     @Transactional
     @PostMapping
     public String saveMember(Model model, @ModelAttribute @Valid Member member,
-            @RequestParam(required = false) Long roleId,
-            RedirectAttributes redirectAttributes, BindingResult result) {
+                RedirectAttributes redirectAttributes, BindingResult result) {
+
         log.debug("Will Save Member afer Validation: {}", member);
-        if (roleId != null)
-            member.setRole(roleRepository.findById(roleId).orElse(null));
-        else
-            member.setRole(null);
 
         String validationError = validateData(member);
         if (validationError != null) {
@@ -203,7 +199,7 @@ public class MemberController {
             @RequestParam(required = false) Long roleId,
             RedirectAttributes redirectAttributes, BindingResult result, @PathVariable Long id) {
         log.debug("Update Member with id {}: {}", id, member);
-        return saveMember(model, member, roleId, redirectAttributes, result);
+        return saveMember(model, member, redirectAttributes, result);
     }
 
 
