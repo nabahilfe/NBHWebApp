@@ -1,0 +1,49 @@
+@param java.lang.String successMessage = null
+@param java.lang.String errorMessage = null
+
+@template.layout.main(content = @`
+
+    <h3>Registrierungscode anfordern</h3>
+    <p>Gib deine E-Mail-Adresse ein, um einen 6-stelligen Registrierungscode zu erhalten.</p>
+
+    <form action="/members/send-register-code" method="post" class="needs-validation" novalidate>
+        <div class="mb-3">
+            <label for="email" class="form-label">E-Mail-Adresse<span class="text-danger">*</span></label>
+            <input type="email"
+                   class="form-control"
+                   id="email"
+                   name="email"
+                   placeholder="name@example.com"
+                   required>
+            <div class="invalid-feedback">Bitte eine gültige E-Mail-Adresse eingeben.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Code anfordern</button>
+    </form>
+
+    <br/>
+
+    @template.components.display-statusmessage(successMessage, errorMessage)
+
+    @if(successMessage != null && !successMessage.isEmpty())
+        <a class="btn btn-outline-success bi-arrow-right" href="/members/register-member"> Weiter zur Registrierung</a>
+    @endif
+
+    <script>
+        // Bootstrap client-side validation hook
+        (function () {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+
+`)

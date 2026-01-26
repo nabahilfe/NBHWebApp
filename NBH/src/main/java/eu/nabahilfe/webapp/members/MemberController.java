@@ -148,8 +148,10 @@ public class MemberController {
     @GetMapping("/register")
     String registerMember(final Model model) {
         log.debug("Registering new Member");
-        return "members/register-member";
+        return "members/request-register-code";
     }
+    
+    @PostMapping("/register")
 
 
     @GetMapping("/login")

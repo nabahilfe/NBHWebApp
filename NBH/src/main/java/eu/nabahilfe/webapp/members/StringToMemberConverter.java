@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
  * parameters or form properties declared as `Member` when the incoming value
  * is a String id.
  */
+
+// TODO: check is this used anywhere?
+
 @Component
 public class StringToMemberConverter implements Converter<String, Member> {
 
