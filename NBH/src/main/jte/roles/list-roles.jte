@@ -8,10 +8,11 @@
 @template.layout.main(content = @`
 
     <h3>Rollen und Berechtigungen für Mitglieder
-        <button type="button" class="btn btn-link" data-bs-toggle="modal"
-            data-bs-target="#helpModal" ">Erklärung zu den Rollen und Berechtigungen
+        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#helpModal">
+            Erklärung zu den Rollen und Berechtigungen
         </button>
     </h3>
+
     <br/>
 
     <!-- Modal help dialog -->
