@@ -145,6 +145,13 @@ public class MemberController {
     }
 
 
+    @GetMapping("/register")
+    String registerMember(final Model model) {
+        log.debug("Registering new Member");
+        return "members/register-member";
+    }
+
+
     // --------------------
     // CREATE NEW, UPDATE
     // --------------------

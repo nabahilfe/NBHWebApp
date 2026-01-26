@@ -37,7 +37,7 @@
                     <!-- Links links -->
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                        <!-- Dropdown Mitglieder -->
+                        <!-- Dropdown Verein -->
                         <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                 Verein
@@ -50,16 +50,16 @@
                             </ul>
                         </li>
 
-                        <!-- Dropdown Mitglieder -->
+                        <!-- Dropdown Mitglied -->
                         <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
-                                Mitglieder
+                                Mitglied
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/members">Mitglieder verwalten</a></li>
                                 <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                <li><a class="dropdown-item" href="/members/register">Registrieren</a></li>
                             </ul>
                         </li>
 
