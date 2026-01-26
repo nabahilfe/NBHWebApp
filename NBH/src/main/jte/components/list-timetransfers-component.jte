@@ -15,7 +15,7 @@
 @import static eu.nabahilfe.webapp.DateFormatter.*
 @import static eu.nabahilfe.webapp.jte.TemplateHelpers.*
 
-@import eu.nabahilfe.webapp.timecheques.TimeTransfer
+@import eu.nabahilfe.webapp.timetransfers.TimeTransfer
 @import eu.nabahilfe.webapp.members.Member
 
 @param Member member

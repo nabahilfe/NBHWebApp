@@ -26,7 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
-import eu.nabahilfe.webapp.timecheques.TimeTransferRepository;
+import eu.nabahilfe.webapp.timetransfers.TimeTransferRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 

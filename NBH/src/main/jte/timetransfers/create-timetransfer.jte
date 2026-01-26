@@ -3,7 +3,7 @@
 @import static eu.nabahilfe.webapp.DateFormatter.*
 
 @import eu.nabahilfe.webapp.org.Offer
-@import eu.nabahilfe.webapp.timecheques.TimeTransferForm
+@import eu.nabahilfe.webapp.timetransfers.TimeTransferForm
 
 @param List<Offer> offers
 @param TimeTransferForm ttf = null

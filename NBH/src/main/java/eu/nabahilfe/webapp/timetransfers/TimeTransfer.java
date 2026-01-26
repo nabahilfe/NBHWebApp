@@ -1,4 +1,4 @@
-package eu.nabahilfe.webapp.timecheques;
+package eu.nabahilfe.webapp.timetransfers;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
