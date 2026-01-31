@@ -1,12 +1,12 @@
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-01-31 14:52:40
- * ModelDescription: NBH Entity Modell mit Postgres Definitions
+ * Generated at 2026-01-31 15:09:14
+ * ModelDescription: NBH Entity Modell
  */
 
 
 /*
- * Cretae table statements
+ * Create table statements
  */
 
 /* Basisinformationen zum Verein, da fehlt sicher noch einiges, zB Vereinsnummer aus dem Vereinsregister */
@@ -88,7 +88,7 @@ create table if not exists EVENTS (
 /* Einmal-Codes für die Registrierung mit E-Mail und Code. */
 create table if not exists REGISTRATION_CODES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    code VARCHAR(10) not null /* Zufällige 2-Stellige Zahl */,
+    code VARCHAR(10) not null /* Zufällige 2-stellige Zahl */,
     email VARCHAR(80) not null /* E-Mail zum Code */,
     expires_at TIMESTAMP not null /* Gültigkeitsdauer des Codes */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
