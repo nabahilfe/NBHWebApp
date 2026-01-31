@@ -1,6 +1,6 @@
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-01-19 18:08:53
+ * Generated at 2026-01-31 14:52:40
  * ModelDescription: NBH Entity Modell mit Postgres Definitions
  */
 
@@ -85,6 +85,20 @@ create table if not exists EVENTS (
 );
 
 
+/* Einmal-Codes für die Registrierung mit E-Mail und Code. */
+create table if not exists REGISTRATION_CODES (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    code VARCHAR(10) not null /* Zufällige 2-Stellige Zahl */,
+    email VARCHAR(80) not null /* E-Mail zum Code */,
+    expires_at TIMESTAMP not null /* Gültigkeitsdauer des Codes */,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,
+    version INTEGER NOT NULL
+);
+
+
 /* Die Mitglieder des Vereins. Eine Mitgliedsnummer muss bei Neuanlage automatisch vergeben werden. */
 create table if not exists MEMBERS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -95,7 +109,7 @@ create table if not exists MEMBERS (
     first_name VARCHAR(80) not null,
     last_name VARCHAR(80) not null,
     birthdate DATE not null,
-    email VARCHAR(80),
+    email VARCHAR(80) /* muss immer in lower-case gespeichert werden! */,
     password VARCHAR(250),
     joining_date DATE not null /* Eintrittsdatum in den Verein */,
     resignation_date DATE /* Austrittsdatum aus dem Verein */,
@@ -181,6 +195,7 @@ create table if not exists ACCOUNTING_ENTRIES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     accountable_class VARCHAR(80) /* MemberFee, TimeCheque, Transaction, ... */,
     accountable_id BIGINT /* id zur Klasse bzw. Tabelle */,
+    accountable_member_id BIGINT /* FK id from MEMBERS(id) */,
     transaction_type VARCHAR(10) not null /* INCOME oder EXPENSE - muss aus Enum TransactionType kommen */,
     transaction_date DATE not null /* Buchungsdatum */,
     transaction_amount NUMERIC(12,2) not null /* Betrag */,
@@ -245,6 +260,11 @@ alter table TIME_CHEQUES
     ;
 
 
+alter table ACCOUNTING_ENTRIES
+    add constraint fk_ACCOUNTING_ENTRIES_accountable_member_id foreign key (accountable_member_id) references MEMBERS(id)
+    ;
+
+
 alter table TRANSACTIONS
     add constraint fk_TRANSACTIONS_accounted_by_id foreign key (accounted_by_id) references ACCOUNTING_ENTRIES(id)
     ;
@@ -262,6 +282,13 @@ add
 ;
 
 
+alter table MEMBERS
+add
+    constraint ucNmbr_MEMBERS unique (member_nmbr),
+    constraint ucEamil_MEMBERS unique (email)
+;
+
+
 alter table MEMBERSHIP_FEES
 add
     constraint uc_MEMBERSHIP_FEES unique (for_year, member_id)
@@ -271,6 +298,12 @@ add
 alter table MEMBER_OFFERS
 add
     constraint uc_MEMBER_OFFERS unique (offer_id, member_id)
+;
+
+
+alter table ACCOUNTING_ENTRIES
+add
+    constraint uc_ACCOUNTING_ENTRIES unique (accountable_class, accountable_id)
 ;
 
 
@@ -296,6 +329,8 @@ drop table if exists ROLES cascade;
 drop table if exists AMOUNT_DOMAIN_VALUES cascade;
 
 drop table if exists EVENTS cascade;
+
+drop table if exists REGISTRATION_CODES cascade;
 
 drop table if exists MEMBERS cascade;
 
