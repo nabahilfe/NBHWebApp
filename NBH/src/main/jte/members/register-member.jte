@@ -37,12 +37,12 @@
                    id="password"
                    name="password"
                    minlength="12"
-                   pattern="^(?=(?:.*[A-Z]){2,})(?=(?:.*[a-z]){2,})(?=(?:.*\d){2,})(?=(?:.*[^A-Za-z0-9]){1,}).{12,}$"
-                   title="Mindestens 12 Zeichen, mindestens 2 Groß- und 2 Kleinbuchstaben, mindestens 2 Ziffern und mindestens 1 Sonderzeichen"
+                   pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{12,}$"
+                   title="Mindestens 12 Zeichen, je 1 Großbuchstabe, 1 Kleinbuchstabe, 1 Ziffer und 1 Sonderzeichen"
                    autocomplete="new-password"
                    required>
-            <div class="form-text">Mindestens 12 Zeichen, mindestens 2 Groß- und 2 Kleinbuchstaben, mindestens 2 Ziffern und mindestens 1 Sonderzeichen.</div>
-            <div class="invalid-feedback">Passwort-Anforderungen nicht erfüllt.</div>
+            <div class="form-text">Mindestens 12 Zeichen, je mindestens 1 Großbuchstabe, 1 Kleinbuchstabe, 1 Ziffer und 1 Sonderzeichen.</div>
+            <div class="invalid-feedback">Passwort braucht mindestens 12 Zeichen sowie je mindestens 1 Großbuchstaben, 1 Kleinbuchstaben, 1 Ziffer und 1 Sonderzeichen.</div>
         </div>
 
         <button type="submit" class="btn btn-primary">Registrieren</button>
