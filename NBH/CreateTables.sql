@@ -1,6 +1,6 @@
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-01-31 15:09:14
+ * Generated at 2026-02-07 23:46:09
  * ModelDescription: NBH Entity Modell
  */
 
@@ -42,13 +42,13 @@ create table if not exists OFFERS (
 /* Rollen im Verein. Über die Rollen werden auch die Berechtigungen vergeben. */
 create table if not exists ROLES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    is_board_member BOOLEAN not null /* Hat eine Funktion wie 'Vorstand', 'Kassier' usw. Muss bei der Rolle vergeben werden */,
-    is_admin BOOLEAN not null /* Hat weitgehende Rechte, kann Mitglieder verwalten und Zeitschecks ausstellen */,
-    is_treasurer BOOLEAN not null /* Verwaltet das Geld, Kassier */,
-    is_secretary BOOLEAN not null /* Schriftführer */,
-    is_auditor BOOLEAN not null /* Rechnungsprüfer, muss unabhängig vom Vorstand sein, darf also kein Board Meber sein oder sonstige rollen haben */,
-    is_time_keeper BOOLEAN not null /* Kann Zeit-Schescks vergeben / verkaufe und Zeiteschecks verbuchen */,
-    is_miscellaneous BOOLEAN not null /* Sonstiges, z.B. Ehrenmitglied */,
+    is_board_member BOOLEAN not null /* VEREINSROLLE - Vorstand */,
+    is_treasurer BOOLEAN not null /* VEREINSROLLE - Kassier, Verwaltet die Buchungen */,
+    is_secretary BOOLEAN not null /* VEREINSROLLE - Schriftführer */,
+    is_auditor BOOLEAN not null /* VEREINSROLLE - Rechnungsprüfer, muss unabhängig vom Vorstand sein, darf keine sonstige Rollen haben */,
+    is_time_keeper BOOLEAN not null /* ZUSATZ-ROLLE - Kann Zeit-Schecks vergeben / verkaufen / verbuchen, muss Vereinsrolle haben */,
+    is_admin BOOLEAN not null /* ZUSATZ-ROLLE - Hat alle Rechte, muss eine Vereinsrollen haben */,
+    is_miscellaneous BOOLEAN not null /* SPEZIAL-ROLLE - z.B. Ehrenmitglied */,
     role_name VARCHAR(80) not null /* Mitglied, Vorstand, stv. Vorstand, Kassier, stv. Kassier, Rechnungsprüfer, Schriftführer, .... */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
