@@ -8,15 +8,17 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
 
 import jakarta.mail.internet.MimeMessage;
 
+@Service
 public class EmailService implements IEmailService {
 	
 	@Autowired 
 	JavaMailSender javaMailSender;
 	
-	@Value("&{spring.email.username}") private String sender;
+	@Value("${spring.mail.username}") private String sender;
 
 	@Override
 	public String sendEmail(EmailDetails details) {
@@ -36,6 +38,11 @@ public class EmailService implements IEmailService {
 			return "Error while sending Mail: " + e;
 		}
 	}
+	
+	@Override
+	public String sendEmailHtml(EmailDetails details) {
+		return sendEmailWithAttachement(details);
+	}
 
 	@Override
 	public String sendEmailWithAttachement(EmailDetails details) {
@@ -48,8 +55,10 @@ public class EmailService implements IEmailService {
 			helper.setSubject(details.getSubject());
 			helper.setText(details.getBody());
 			
-			FileSystemResource file = new FileSystemResource(new File(details.getAttachment()));
-			helper.addAttachment(file.getFilename(), file);
+			if(details.getAttachment() != null && !details.getAttachment().isEmpty()) {
+				FileSystemResource file = new FileSystemResource(new File(details.getAttachment()));
+				helper.addAttachment(file.getFilename(), file);
+			}
 			
 			javaMailSender.send(mimeMessage);
 			
@@ -59,5 +68,7 @@ public class EmailService implements IEmailService {
 			return "Error while sending Mail: " + e;
 		}
 	}
+
+
 	
 }
