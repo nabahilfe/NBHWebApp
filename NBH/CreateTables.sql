@@ -1,6 +1,6 @@
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-02-07 23:46:09
+ * Generated at 2026-02-08 12:19:06
  * ModelDescription: NBH Entity Modell
  */
 
@@ -117,6 +117,7 @@ create table if not exists MEMBERS (
     number VARCHAR(20),
     zip VARCHAR(10),
     city VARCHAR(80),
+    direct_debit_authorization BOOLEAN not null DEFAULT FALSE /* Einziehungsauftrag vorhanden - Mitglied kann sebständig Zeitschecks bestellen */,
     accumulated_hours INTEGER /* Gut-Stunden - kommt aus Gutschrift bei Eintritt, Stundenkauf, Stundenerwerb durch Hilfestellung, ... */,
     role_id BIGINT /* FK id from ROLES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
