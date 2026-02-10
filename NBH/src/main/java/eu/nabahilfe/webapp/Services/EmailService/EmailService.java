@@ -49,11 +49,20 @@ public class EmailService implements IEmailService {
 		try {
 			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+			String html = 
+				"""
+		        <html>
+		            <body>""" 
+		            	+ details.getBody() 
+		            	+ """
+		            </body>
+		        </html>
+		        """;
 			
 			helper.setFrom(sender);
 			helper.setTo(details.getRecipient());
 			helper.setSubject(details.getSubject());
-			helper.setText(details.getBody());
+			helper.setText(html, true);
 			
 			if(details.getAttachment() != null && !details.getAttachment().isEmpty()) {
 				FileSystemResource file = new FileSystemResource(new File(details.getAttachment()));
