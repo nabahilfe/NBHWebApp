@@ -2,6 +2,7 @@
 @import java.time.LocalDate
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
+@import static eu.nabahilfe.webapp.jte.TemplateHelpers.*
 
 @import eu.nabahilfe.webapp.NbhConst
 @import eu.nabahilfe.webapp.members.Member
@@ -60,6 +61,7 @@
     <br/>
     <div class="card">
         <div class="card-body">
+            <!-- FIXME: Username -->
             <h5>Erworbene Zeitschecks von FIXME: Username</h5>
 
             <table class="table table-hover table-sm" id="memberTable">

@@ -86,6 +86,9 @@ public class Member  {
     @Column(nullable = false)
     private Boolean directDebitAuthorization;    // Wenn Einziehungsauftrag vorhanden kann Mitglied sebständig Zeitschecks bestellen
 
+    @Column(nullable = false)
+    private Boolean isImportedMember;    // Für importierte, bestehende Mitglider muss das TRUE sein, damit ihnen kein Gratis-Zeitschecks zugeteilt werden kann
+
     private Integer accumulatedHours;    // Gut-Stunden - kommt aus Gutschrift bei Eintritt, Stundenkauf, Stundenerwerb durch Hilfestellung, ...
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
@@ -354,6 +357,15 @@ public class Member  {
     }
 
 
+    public Boolean getIsImportedMember() {
+        return isImportedMember;
+    }
+
+
+    public void setIsImportedMember(Boolean isImportedMember) {
+        this.isImportedMember = isImportedMember;
+    }
+
     // --------------------------------
     // add your business methodes here
     // --------------------------------
@@ -415,6 +427,7 @@ public class Member  {
                 + ", birthdate=" + birthdate + ", email=" + email + ", password=" + password + ", joiningDate="
                 + joiningDate + ", resignationDate=" + resignationDate + ", street=" + street + ", number=" + number
                 + ", zip=" + zip + ", city=" + city + ", directDebitAuthorization=" + directDebitAuthorization
+                + ", isImportedMember=" + isImportedMember
                 + ", accumulatedHours=" + accumulatedHours + ", role=" + role + ", createdAt=" + createdAt
                 + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt + ", updatedBy=" + updatedBy + ", version="
                 + version + "]";

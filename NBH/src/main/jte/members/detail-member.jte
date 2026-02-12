@@ -172,7 +172,7 @@
 
     @if(member.getId() != null)
 
-        @if(numberOfTimecheques != null && numberOfTimecheques == 0)
+        @if(numberOfTimecheques != null && numberOfTimecheques == 0 && (member.getIsImportedMember() == false))
             <div class="alert alert-info py-2 px-3" role="alert">
                 Dieses Mitglied hat noch keine Zeitschecks. Erfasse gleich den ersten Gratis-Zeitscheck über den Button unten.
             </div>

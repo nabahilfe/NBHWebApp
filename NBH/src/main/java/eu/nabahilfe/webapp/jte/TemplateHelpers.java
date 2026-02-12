@@ -21,4 +21,17 @@ public class TemplateHelpers {
         }
         return output -> output.writeUserContent(member.getName());
     }
+
+
+    static public Content boldText(String text) {
+        return new Content() {
+            @Override
+            public void writeTo(TemplateOutput output) {
+                output.writeContent("<strong>");
+                output.writeUserContent(text);
+                output.writeContent("</strong>");
+            }
+        };
+    }
+
 }

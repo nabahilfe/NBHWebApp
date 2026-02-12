@@ -97,8 +97,8 @@ public class TimeChequeController {
         // Business Logic: determine TimeCheque hours based on existing TimeCheques
         TimeCheque tc = null;
         int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
-        if (existingTimeCheques == 0) {
-            log.debug("Member id={} has no existing TimeCheques, using first hours of {}", memberId, NbhConst.FIRST_TIME_CHEQUE_HOURS);
+        if (existingTimeCheques == 0 && (member.getIsImportedMember() != true)) {
+            log.debug("Member id={} has no existing TimeCheques, is not imported Member, using first hours of {}", memberId, NbhConst.FIRST_TIME_CHEQUE_HOURS);
             tc = createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member);
         } else {
             tc = createTimeCheque(NbhConst.REGULAR_TIME_CHEQUE_HOURS, member);
