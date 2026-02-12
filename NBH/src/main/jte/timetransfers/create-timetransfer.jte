@@ -201,9 +201,9 @@
         function checkFields() {
             if (userFrom.value.trim() !== "" && userTo.value.trim() !== ""
                     && offer.value.trim() !== "" && dateOfService.value.trim() !== "") {
-                  submitButton.disabled = false;
+                submitButton.disabled = false;
             } else {
-                  submitButton.disabled = true;
+                submitButton.disabled = true;
             }
         }
 
