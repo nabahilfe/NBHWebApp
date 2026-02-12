@@ -88,28 +88,10 @@ public class GlobalExceptionHandler {
             WebRequest request,
             RedirectAttributes redirectAttributes) {
 
-        if (isUniqueConstraintViolation(ex)) {
-            redirectAttributes.addFlashAttribute("errorMessage",
-            "A record with this value already exists. Please use a different value.");
-        } else {
-            redirectAttributes.addFlashAttribute("errorMessage",
-            "Data integrity violation. Please check your input and try again.");
-        }
+        redirectAttributes.addFlashAttribute("errorMessage",
+        "Data integrity violation " + ex.getMostSpecificCause().getMessage());
 
         return new ModelAndView("redirect:" + getRedirectUrl(request));
-    }
-
-
-    private boolean isUniqueConstraintViolation(Throwable ex) {
-        Throwable cause = ex.getCause();
-
-        while (cause != null) {
-            if (cause instanceof org.hibernate.exception.ConstraintViolationException) {
-                return true;
-            }
-            cause = cause.getCause();
-        }
-        return false;
     }
 
 

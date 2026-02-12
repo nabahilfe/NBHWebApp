@@ -291,7 +291,7 @@ add
 
 alter table MEMBERS
 add
-    constraint ucEamil_MEMBERS unique (email)
+    constraint ucEmail_MEMBERS unique (email)
 ;
 
 alter table MEMBERSHIP_FEES
