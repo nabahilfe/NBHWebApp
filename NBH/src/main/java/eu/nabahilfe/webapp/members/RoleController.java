@@ -144,6 +144,7 @@ public class RoleController {
             1) Auditor und Miscellaneous dürfen keine andere Rolle haben
             2) VEREINSROLLEN BoardMember, Treasurer, Secretary, Auditor können NICHT kombiniert werden
             3) ZUSATZ-ROLLE Admin und TimeKeeper müssen eine der Vereinsrollen BoardMember, Treasurer, Secretary haben
+            4) Admin nicht mit TimeKeeper kombinieren, da Admin alle Rechte hat und TimeKeeper nur Zeit-Schecks vergeben kann
 
         isBoardMember       Bool not null    "VEREINSROLLE - Vorstand"
         isTreasurer         Bool not null    "VEREINSROLLE - Kassier, Verwaltet die Buchungen"
@@ -159,10 +160,10 @@ public class RoleController {
         // Check rule 1: Auditor und Miscellaneous dürfen keine andere Rolle haben
 
         if (role.getIsAuditor() && (role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary() || role.getIsTimeKeeper() || role.getIsAdmin() || role.getIsMiscellaneous()))
-            return "Rolle mit Zuordnung 'Rechnungsrüfer' darf keine andere Zuordnung haben!";
+            return "Rolle mit Funktion 'Rechnungsrüfer' darf keine andere Funktion haben!";
 
         if (role.getIsMiscellaneous() && (role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary() || role.getIsAuditor() || role.getIsTimeKeeper() || role.getIsAdmin()))
-            return "Rolle mit Zuordnung 'Sonsiges' darf keine andere Zuordnung haben!";
+            return "Rolle mit Funktion 'Sonsiges' darf keine andere Funktion haben!";
 
         // Check rule 2: VEREINSROLLEN BoardMember, Treasurer, Secretary, Auditor können NICHT kombiniert werden
 
@@ -176,7 +177,19 @@ public class RoleController {
 
         // Check rule 3: ZUSATZ-ROLLE Admin und TimeKeeper müssen eine der Vereinsrollen BoardMember, Treasurer, Secretary haben
         if ((role.getIsAdmin() || role.getIsTimeKeeper()) && !(role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary()))
-            return "Rollen mit Zuordnung 'Administrator' oder 'Zeitschecks' müssen mindestens eine Vereinsrolle (Vorstand, Kassier, Schriftführer) haben!";
+            return "Rollen mit Funktion 'Administrator' oder 'Zeitschecks' müssen eine der Vereinsrollen Vorstand, Kassier oder Schriftführer haben!";
+
+        // Check rule 4: Admin nicht mit TimeKeeper kombinieren, da Admin alle Rechte hat und TimeKeeper nur Zeit-Schecks vergeben kann
+        if (role.getIsAdmin() && role.getIsTimeKeeper())
+            return "Rollen mit Funktion 'Administrator' nicht mit Funktion 'Zeitschecks' kombiniert, Administrator hat sowieso auf alles Zugriff.";
+
+        // Check rule 5: Es können keine Rollen ohne Funktion angelegt werden! Bitte wählen Sie mindestens eine Funktion aus.
+        int otherRoleCount = 0;
+        if (role.getIsAdmin()) otherRoleCount++;
+        if (role.getIsTimeKeeper()) otherRoleCount++;
+        if (role.getIsMiscellaneous()) otherRoleCount++;
+        if (otherRoleCount + clubRoleCount == 0)
+            return "Es können keine Rollen ohne Funktion angelegt werden! Bitte wählen Sie mindestens eine Funktion aus.";
 
         return null;
     }
