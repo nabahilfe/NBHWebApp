@@ -93,7 +93,7 @@ public class RoleController {
         roleRepository.save(role);
         redirectAttributes.addFlashAttribute("successMessage", "Rolle '" + role.getRoleName() + "' wurde gespeichert.");
         log.debug("Role saved: {}", role);
-        return "redirect:/roles/" + role.getId();
+        return "redirect:/roles";
     }
 
 
