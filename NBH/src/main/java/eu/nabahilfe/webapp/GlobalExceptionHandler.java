@@ -1,18 +1,22 @@
 package eu.nabahilfe.webapp;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.dao.PessimisticLockingFailureException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.UnexpectedRollbackException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-//@ControllerAdvice
-public class TransactionalExceptionHandler {
+@ControllerAdvice
+public class GlobalExceptionHandler {
 
-//    @ExceptionHandler(TransactionSystemException.class)
+    @ExceptionHandler(TransactionSystemException.class)
     public ModelAndView handleTransactionSystemException(
             TransactionSystemException ex,
             WebRequest request,
@@ -25,7 +29,7 @@ public class TransactionalExceptionHandler {
         return new ModelAndView("redirect:" + getRedirectUrl(request));
     }
 
-//    @ExceptionHandler(UnexpectedRollbackException.class)
+    @ExceptionHandler(UnexpectedRollbackException.class)
     public ModelAndView handleUnexpectedRollbackException(
             UnexpectedRollbackException ex,
             WebRequest request,
@@ -38,7 +42,7 @@ public class TransactionalExceptionHandler {
         return new ModelAndView("redirect:" + getRedirectUrl(request));
     }
 
-//    @ExceptionHandler(OptimisticLockingFailureException.class)
+    @ExceptionHandler(OptimisticLockingFailureException.class)
     public ModelAndView handleOptimisticLockingFailure(
             OptimisticLockingFailureException ex,
             WebRequest request,
@@ -51,7 +55,7 @@ public class TransactionalExceptionHandler {
         return new ModelAndView("redirect:" + getRedirectUrl(request));
     }
 
-//    @ExceptionHandler(DataAccessException.class)
+    @ExceptionHandler(DataAccessException.class)
     public ModelAndView handleDataAccessException(
             DataAccessException ex,
             WebRequest request,
@@ -64,7 +68,7 @@ public class TransactionalExceptionHandler {
         return new ModelAndView("redirect:" + getRedirectUrl(request));
     }
 
-//    @ExceptionHandler(PessimisticLockingFailureException.class)
+    @ExceptionHandler(PessimisticLockingFailureException.class)
     public ModelAndView handlePessimisticLockingFailure(
             PessimisticLockingFailureException ex,
             WebRequest request,
@@ -76,6 +80,38 @@ public class TransactionalExceptionHandler {
 
         return new ModelAndView("redirect:" + getRedirectUrl(request));
     }
+
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ModelAndView handleDataIntegrityException(
+            DataIntegrityViolationException ex,
+            WebRequest request,
+            RedirectAttributes redirectAttributes) {
+
+        if (isUniqueConstraintViolation(ex)) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+            "A record with this value already exists. Please use a different value.");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage",
+            "Data integrity violation. Please check your input and try again.");
+        }
+
+        return new ModelAndView("redirect:" + getRedirectUrl(request));
+    }
+
+
+    private boolean isUniqueConstraintViolation(Throwable ex) {
+        Throwable cause = ex.getCause();
+
+        while (cause != null) {
+            if (cause instanceof org.hibernate.exception.ConstraintViolationException) {
+                return true;
+            }
+            cause = cause.getCause();
+        }
+        return false;
+    }
+
 
     // Helper method to determine redirect URL
     private String getRedirectUrl(WebRequest request) {
