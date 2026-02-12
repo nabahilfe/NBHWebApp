@@ -188,6 +188,7 @@ public class MemberController {
         if (member.getId() == null) {
             member.setMemberNmbr(getNextMemberNumber());
             member.setJoiningDate(LocalDate.now());
+            member.setIsImportedMember(false);
         }
 
         log.debug("Saving Member: {}", member);

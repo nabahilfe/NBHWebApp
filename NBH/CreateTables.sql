@@ -118,7 +118,7 @@ create table if not exists MEMBERS (
     zip VARCHAR(10),
     city VARCHAR(80),
     direct_debit_authorization BOOLEAN not null DEFAULT FALSE /* Wenn Einziehungsauftrag vorhanden kann Mitglied sebständig Zeitschecks bestellen */,
-    is_imported_member BOOLEAN not null DEFAULT FALSE /* Für importierte, bestehende Mitglider muss das TRUE sein, damit ihnen kein Gratis-Zeitschecks zugeteilt werden kann */,
+    is_imported_member BOOLEAN not null DEFAULT TRUE /* Für importierte, bestehende Mitglider muss das TRUE sein, damit ihnen kein Gratis-Zeitschecks zugeteilt werden kann */,
     accumulated_hours INTEGER /* Gut-Stunden - kommt aus Gutschrift bei Eintritt, Stundenkauf, Stundenerwerb durch Hilfestellung, ... */,
     role_id BIGINT /* FK id from ROLES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),

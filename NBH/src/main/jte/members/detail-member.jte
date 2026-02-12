@@ -139,8 +139,8 @@
                                 <input type="hidden" name="_directDebitAuthorization" value="on"/>
                                 <input class="form-check-input" type="checkbox"
                                     id="directDebitAuthorization" name="directDebitAuthorization"
-                                    checked="${member.getDirectDebitAuthorization()}">
-                                <label class="form-check-label" for="isBoardMember">
+                                    checked="${member.getDirectDebitAuthorization() != null && member.getDirectDebitAuthorization()}">
+                                <label class="form-check-label" for="directDebitAuthorization">
                                   Einziehungsauftrag erteilt
                                 </label>
                             </div>
@@ -172,7 +172,7 @@
 
     @if(member.getId() != null)
 
-        @if(numberOfTimecheques != null && numberOfTimecheques == 0 && (member.getIsImportedMember() == false))
+        @if(numberOfTimecheques != null && numberOfTimecheques == 0 && member.getIsImportedMember() == false)
             <div class="alert alert-info py-2 px-3" role="alert">
                 Dieses Mitglied hat noch keine Zeitschecks. Erfasse gleich den ersten Gratis-Zeitscheck über den Button unten.
             </div>
