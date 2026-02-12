@@ -31,4 +31,7 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     @EntityGraph(attributePaths = "role")
     Optional<Member> findTopByOrderByMemberNmbrDesc();
 
+
+    Member findByEmail(String email);
+
 }

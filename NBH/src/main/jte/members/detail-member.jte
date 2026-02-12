@@ -38,109 +38,118 @@
 
             <div class="form-group row">
                 <div class="col">
-                <div class="card">
-                <div class="card-body bg-success bg-opacity-10">
+                    <div class="card">
+                        <div class="card-body bg-success bg-opacity-10">
 
-                    <h5>Persönliche Daten</h5>
+                            <h5>Persönliche Daten</h5>
 
-                    <label for="salutation" class="col col-form-label">Anrede</label>
-                    <div class="col">
-                        <select class="form-select" name="salutation" id="salutation">
-                            <option value="">Auswählen</option>
-                            @for(Salutation sal : Salutation.values())
-                                <option value="${sal.name()}" selected="${member.getSalutation() != null && member.getSalutation().equals(sal.name())}">
-                                    ${sal.name()}
-                                </option>
-                            @endfor
-                        </select>
+                            <label for="salutation" class="col col-form-label">Anrede</label>
+                            <div class="col">
+                                <select class="form-select" name="salutation" id="salutation">
+                                    <option value="">Auswählen</option>
+                                    @for(Salutation sal : Salutation.values())
+                                        <option value="${sal.name()}" selected="${member.getSalutation() != null && member.getSalutation().equals(sal.name())}">
+                                            ${sal.name()}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+
+                            <label for="title" class="col col-form-label">Titel</label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="title" id="title" value="${member.getTitle()}">
+                            </div>
+
+                            <label for="firstName" class="col col-form-label">Vorname<span class="text-danger">*</span></label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="firstName" id="firstName" value="${member.getFirstName()}" required>
+                            </div>
+
+                            <label for="lastName" class="col col-form-label">Nachname<span class="text-danger">*</span></label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="lastName" id="lastName" value="${member.getLastName()}" required>
+                            </div>
+
+                            <label for="birthdate" class="col col-form-label">Gebutsdatum<span class="text-danger">*</span></label>
+                            <div class="col">
+                                <input type="date" class="form-control" name="birthdate" id="birthdate" value="${formatISO(member.getBirthdate())}" required>
+                            </div>
+
+                            <label for="role" class="col col-form-label">Rolle</label>
+                            <div class="col">
+                                <select class="form-select" name="role" id="role">
+                                    <option value="">Einfaches Mitglied</option>
+                                    @for(Role role : roles)
+                                        <option value="${role.getId()}" selected="${member.getRole() != null && member.getRole().getId() == role.getId()}">
+                                            ${role.getRoleName()}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+
+                            @if(member.getId() != null)
+                                <br/>
+                                <b>Zeitguthaben: ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}</b>
+                            @endif
+
+
+                        </div>
                     </div>
-
-                    <label for="title" class="col col-form-label">Titel</label>
-                    <div class="col">
-                        <input type="text" class="form-control" name="title" id="title" value="${member.getTitle()}">
-                    </div>
-
-                    <label for="firstName" class="col col-form-label">Vorname<span class="text-danger">*</span></label>
-                    <div class="col">
-                        <input type="text" class="form-control" name="firstName" id="firstName" value="${member.getFirstName()}" required>
-                    </div>
-
-                    <label for="lastName" class="col col-form-label">Nachname<span class="text-danger">*</span></label>
-                    <div class="col">
-                        <input type="text" class="form-control" name="lastName" id="lastName" value="${member.getLastName()}" required>
-                    </div>
-
-                    <label for="birthdate" class="col col-form-label">Gebutsdatum<span class="text-danger">*</span></label>
-                    <div class="col">
-                        <input type="date" class="form-control" name="birthdate" id="birthdate" value="${formatISO(member.getBirthdate())}" required>
-                    </div>
-
-                    <label for="role" class="col col-form-label">Rolle</label>
-                    <div class="col">
-                        <select class="form-select" name="role" id="role">
-                            <option value="">Einfaches Mitglied</option>
-                            @for(Role role : roles)
-                                <option value="${role.getId()}" selected="${member.getRole() != null && member.getRole().getId() == role.getId()}">
-                                    ${role.getRoleName()}
-                                </option>
-                            @endfor
-                        </select>
-                    </div>
-
-                    @if(member.getId() != null)
-                        <br/>
-                        <b>Zeitguthaben: ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}</b>
-                    @endif
-
-
-                </div>
-                </div>
                 </div>
 
                 <div class="col">
-                <div class="card">
-                <div class="card-body bg-success bg-opacity-10">
+                    <div class="card">
+                        <div class="card-body bg-success bg-opacity-10">
 
-                    <h5>Kontaktdaten & Adresse</h5>
+                            <h5>Kontaktdaten & Adresse</h5>
 
-                    <label for="email" class="col col-form-label">E-Mail</label>
-                    <div class="col">
-                        <input type="text" class="form-control" name="email" id="email" value="${member.getEmail()}">
+                            <label for="email" class="col col-form-label">E-Mail</label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="email" id="email" value="${member.getEmail()}">
+                            </div>
+
+                            <label for="institution" class="col col-form-label">Institution</label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="institution" id="institut" value="${member.getInstitution()}">
+                            </div>
+
+                            <label for="street" class="col col-form-label">Straße<span class="text-danger">*</span></label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="street" id="street" value="${member.getStreet()}" required>
+                            </div>
+
+                            <label for="number" class="col col-form-label">Nummer<span class="text-danger">*</span></label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="number" id="number" value="${member.getNumber()}" required>
+                            </div>
+
+                            <label for="zip" class="col col-form-label">PLZ<span class="text-danger">*</span></label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="zip" id="zip" value="${member.getZip()}" required>
+                            </div>
+
+                            <label for="city" class="col col-form-label">Ort<span class="text-danger">*</span></label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="city" id="city" value="${member.getCity()}" required>
+                            </div>
+
+                            <br/>
+
+                            <div class="form-check">
+                                <input type="hidden" name="_directDebitAuthorization" value="on"/>
+                                <input class="form-check-input" type="checkbox"
+                                    id="directDebitAuthorization" name="directDebitAuthorization"
+                                    checked="${member.getDirectDebitAuthorization()}">
+                                <label class="form-check-label" for="isBoardMember">
+                                  Einziehungsauftrag erteilt
+                                </label>
+                            </div>
+
+                        </div>
                     </div>
-
-                    <label for="institution" class="col col-form-label">Institution</label>
-                    <div class="col">
-                        <input type="text" class="form-control" name="institution" id="institut" value="${member.getInstitution()}">
-                    </div>
-
-                    <label for="street" class="col col-form-label">Straße<span class="text-danger">*</span></label>
-                    <div class="col">
-                        <input type="text" class="form-control" name="street" id="street" value="${member.getStreet()}" required>
-                    </div>
-
-                    <label for="number" class="col col-form-label">Nummer<span class="text-danger">*</span></label>
-                    <div class="col">
-                        <input type="text" class="form-control" name="number" id="number" value="${member.getNumber()}" required>
-                    </div>
-
-                    <label for="zip" class="col col-form-label">PLZ<span class="text-danger">*</span></label>
-                    <div class="col">
-                        <input type="text" class="form-control" name="zip" id="zip" value="${member.getZip()}" required>
-                    </div>
-
-                    <label for="city" class="col col-form-label">Ort<span class="text-danger">*</span></label>
-                    <div class="col">
-                        <input type="text" class="form-control" name="city" id="city" value="${member.getCity()}" required>
-                    </div>
-
-
-                </div>
-                </div>
                 </div>
 
             </div>
-
-
 
             <br/>
 

@@ -59,7 +59,7 @@ public class Member  {
 
     @Size(max = 80)
     @Email
-    private String email;
+    private String email;    // muss immer in lower-case gespeichert werden!
 
     @Size(max = 250)
     private String password;
@@ -82,6 +82,9 @@ public class Member  {
 
     @Size(max = 80)
     private String city;
+
+    @Column(nullable = false)
+    private Boolean directDebitAuthorization;    // Wenn Einziehungsauftrag vorhanden kann Mitglied sebständig Zeitschecks bestellen
 
     private Integer accumulatedHours;    // Gut-Stunden - kommt aus Gutschrift bei Eintritt, Stundenkauf, Stundenerwerb durch Hilfestellung, ...
 
@@ -341,6 +344,15 @@ public class Member  {
     }
 
 
+    public Boolean getDirectDebitAuthorization() {
+        return directDebitAuthorization;
+    }
+
+
+    public void setDirectDebitAuthorization(Boolean directDebitAuthorization) {
+        this.directDebitAuthorization = directDebitAuthorization;
+    }
+
 
     // --------------------------------
     // add your business methodes here
@@ -402,9 +414,10 @@ public class Member  {
                 + ", institution=" + institution + ", firstName=" + firstName + ", lastName=" + lastName
                 + ", birthdate=" + birthdate + ", email=" + email + ", password=" + password + ", joiningDate="
                 + joiningDate + ", resignationDate=" + resignationDate + ", street=" + street + ", number=" + number
-                + ", zip=" + zip + ", city=" + city + ", accumulatedHours=" + accumulatedHours + ", role=" + role
-                + ", createdAt=" + createdAt + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt + ", updatedBy="
-                + updatedBy + ", version=" + version + "]";
+                + ", zip=" + zip + ", city=" + city + ", directDebitAuthorization=" + directDebitAuthorization
+                + ", accumulatedHours=" + accumulatedHours + ", role=" + role + ", createdAt=" + createdAt
+                + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt + ", updatedBy=" + updatedBy + ", version="
+                + version + "]";
     }
 
 }
