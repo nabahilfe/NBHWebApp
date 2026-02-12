@@ -3,19 +3,18 @@
 
 /* Daten für ROLES */
 
-INSERT INTO roles (is_board_member, is_admin, is_treasurer, is_secretary, is_auditor, is_time_keeper, is_miscellaneous, role_name,      version) VALUES
-                    (true,          true,       false,          false,       false,      true,           false,          'Obmann',          0),
-                    (true,          true,       false,          false,       false,      true,           false,          'Obmann Stv.',     0),
-                    (true,          true,       false,          false,       false,      true,           false,          'Obfrau',          0),
-                    (true,          true,       false,          false,       false,      true,           false,          'Obfrau Stv.',     0),
-                    (true,          false,      true,           false,       false,      false,          false,          'Kassier',         0),
-                    (true,          false,      true,           false,       false,      false,          false,          'Kassier Stv.',    0),
-                    (false,         false,      false,          false,       true,       false,          false,          'Rechnungsprüfer', 0),
-                    (false,         false,      false,          false,       true,       false,          false,          'Rechnungsprüfer Stv.', 0),
-                    (true,          true,       false,          true,        false,      true,           false,          'Schriftührer',    0),
-                    (true,          true,       false,          true,        false,      true,           false,          'Schriftührer Stv.', 0),
-                    (false,         false,      false,          false,       false,      false,          true,           'Ehrenmitglied',   0),
-                    (false,         true,       false,          false,       false,      true,           false,          'Administrator',   0);
+INSERT INTO roles (is_board_member,  is_treasurer, is_secretary, is_auditor, is_time_keeper, is_admin, is_miscellaneous, role_name,      	version) VALUES
+                    (true,             false,          false,       false,      false,       true,       false,          'Obmann',          	0),
+                    (true,             false,          false,       false,      false,       true,       false,          'Obmann Stv.',     	0),
+                    (true,             false,          false,       false,      true,        false,      false,          'Obfrau',          	0),
+                    (true,             false,          false,       false,      true,        false,      false,          'Obfrau Stv.',     	0),
+                    (false,            true,           false,       false,      false,       false,      false,          'Kassier',         	0),
+                    (false,            true,           false,       false,      false,       false,      false,          'Kassier Stv.',    	0),
+                    (false,            false,          false,       true,       false,       false,      false,          'Rechnungsprüfer', 	0),
+                    (false,            false,          false,       true,       false,       false,      false,          'Rechnungsprüfer Stv.', 0),
+                    (false,            false,          true,        false,      false,       true,       false,          'Schriftührer',    	0),
+                    (false,            false,          true,        false,      false,       true,       false,          'Schriftührer Stv.', 	0),
+                    (false,            false,          false,       false,      false,       false,      true,           'Ehrenmitglied',   	0);
 
 
 
