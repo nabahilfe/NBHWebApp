@@ -139,16 +139,44 @@ public class RoleController {
     // do the validation
     // --------------------
 
+    /*
+        Validation Rules:
+            1) Auditor und Miscellaneous dürfen keine andere Rolle haben
+            2) VEREINSROLLEN BoardMember, Treasurer, Secretary, Auditor können NICHT kombiniert werden
+            3) ZUSATZ-ROLLE Admin und TimeKeeper müssen eine der Vereinsrollen BoardMember, Treasurer, Secretary haben
+
+        isBoardMember       Bool not null    "VEREINSROLLE - Vorstand"
+        isTreasurer         Bool not null    "VEREINSROLLE - Kassier, Verwaltet die Buchungen"
+        isSecretary         Bool not null    "VEREINSROLLE - Schriftführer"
+        isAuditor           Bool not null    "VEREINSROLLE - Rechnungsprüfer, muss unabhängig vom Vorstand sein, darf keine sonstige Rollen haben"
+        isTimeKeeper        Bool not null    "ZUSATZ-ROLLE - Kann Zeit-Schecks vergeben / verkaufen / verbuchen, muss Vereinsrolle haben"
+        isAdmin             Bool not null    "ZUSATZ-ROLLE - Hat alle Rechte, muss eine Vereinsrollen haben"
+        isMiscellaneous     Bool not null    "SPEZIAL-ROLLE - z.B. Ehrenmitglied"
+     */
+
     private String validateRoleAttributes(Role role) {
 
-        if (role.getIsAuditor() && (role.getIsAdmin() || role.getIsBoardMember() || role.getIsTimeKeeper() || role.getIsMiscellaneous() || role.getIsTreasurer() || role.getIsSecretary()))
+        // Check rule 1: Auditor und Miscellaneous dürfen keine andere Rolle haben
+
+        if (role.getIsAuditor() && (role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary() || role.getIsTimeKeeper() || role.getIsAdmin() || role.getIsMiscellaneous()))
             return "Rolle mit Zuordnung 'Rechnungsrüfer' darf keine andere Zuordnung haben!";
 
-        if (role.getIsMiscellaneous() && (role.getIsAdmin() || role.getIsBoardMember() || role.getIsTimeKeeper() || role.getIsAuditor() || role.getIsTreasurer() || role.getIsSecretary()))
+        if (role.getIsMiscellaneous() && (role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary() || role.getIsAuditor() || role.getIsTimeKeeper() || role.getIsAdmin()))
             return "Rolle mit Zuordnung 'Sonsiges' darf keine andere Zuordnung haben!";
 
-        if (!(role.getIsAdmin() || role.getIsAuditor() || role.getIsBoardMember() || role.getIsTimeKeeper() || role.getIsMiscellaneous() || role.getIsTreasurer() || role.getIsSecretary()))
-            return "Es muss mindestens eine Zuordnung für die Rolle ausgewählt werden!";
+        // Check rule 2: VEREINSROLLEN BoardMember, Treasurer, Secretary, Auditor können NICHT kombiniert werden
+
+        int clubRoleCount = 0;
+        if (role.getIsBoardMember()) clubRoleCount++;
+        if (role.getIsTreasurer()) clubRoleCount++;
+        if (role.getIsSecretary()) clubRoleCount++;
+        if (role.getIsAuditor()) clubRoleCount++;
+        if (clubRoleCount > 1)
+            return "Es darf nur eine Vereinsrolle (Vorstand, Kassier, Schriftführer, Rechnungsprüfer) ausgewählt werden!";
+
+        // Check rule 3: ZUSATZ-ROLLE Admin und TimeKeeper müssen eine der Vereinsrollen BoardMember, Treasurer, Secretary haben
+        if ((role.getIsAdmin() || role.getIsTimeKeeper()) && !(role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary()))
+            return "Rollen mit Zuordnung 'Administrator' oder 'Zeitschecks' müssen mindestens eine Vereinsrolle (Vorstand, Kassier, Schriftführer) haben!";
 
         return null;
     }
