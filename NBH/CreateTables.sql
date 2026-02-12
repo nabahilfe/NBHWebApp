@@ -1,6 +1,6 @@
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-02-12 10:01:43
+ * Generated at 2026-02-12 14:15:11
  * ModelDescription: NBH Entity Modell
  */
 
@@ -234,42 +234,42 @@ create table if not exists TRANSACTIONS (
 
 alter table MEMBERS
     add constraint fk_MEMBERS_role_id foreign key (role_id) references ROLES(id)
-    ;
+;
 
 
 alter table MEMBERSHIP_FEES
     add constraint fk_MEMBERSHIP_FEES_member_id foreign key (member_id) references MEMBERS(id),
     add constraint fk_MEMBERSHIP_FEES_accounted_by_id foreign key (accounted_by_id) references ACCOUNTING_ENTRIES(id)
-    ;
+;
 
 
 alter table MEMBER_OFFERS
     add constraint fk_MEMBER_OFFERS_offer_id foreign key (offer_id) references OFFERS(id),
     add constraint fk_MEMBER_OFFERS_member_id foreign key (member_id) references MEMBERS(id)
-    ;
+;
 
 
 alter table TIME_TRANSFERS
     add constraint fk_TIME_TRANSFERS_offer_id foreign key (offer_id) references OFFERS(id),
     add constraint fk_TIME_TRANSFERS_from_member_id foreign key (from_member_id) references MEMBERS(id),
     add constraint fk_TIME_TRANSFERS_to_member_id foreign key (to_member_id) references MEMBERS(id)
-    ;
+;
 
 
 alter table TIME_CHEQUES
     add constraint fk_TIME_CHEQUES_assigned_to_id foreign key (assigned_to_id) references MEMBERS(id),
     add constraint fk_TIME_CHEQUES_accounted_by_id foreign key (accounted_by_id) references ACCOUNTING_ENTRIES(id)
-    ;
+;
 
 
 alter table ACCOUNTING_ENTRIES
     add constraint fk_ACCOUNTING_ENTRIES_accountable_member_id foreign key (accountable_member_id) references MEMBERS(id)
-    ;
+;
 
 
 alter table TRANSACTIONS
     add constraint fk_TRANSACTIONS_accounted_by_id foreign key (accounted_by_id) references ACCOUNTING_ENTRIES(id)
-    ;
+;
 
 
 
@@ -279,36 +279,28 @@ alter table TRANSACTIONS
  */
 
 alter table ASSOCIATIONS
-add
-    constraint uc_ASSOCIATIONS unique (name)
+    add constraint uc_name_associations unique (name)
 ;
 
 
 alter table MEMBERS
-add
-    constraint ucNmbr_MEMBERS unique (member_nmbr)
+    add constraint uc_nmbr_members unique (member_nmbr),
+    add constraint uc_email_members unique (email)
 ;
 
-alter table MEMBERS
-add
-    constraint ucEmail_MEMBERS unique (email)
-;
 
 alter table MEMBERSHIP_FEES
-add
-    constraint uc_MEMBERSHIP_FEES unique (for_year, member_id)
+    add constraint uc_year_member_membership_fees unique (for_year, member_id)
 ;
 
 
 alter table MEMBER_OFFERS
-add
-    constraint uc_MEMBER_OFFERS unique (offer_id, member_id)
+    add constraint uc_offer_member_member_offers unique (offer_id, member_id)
 ;
 
 
 alter table ACCOUNTING_ENTRIES
-add
-    constraint uc_ACCOUNTING_ENTRIES unique (accountable_class, accountable_id)
+    add constraint uc_class_id_accounting_entries unique (accountable_class, accountable_id)
 ;
 
 
