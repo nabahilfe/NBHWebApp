@@ -1,5 +1,6 @@
 package eu.nabahilfe.webapp.registration;
 
+import java.time.LocalDateTime;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import jakarta.validation.Valid;
 public class RegistrationController {
 
     private final MemberRepository memberRepository;
+    private final RegistrationCodeRepository registrationCodeRepository;
 
     private static final Logger log = LoggerFactory.getLogger(RegistrationController.class);
 
@@ -36,8 +38,9 @@ public class RegistrationController {
     }
 
 
-    public RegistrationController(MemberRepository memberRepository) {
+    public RegistrationController(MemberRepository memberRepository, RegistrationCodeRepository registrationCodeRepository) {
         this.memberRepository = memberRepository;
+        this.registrationCodeRepository = registrationCodeRepository;
     }
 
 
@@ -56,21 +59,22 @@ public class RegistrationController {
 
         email = email.trim().toLowerCase();
 
-// FIXME - Implementation missing
-
-//        if (!emailService.isAllowed(email)) {
-//            binding.rejectValue("email", "invalid", "E-Mail nicht erlaubt");
-//            return "register/email.jte";
-//        }
-
-
         Member existing = memberRepository.findByEmail(email);
         if (existing == null) {
             model.addAttribute("errorMessage", "E-Mail '" + email + "' ist nicht bekannt");
             return "registration/email";
         }
 
-        generateAndSendCode(email, randomCode());
+        String code = randomCode();
+        sendCode(email, code);
+
+        RegistrationCode registrationCode = new RegistrationCode();
+        registrationCode.setEmail(email);
+        registrationCode.setCode(code);
+        registrationCode.setExpiresAt(LocalDateTime.now().plusMinutes(15)); // Code ist 15 Minuten gültig
+
+        registrationCodeRepository.save(registrationCode);
+
         session.start(email); // RESET + Start
 
         return "redirect:/registration/confirm";
@@ -112,7 +116,7 @@ public class RegistrationController {
         }
 
         if (!verifyCode(session.getEmail(), form.getCode())) {
-            model.addAttribute("errorMessage", "Ungültiger Code!");
+            model.addAttribute("errorMessage", "Ungültiger oder abgelaufener Code!");
             return "registration/confirm";
         }
 
@@ -120,6 +124,10 @@ public class RegistrationController {
         Member member = memberRepository.findByEmail(session.getEmail());
         // FIXME - Implementation missing hashing for password
         member.setPassword(form.getPassword());
+
+        // delete all existing codes for this email
+        long deleted = registrationCodeRepository.deleteByEmail(session.getEmail());
+        log.debug("Deleted {} registration codes for email {}", deleted, session.getEmail());
 
         session.complete();
         sessionStatus.setComplete();
@@ -164,22 +172,37 @@ public class RegistrationController {
     }
 
 
-    // --------------------------------------------------------------------------
-    // Helper methods to generate a random code and send it to the user via email
+    // Helper methods
 
 
     private boolean verifyCode(String email, String code) {
-        log.warn("Verifying code {} for email {}", code, email);
-        // FIXME Add final implementation to verify the code for the given email
-        if ("123456".equals(code)) {
-            return true;
+
+        log.debug("Verifying code {} for email {}", code, email);
+
+        RegistrationCode regCode = registrationCodeRepository.findFirstByEmailOrderByIdDesc(email);
+
+        if (regCode == null) {
+            log.debug("No code found for email {}", email);
+            return false;
         }
-        return false;
+
+        if (!regCode.getCode().equals(code)) {
+            log.debug("Code does not match for email {}", email);
+            return false;
+        }
+
+        if (regCode.getExpiresAt().isBefore(LocalDateTime.now())) {
+            log.debug("Code expired for email {}", email);
+            return false;
+        }
+
+        log.debug("Code verified successfully for email {}", email);
+        return true;
     }
 
 
 
-    private void generateAndSendCode(@Valid String email, String randomCode) {
+    private void sendCode(@Valid String email, String randomCode) {
         // FIXME Add final implementation to send the code to the user via email
         log.warn("Generated code {} for email {}", randomCode, email);
     }
