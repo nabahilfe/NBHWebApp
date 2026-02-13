@@ -6,6 +6,7 @@ import java.time.temporal.ChronoUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.members.MemberController;
 
 public class RegistrationSession {
@@ -24,7 +25,7 @@ public class RegistrationSession {
 
     public boolean isExpired() {
         return createdAt != null &&
-               createdAt.isBefore(Instant.now().minus(15, ChronoUnit.MINUTES));
+               createdAt.isBefore(Instant.now().minus(NbhConst.REGISTRATION_CODE_TTL, ChronoUnit.MINUTES));
     }
 
     public void start(String email) {

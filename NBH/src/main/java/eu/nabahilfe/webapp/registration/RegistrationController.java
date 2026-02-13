@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -71,7 +72,7 @@ public class RegistrationController {
         RegistrationCode registrationCode = new RegistrationCode();
         registrationCode.setEmail(email);
         registrationCode.setCode(code);
-        registrationCode.setExpiresAt(LocalDateTime.now().plusMinutes(15)); // Code ist 15 Minuten gültig
+        registrationCode.setExpiresAt(LocalDateTime.now().plusMinutes(NbhConst.REGISTRATION_CODE_TTL)); // Code ist 15 Minuten gültig
 
         registrationCodeRepository.save(registrationCode);
 
