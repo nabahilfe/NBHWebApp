@@ -17,6 +17,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @Controller
@@ -97,6 +98,7 @@ public class RegistrationController {
 
 
     @PostMapping("/confirm")
+    @Transactional
     public String processConfirm(Model model, @Valid @ModelAttribute("form") RegisterConfirmForm form, BindingResult binding,
             @ModelAttribute("registrationSession") RegistrationSession session, SessionStatus sessionStatus ) {
 
@@ -114,6 +116,11 @@ public class RegistrationController {
             return "registration/confirm";
         }
 
+
+        Member member = memberRepository.findByEmail(session.getEmail());
+        // FIXME - Implementation missing hashing for password
+        member.setPassword(form.getPassword());
+
         session.complete();
         sessionStatus.setComplete();
 
@@ -128,7 +135,36 @@ public class RegistrationController {
     }
 
 
+    @GetMapping("/login")
+    public String showLoginForm() {
+        return "registration/login";
+    }
 
+
+    @PostMapping("/login")
+    public String processLogin(Model model, @RequestParam("email") String email, @RequestParam("password") String password) {
+
+        if (email != null) {
+            email = email.trim().toLowerCase();
+        }
+
+        Member member = memberRepository.findByEmail(email);
+        if (member == null) {
+            model.addAttribute("errorMessage", "E-Mail oder Passwort ist falsch.");
+            return "registration/login";
+        }
+
+        if (member.getPassword() == null || !member.getPassword().equals(password)) {
+            model.addAttribute("errorMessage", "E-Mail oder Passwort ist falsch.");
+            return "registration/login";
+        }
+
+        model.addAttribute("successMessage", "Erfolgreich angemeldet.");
+        return "registration/login";
+    }
+
+
+    // --------------------------------------------------------------------------
     // Helper methods to generate a random code and send it to the user via email
 
 
