@@ -1,3 +1,9 @@
+@param java.lang.String successMessage = null
+@param java.lang.String errorMessage = null
+
+@param java.lang.String email = null
+
+
 @template.layout.main(content = @`
 
     <h3>Registrieren</h3>
@@ -5,12 +11,12 @@
 
     <form action="/register" method="post" class="needs-validation" novalidate>
         <div class="mb-3">
-            <label for="email" class="form-label">E-Mail Adresse<span class="text-danger">*</span></label>
-            <input type="email"
+            <label for="email" class="form-label">Deine E-Mail Adresse</label>
+            <input type="email" readonly
                    class="form-control"
                    id="email"
                    name="email"
-                   placeholder="name@example.com"
+                   value="${email}"
                    required>
             <div class="invalid-feedback">Bitte eine gültige E-Mail Adresse eingeben.</div>
         </div>

@@ -60,7 +60,7 @@
                                 <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="/members/login">Anmelden</a></li>
-                                <li><a class="dropdown-item" href="/members/register">Registrieren</a></li>
+                                <li><a class="dropdown-item" href="/registration/email">Registrieren</a></li>
                             </ul>
                         </li>
 
@@ -120,7 +120,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
 
-        <!-- Optional: Auto-dismiss alerts -->
+        <!-- Auto-dismiss success alerts -->
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const alertEl = document.getElementById('successAlert');

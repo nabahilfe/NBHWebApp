@@ -1,25 +1,38 @@
 package eu.nabahilfe.webapp.registration;
 
+import java.util.Random;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
-import eu.nabahilfe.webapp.members.RoleRepository;
-import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
-import eu.nabahilfe.webapp.timetransfers.TimeTransferRepository;
 import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/registration")
+@SessionAttributes("registrationSession")
 public class RegistrationController {
 
     private final MemberRepository memberRepository;
-    // FIXME private final EmailService emailService;
 
+    private static final Logger log = LoggerFactory.getLogger(RegistrationController.class);
+
+
+    @ModelAttribute("registrationSession")
+    public RegistrationSession registrationSession() {
+        return new RegistrationSession();
+    }
 
 
     public RegistrationController(MemberRepository memberRepository) {
@@ -27,35 +40,125 @@ public class RegistrationController {
     }
 
 
+    @GetMapping("/email")
+    public String showEmailForm(@Valid @ModelAttribute("email") String email, BindingResult binding,
+            @ModelAttribute("registrationSession") RegistrationSession session ) {
 
+        return "registration/email";
+    }
 
 
 
     @PostMapping("/email")
-    public String processEmail(@Valid @ModelAttribute("email") String email, BindingResult binding,
+    public String processEmail(Model model, @Valid @RequestParam("email") String email,
             @ModelAttribute("registrationSession") RegistrationSession session ) {
 
-        if (binding.hasErrors()) {
-            return "register/email";
-        }
+        email = email.trim().toLowerCase();
+
 // FIXME - Implementation missing
 
-//        if (!emailService.isAllowed(form.getEmail())) {
+//        if (!emailService.isAllowed(email)) {
 //            binding.rejectValue("email", "invalid", "E-Mail nicht erlaubt");
 //            return "register/email.jte";
 //        }
-//
-//        Member existing = memberRepository.findByEmail(email.trim().toLowerCase());
-//        if (existing == null) {
-//            binding.rejectValue("email", "non existent", "E-Mail ist nicht bekannt");
-//            return "register/email";
-//        }
-//
-//        verificationService.sendCode(form.getEmail());
-//
-//        session.start(form.getEmail()); // RESET + Start
 
-        return "redirect:/register/confirm";
+
+        Member existing = memberRepository.findByEmail(email);
+        if (existing == null) {
+            model.addAttribute("errorMessage", "E-Mail '" + email + "' ist nicht bekannt");
+            return "registration/email";
+        }
+
+        generateAndSendCode(email, randomCode());
+        session.start(email); // RESET + Start
+
+        return "redirect:/registration/confirm";
+    }
+
+
+
+    @GetMapping("/confirm")
+    public String showConfirmForm(@ModelAttribute("registrationSession") RegistrationSession session, Model model) {
+
+        if (session.getEmail() == null || session.isExpired()) {
+            return "redirect:/registration/email";
+        }
+
+        if (session.getStep() != RegistrationStep.EMAIL_VERIFIED) {
+            return "redirect:/registration/email";
+        }
+
+        model.addAttribute("email", session.getEmail());
+        model.addAttribute("form", new RegisterConfirmForm());
+
+        return "registration/confirm";
+    }
+
+
+    @PostMapping("/confirm")
+    public String processConfirm(@Valid @ModelAttribute("form") RegisterConfirmForm form, BindingResult binding,
+            @ModelAttribute("registrationSession") RegistrationSession session, SessionStatus sessionStatus ) {
+
+        if (session.isExpired() || session.getStep() != RegistrationStep.EMAIL_VERIFIED) {
+            sessionStatus.setComplete();
+            return "redirect:/register/email";
+        }
+
+        if (binding.hasErrors()) {
+            return "register/confirm";
+        }
+
+        if (!verifyCode(session.getEmail(), form.getCode())) {
+            binding.rejectValue("code", "invalid", "Code ungültig");
+            return "register/confirm.jte";
+        }
+
+        session.complete();
+        sessionStatus.setComplete();
+
+        return "redirect:/register/success";
+    }
+
+
+    @GetMapping("/success")
+    public String success(@ModelAttribute("registrationSession") RegistrationSession session ) {
+
+        if (session.getStep() != RegistrationStep.COMPLETED) {
+            return "redirect:/register/email";
+        }
+
+        return "register/success";
+    }
+
+
+
+    // Helper methods to generate a random code and send it to the user via email
+
+
+    private boolean verifyCode(String email, String code) {
+        log.warn("Verifying code {} for email {}", code, email);
+        // FIXME Add final implementation to verify the code for the given email
+        if ("123456".equals(code)) {
+            return true;
+        }
+        return false;
+    }
+
+
+
+    private void generateAndSendCode(@Valid String email, String randomCode) {
+        // FIXME Add final implementation to send the code to the user via email
+        log.warn("Generated code {} for email {}", randomCode, email);
+    }
+
+
+    final int min = 100000;
+    final int max = 999999;
+    final int range = max - min + 1;
+
+    private String randomCode() {
+        Random r = new Random();
+        return String.valueOf(r.nextInt(range) + min);
     }
 
 }

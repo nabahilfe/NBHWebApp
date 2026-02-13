@@ -1,24 +1,30 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
+@param java.lang.String email = null
+
 @template.layout.main(content = @`
 
     <h3>Registrierungscode anfordern</h3>
-    <p>Gib deine E-Mail-Adresse ein, um einen 6-stelligen Registrierungscode zu erhalten.</p>
+    <p>Gib deine E-Mail ein um einen 6-stelligen Registrierungscode zu erhalten.</p>
 
-    <form action="/members/send-register-code" method="post" class="needs-validation" novalidate>
+
+    <form action="/registration/email" method="post" class="needs-validation" novalidate>
+
         <div class="mb-3">
-            <label for="email" class="form-label">E-Mail-Adresse<span class="text-danger">*</span></label>
+            <label for="email" class="form-label">Meine E-Mail<span class="text-danger">*</span></label>
             <input type="email"
                    class="form-control"
                    id="email"
                    name="email"
                    placeholder="name@example.com"
+                   value="${email}"
                    required>
-            <div class="invalid-feedback">Bitte eine gültige E-Mail-Adresse eingeben.</div>
+            <div class="invalid-feedback">Bitte eine gültige E-Mail Adresse eingeben.</div>
         </div>
 
         <button type="submit" class="btn btn-primary">Code anfordern</button>
+
     </form>
 
     <br/>
