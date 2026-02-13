@@ -3,6 +3,12 @@
 
 @template.layout.main(content = @`
 
+@if(successMessage != null)
+
+    <h3>Du bist angemeldet.</h3>
+
+@else
+
     <h3>Anmelden</h3>
     <p>Bitte melde dich mit deiner E-Mail-Adresse und deinem Passwort an.</p>
 
@@ -32,6 +38,8 @@
 
         <button type="submit" class="btn btn-primary">Anmelden</button>
     </form>
+
+@endif
 
     <br/>
 
