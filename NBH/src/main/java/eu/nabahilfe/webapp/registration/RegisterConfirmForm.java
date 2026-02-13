@@ -1,15 +1,17 @@
 package eu.nabahilfe.webapp.registration;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 public class RegisterConfirmForm {
+
     @NotBlank
     private String code;
 
     @NotBlank
-    @Size(min = 12, message = "Das Passwort muss mindestens 12 Zeichen lang sein.")
     private String password;
+
+    @NotBlank
+    private String email;
 
     public String getCode() {
         return code;
@@ -25,6 +27,14 @@ public class RegisterConfirmForm {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }

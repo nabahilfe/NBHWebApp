@@ -88,46 +88,43 @@ public class RegistrationController {
             return "redirect:/registration/email";
         }
 
-        model.addAttribute("email", session.getEmail());
-        model.addAttribute("form", new RegisterConfirmForm());
+        RegisterConfirmForm form = new RegisterConfirmForm();
+        form.setEmail(session.getEmail());
+        model.addAttribute("form", form);
 
         return "registration/confirm";
     }
 
 
     @PostMapping("/confirm")
-    public String processConfirm(@Valid @ModelAttribute("form") RegisterConfirmForm form, BindingResult binding,
+    public String processConfirm(Model model, @Valid @ModelAttribute("form") RegisterConfirmForm form, BindingResult binding,
             @ModelAttribute("registrationSession") RegistrationSession session, SessionStatus sessionStatus ) {
 
         if (session.isExpired() || session.getStep() != RegistrationStep.EMAIL_VERIFIED) {
             sessionStatus.setComplete();
-            return "redirect:/register/email";
+            return "redirect:/registration/email";
         }
 
         if (binding.hasErrors()) {
-            return "register/confirm";
+            return "registration/confirm";
         }
 
         if (!verifyCode(session.getEmail(), form.getCode())) {
-            binding.rejectValue("code", "invalid", "Code ungültig");
-            return "register/confirm.jte";
+            model.addAttribute("errorMessage", "Ungültiger Code!");
+            return "registration/confirm";
         }
 
         session.complete();
         sessionStatus.setComplete();
 
-        return "redirect:/register/success";
+        return "redirect:/registration/success";
     }
 
 
     @GetMapping("/success")
-    public String success(@ModelAttribute("registrationSession") RegistrationSession session ) {
+    public String success() {
 
-        if (session.getStep() != RegistrationStep.COMPLETED) {
-            return "redirect:/register/email";
-        }
-
-        return "register/success";
+        return "registration/success";
     }
 
 
