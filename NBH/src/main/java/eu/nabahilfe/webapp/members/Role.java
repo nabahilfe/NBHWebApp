@@ -1,7 +1,9 @@
 package eu.nabahilfe.webapp.members;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -212,4 +214,44 @@ public class Role  {
         this.isTreasurer = false;
         this.isSecretary = false;
     }
+
+    // for spring security
+
+    public Set<String> getAuthorities() {
+
+        Set<String> auths = new HashSet<>();
+
+        auths.add("ROLE_USER");   // Alle Rollen haben die Rolle USER
+
+        if (Boolean.TRUE.equals(isAdmin)) {
+            auths.add("ROLE_ADMIN");
+        }
+
+        if (Boolean.TRUE.equals(isBoardMember)) {
+            auths.add("ROLE_BOARD_MEMBER");
+        }
+
+        if (Boolean.TRUE.equals(isTreasurer)) {
+            auths.add("ROLE_TREASURER");
+        }
+
+        if (Boolean.TRUE.equals(isSecretary)) {
+            auths.add("ROLE_SECRETARY");
+        }
+
+        if (Boolean.TRUE.equals(isAuditor)) {
+            auths.add("ROLE_AUDITOR");
+        }
+
+        if (Boolean.TRUE.equals(isTimeKeeper)) {
+            auths.add("ROLE_TIME_KEEPER");
+        }
+
+        if (Boolean.TRUE.equals(isMiscellaneous)) {
+            auths.add("ROLE_MISC");
+        }
+
+        return auths;
+    }
+
 }

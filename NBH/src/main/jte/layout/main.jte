@@ -1,5 +1,7 @@
-@param gg.jte.Content content
+@import org.springframework.security.web.csrf.CsrfToken
 
+@param CsrfToken csrf = null
+@param gg.jte.Content content
 @param String searchTerm = null
 
 <!doctype html>

@@ -1,6 +1,9 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+
+
 @template.layout.main(content = @`
 
 @if(successMessage != null)
@@ -10,15 +13,16 @@
 @else
 
     <h3>Anmelden</h3>
-    <p>Bitte melde dich mit deiner E-Mail-Adresse und deinem Passwort an.</p>
+    <p>Bitte melde dich mit deiner E-Mail und deinem Passwort an.</p>
 
     <form action="/registration/login" method="post" class="needs-validation" novalidate>
+        ${csrfHiddenInput}
         <div class="mb-3">
-            <label for="email" class="form-label">E-Mail-Adresse<span class="text-danger">*</span></label>
+            <label for="username" class="form-label">E-Mail-Adresse<span class="text-danger">*</span></label>
             <input type="email"
                    class="form-control"
-                   id="email"
-                   name="email"
+                   id="username"
+                   name="username"
                    placeholder="name@example.com"
                    autocomplete="username"
                    required>

@@ -1,6 +1,8 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+
 @param java.lang.String email = null
 
 @template.layout.main(content = @`
@@ -12,7 +14,7 @@
 
 
     <form action="/registration/email" method="post" class="needs-validation" novalidate>
-
+        ${csrfHiddenInput}
         <div class="mb-3">
             <label for="email" class="form-label">Meine E-Mail<span class="text-danger">*</span></label>
             <input type="email"

@@ -145,21 +145,6 @@ public class MemberController {
     }
 
 
-    @GetMapping("/register")
-    String registerMember(final Model model) {
-        log.debug("Registering new Member");
-        return "members/validate-email";
-    }
-
-    @PostMapping("/register")
-
-
-    @GetMapping("/login")
-    String loginMember(final Model model) {
-        log.debug("Member login");
-        return "members/login-member";
-    }
-
 
     // --------------------
     // CREATE NEW, UPDATE

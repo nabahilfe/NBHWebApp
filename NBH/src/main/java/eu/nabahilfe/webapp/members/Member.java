@@ -91,7 +91,7 @@ public class Member  {
 
     private Integer accumulatedHours;    // Gut-Stunden - kommt aus Gutschrift bei Eintritt, Stundenkauf, Stundenerwerb durch Hilfestellung, ...
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)	// FetchType.EAGER damit Login funktioniert, da die Rolle für die Autorisierung benötigt wird.
     @JoinColumn(name = "role_id")
     private Role role;    // Nur befüllt wenn zusätlich Rolle zum normalen Mitglied
 
@@ -401,6 +401,13 @@ public class Member  {
     }
 
 
+    public boolean isActive() {
+        LocalDate today = LocalDate.now();
+        return resignationDate == null || resignationDate.isAfter(today);
+    }
+
+
+
     // ------------------------------------------------------------------------
     // generate equals/hasCode methodes with Eclipse here - use ONLY id field!
     // ------------------------------------------------------------------------
@@ -436,5 +443,6 @@ public class Member  {
                 + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt + ", updatedBy=" + updatedBy + ", version="
                 + version + "]";
     }
+
 
 }
