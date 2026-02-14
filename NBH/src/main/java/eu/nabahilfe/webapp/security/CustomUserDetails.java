@@ -43,12 +43,16 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getEmail();
+        return member.getFirstName();
     }
 
     @Override
     public boolean isEnabled() {
         return member.isActive();
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     // other methods -> true
