@@ -29,7 +29,7 @@ import jakarta.validation.constraints.Size;
  */
 @Entity
 @Table(name = "MEMBERS")
-//@EntityListeners(GlobalAuditListener.class)
+@EntityListeners(GlobalAuditListener.class)
 public class Member  {
 
     @Id

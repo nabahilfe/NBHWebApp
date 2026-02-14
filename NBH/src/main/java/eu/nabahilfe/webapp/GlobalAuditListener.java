@@ -10,10 +10,10 @@ import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.security.SecurityUtils;
 
 
-//@Component
+@Component
 public class GlobalAuditListener {
 
-    //@Autowired
+    @Autowired
     private SecurityUtils securityUtils;
 
 

@@ -29,7 +29,7 @@ import jakarta.persistence.Version;
  * Zeitscheck - zuerst angelegt und dann später verbucht vom Kassier. TransactionType ist immer INCOME
  */
 @Entity
-//@EntityListeners(GlobalAuditListener.class)
+@EntityListeners(GlobalAuditListener.class)
 @Table(name = "TIME_CHEQUES")
 public class TimeCheque implements Accountable {
 

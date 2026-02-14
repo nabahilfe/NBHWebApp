@@ -7,6 +7,7 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 
 @template.layout.main(content = @`
 
@@ -21,7 +22,7 @@
 
         <!-- first action is for save, second action is for update -->
         <form action="${role.getId() == null ? "/roles" : "/roles/" + role.getId()}" method="post">
-
+          ${csrfHiddenInput}
           <div class="form-group row">
             <label for="roleName" class="col-sm-2 col-form-label">Rollenbezeichnung <span class="text-danger">*</span></label>
             <div class="col-sm-10">

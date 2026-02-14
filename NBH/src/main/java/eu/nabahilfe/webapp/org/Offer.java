@@ -24,7 +24,7 @@ import jakarta.validation.constraints.Size;
  * Angebote der Mitglieder, wird bei der Verbuchung von Zeitschecks verwendet
  */
 @Entity
-//@EntityListeners(GlobalAuditListener.class)
+@EntityListeners(GlobalAuditListener.class)
 @Table(name = "OFFERS")
 public class Offer  {
     @Id

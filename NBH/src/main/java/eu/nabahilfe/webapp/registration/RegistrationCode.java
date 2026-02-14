@@ -18,7 +18,7 @@ import jakarta.validation.constraints.Size;
  * Einmal-Codes für die Registrierung mit E-Mail und Code.
  */
 @Entity
-//@EntityListeners(GlobalAuditListener.class)
+@EntityListeners(GlobalAuditListener.class)
 @Table(name = "REGISTRATION_CODES")
 public class RegistrationCode  {
 

@@ -30,7 +30,7 @@ import jakarta.validation.constraints.Size;
  * Buchungsdatensatz zu Zeitscheck-Kauf, Mitgliedschaft, Weihnachtsessen, usw.
  */
 @Entity
-//@EntityListeners(GlobalAuditListener.class)
+@EntityListeners(GlobalAuditListener.class)
 @Table(name = "ACCOUNTING_ENTRIES")
 public class AccountingEntry  {
 

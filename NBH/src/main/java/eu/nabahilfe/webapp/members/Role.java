@@ -27,7 +27,7 @@ import jakarta.validation.constraints.Size;
  * Rollen im Verein. Über die Rollen werden auch die Berechtigungen vergeben.
  */
 @Entity
-//@EntityListeners(GlobalAuditListener.class)
+@EntityListeners(GlobalAuditListener.class)
 @Table(name = "ROLES")
 public class Role  {
 

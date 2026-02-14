@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.security.web.csrf.CsrfToken;
 
 @Controller
 @RequestMapping("/roles")
@@ -81,7 +83,10 @@ public class RoleController {
     @Transactional
     @PostMapping
     String saveRole(Model model, @ModelAttribute @Valid Role role,
-            RedirectAttributes redirectAttributes, BindingResult result) {
+            RedirectAttributes redirectAttributes, BindingResult result, HttpServletRequest request) {
+
+        CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        if (csrf != null) model.addAttribute("csrf", csrf);
 
         String roleError = validateRoleAttributes(role);
         if (roleError != null) {
@@ -99,19 +104,23 @@ public class RoleController {
 
     @PostMapping("/{id}")
     public String updateRole(Model model, @ModelAttribute @Valid Role role,
-            RedirectAttributes redirectAttributes, BindingResult result, @PathVariable Long id) {
+            RedirectAttributes redirectAttributes, BindingResult result, HttpServletRequest request, @PathVariable Long id) {
         log.debug("Update Role with id {}: {}", id, role);
-        return saveRole(model, role, redirectAttributes, result);
+
+        CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        if (csrf != null) model.addAttribute("csrf", csrf);
+
+        return saveRole(model, role, redirectAttributes, result, request);
     }
 
 
-    // --------------------
-    // DELETE
-    // --------------------
-
     @PostMapping("/delete/{id}")
     @Transactional
-    String deleteRole(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
+    String deleteRole(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+
+        CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        if (csrf != null) model.addAttribute("csrf", csrf);
+
         Optional<Role> role = roleRepository.findById(id);
         roleRepository.delete(role.get());
         redirectAttributes.addFlashAttribute("successMessage", "Rolle " + role.get().getRoleName() + " wurde gelöscht.");

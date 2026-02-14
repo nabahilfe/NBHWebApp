@@ -29,7 +29,7 @@ import jakarta.validation.constraints.Size;
  * Zeitgutschrift von Mitglied A an Mitglied B für erbrachte Leistung.
  */
 @Entity
-//@EntityListeners(GlobalAuditListener.class)
+@EntityListeners(GlobalAuditListener.class)
 @Table(name = "TIME_TRANSFERS")
 public class TimeTransfer  {
 
