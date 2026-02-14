@@ -15,29 +15,23 @@ public class SecurityConfig {
 
         http
             .authorizeHttpRequests(auth -> auth
-
-                .requestMatchers("/css/**", "/js/**").permitAll()
-
-                .requestMatchers("/registration/**").permitAll()
-
-
                 .requestMatchers("/").permitAll()
+                .requestMatchers("/css/**", "/js/**").permitAll()
+                .requestMatchers("/registration/**").permitAll()
+// FIXME: Hier müssen die Rollen entsprechend der Anforderungen angepasst werden.
+//                .requestMatchers("/admin/**")
+//                    .hasRole("ADMIN")
+//
+//                .requestMatchers("/billing/**")
+//                    .hasAnyRole("TREASURER", "AUDITOR")
+//
+//                .requestMatchers("/docs/**")
+//                    .hasRole("SECRETARY")
+//
+//                .requestMatchers("/time/**")
+//                    .hasRole("TIME_KEEPER")
 
-                .requestMatchers("/login").permitAll()
-
-                .requestMatchers("/admin/**")
-                    .hasRole("ADMIN")
-
-                .requestMatchers("/billing/**")
-                    .hasAnyRole("TREASURER", "AUDITOR")
-
-                .requestMatchers("/docs/**")
-                    .hasRole("SECRETARY")
-
-                .requestMatchers("/time/**")
-                    .hasRole("TIME_KEEPER")
-
-                .anyRequest().authenticated()
+                .anyRequest().hasRole("USER")
             )
 
             .formLogin(form -> form
