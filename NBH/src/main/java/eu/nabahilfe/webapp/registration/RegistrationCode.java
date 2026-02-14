@@ -2,8 +2,10 @@ package eu.nabahilfe.webapp.registration;
 
 import java.time.LocalDateTime;
 
+import eu.nabahilfe.webapp.GlobalAuditListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +18,7 @@ import jakarta.validation.constraints.Size;
  * Einmal-Codes für die Registrierung mit E-Mail und Code.
  */
 @Entity
+//@EntityListeners(GlobalAuditListener.class)
 @Table(name = "REGISTRATION_CODES")
 public class RegistrationCode  {
 

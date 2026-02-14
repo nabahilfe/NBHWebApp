@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import eu.nabahilfe.webapp.GlobalAuditListener;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.org.Offer;
 
@@ -12,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +29,7 @@ import jakarta.validation.constraints.Size;
  * Zeitgutschrift von Mitglied A an Mitglied B für erbrachte Leistung.
  */
 @Entity
+//@EntityListeners(GlobalAuditListener.class)
 @Table(name = "TIME_TRANSFERS")
 public class TimeTransfer  {
 
