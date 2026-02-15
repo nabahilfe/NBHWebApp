@@ -18,7 +18,7 @@
 
     <h3>Registrierungscode anfordern</h3>
     <p>Gib deine E-Mail ein um einen 6-stelligen Registrierungscode zu erhalten.<br/>
-    Der Code ist 15 Minuten gültig und wird für die Aktivierung deines Kontos benötigt.</p>
+    Der Code, den du per e-Mail erhälts, ist 15 Minuten gültig und wird für die Aktivierung deines Kontos benötigt.</p>
     <p>Hinweis: Du kannst mit diesem Formular auch ein neues Paswort erstellen, falls du dein Passwort vergessen hast.</p>
 
 

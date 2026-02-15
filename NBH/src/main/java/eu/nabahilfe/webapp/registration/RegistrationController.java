@@ -94,6 +94,27 @@ public class RegistrationController {
     }
 
 
+    @GetMapping("/logout")
+    public String showLogoutForm(Model model, HttpServletRequest request) {
+
+//        CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+//        if (csrf != null) model.addAttribute("csrf", csrf);
+
+        return "registration/logout";
+    }
+
+
+    @PostMapping("/logout")
+    public String doLogout(Model model, HttpServletRequest request, SessionStatus sessionStatus) {
+
+        CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        if (csrf != null) {
+            model.addAttribute("csrf", csrf);
+        }
+        sessionStatus.setComplete();
+        return "redirect:/";
+    }
+
 
     @GetMapping("/confirm")
     public String showConfirmForm(@ModelAttribute("registrationSession") RegistrationSession session, Model model) {

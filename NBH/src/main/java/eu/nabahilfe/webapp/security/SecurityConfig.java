@@ -18,6 +18,7 @@ public class SecurityConfig {
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/css/**", "/js/**").permitAll()
                 .requestMatchers("/registration/**").permitAll()
+
 // FIXME: Hier müssen die Rollen entsprechend der Anforderungen angepasst werden.
 //                .requestMatchers("/admin/**")
 //                    .hasRole("ADMIN")
@@ -43,10 +44,11 @@ public class SecurityConfig {
             )
 
 
-
             .logout(logout -> logout
                 .logoutUrl("/registration/logout")
-                .logoutSuccessUrl("/registration/login?logout")
+                .invalidateHttpSession(true)             // Session vernichten (Standard)
+                .deleteCookies("JSESSIONID")             // Session-Cookie löschen
+                .logoutSuccessUrl("/")
                 .permitAll()
             );
 
