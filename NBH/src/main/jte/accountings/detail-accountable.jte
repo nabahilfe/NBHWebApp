@@ -10,8 +10,17 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
 
-@template.layout.main(content = @`
+
+@template.layout.main(
+    isAuthenticated = isAuthenticated,
+    username = username,
+    fullUsername = fullUsername,
+    content = @`
+
     <h3>Buchungsdatensatz anlegen</h3>
     <p>Damit wird dokumentiert, dass die Buchung durchgeführt wurde.</p>
     <br/>

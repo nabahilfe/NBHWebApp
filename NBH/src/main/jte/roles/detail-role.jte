@@ -9,7 +9,16 @@
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 
-@template.layout.main(content = @`
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
+
+
+@template.layout.main(
+    isAuthenticated = isAuthenticated,
+    username = username,
+    fullUsername = fullUsername,
+    content = @`
 
     <h3>
         ${role.getId() != null ? "Rolle bearbeiten" : "Neue Rolle anlegen"}

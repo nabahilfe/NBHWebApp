@@ -23,7 +23,16 @@
 @param Integer numberOfTimecheques = null		/* so we can display button to create first TimeCheque only if there are none yet */
 
 
-@template.layout.main(content = @`
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
+
+
+@template.layout.main(
+    isAuthenticated = isAuthenticated,
+    username = username,
+    fullUsername = fullUsername,
+    content = @`
 
     <h3>
         ${member.getId() != null ? "Mitglied bearbeiten" : "Neues Mitglied anlegen"}

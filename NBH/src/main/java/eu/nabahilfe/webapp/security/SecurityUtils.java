@@ -32,4 +32,17 @@ public class SecurityUtils {
         }
         return null;
     }
+
+    public Boolean isAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String);
+    }
+
+    public String getFullUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            return ((CustomUserDetails) authentication.getPrincipal()).getFullUsername();
+        }
+        return null;
+    }
 }

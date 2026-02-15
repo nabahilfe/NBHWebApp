@@ -16,7 +16,16 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@template.layout.main(content = @`
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
+
+
+@template.layout.main(
+    isAuthenticated = isAuthenticated,
+    username = username,
+    fullUsername = fullUsername,
+    content = @`
 
     <h3>Nicht verbuchte Zeitschecks</h3>
 

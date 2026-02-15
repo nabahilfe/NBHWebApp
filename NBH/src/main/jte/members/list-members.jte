@@ -13,8 +13,16 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
+
+
 @template.layout.main(
     searchTerm = searchTerm,
+    isAuthenticated = isAuthenticated,
+    username = username,
+    fullUsername = fullUsername,
     content = @`
 
   <!-- Hidden form to handle sorting -->

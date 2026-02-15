@@ -5,7 +5,16 @@
 
 @param eu.nabahilfe.webapp.registration.RegisterConfirmForm form = null
 
-@template.layout.main(content = @`
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
+
+
+@template.layout.main(
+    isAuthenticated = isAuthenticated,
+    username = username,
+    fullUsername = fullUsername,
+    content = @`
 
     <h3>Registrieren</h3>
     <p>Bitte gib deinen Code und ein sicheres Passwort ein, um dein Konto zu aktivieren.</p>

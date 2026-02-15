@@ -5,7 +5,16 @@
 
 @param java.lang.String email = null
 
-@template.layout.main(content = @`
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
+
+
+@template.layout.main(
+    isAuthenticated = isAuthenticated,
+    username = username,
+    fullUsername = fullUsername,
+    content = @`
 
     <h3>Registrierungscode anfordern</h3>
     <p>Gib deine E-Mail ein um einen 6-stelligen Registrierungscode zu erhalten.<br/>

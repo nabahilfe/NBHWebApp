@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import eu.nabahilfe.webapp.security.CustomUserDetails;
 import eu.nabahilfe.webapp.security.SecurityUtils;
 
 // name of my mac: imac.internal
@@ -25,10 +24,15 @@ public class HomePageController {
     @GetMapping("/")
     public String home(Model model) {
 
-        Long currentUserId = securityUtils.getCurrentUserId();
         String currentUsername = securityUtils.getCurrentUsername();
+        String fullUsername = securityUtils.getFullUsername();
 
+        model.addAttribute("fullUsername", currentUsername != null ? fullUsername : "Gast");
         model.addAttribute("username", currentUsername != null ? currentUsername : "Gast");
+        model.addAttribute("isAuthenticated", securityUtils.isAuthenticated());
+
+        log.debug("Accessing home page. User: {}, Authenticated: {}", currentUsername, securityUtils.isAuthenticated());
+
         return "home";
     }
 

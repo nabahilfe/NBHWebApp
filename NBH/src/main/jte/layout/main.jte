@@ -4,6 +4,10 @@
 @param gg.jte.Content content
 @param String searchTerm = null
 
+@param String username = null
+@param String fullUsername = null
+@param Boolean isAuthenticated = false
+
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
     <head>
@@ -58,11 +62,15 @@
                                 Mitglied
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/members">Mitglieder verwalten</a></li>
-                                <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/registration/login">Anmelden</a></li>
-                                <li><a class="dropdown-item" href="/registration/email">Registrieren</a></li>
+                                @if (isAuthenticated)
+                                    <li><a class="dropdown-item" href="/members">Mitglieder verwalten</a></li>
+                                    <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/registration/logout">Abmelden</a></li>
+                                @else
+                                    <li><a class="dropdown-item" href="/registration/login">Anmelden</a></li>
+                                    <li><a class="dropdown-item" href="/registration/email">Registrieren</a></li>
+                                @endif
                             </ul>
                         </li>
 
