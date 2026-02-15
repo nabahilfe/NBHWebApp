@@ -15,10 +15,13 @@
 @param String username = null
 @param Boolean isAuthenticated = false
 
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
 @template.layout.main(
     isAuthenticated = isAuthenticated,
     username = username,
     fullUsername = fullUsername,
+    ctxt = ctxt,
     content = @`
 
     <h3>Zeitscheck angelgt</h3>

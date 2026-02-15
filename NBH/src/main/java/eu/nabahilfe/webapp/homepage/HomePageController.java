@@ -27,9 +27,9 @@ public class HomePageController {
         String currentUsername = securityUtils.getCurrentUsername();
         String fullUsername = securityUtils.getFullUsername();
 
-        model.addAttribute("fullUsername", currentUsername != null ? fullUsername : "Gast");
-        model.addAttribute("username", currentUsername != null ? currentUsername : "Gast");
-        model.addAttribute("isAuthenticated", securityUtils.isAuthenticated());
+//        model.addAttribute("fullUsername", currentUsername != null ? fullUsername : "Gast");
+//        model.addAttribute("username", currentUsername != null ? currentUsername : "Gast");
+//        model.addAttribute("isAuthenticated", securityUtils.isAuthenticated());
 
         log.debug("Accessing home page. User: {}, Authenticated: {}", currentUsername, securityUtils.isAuthenticated());
 

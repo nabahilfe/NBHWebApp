@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import eu.nabahilfe.webapp.members.Member;
 
+// FIXME - can we delete this?
 @Component
 public class SecurityUtils {
 

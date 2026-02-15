@@ -7,6 +7,10 @@
 @param String username = null
 @param String fullUsername = null
 @param Boolean isAuthenticated = false
+@param Boolean isAdmin = false
+
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
 
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
@@ -62,7 +66,7 @@
                                 Mitglied
                             </button>
                             <ul class="dropdown-menu">
-                                @if (isAuthenticated)
+                                @if (ctxt.isAuthenticated())
                                     <li><a class="dropdown-item" href="/members">Mitglieder verwalten</a></li>
                                     <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
                                     <li><hr class="dropdown-divider"></li>
@@ -71,6 +75,11 @@
                                     <li><a class="dropdown-item" href="/registration/login">Anmelden</a></li>
                                     <li><a class="dropdown-item" href="/registration/email">Registrieren</a></li>
                                 @endif
+                                @if (ctxt.isAdmin())
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/admin">Admin Dashboard</a></li>
+                                @endif
+
                             </ul>
                         </li>
 
@@ -103,7 +112,7 @@
 
 
                         <li class="nav-item">
-                            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                            <a class="nav-link disabled" aria-disabled="true">${ctxt.getUsername()}</a>
                         </li>
 
                     </ul>

@@ -1,18 +1,13 @@
-@param String fullUsername = null
-@param String username = null
-@param Boolean isAuthenticated = false
-
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
 
 @template.layout.main(
-    isAuthenticated = isAuthenticated,
-    username = username,
-    fullUsername = fullUsername,
+    ctxt = ctxt,
     content = @`
 
     <div class="bg-white rounded-lg p-6">
-        <h1 class="">Willkommen ${username}!</h1>
+        <h1 class="">Willkommen ${ctxt.getUsername()}!</h1>
 
-        @if (isAuthenticated)
+        @if (ctxt.isAuthenticated())
             <p >Das ist deine Nachbarschaftshilfe Übersicht</p>
         @endif
 
