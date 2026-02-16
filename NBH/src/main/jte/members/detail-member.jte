@@ -158,6 +158,14 @@
                                 </label>
                             </div>
 
+                            <!-- Hidden mirrors to submit values when fields are disabled -->
+                            <input type="hidden" id="firstName-hidden">
+                            <input type="hidden" id="lastName-hidden">
+                            <input type="hidden" id="institut-hidden">
+                            <input type="hidden" id="role-hidden">
+                            <input type="hidden" id="title-hidden">
+                            <input type="hidden" id="email-hidden">
+                            <input type="hidden" id="birthdate-hidden">
                         </div>
                     </div>
                 </div>
@@ -185,14 +193,20 @@
 
     @if(member.getId() != null)
 
-        @if(numberOfTimecheques != null && numberOfTimecheques == 0 && member.getIsImportedMember() == false)
-            <div class="alert alert-info py-2 px-3" role="alert">
-                Dieses Mitglied hat noch keine Zeitschecks. Erfasse gleich den ersten Gratis-Zeitscheck über den Button unten.
+        @if(member.getSalutation() != null && member.getSalutation().equals("SOZIALKONTO"))
+            <div class="alert alert-warning py-2 px-3" role="alert">
+                Sozialkonto der Nachbarschaftshilfe. Zeitschecks können nur durch Spenden von anderen Mitgliedern hinzugefügt werden, nicht durch kaufen.
             </div>
-            <form action="/timecheques/new" method="get">
-                <input type="hidden" name="memberId" value="${member.getId()}">
-                <button type="submit" class="btn btn-outline-primary bi-plus-square"> Ersten Zeitscheck erfassen</button>
-            </form>
+        @else
+            @if(numberOfTimecheques != null && numberOfTimecheques == 0 && member.getIsImportedMember() == false)
+                <div class="alert alert-info py-2 px-3" role="alert">
+                    Dieses Mitglied hat noch keine Zeitschecks. Erfasse gleich den ersten Gratis-Zeitscheck über den Button unten.
+                </div>
+                <form action="/timecheques/new" method="get">
+                    <input type="hidden" name="memberId" value="${member.getId()}">
+                    <button type="submit" class="btn btn-outline-primary bi-plus-square"> Ersten Zeitscheck erfassen</button>
+                </form>
+            @endif
         @endif
 
         <br/>
@@ -241,10 +255,84 @@
         </div>
     @endif
 
+    <script>
+        (function() {
+            const salutation = document.getElementById('salutation');
+            const firstName = document.getElementById('firstName');
+            const lastName = document.getElementById('lastName');
+            const institution = document.getElementById('institut');
+            const role = document.getElementById('role');
+            const title = document.getElementById('title');
+            const email = document.getElementById('email');
+            const directDebitAuthorization = document.getElementById('directDebitAuthorization');
+            const birthdate = document.getElementById('birthdate');
+            const birthdateHidden = document.getElementById('birthdate-hidden');
+
+            const firstNameHidden = document.getElementById('firstName-hidden');
+            const lastNameHidden = document.getElementById('lastName-hidden');
+            const institutionHidden = document.getElementById('institut-hidden');
+            const roleHidden = document.getElementById('role-hidden');
+            const titleHidden = document.getElementById('title-hidden');
+            const emailHidden = document.getElementById('email-hidden');
+
+            const isExisting = ${member.getId() != null};
+
+            const disableAndMirror = (field, hidden) => {
+                hidden.name = field.name;
+                hidden.value = field.value;
+                field.disabled = true;
+            };
+
+            const enableAndClear = (field, hidden, clearValue) => {
+                field.disabled = false;
+                if (clearValue) {
+                    field.value = '';
+                }
+                hidden.removeAttribute('name');
+                hidden.value = '';
+            };
+
+            const toggleFields = (isSocial, isInitial) => {
+                if (isSocial) {
+                    firstName.value = 'Sozialkonto';
+                    lastName.value = 'Nachbarschaftshilfe';
+                    institution.value = 'Nachbarschaftshilfe';
+                    role.value = '';
+                    title.value = '';
+                    email.value = '';
+                    directDebitAuthorization.checked = false;
+                    directDebitAuthorization.disabled = true;
+
+                    disableAndMirror(firstName, firstNameHidden);
+                    disableAndMirror(lastName, lastNameHidden);
+                    disableAndMirror(institution, institutionHidden);
+                    disableAndMirror(role, roleHidden);
+                    disableAndMirror(title, titleHidden);
+                    disableAndMirror(email, emailHidden);
+                } else {
+                    const shouldClear = !isInitial; // keep existing values on initial load
+                    enableAndClear(firstName, firstNameHidden, shouldClear);
+                    enableAndClear(lastName, lastNameHidden, shouldClear);
+                    enableAndClear(institution, institutionHidden, shouldClear);
+                    enableAndClear(role, roleHidden, shouldClear);
+                    enableAndClear(title, titleHidden, shouldClear);
+                    enableAndClear(email, emailHidden, shouldClear);
+                    directDebitAuthorization.disabled = false;
+                }
+            };
+
+            salutation.addEventListener('change', () => toggleFields(salutation.value === 'SOZIALKONTO', false));
+
+            if (isExisting) {
+                salutation.disabled = true;
+                disableAndMirror(birthdate, birthdateHidden);
+            }
+
+            toggleFields(salutation.value === 'SOZIALKONTO', true);
+        })();
+    </script>
+
 `)
-
-
-
 
 
 
