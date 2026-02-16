@@ -14,10 +14,6 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@param String fullUsername = null
-@param String username = null
-@param Boolean isAuthenticated = false
-
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
@@ -74,7 +70,7 @@
     <br/>
     <div class="card">
         <div class="card-body">
-            <h5>Erworbene Zeitschecks von ${ctxt.getFullUsername()}</h5>
+            <h5>Erworbene Zeitschecks</h5>
 
             <table class="table table-hover table-sm" id="memberTable">
                 <thead>

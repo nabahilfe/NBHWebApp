@@ -160,8 +160,6 @@ public class TimeChequeController {
         tc.setAmount(timeChequeHours <= 5 ? BigDecimal.valueOf(0) : BigDecimal.valueOf(3.60 * timeChequeHours));
         tc.setAssignedTo(member);
         tc.setTransactionDate(LocalDate.now());
-        // FIXME: must be logged in user!
-        tc.setCreatedBy(member);
 
         log.debug("\nCreated TimeCheque: {}", tc);
 
