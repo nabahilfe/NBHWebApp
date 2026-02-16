@@ -30,6 +30,7 @@ insert into offers (code, description, version) values
 ('600','Hilfe beim Organisieren von Festen und Veranstaltungen', 0),
 ('600','Außenarbeiten', 0),
 ('800','Hilfe beim Bedienen technischer Geräte', 0),
+('900','Spende von Stunden von/für Sozialkonto', 0),
 ('999','KORREKTURBUCHUNG', 0);
 
 
