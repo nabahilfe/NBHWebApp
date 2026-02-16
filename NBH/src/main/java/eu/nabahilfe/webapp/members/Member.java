@@ -443,7 +443,7 @@ public class Member  {
                 + ", zip=" + zip + ", city=" + city + ", directDebitAuthorization=" + directDebitAuthorization
                 + ", isImportedMember=" + isImportedMember
                 + ", accumulatedHours=" + accumulatedHours + ", role=" + role + ", createdAt=" + createdAt
-                + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt + ", updatedBy=" + updatedBy + ", version="
+                + ", createdById=" + createdBy.getId() + ", updatedAt=" + updatedAt + ", updatedById=" + updatedBy.getId() + ", version="
                 + version + "]";
     }
 
