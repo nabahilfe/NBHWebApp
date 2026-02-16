@@ -48,7 +48,7 @@
 
     <div class="card">
         <div class="card-body">
-            <h5>Erworbene Zeitschecks von FIXME: Username</h5>
+            <h5>Erworbene Zeitschecks von ${ctxt.getFullUsername()}</h5>
 
             <table class="table table-hover table-sm" id="memberTable">
                 <thead>
