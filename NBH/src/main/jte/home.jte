@@ -1,6 +1,6 @@
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
-@template.layout.main(
+@template.layout.mainpage(
     ctxt = ctxt,
     content = @`
 

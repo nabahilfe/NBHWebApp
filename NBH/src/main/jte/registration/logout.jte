@@ -2,7 +2,7 @@
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 
 
-@template.layout.main(
+@template.layout.mainpage(
     content = @`
 
     <h3>Abmelden</h3>

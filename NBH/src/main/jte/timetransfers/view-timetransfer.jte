@@ -17,7 +17,7 @@
 
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
-@template.layout.main(
+@template.layout.mainpage(
     isAuthenticated = isAuthenticated,
     username = username,
     fullUsername = fullUsername,

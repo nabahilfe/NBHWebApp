@@ -18,7 +18,7 @@
 @param Boolean isAuthenticated = false
 
 
-@template.layout.main(
+@template.layout.mainpage(
     searchTerm = searchTerm,
     isAuthenticated = isAuthenticated,
     username = username,

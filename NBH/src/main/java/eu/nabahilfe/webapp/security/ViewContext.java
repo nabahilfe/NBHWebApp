@@ -19,11 +19,11 @@ public class ViewContext {
     }
 
     public String getUsername() {
-        return user != null ? user.getFirstName() : "Guest";
+        return user != null ? user.getFirstName() : "Gast";
     }
 
     public String getFullUsername() {
-        return user != null ? user.getName() : "Guest";
+        return user != null ? user.getName() : "Gast";
     }
 
     public boolean isAdmin() {
