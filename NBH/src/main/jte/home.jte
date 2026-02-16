@@ -1,16 +1,17 @@
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
+
 @template.layout.mainpage(
+    csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
 
-    <div class="bg-white rounded-lg p-6">
-        <h1 class="">Willkommen ${ctxt.getUsername()}!</h1>
+    <h1 class="">Willkommen ${ctxt.getUsername()}!</h1>
 
-        @if (ctxt.isAuthenticated())
-            <p >Das ist deine Nachbarschaftshilfe Übersicht</p>
-        @endif
+    @if (ctxt.isAuthenticated())
+        <p >Das ist deine Nachbarschaftshilfe Übersicht</p>
+    @endif
 
-    </div>
 
 `)

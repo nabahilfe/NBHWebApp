@@ -19,12 +19,12 @@
 @param Boolean isAuthenticated = false
 
 
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
+
 @template.layout.mainpage(
-    isAuthenticated = isAuthenticated,
-    username = username,
-    fullUsername = fullUsername,
+    csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
 
@@ -33,6 +33,7 @@
 
 
     <form id="tcForm" action="/timecheques" method="POST">
+        ${csrfHiddenInput}
         <div class="card">
             <div class="card-body bg-success bg-opacity-10">
                 <h4 class="text-primary">${timeCheque.getAssignedTo().getName()}</h4>

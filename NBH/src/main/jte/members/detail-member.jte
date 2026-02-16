@@ -28,12 +28,12 @@
 @param Boolean isAuthenticated = false
 
 
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
+
 @template.layout.mainpage(
-    isAuthenticated = isAuthenticated,
-    username = username,
-    fullUsername = fullUsername,
+    csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
 
@@ -47,6 +47,7 @@
 
         <!-- first action is for save, second action is for update -->
         <form action="${member.getId() == null ? "/members" : "/members/" + member.getId()}" method="post">
+            ${csrfHiddenInput}
 
             <div class="form-group row">
                 <div class="col">

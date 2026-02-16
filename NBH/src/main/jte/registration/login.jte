@@ -1,19 +1,17 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
-
 @param String fullUsername = null
 @param String username = null
 @param Boolean isAuthenticated = false
 
 
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
+
 @template.layout.mainpage(
-    isAuthenticated = isAuthenticated,
-    username = username,
-    fullUsername = fullUsername,
+    csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
 

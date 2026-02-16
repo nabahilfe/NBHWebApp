@@ -1,6 +1,4 @@
-@import org.springframework.security.web.csrf.CsrfToken
 
-@param CsrfToken csrf = null
 @param gg.jte.Content content
 @param String searchTerm = null
 
@@ -9,6 +7,7 @@
 @param Boolean isAuthenticated = false
 @param Boolean isAdmin = false
 
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
 

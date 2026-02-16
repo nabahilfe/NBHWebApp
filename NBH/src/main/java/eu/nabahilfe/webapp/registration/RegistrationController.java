@@ -6,7 +6,6 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -73,11 +72,6 @@ public class RegistrationController {
             return "registration/email";
         }
 
-        CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        if (csrf != null) {
-            model.addAttribute("csrf", csrf);
-        }
-
         String code = randomCode();
         sendCode(email, code);
 
@@ -96,21 +90,12 @@ public class RegistrationController {
 
     @GetMapping("/logout")
     public String showLogoutForm(Model model, HttpServletRequest request) {
-
-//        CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-//        if (csrf != null) model.addAttribute("csrf", csrf);
-
         return "registration/logout";
     }
 
 
     @PostMapping("/logout")
     public String doLogout(Model model, HttpServletRequest request, SessionStatus sessionStatus) {
-
-        CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        if (csrf != null) {
-            model.addAttribute("csrf", csrf);
-        }
         sessionStatus.setComplete();
         return "redirect:/";
     }
@@ -187,12 +172,6 @@ public class RegistrationController {
 
         if (email != null) {
             email = email.trim().toLowerCase();
-        }
-
-        // Add CSRF token
-        CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        if (csrf != null) {
-            model.addAttribute("csrf", csrf);
         }
 
         Member member = memberRepository.findByEmail(email);

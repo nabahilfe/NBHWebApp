@@ -15,12 +15,12 @@
 @param Boolean isAuthenticated = false
 
 
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
+
 @template.layout.mainpage(
-    isAuthenticated = isAuthenticated,
-    username = username,
-    fullUsername = fullUsername,
+    csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
 
@@ -31,6 +31,7 @@
     <div class="row">
         <!-- first action is for create, second action is for update -->
         <form action="${accountingEntry.getId() == null ? "/accountings/save-accounting" : "/accountings/view-accounting/" + accountingEntry.getId()}" method="post">
+            ${csrfHiddenInput}
             <div class="form-group row">
                 <label for="accountableClass" class="col-sm-2 col-form-label">Buchung für</label>
                 <div class="col-sm-10">

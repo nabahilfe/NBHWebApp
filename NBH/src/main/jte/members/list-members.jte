@@ -17,12 +17,13 @@
 @param String username = null
 @param Boolean isAuthenticated = false
 
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
 
 @template.layout.mainpage(
-    searchTerm = searchTerm,
-    isAuthenticated = isAuthenticated,
-    username = username,
-    fullUsername = fullUsername,
+    csrfHiddenInput = csrfHiddenInput,
+    ctxt = ctxt,
     content = @`
 
   <!-- Hidden form to handle sorting -->
@@ -113,6 +114,7 @@
 
     <!-- Hidden form so we can submit the delete -->
     <form id="hiddenForm" method="post" style="display: none;">
+        ${csrfHiddenInput}
         <input type="hidden" name="memberId" id="memberIdInput">
     </form>
 

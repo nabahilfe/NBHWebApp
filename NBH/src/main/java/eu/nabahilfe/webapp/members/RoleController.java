@@ -20,7 +20,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.springframework.security.web.csrf.CsrfToken;
 
 @Controller
 @RequestMapping("/roles")
@@ -85,9 +84,6 @@ public class RoleController {
     String saveRole(Model model, @ModelAttribute @Valid Role role,
             RedirectAttributes redirectAttributes, BindingResult result, HttpServletRequest request) {
 
-        CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        if (csrf != null) model.addAttribute("csrf", csrf);
-
         String roleError = validateRoleAttributes(role);
         if (roleError != null) {
             model.addAttribute("errorMessage", roleError);
@@ -106,10 +102,6 @@ public class RoleController {
     public String updateRole(Model model, @ModelAttribute @Valid Role role,
             RedirectAttributes redirectAttributes, BindingResult result, HttpServletRequest request, @PathVariable Long id) {
         log.debug("Update Role with id {}: {}", id, role);
-
-        CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        if (csrf != null) model.addAttribute("csrf", csrf);
-
         return saveRole(model, role, redirectAttributes, result, request);
     }
 
@@ -117,9 +109,6 @@ public class RoleController {
     @PostMapping("/delete/{id}")
     @Transactional
     String deleteRole(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-
-        CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        if (csrf != null) model.addAttribute("csrf", csrf);
 
         Optional<Role> role = roleRepository.findById(id);
         roleRepository.delete(role.get());

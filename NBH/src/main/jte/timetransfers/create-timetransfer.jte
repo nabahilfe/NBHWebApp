@@ -16,12 +16,12 @@
 @param Boolean isAuthenticated = false
 
 
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
+
 @template.layout.mainpage(
-    isAuthenticated = isAuthenticated,
-    username = username,
-    fullUsername = fullUsername,
+    csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
 
@@ -42,6 +42,7 @@
 
     <!-- Main form: POST to /timetransfers; server processes the submitted fields -->
     <form action="/timetransfers" method="post">
+        ${csrfHiddenInput}
 
         <div class="row">
           <div class="col-sm-6">

@@ -21,12 +21,12 @@
 @param Boolean isAuthenticated = false
 
 
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
+
 @template.layout.mainpage(
-    isAuthenticated = isAuthenticated,
-    username = username,
-    fullUsername = fullUsername,
+    csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
 
@@ -51,6 +51,7 @@
         <tbody class="table-group-divider">
             @for (TimeCheque tc : timeCheques)
                 <form method="post" action="/accountings/new-accountable">
+                    ${csrfHiddenInput}
                     <tr>
                         <td scope="row">${dateDE(tc.getTransactionDate())}</td>
                         <td scope="row">${tc.getAssignedTo().getNameAndAddress()}</td>
