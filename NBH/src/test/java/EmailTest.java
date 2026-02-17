@@ -9,8 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 
 import eu.nabahilfe.webapp.NbhApplication;
-import eu.nabahilfe.webapp.Services.EmailService.EmailDetails;
-import eu.nabahilfe.webapp.Services.EmailService.EmailService;
+import eu.nabahilfe.webapp.email.EmailDetails;
+import eu.nabahilfe.webapp.email.EmailService;
 
 
 @SpringBootTest(classes = NbhApplication.class)
@@ -22,7 +22,7 @@ public class EmailTest {
 
 	
 	@Test
-	private void sendEmailTest() {
+	void sendEmailTest() {
 
 		String id = UUID.randomUUID().toString();
 		EmailDetails emailDetails = new EmailDetails(recipient, id, "test email");
@@ -30,13 +30,20 @@ public class EmailTest {
 	}
 	
 	@Test
-	private void sendEmailHtmlTest() {
+	void sendEmailHtmlTest() {
 
 		String id = UUID.randomUUID().toString();
 		String htmlBody = "<h2>test email</h2><p>this is a html body</p>";
 		EmailDetails emailDetails = new EmailDetails(recipient, id, htmlBody);
 		System.out.println(emailService.sendEmailHtml(emailDetails));
 	}
+	
+	@Test
+	void sendTimeChecksToBookEmailTest() {
+		//emailService.sendTimeChecksToBookEmail();
+	}
+	
+	
 	
 	
 	

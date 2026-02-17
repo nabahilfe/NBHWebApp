@@ -1,4 +1,4 @@
-package eu.nabahilfe.webapp.Services.EmailService;
+package eu.nabahilfe.webapp.email;
 
 
 public class EmailDetails {

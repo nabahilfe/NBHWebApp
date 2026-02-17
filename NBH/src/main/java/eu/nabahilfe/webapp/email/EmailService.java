@@ -1,4 +1,4 @@
-package eu.nabahilfe.webapp.Services.EmailService;
+package eu.nabahilfe.webapp.email;
 
 import java.io.File;
 
@@ -16,12 +16,16 @@ import jakarta.mail.internet.MimeMessage;
 public class EmailService implements IEmailService {
 	
 	@Autowired 
-	JavaMailSender javaMailSender;
+	private JavaMailSender javaMailSender;
+	private EmailComposer emailComposer = new EmailComposer();
 	
 	@Value("${spring.mail.username}") private String sender;
-
+	
+	
 	@Override
 	public String sendEmail(EmailDetails details) {
+		System.out.println("sender: " + sender);
+		
 		try {
 			SimpleMailMessage mailMessage = new SimpleMailMessage();
 			
@@ -76,6 +80,12 @@ public class EmailService implements IEmailService {
 		catch  (Exception e) {
 			return "Error while sending Mail: " + e;
 		}
+	}
+	
+	
+	public String sendTimeChecksToBookEmail(String name, String recipient) {
+		// TODO: send emails to users with correct role
+		return sendEmailHtml(emailComposer.composeTimeChecksToBookEmail("test@nabahilfe.eu", "testUser"));
 	}
 
 
