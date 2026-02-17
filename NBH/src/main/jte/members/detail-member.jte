@@ -91,7 +91,7 @@
                             <label for="role" class="col col-form-label">Rolle</label>
                             <div class="col">
                                 <select class="form-select" name="role" id="role">
-                                    <option value="">Einfaches Mitglied</option>
+                                    <option value=""></option>
                                     @for(Role role : roles)
                                         <option value="${role.getId()}" selected="${member.getRole() != null && member.getRole().getId() == role.getId()}">
                                             ${role.getRoleName()}
@@ -158,6 +158,13 @@
                                 </label>
                             </div>
 
+                            <!-- Hidden mirrors to submit disabled values -->
+                            <input type="hidden" id="firstName-hidden">
+                            <input type="hidden" id="lastName-hidden">
+                            <input type="hidden" id="institution-hidden">
+                            <input type="hidden" id="role-hidden">
+                            <input type="hidden" id="title-hidden">
+                            <input type="hidden" id="email-hidden">
                         </div>
                     </div>
                 </div>
@@ -247,14 +254,124 @@
         </div>
     @endif
 
+    <script>
+        (function() {
+            const salutation = document.getElementById('salutation');
+            const title = document.getElementById('title');
+            const firstName = document.getElementById('firstName');
+            const lastName = document.getElementById('lastName');
+            const email = document.getElementById('email');
+            const institution = document.getElementById('institut');
+            const role = document.getElementById('role');
+            const directDebitAuthorization = document.getElementById('directDebitAuthorization');
+
+            const firstNameHidden = document.getElementById('firstName-hidden');
+            const lastNameHidden = document.getElementById('lastName-hidden');
+            const institutionHidden = document.getElementById('institution-hidden');
+            const roleHidden = document.getElementById('role-hidden');
+            const titleHidden = document.getElementById('title-hidden');
+            const emailHidden = document.getElementById('email-hidden');
+
+            const isExisting = ${member.getId() != null};
+            const savedSalutation = '${member.getSalutation() != null ? member.getSalutation() : ""}';
+
+            // Preserve user-entered values when toggling Sozialkonto on/off
+            const snapshot = {
+                title: title.value,
+                firstName: firstName.value,
+                lastName: lastName.value,
+                email: email.value,
+                institution: institution.value,
+                role: role.value,
+                directDebitAuthorization: directDebitAuthorization.checked
+            };
+
+            const mirror = (field, hidden, enabled) => {
+                if (enabled) {
+                    hidden.removeAttribute('name');
+                    hidden.value = '';
+                    field.disabled = false;
+                } else {
+                    hidden.name = field.name;
+                    hidden.value = field.value;
+                    field.disabled = true;
+                }
+            };
+
+            const applySocialLock = (enable) => {
+                if (enable) {
+                    snapshot.title = title.value;
+                    snapshot.firstName = firstName.value;
+                    snapshot.lastName = lastName.value;
+                    snapshot.email = email.value;
+                    snapshot.institution = institution.value;
+                    snapshot.role = role.value;
+                    snapshot.directDebitAuthorization = directDebitAuthorization.checked;
+
+                    title.value = '';
+                    institution.value = 'Nachbarschaftshilfe';
+                    firstName.value = 'SOZIALKONTO';
+                    lastName.value = 'NACHBARSCHAFTSHILFE';
+                    role.value = '';
+
+                    mirror(title, titleHidden, false);
+                    mirror(institution, institutionHidden, false);
+                    mirror(firstName, firstNameHidden, false);
+                    mirror(lastName, lastNameHidden, false);
+                    mirror(role, roleHidden, false);
+
+                    directDebitAuthorization.disabled = true;
+                    directDebitAuthorization.checked = false;
+                } else {
+                    mirror(title, titleHidden, true);
+                    mirror(institution, institutionHidden, true);
+                    mirror(firstName, firstNameHidden, true);
+                    mirror(lastName, lastNameHidden, true);
+                    mirror(role, roleHidden, true);
+
+                    title.value = snapshot.title;
+                    institution.value = snapshot.institution;
+                    firstName.value = snapshot.firstName;
+                    lastName.value = snapshot.lastName;
+                    role.value = snapshot.role;
+
+                    directDebitAuthorization.disabled = false;
+                    directDebitAuthorization.checked = snapshot.directDebitAuthorization;
+                }
+            };
+
+            const enforceSalutationOptions = () => {
+                const options = Array.from(salutation.options);
+                if (!isExisting) {
+                    return;
+                }
+
+                if (savedSalutation === 'SOZIALKONTO') {
+                    options.forEach(opt => {
+                        opt.disabled = opt.value !== 'SOZIALKONTO';
+                        opt.hidden = opt.value !== 'SOZIALKONTO';
+                    });
+                    salutation.value = 'SOZIALKONTO';
+                    salutation.disabled = true;
+                } else {
+                    options
+                        .filter(opt => opt.value === 'SOZIALKONTO')
+                        .forEach(opt => opt.remove());
+                }
+            };
+
+            const handleSalutationChange = () => {
+                const isSocial = salutation.value === 'SOZIALKONTO';
+                applySocialLock(isSocial);
+            };
+
+            enforceSalutationOptions();
+            handleSalutationChange();
+            salutation.addEventListener('change', handleSalutationChange);
+        })();
+    </script>
+
 `)
-
-
-
-
-
-
-
 
 
 
