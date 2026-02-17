@@ -240,12 +240,12 @@
                     </div>
                     <div class="tab-pane fade" id="transfers-pane" role="tabpanel" aria-labelledby="transfers-tab" tabindex="0">
                         <div class="pt-3">
-                            @template.components.list-timetransfers-component(member = member, transfers = givenTimeTransfers)
+                            @template.components.list-timetransfers-given-component(member = member, transfers = givenTimeTransfers)
                         </div>
                     </div>
                     <div class="tab-pane fade" id="received-pane" role="tabpanel" aria-labelledby="received-tab" tabindex="0">
                         <div class="pt-3">
-                            @template.components.list-timetransfers-component(member = member, transfers = receivedTimeTransfers)
+                            @template.components.list-timetransfers-received-component(member = member, transfers = receivedTimeTransfers)
                         </div>
                     </div>
                 </div>

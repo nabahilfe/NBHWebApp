@@ -2,7 +2,7 @@
     A reusable template to display time transfers.
 
     Usage:
-    @template.components.list-timetransfers-component(member = Member, transfers = List<TimeTransfer>)
+    @template.components.list-timetransfers-received-component(member = Member, transfers = List<TimeTransfer>)
 
     Parameters:
     - timeTransfers: List<TimeTransfer>
@@ -31,8 +31,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Datum</th>
-                        <th scope="col">von</th>
-                        <th scope="col">an</th>
+                        <th scope="col">abgegeben an</th>
                         <th scope="col">Kategorie</th>
                         <th scope="col" class="text-end">Stunden</th>
                     </tr>
@@ -41,7 +40,6 @@
                     @for (TimeTransfer tt : transfers)
                         <tr>
                             <td scope="row">${dateDE(tt.getDateOfService())}</td>
-                            <td scope="row">${boldMemberNameIfSameId(member.getId(), tt.getFromMember())}</td>
                             <td scope="row">${boldMemberNameIfSameId(member.getId(), tt.getToMember())}</td>
                             <td scope="row">${tt.getOffer().getDescription()}</td>
                             <td scope="row" class="text-end">${tt.getHours()}</td>
