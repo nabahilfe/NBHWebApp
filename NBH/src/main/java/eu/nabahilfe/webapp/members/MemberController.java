@@ -174,6 +174,12 @@ public class MemberController {
             member.setMemberNmbr(getNextMemberNumber());
             member.setJoiningDate(LocalDate.now());
             member.setIsImportedMember(false);
+
+            String error = validateOnlyOneSozialkonto(member);
+            if (error != null) {
+                model.addAttribute("errorMessage", error);
+                return "members/detail-member";
+            }
         }
 
         log.debug("Saving Member: {}", member);
@@ -186,6 +192,15 @@ public class MemberController {
         log.debug("Member saved: {}", member);
 
         return "redirect:/members/" + member.getId();
+    }
+
+
+    private String validateOnlyOneSozialkonto(@Valid Member member) {
+        if (member.getSalutation() != null && member.getSalutation().equals("SOZIALKONTO") && memberRepository.findBySalutation("SOZIALKONTO").size() > 0) {
+            return "Es gibt bereits ein Sozialkonto, es kann kein weiteres Sozialkonto angelgt werden!";
+        }
+
+        return null;
     }
 
 

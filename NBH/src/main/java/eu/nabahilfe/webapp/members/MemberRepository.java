@@ -34,4 +34,6 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
 
     Member findByEmail(String email);
 
+    List<Member> findBySalutation(String salutation);
+
 }
