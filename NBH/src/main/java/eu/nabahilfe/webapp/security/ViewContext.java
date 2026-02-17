@@ -4,6 +4,7 @@ import eu.nabahilfe.webapp.members.Member;
 
 public class ViewContext {
 
+    // FIXME ? - use CustomUserDetails instead of Member
     private final Member user;
 
     public ViewContext(Member user) {

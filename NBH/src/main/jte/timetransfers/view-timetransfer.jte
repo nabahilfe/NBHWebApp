@@ -33,8 +33,8 @@
             <div class="card">
                 <div class="card-body bg-success bg-opacity-10">
 
-                    <h5 class="card-title text-primary">Leistungsempfänger</h5>
-                    <p class="card-text text-success">Gibt Zeitscheck an Leistungserbringer</p>
+                    <h5 class="card-title text-primary">Zeitscheck von</h5>
+                    <p class="card-text text-success">Gibt Zeitscheck ab</p>
 
                     <input type="text" class="form-control" readonly value="${tt.getFromMember().getNameAndAddress()}">
 
@@ -58,8 +58,8 @@
             <div class="card">
                 <div class="card-body bg-success bg-opacity-10">
 
-                    <h5 class="card-title text-primary">Leistungserbringer</h5>
-                    <p class="card-text text-success">Erhält Zeitscheck vom Leistungsempfänger</p>
+                    <h5 class="card-title text-primary">Zeitscheck an</h5>
+                    <p class="card-text text-success">Erhält Zeitscheck</p>
 
                     <input type="text" class="form-control" readonly value="${tt.getToMember().getNameAndAddress()}">
 

@@ -1,11 +1,13 @@
 package eu.nabahilfe.webapp.registration;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 import eu.nabahilfe.webapp.NbhConst;
 
-public class RegistrationSession {
+public class RegistrationSession implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private String email;
     private RegistrationStep step;

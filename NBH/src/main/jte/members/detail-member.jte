@@ -217,17 +217,17 @@
                 <ul class="nav nav-tabs" id="memberDetailTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="timecheques-tab" data-bs-toggle="tab" data-bs-target="#timecheques-pane" type="button" role="tab" aria-controls="timecheques-pane" aria-selected="true">
-                            Zeitschecks
+                            Zeitschecks gekauft
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="transfers-tab" data-bs-toggle="tab" data-bs-target="#transfers-pane" type="button" role="tab" aria-controls="transfers-pane" aria-selected="false">
-                            Leistungsempfänger
+                            Zeitschecks abgegeben an
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="received-tab" data-bs-toggle="tab" data-bs-target="#received-pane" type="button" role="tab" aria-controls="received-pane" aria-selected="false">
-                            Leistungserbringer
+                            Zeitschecks erhalten von
                         </button>
                     </li>
                 </ul>

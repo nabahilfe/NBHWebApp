@@ -1,5 +1,6 @@
 package eu.nabahilfe.webapp.members;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -30,7 +31,8 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "MEMBERS")
 @EntityListeners(GlobalAuditListener.class)
-public class Member  {
+public class Member implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

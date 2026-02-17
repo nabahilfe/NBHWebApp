@@ -24,8 +24,7 @@
 
 <div class="card">
     <div class="card-body">
-        <h5>Gehandelte Zeitschecks</h5>
-        <p class="card-text"><strong>${member.getName()}</strong></p>
+        <p class="card-text"><strong>${member.getName()} - abgegeben Zeitschecks</strong></p>
         <div class="table-responsive">
 
             <table class="table table-hover table-sm" id="memberTable">

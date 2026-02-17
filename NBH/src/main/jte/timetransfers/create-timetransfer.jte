@@ -49,8 +49,8 @@
             <div class="card">
               <div class="card-body bg-success bg-opacity-10">
 
-                <h5 class="card-title text-primary">Leistungsempfänger</h5>
-                <p class="card-text text-success">Gibt Zeitscheck an Leistungserbringer</p>
+                <h5 class="card-title text-primary">Zeitscheck von</h5>
+                <p class="card-text text-success">Gibt Zeitscheck ab</p>
 
                 <!--
                   Payer input (userFrom): visible text input for autocomplete search
@@ -86,7 +86,7 @@
                 </div>
 
                 <!-- Service date: required date input (yyyy-mm-dd). Prefilled when editing. -->
-                <label for="dateOfService" class="col-sm-10 col-form-label">Leistungsdatum</label>
+                <label for="dateOfService" class="col-sm-10 col-form-label">Datum</label>
                 <div class="col-sm-10">
                       <input type="date" class="form-control" name="dateOfService" id="dateOfService"
                           value="${ttf == null ? "" : dateDE(ttf.getServiceDate())}" required>
@@ -114,8 +114,8 @@
             <div class="card">
               <div class="card-body bg-success bg-opacity-10">
 
-                <h5 class="card-title text-primary">Leistungserbringer</h5>
-                <p class="card-text text-success">Erhält Zeitscheck vom Leistungsempfänger</p>
+                <h5 class="card-title text-primary">Zeitscheck an</h5>
+                <p class="card-text text-success">Erhält Zeitscheck</p>
 
                 <!--
                   Payee input (userTo): same structure as userFrom
