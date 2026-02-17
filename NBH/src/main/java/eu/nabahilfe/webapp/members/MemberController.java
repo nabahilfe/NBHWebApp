@@ -196,7 +196,7 @@ public class MemberController {
 
 
     private String validateOnlyOneSozialkonto(@Valid Member member) {
-        if (member.getSalutation() != null && member.getSalutation().equals("SOZIALKONTO") && memberRepository.findBySalutation("SOZIALKONTO").size() > 0) {
+        if (member.getSalutation() != null && member.getSalutation().equals(NbhConst.SOZIALKONTO) && memberRepository.findBySalutation(NbhConst.SOZIALKONTO).size() > 0) {
             return "Es gibt bereits ein Sozialkonto, es kann kein weiteres Sozialkonto angelgt werden!";
         }
 
