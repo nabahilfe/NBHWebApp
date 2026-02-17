@@ -1,4 +1,3 @@
-
 @param gg.jte.Content content
 @param String searchTerm = null
 
@@ -111,10 +110,15 @@
 
 
                         <li class="nav-item">
-                            <a class="nav-link disabled" aria-disabled="true">${ctxt.getUsername()}</a>
+                            <a class="nav-link" aria-disabled="true">SomethingElse...</a>
                         </li>
 
                     </ul>
+
+                    <!-- Username display -->
+                    @if(ctxt.isAuthenticated())
+                        <span class="navbar-text me-3">Angemeldet als <b>${ctxt.getUsername()}</b></span>
+                    @endif
 
                     <!-- Suchformular rechts -->
                     <form class="d-flex" role="search" action="/members/search" method="get">
