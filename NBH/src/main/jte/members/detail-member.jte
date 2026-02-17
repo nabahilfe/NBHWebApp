@@ -32,6 +32,7 @@
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
 
+@{boolean isExistingMember = member.getId() != null;}
 @template.layout.mainpage(
     csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
@@ -61,9 +62,11 @@
                                 <select class="form-select" name="salutation" id="salutation">
                                     <option value="">Auswählen</option>
                                     @for(Salutation sal : Salutation.values())
-                                        <option value="${sal.name()}" selected="${member.getSalutation() != null && member.getSalutation().equals(sal.name())}">
-                                            ${sal.name()}
-                                        </option>
+                                        @if(member.getId() == null || (member.getSalutation() != null && member.getSalutation().equals("SOZIALKONTO")) || !sal.name().equals("SOZIALKONTO"))
+                                            <option value="${sal.name()}" selected="${member.getSalutation() != null && member.getSalutation().equals(sal.name())}">
+                                                ${sal.name()}
+                                            </option>
+                                        @endif
                                     @endfor
                                 </select>
                             </div>
@@ -324,7 +327,6 @@
             salutation.addEventListener('change', () => toggleFields(salutation.value === 'SOZIALKONTO', false));
 
             if (isExisting) {
-                salutation.disabled = true;
                 disableAndMirror(birthdate, birthdateHidden);
             }
 
@@ -333,6 +335,11 @@
     </script>
 
 `)
+
+
+
+
+
 
 
 
