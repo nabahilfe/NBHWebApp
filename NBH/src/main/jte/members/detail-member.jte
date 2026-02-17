@@ -20,7 +20,7 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@param Integer numberOfTimecheques = null		/* so we can display button to create first TimeCheque only if there are none yet */
+@param Integer numberOfTimecheques = null
 
 
 @param String fullUsername = null
@@ -32,7 +32,6 @@
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
 
-@{boolean isExistingMember = member.getId() != null;}
 @template.layout.mainpage(
     csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
@@ -62,11 +61,9 @@
                                 <select class="form-select" name="salutation" id="salutation">
                                     <option value="">Auswählen</option>
                                     @for(Salutation sal : Salutation.values())
-                                        @if(member.getId() == null || (member.getSalutation() != null && member.getSalutation().equals("SOZIALKONTO")) || !sal.name().equals("SOZIALKONTO"))
-                                            <option value="${sal.name()}" selected="${member.getSalutation() != null && member.getSalutation().equals(sal.name())}">
-                                                ${sal.name()}
-                                            </option>
-                                        @endif
+                                        <option value="${sal.name()}" selected="${member.getSalutation() != null && member.getSalutation().equals(sal.name())}">
+                                            ${sal.name()}
+                                        </option>
                                     @endfor
                                 </select>
                             </div>
@@ -161,14 +158,6 @@
                                 </label>
                             </div>
 
-                            <!-- Hidden mirrors to submit values when fields are disabled -->
-                            <input type="hidden" id="firstName-hidden">
-                            <input type="hidden" id="lastName-hidden">
-                            <input type="hidden" id="institut-hidden">
-                            <input type="hidden" id="role-hidden">
-                            <input type="hidden" id="title-hidden">
-                            <input type="hidden" id="email-hidden">
-                            <input type="hidden" id="birthdate-hidden">
                         </div>
                     </div>
                 </div>
@@ -258,83 +247,9 @@
         </div>
     @endif
 
-    <script>
-        (function() {
-            const salutation = document.getElementById('salutation');
-            const firstName = document.getElementById('firstName');
-            const lastName = document.getElementById('lastName');
-            const institution = document.getElementById('institut');
-            const role = document.getElementById('role');
-            const title = document.getElementById('title');
-            const email = document.getElementById('email');
-            const directDebitAuthorization = document.getElementById('directDebitAuthorization');
-            const birthdate = document.getElementById('birthdate');
-            const birthdateHidden = document.getElementById('birthdate-hidden');
-
-            const firstNameHidden = document.getElementById('firstName-hidden');
-            const lastNameHidden = document.getElementById('lastName-hidden');
-            const institutionHidden = document.getElementById('institut-hidden');
-            const roleHidden = document.getElementById('role-hidden');
-            const titleHidden = document.getElementById('title-hidden');
-            const emailHidden = document.getElementById('email-hidden');
-
-            const isExisting = ${member.getId() != null};
-
-            const disableAndMirror = (field, hidden) => {
-                hidden.name = field.name;
-                hidden.value = field.value;
-                field.disabled = true;
-            };
-
-            const enableAndClear = (field, hidden, clearValue) => {
-                field.disabled = false;
-                if (clearValue) {
-                    field.value = '';
-                }
-                hidden.removeAttribute('name');
-                hidden.value = '';
-            };
-
-            const toggleFields = (isSocial, isInitial) => {
-                if (isSocial) {
-                    firstName.value = 'Sozialkonto';
-                    lastName.value = 'Nachbarschaftshilfe';
-                    institution.value = 'Nachbarschaftshilfe';
-                    role.value = '';
-                    title.value = '';
-                    email.value = '';
-                    directDebitAuthorization.checked = false;
-                    directDebitAuthorization.disabled = true;
-
-                    disableAndMirror(firstName, firstNameHidden);
-                    disableAndMirror(lastName, lastNameHidden);
-                    disableAndMirror(institution, institutionHidden);
-                    disableAndMirror(role, roleHidden);
-                    disableAndMirror(title, titleHidden);
-                    disableAndMirror(email, emailHidden);
-                } else {
-                    const shouldClear = !isInitial; // keep existing values on initial load
-                    enableAndClear(firstName, firstNameHidden, shouldClear);
-                    enableAndClear(lastName, lastNameHidden, shouldClear);
-                    enableAndClear(institution, institutionHidden, shouldClear);
-                    enableAndClear(role, roleHidden, shouldClear);
-                    enableAndClear(title, titleHidden, shouldClear);
-                    enableAndClear(email, emailHidden, shouldClear);
-                    directDebitAuthorization.disabled = false;
-                }
-            };
-
-            salutation.addEventListener('change', () => toggleFields(salutation.value === 'SOZIALKONTO', false));
-
-            if (isExisting) {
-                disableAndMirror(birthdate, birthdateHidden);
-            }
-
-            toggleFields(salutation.value === 'SOZIALKONTO', true);
-        })();
-    </script>
-
 `)
+
+
 
 
 
