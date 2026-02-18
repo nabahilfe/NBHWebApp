@@ -8,10 +8,11 @@
 @template.layout.main(content = @`
 
     <h3>Rollen und Berechtigungen für Mitglieder
-        <button type="button" class="btn btn-link" data-bs-toggle="modal"
-            data-bs-target="#helpModal" ">Erklärung zu den Rollen und Berechtigungen
+        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#helpModal">
+            Erklärung zu den Rollen und Berechtigungen
         </button>
     </h3>
+
     <br/>
 
     <!-- Modal help dialog -->
@@ -26,16 +27,18 @@
             <p>Die <b>Rollen</b> bieten einerseitzs die Möglichkeit <b>Bezeichnungen für Funktionen</b> zu vergeben,
                 andererseits sind damit auch <b>bestimmte Berechtigungen</b> vebunden.</p>
             <ul>
-              <li><b>Vorstand</b> - kann Mitglieder verwalten, Kassaführung einsehen</li>
-              <li><b>Schriftführer</b> - kann Protokolle erstellen und verwalten</li>
-              <li><b>Kassier</b> - kann Zahlungen erfassen und die Kassaführung verwalten</li>
-              <li><b>Prüfer</b> - kann die Zahlungen und Kassaführung einsehen</li>
-              <li><b>Zeitschecks</b> - kann Zeitschecks erfassen und verwalten</li>
-              <li><b>Administrator</b> - kann alles verwalten, aber nicht die Mitglieder und nicht Zahlungen und nicht Kassaführung </li>
-              <li><b>Sonstiges</b> - wie ein einfaches Mitglied, nur eigene Daten</li>
+              <li><b>Vorstand</b> - kann Mitglieder verwalten, Kassaführung einsehen.</li>
+              <li><b>Schriftführer</b> - kann Protokolle erstellen und verwalten.</li>
+              <li><b>Kassier</b> - kann Zahlungen erfassen und die Kassaführung verwalten.</li>
+              <li><b>Prüfer</b> - kann Zahlungen und Kassaführung einsehen.</li>
+              <li><b>Zeitschecks</b> - kann Zeitschecks erfassen und verwalten.</li>
+              <li><b>Administrator</b> - kann alles einsehen, erfassen und verwalten.</li>
+              <li><b>Sonstiges</b> - wie ein einfaches Mitglied, nur eigene Daten einsehen, Mitglieder suchen, Stunden übertragen.</li>
              </ul>
-             <p>Eine Rolle kann auch <b>mehrere</b> Berechtigungen zugeordnet haben, z.B. Obmann/Obfrau auch die Berechtigung für Zeitschecks.</p>
-             Die Rolle <b>Prüfer</b> und <b>Sonstiges</b> lassen sich nicht mit anderen Rollen/Berechtigungen kombinieren.
+             <p>Einer <b>Rolle</b> können auch <b>mehrere Berechtigungen</b> zugeordnet werden, z.B. Obmann/Obfrau auch die Berechtigung für Zeitschecks,
+                oder ein Schriftführer könnte auch Administrator sein.</p>
+             <p>Die Funktionen <b>Zeitschecks</b> und <b>Administrator</b> müssen immer mit einer Vereins-Funktion wie Vorstand, Schriftführer oder Kassier kombiniert werden.</p>
+             <b>Die Funktionen <i>Prüfer</i> und <i>Sonstiges</i> lassen sich <i>nicht</i> mit anderen Berechtigungen kombinieren!</b>
           </div>
         </div>
       </div>
@@ -120,7 +123,7 @@
         <button class="btn btn-outline-primary bi-plus-circle" type="submit"> Rolle hinzufügen</button>
     </form>
 
-    <p/>
+    <br/>
 
     @template.components.display-statusmessage(successMessage, errorMessage)
 

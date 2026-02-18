@@ -6,7 +6,7 @@ Basierend auf Spring-Boot, Bootstrap und Postgres.
 Als IDE wird Eclipse verwendet, es handelt sich also auch um ein Eclipse Projekt.
 
 
-## Probleme nach Check Out lösen
+## Probleme in Eclipse nach dem Check Out lösen
 
-Zuerst im Project Root ausführen: `./mvnw spring-boot:run`<br>
-Dann in Eclipse: Rechtsklick auf das Projekt „Maven → Update Project…“
+* zuerst im Project Root ausführen: `./mvnw spring-boot:run`
+* dann in Eclipse: Rechtsklick auf das Projekt und dann „Maven → Update Project…“

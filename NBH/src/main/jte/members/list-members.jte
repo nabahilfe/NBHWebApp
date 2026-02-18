@@ -30,14 +30,15 @@
 
         <thead>
         <tr>
-    	  <th scope="col" data-col="lastName" data-order="${orderBy.equals("lastName") ? order : ""}">
+          <th scope="col" data-col="lastName" data-order="${orderBy.equals("lastName") ? order : ""}">
             Nachname ${orderBy.equals("lastName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
           <th scope="col" data-col="firstName" data-order="${orderBy.equals("firstName") ? order : ""}">
             Vorname ${orderBy.equals("firstName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
-          
           <th scope="col">Adresse</th>
           <th scope="col" data-col="role.roleName" data-order="${orderBy.equals("role.roleName") ? order : ""}">
             Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+          <th scope="col" data-col="email" data-order="${orderBy.equals("email") ? order : ""}">
+            E-Mail ${orderBy.equals("email") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
           <th scope="col" class="text-center">Edit</th>
           <th scope="col" class="text-center">Delete</th>
           <th scope="col" class="text-end" data-col="accumulatedHours" data-order="${orderBy.equals("accumulatedHours") ? order : ""}">
@@ -49,11 +50,12 @@
         <tbody class="table-group-divider">
         @for (Member member : memberPage.getContent())
         <tr>
-          <td><b>${member.getLastName()}</b></td>
+          <td><a class="text-decoration-none" href="/members/${member.getId()}"><b>${member.getLastName()}</b></a></td>
           <td>${member.getFirstName()}</td>
 
           <td>${member.getAddress()}</td>
           <td>${member.getRole() != null ? member.getRole().getRoleName() : ""}</td>
+          <td>${member.getEmail() != null ? member.getEmail() : ""}</td>
           <td class="text-center">
             <a class="btn btn-outline-primary btn-sm bi-pencil"
                 href="/members/${member.getId()}"
@@ -67,7 +69,7 @@
                 data-item-id="${member.getId()}"></button>
           </td>
           <td class="text-end">
-            ${member.getAccumulatedHours() > 0 ? member.getAccumulatedHours() + " h" : ""}
+            ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}
           </td>
           <td class="text-center">
             <a class="btn btn-outline-primary btn-sm bi-plus-lg" href="/timecheques/new?memberId=${member.getId()}"
@@ -111,7 +113,7 @@
         <button type="submit" class="btn btn-outline-primary bi-plus-circle"> Mitglied hinzufügen</button>
     </form>
 
-    <p/>
+    <br/>
 
     <!-- Pagination controls -->
     @if(memberPage.getTotalPages() > 0)
@@ -192,5 +194,6 @@
 
 
 `)
+
 
 

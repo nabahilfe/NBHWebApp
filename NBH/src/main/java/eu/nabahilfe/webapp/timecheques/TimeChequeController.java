@@ -24,19 +24,21 @@ import jakarta.transaction.Transactional;
 @SessionAttributes("timeCheque")
 public class TimeChequeController {
 
-    private final TimeCheckRepository timeChequeRepository;
+    private final TimeChequeRepository timeChequeRepository;
     private final MemberRepository memberRepository;
-    private final TimeCheckRepository timeCheckRepository;
+    private final TimeChequeRepository timeCheckRepository;
 
     private static final Logger log = LoggerFactory.getLogger(TimeChequeController.class);
 
-    public TimeChequeController(TimeCheckRepository timeChequeRepository, MemberRepository memberRepository,
-            TimeCheckRepository timeCheckRepository) {
+    public TimeChequeController(TimeChequeRepository timeChequeRepository, MemberRepository memberRepository,
+            TimeChequeRepository timeCheckRepository) {
         this.timeChequeRepository = timeChequeRepository;
         this.memberRepository = memberRepository;
         this.timeCheckRepository = timeCheckRepository;
     }
 
+
+    // FIXME: add @Attribute methods to populate Model with common data
 
     // --------------------
     // LIST & DETAIL
@@ -61,7 +63,7 @@ public class TimeChequeController {
         model.addAttribute("timeCheque", tc);
         model.addAttribute("member", member);
         model.addAttribute("purchasedTimeCheques", timeCheckRepository.
-                findAllByAssignedToIdOrderByOrderDateDesc(member.getId()));
+                findAllByAssignedTo_IdOrderByTransactionDateDesc(member.getId()));
 
         return "timecheques/summary-timecheque";
 
@@ -71,10 +73,9 @@ public class TimeChequeController {
     @GetMapping("/unaccounted")
     String listUnaccountedTimeCheques(final Model model) {
         log.debug("Listing unaccounted TimeCheques");
-        model.addAttribute("timeCheques", timeChequeRepository.findAllNotAccountedTimeCheques());
+        model.addAttribute("timeCheques", timeChequeRepository.findAllByAccountedBy_IdIsNullAndAmountGreaterThanOrderByTransactionDateAsc(0.0));
         log.debug("Found {} unaccounted TimeCheques", ((java.util.List<?>) model.getAttribute("timeCheques")).size());
-        return "timecheques/list-timecheques";
-
+        return "timecheques/list-unaccounted-timecheques";
     }
 
 
@@ -96,8 +97,8 @@ public class TimeChequeController {
         // Business Logic: determine TimeCheque hours based on existing TimeCheques
         TimeCheque tc = null;
         int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
-        if (existingTimeCheques == 0) {
-            log.debug("Member id={} has no existing TimeCheques, using first hours of {}", memberId, NbhConst.FIRST_TIME_CHEQUE_HOURS);
+        if (existingTimeCheques == 0 && (member.getIsImportedMember() != true)) {
+            log.debug("Member id={} has no existing TimeCheques, is not imported Member, using first hours of {}", memberId, NbhConst.FIRST_TIME_CHEQUE_HOURS);
             tc = createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member);
         } else {
             tc = createTimeCheque(NbhConst.REGULAR_TIME_CHEQUE_HOURS, member);
@@ -105,7 +106,7 @@ public class TimeChequeController {
         }
 
         model.addAttribute("timeCheque", tc);
-        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedToIdOrderByOrderDateDesc(memberId));
+        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(memberId));
 
         String validationError = validateData(member, tc, existingTimeCheques);
         if (validationError != null) {
@@ -125,10 +126,13 @@ public class TimeChequeController {
     String saveTimeCheque(final Model model, @RequestParam LocalDate orderDate) {
 
         TimeCheque tc = (TimeCheque) model.getAttribute("timeCheque");
-        tc.setOrderDate(orderDate);
+        tc.setTransactionDate(orderDate);
         timeChequeRepository.save(tc);
 
         // BusinessRule: Update Member's accumulated hours
+        if (tc.getAssignedTo().getAccumulatedHours() == null) {
+            tc.getAssignedTo().setAccumulatedHours(0);
+        }
         Integer newHours = tc.getAssignedTo().getAccumulatedHours() + tc.getHours();
         tc.getAssignedTo().setAccumulatedHours(newHours);
         memberRepository.save(tc.getAssignedTo());
@@ -151,13 +155,15 @@ public class TimeChequeController {
 
         TimeCheque tc = new TimeCheque();
 
-        tc.hours = timeChequeHours;
+        tc.setHours(timeChequeHours);
         // FIXME: Richtigen Betrag aus TC-Kosten Tabelle holen
-        tc.amount = timeChequeHours <= 5 ? BigDecimal.valueOf(0) : BigDecimal.valueOf(3.60 * timeChequeHours);
-        tc.assignedTo = member;
-        tc.orderDate = LocalDate.now();
+        tc.setAmount(timeChequeHours <= 5 ? BigDecimal.valueOf(0) : BigDecimal.valueOf(3.60 * timeChequeHours));
+        tc.setAssignedTo(member);
+        tc.setTransactionDate(LocalDate.now());
         // FIXME: must be logged in user!
-        tc.createdBy = member;
+        tc.setCreatedBy(member);
+
+        log.debug("\nCreated TimeCheque: {}", tc);
 
         return tc;
     }
@@ -166,7 +172,7 @@ public class TimeChequeController {
     private String validateData(Member member, TimeCheque timeCheque, int existingTimeCheques) {
         // Business Rule: TimeCheques can only be purchased if Member has less than 5 accumulated hours,
         // except for the first TimeCheque, which is free of charge.
-        if (member.getAccumulatedHours() >= NbhConst.MIN_HOURS_FOR_TIME_CHEQUE && existingTimeCheques > 0) {
+        if (member.getAccumulatedHours() != null && member.getAccumulatedHours() >= NbhConst.MIN_HOURS_FOR_TIME_CHEQUE && existingTimeCheques > 0) {
             return "Zeitschecks können erst bei weniger als 5 Stunden Zeitguthaben erworben werden." +
                    " Aktuelles Zeitguthaben: " + member.getAccumulatedHours() + " Stunden.";
         }

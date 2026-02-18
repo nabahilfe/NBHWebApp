@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import eu.nabahilfe.webapp.NbhConst;
-import eu.nabahilfe.webapp.timecheques.TimeCheckRepository;
-import eu.nabahilfe.webapp.timecheques.TimeTransferRepository;
+import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
+import eu.nabahilfe.webapp.timetransfers.TimeTransferRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
@@ -38,13 +38,13 @@ public class MemberController {
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
     private final TimeTransferRepository timeTransferRepository;
-    private final TimeCheckRepository timeCheckRepository;
+    private final TimeChequeRepository timeCheckRepository;
 
 
     private static final Logger log = LoggerFactory.getLogger(MemberController.class);
 
     public MemberController(MemberRepository memberRepository, RoleRepository roleRepository,
-            TimeTransferRepository timeTransferRepository, TimeCheckRepository timeCheckRepository) {
+            TimeTransferRepository timeTransferRepository, TimeChequeRepository timeCheckRepository) {
         this.memberRepository = memberRepository;
         this.roleRepository = roleRepository;
         this.timeTransferRepository = timeTransferRepository;
@@ -62,6 +62,15 @@ public class MemberController {
     @ModelAttribute("roles")
     public List<Role> getAllRoles() {
         return roleRepository.findAllBy(Sort.by("roleName").ascending());
+    }
+
+
+    @ModelAttribute("numberOfTimecheques")
+    public Integer getNumberOfTimecheques(@ModelAttribute Member member) {
+        if (member.getId() != null)
+            return timeCheckRepository.countByAssignedTo(member);
+        else
+            return 0;
     }
 
 
@@ -129,9 +138,26 @@ public class MemberController {
     @GetMapping("/{id}")
     String editMember(final Model model, @PathVariable Long id) {
         log.debug("Editing Member: {}", id);
-        model.addAttribute("timeTransfers", timeTransferRepository.findLast10ByFromMemberIdOrToMemberIdOrderByDateOfServiceDesc(id, id));
-        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedToIdOrderByOrderDateDesc(id));
+        model.addAttribute("receivedTimeTransfers", timeTransferRepository.findAllByToMember_IdOrderByDateOfServiceDesc(id));
+        model.addAttribute("givenTimeTransfers", timeTransferRepository.findAllByFromMember_IdOrderByDateOfServiceDesc(id));
+        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(id));
         return "members/detail-member";
+    }
+
+
+    @GetMapping("/register")
+    String registerMember(final Model model) {
+        log.debug("Registering new Member");
+        return "members/validate-email";
+    }
+
+    @PostMapping("/register")
+
+
+    @GetMapping("/login")
+    String loginMember(final Model model) {
+        log.debug("Member login");
+        return "members/login-member";
     }
 
 
@@ -149,13 +175,9 @@ public class MemberController {
     @Transactional
     @PostMapping
     public String saveMember(Model model, @ModelAttribute @Valid Member member,
-            @RequestParam(required = false) Long roleId,
-            RedirectAttributes redirectAttributes, BindingResult result) {
+                RedirectAttributes redirectAttributes, BindingResult result) {
 
-        if (roleId != null)
-            member.setRole(roleRepository.findById(roleId).orElse(null));
-        else
-            member.setRole(null);
+        log.debug("Will Save Member afer Validation: {}", member);
 
         String validationError = validateData(member);
         if (validationError != null) {
@@ -166,8 +188,14 @@ public class MemberController {
         if (member.getId() == null) {
             member.setMemberNmbr(getNextMemberNumber());
             member.setJoiningDate(LocalDate.now());
+            member.setIsImportedMember(false);
         }
+
+        log.debug("Saving Member: {}", member);
+
         memberRepository.save(member);
+
+        redirectAttributes.addFlashAttribute("numberOfTimecheques", timeCheckRepository.countByAssignedTo(member));
         redirectAttributes.addFlashAttribute("successMessage", "Daten für " + member.getName() + " wurden gespeichert.");
 
         log.debug("Member saved: {}", member);
@@ -188,7 +216,7 @@ public class MemberController {
             @RequestParam(required = false) Long roleId,
             RedirectAttributes redirectAttributes, BindingResult result, @PathVariable Long id) {
         log.debug("Update Member with id {}: {}", id, member);
-        return saveMember(model, member, roleId, redirectAttributes, result);
+        return saveMember(model, member, redirectAttributes, result);
     }
 
 

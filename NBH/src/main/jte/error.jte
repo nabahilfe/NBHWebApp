@@ -11,7 +11,7 @@
     - message: The detailed message (String)
 -->
 
-<h1>${status}</h1>
+<h1>StatusCode: ${status}</h1>
 <h2>${error}</h2>
 <p>${message}</p>
 

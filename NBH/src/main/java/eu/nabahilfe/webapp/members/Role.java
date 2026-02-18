@@ -1,68 +1,85 @@
 package eu.nabahilfe.webapp.members;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-import eu.nabahilfe.webapp.NbhConst;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
-
+/**
+ * Rollen im Verein. Über die Rollen werden auch die Berechtigungen vergeben.
+ */
 @Entity
-@Table(name = "roles")
-public class Role {
+@Table(name = "ROLES")
+public class Role  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    @Column(nullable = false, name = "is_admin", columnDefinition = "Boolean default false")
-    Boolean isAdmin;
+    @Column(nullable = false)
+    private Boolean isBoardMember;    // Hat eine Funktion wie 'Vorstand', 'Kassier' usw. Muss bei der Rolle vergeben werden
 
-    @Column(nullable = false, name = "is_board_member", columnDefinition = "Boolean default false")
-    Boolean isBoardMember;
+    @Column(nullable = false)
+    private Boolean isAdmin;    // Hat weitgehende Rechte, kann Mitglieder verwalten und Zeitschecks ausstellen
 
-    @Column(nullable = false, name = "is_treasurer", columnDefinition = "Boolean default false")
-    Boolean isTreasurer;
+    @Column(nullable = false)
+    private Boolean isTreasurer;    // Verwaltet das Geld, Kassier
 
-    @Column(nullable = false, name = "is_secretary", columnDefinition = "Boolean default false")
-    Boolean isSecretary;
+    @Column(nullable = false)
+    private Boolean isSecretary;    // Schriftführer
 
-    @Column(nullable = false, name = "is_auditor", columnDefinition = "Boolean default false")
-    Boolean isAuditor;
+    @Column(nullable = false)
+    private Boolean isAuditor;    // Rechnungsprüfer, muss unabhängig vom Vorstand sein, darf also kein Board Meber sein oder sonstige rollen haben
 
-    @Column(nullable = false, name = "is_time_keeper", columnDefinition = "Boolean default false")
-    Boolean isTimeKeeper;
+    @Column(nullable = false)
+    private Boolean isTimeKeeper;    // Kann Zeit-Schescks vergeben / verkaufe und Zeiteschecks verbuchen
 
-    @Column(nullable = false, name = "is_miscellaneous", columnDefinition = "Boolean default false")
-    Boolean isMiscellaneous;
+    @Column(nullable = false)
+    private Boolean isMiscellaneous;    // Sonstiges, z.B. Ehrenmitglied
 
-
-    @Column(nullable = false, name = "role_name")
+    @Size(max = 80)
+    @NotEmpty
     @NotBlank(message = "Rollen-Name darf nicht leer sein!")
-    @Size(min = 5, max = NbhConst.MAX_LEN_NAME)
-    public String roleName;
+    private String roleName;    // Mitglied, Vorstand, stv. Vorstand, Kassier, stv. Kassier, Rechnungsprüfer, Schriftführer, ....
+
+    // Creation timestamp, value is set by Postgres (see Table definition)
+    @Column(insertable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    // FIXME in Generator: "@Column(nullable = false)"
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "created_by_id")
+    private Member createdBy;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "updated_by_id")
+    private Member updatedBy;
 
     @Version
     @Column(nullable = false)
-    Integer version;
+    private Integer version;
 
 
-    public Role() {
-        this.isAdmin = false;
-        this.isBoardMember = false;
-        this.isAuditor = false;
-        this.isTimeKeeper = false;
-        this.isMiscellaneous = false;
-        this.isTreasurer = false;
-        this.isSecretary = false;
-    }
+    // -------------------------------------------------
+    // generate setter/getter methodes with Eclipse here
+    // -------------------------------------------------
 
     public Long getId() {
         return id;
@@ -180,4 +197,19 @@ public class Role {
                 + version + "]";
     }
 
+
+
+    // -------------------------------
+    // add your business methodes here
+    // -------------------------------
+
+    public Role() {
+        this.isAdmin = false;
+        this.isBoardMember = false;
+        this.isAuditor = false;
+        this.isTimeKeeper = false;
+        this.isMiscellaneous = false;
+        this.isTreasurer = false;
+        this.isSecretary = false;
+    }
 }

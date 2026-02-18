@@ -17,7 +17,7 @@
 
     <div class="row">
 
-        <p/>
+        <br/>
 
         <!-- first action is for save, second action is for update -->
         <form action="${role.getId() == null ? "/roles" : "/roles/" + role.getId()}" method="post">
@@ -34,7 +34,7 @@
             </div>
           </div>
 
-          <p/>
+          <br/>
 
           <div class="form-group row">
 
@@ -88,7 +88,7 @@
                     id="isTimeKeeper" name="isTimeKeeper"
                     checked="${role.getIsTimeKeeper()}">
                 <label class="form-check-label" for="isTimeKeeper">
-                  Zeitschecks verwalten - kann Zeitschecks erstellen und Stunden verbuchen
+                  Zeitschecks - kann Zeitschecks verwalten
                 </label>
               </div>
 
@@ -98,7 +98,7 @@
                     id="isAdmin" name="isAdmin"
                     checked="${role.getIsAdmin()}">
                 <label class="form-check-label" for="isAdmin">
-                  Administrator - kann alles verwalten außer Kassaführung, Zeitschecks, Stundenbuchungen
+                  Administrator - kann alles verwalten
                 </label>
               </div>
 
@@ -116,7 +116,7 @@
 
           </div>
 
-          <p/>
+          <br/>
 
           <div class="form-group row">
             <div class="col-sm-10">
@@ -124,10 +124,9 @@
             </div>
           </div>
 
-          <p/>
+          <br/>
 
           @template.components.display-statusmessage(successMessage, errorMessage)
-
 
         </form>
 

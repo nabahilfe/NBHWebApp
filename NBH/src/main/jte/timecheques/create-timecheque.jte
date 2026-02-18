@@ -2,6 +2,7 @@
 @import java.time.LocalDate
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
+@import static eu.nabahilfe.webapp.jte.TemplateHelpers.*
 
 @import eu.nabahilfe.webapp.NbhConst
 @import eu.nabahilfe.webapp.members.Member
@@ -18,56 +19,50 @@
     <h3>Zeitscheck erstellen für</h3>
     <br/>
 
-    <div class="card">
 
-        <form id="tcForm" action="/timecheques" method="POST">
-
-            <div class="card-header">
+    <form id="tcForm" action="/timecheques" method="POST">
+        <div class="card">
+            <div class="card-body bg-success bg-opacity-10">
                 <h4 class="text-primary">${timeCheque.getAssignedTo().getName()}</h4>
                 <p>${timeCheque.getAssignedTo().getAddress()}</p>
-            </div>
 
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
-                </li>
+                Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours() == null ? 0
+                        : timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
 
-                <li class="list-group-item ">
+                <p>
                     ${timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS ? "Kostenlos bei Eintritt" : "Kauf von Zeitschecks"}:
                     <b>${timeCheque.getHours()} h</b>
-                </li>
+                </p>
 
-                <li class="list-group-item ">
-                    <div class="row g-3 align-items-center">
-                        <div class="col-auto">
-                            <label for="orderDate" class="col-form-label">Bestelldatum</label>
-                        </div>
-                        <div class="col-auto">
-                            <input type="date" class="form-control" name="orderDate" id="orderDate" value="${timeCheque.getOrderDate().toString()}" required>
-                        </div>
+                <div class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <label for="orderDate" class="col-form-label">Erstellungsdatum:</label>
                     </div>
-                </li>
-            </ul>
-
-            @if (errorMessage == null)
-                <div class="card-body">
-                    <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
-                        data-item-id="${timeCheque.getAssignedTo().getId()}">Erstellen️️</button>
+                    <div class="col-auto">
+                        <input type="date" class="form-control" name="orderDate" id="orderDate" value="${formatISO(timeCheque.getTransactionDate())}" required>
+                    </div>
                 </div>
-            @endif
+            </div>
+        </div>
+    </form>
 
-        </form>
 
-    </div>
+    @if (errorMessage == null)
+        <br/>
+        <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
+            data-item-id="${timeCheque.getAssignedTo().getId()}">Erstellen️️</button>
+    @endif
+
 
     <br/>
     @template.components.display-statusmessage(successMessage, errorMessage)
 
+    <br/>
     <div class="card">
         <div class="card-body">
-            <h5>Bereits erworbene Zeitschecks</h5>
-            <p class="card-text">FIXME: Username</p>
+            <!-- FIXME: Username -->
+            <h5>Erworbene Zeitschecks von FIXME: Username</h5>
 
             <table class="table table-hover table-sm" id="memberTable">
                 <thead>
@@ -80,7 +75,7 @@
                 <tbody class="table-group-divider">
                     @for (TimeCheque tc : purchasedTimeCheques)
                     <tr>
-                        <td>${formatDE(tc.getOrderDate())}</td>
+                        <td>${dateDE(tc.getTransactionDate())}</td>
                         <td>${tc.getCreatedBy().getName()}</td>
                         <td class="text-end">${tc.getHours()}</td>
                     </tr>

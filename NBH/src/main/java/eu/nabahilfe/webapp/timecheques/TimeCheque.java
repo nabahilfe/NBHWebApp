@@ -2,10 +2,14 @@ package eu.nabahilfe.webapp.timecheques;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import eu.nabahilfe.webapp.accountings.Accountable;
 import eu.nabahilfe.webapp.accountings.AccountingEntry;
+import eu.nabahilfe.webapp.accountings.TransactionType;
 import eu.nabahilfe.webapp.members.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,39 +23,101 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 
 
+/**
+ * Zeitscheck - zuerst angelegt und dann später verbucht vom Kassier. TransactionType ist immer INCOME
+ */
 @Entity
-@Table(name = "time_cheques")
+@Table(name = "TIME_CHEQUES")
 public class TimeCheque implements Accountable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    Integer hours;
+    @Column(nullable = false)
+    private Integer hours;    // Anzahl der Stunden, üblicherweise 5 (Beitritt zum Verein) oder 10
 
-    BigDecimal amount;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(nullable = false)
+    private LocalDate transactionDate;
 
-    LocalDate orderDate;
+    @Column(nullable = false)
+    private BigDecimal amount;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "assigned_to")
-    Member assignedTo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_to_id")
+    private Member assignedTo;    // wem werden die Stunden gutgeschrieben
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "created_by")
-    Member createdBy;
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "accounted_by_id")
+    private AccountingEntry accountedBy;    // Abrechnung dokumentiert mit AccountingEntry
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "accounting_entry")
-    AccountingEntry accountingEntry;
+    // Creation timestamp, value is set by Postgres (see Table definition)
+    @Column(insertable = false, updatable = false)
+    private LocalDateTime createdAt;
 
+    // FIXME: im Generator: "@Column(nullable = false)"
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "created_by_id")
+    private Member createdBy;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "updated_by_id")
+    private Member updatedBy;
 
     @Version
     @Column(nullable = false)
-    Integer version;
+    private Integer version;
 
-    public TimeCheque() {
-        super();
+    @Override
+    public String getAccountableClassName() {
+        return this.getClass().getSimpleName();
+    }
+
+    @Override
+    public Long getAccountableId() {
+        return id;
+    }
+
+
+    @Override
+    public String getTransactionType() {
+        return TransactionType.INCOME.name();
+    }
+
+    @Override
+    public String getTransactionISODate() {
+        return transactionDate.toString();
+    }
+
+    public LocalDate getTransactionDate() {
+        return transactionDate;
+    }
+
+    @Override
+    public BigDecimal getTransactionAmount() {
+        return amount;
+    }
+
+    @Override
+    public Long getAccountableMemberId() {
+        return assignedTo.getId();
+    }
+
+    // --------------------------------
+    // Getter and Setter
+    // --------------------------------
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getHours() {
@@ -62,7 +128,6 @@ public class TimeCheque implements Accountable {
         this.hours = hours;
     }
 
-    @Override
     public BigDecimal getAmount() {
         return amount;
     }
@@ -79,6 +144,22 @@ public class TimeCheque implements Accountable {
         this.assignedTo = assignedTo;
     }
 
+    public AccountingEntry getAccountedBy() {
+        return accountedBy;
+    }
+
+    public void setAccountedBy(AccountingEntry accountedBy) {
+        this.accountedBy = accountedBy;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public Member getCreatedBy() {
         return createdBy;
     }
@@ -87,12 +168,20 @@ public class TimeCheque implements Accountable {
         this.createdBy = createdBy;
     }
 
-    public LocalDate getOrderDate() {
-        return orderDate;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setOrderDate(LocalDate orderDate) {
-        this.orderDate = orderDate;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Member getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Member updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
     public Integer getVersion() {
@@ -103,46 +192,38 @@ public class TimeCheque implements Accountable {
         this.version = version;
     }
 
-    public Long getId() {
-        return id;
+    public void setTransactionDate(LocalDate transactionDate) {
+        this.transactionDate = transactionDate;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        TimeCheque other = (TimeCheque) obj;
-        return Objects.equals(id, other.id);
-    }
 
     @Override
     public String toString() {
-        return "TimeCheque [id=" + id + ", hours=" + hours + ", amount=" + amount + ", assignedTo=" + assignedTo
-                + ", createdBy=" + createdBy + ", version=" + version + "]";
+        return "TimeCheque [getAccountableClass()=" + getAccountableClassName() + ", getAccountableId()="
+                + getAccountableId() + ", getTransactionType()=" + getTransactionType() + ", getTransactionDate()="
+                + getTransactionDate() + ", getTransactionAmount()=" + getTransactionAmount() + ", getId()=" + getId()
+                + ", getHours()=" + getHours() + ", getAmount()=" + getAmount() + ", getAssignedTo()=" + getAssignedTo()
+                + ", getAccountedBy()=" + getAccountedBy() + ", getCreatedAt()=" + getCreatedAt() + ", getCreatedBy()="
+                + getCreatedBy() + ", getUpdatedAt()=" + getUpdatedAt() + ", getUpdatedBy()=" + getUpdatedBy()
+                + ", getVersion()=" + getVersion() + "]";
     }
 
-    @Override
-    public String getAccountableTableName() {
-        return this.getClass().getAnnotation(Table.class).name();
-    }
 
-    @Override
-    public Long getAccountableId() {
-        return getId();
-    }
+
+
+
+    // -----------------------------------------------
+    // Don't forget to generate toString() for logging
+    // -----------------------------------------------
+
+
+
+
+
+
+    // -------------------------------
+    // add your business methodes here
+    // -------------------------------
 
 
 }

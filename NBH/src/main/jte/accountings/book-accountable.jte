@@ -20,20 +20,19 @@
 
           <div class="form-group row">
 
-            <label for="accountingType" class="col-sm-2 col-form-label">INCOMING/OUTGOING<span class="text-danger">*</span></label>
+            <label for="transactionType" class="col-sm-2 col-form-label">INCOMING/EXPENSE<span class="text-danger">*</span></label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" name="accountingType" id="accountingType" value="${accountingEntry.getAccountingType()}" required>
+              <input type="text" class="form-control" name="transactionType" id="transactionType" value="${accountingEntry.getTransactionDisplayType()}" required>
             </div>
 
-            <label for="amount" class="col-sm-2 col-form-label">Betrag<span class="text-danger">*</span></label>
+            <label for="transactionAmount" class="col-sm-2 col-form-label">Betrag<span class="text-danger">*</span></label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" name="amount" id="amount" value="${accountingEntry.getAmount()}" required>
+              <input type="text" class="form-control" name="transactionAmount" id="transactionAmount" value="${accountingEntry.getTransactionAmount()}" required>
             </div>
 
             <label for="accountingDate" class="col-sm-2 col-form-label">Buchungsdatum<span class="text-danger">*</span></label>
             <div class="col-sm-10">
-              <input type="date" class="form-control" name="accountingDate" id="accountingDate"
-                    value="${accountingEntry.getAmount() != null ? accountingEntry.getAmount().toString() : ""}" required>
+              <input type="date" class="form-control" name="accountingDate" id="accountingDate" value="${formatISO(accountingEntry.getAccountingDate())}" required>
             </div>
 
           </div>

@@ -3,21 +3,24 @@
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
 
+@import eu.nabahilfe.webapp.members.Salutation
 @import eu.nabahilfe.webapp.members.Member
 @import eu.nabahilfe.webapp.members.Role
-@import eu.nabahilfe.webapp.timecheques.TimeTransfer
+@import eu.nabahilfe.webapp.timetransfers.TimeTransfer
 @import eu.nabahilfe.webapp.timecheques.TimeCheque
 
 @param Member member
 @param List<Role> roles
 @param List<TimeCheque> purchasedTimeCheques
-@param List<TimeTransfer> timeTransfers
+@param List<TimeTransfer> receivedTimeTransfers
+@param List<TimeTransfer> givenTimeTransfers
 
 @param java.lang.String action
 
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
+@param Integer numberOfTimecheques = null		/* so we can display button to create first TimeCheque only if there are none yet */
 
 
 @template.layout.main(content = @`
@@ -28,118 +31,208 @@
 
     <div class="row">
 
-        <p/>
+        <br/>
 
         <!-- first action is for save, second action is for update -->
         <form action="${member.getId() == null ? "/members" : "/members/" + member.getId()}" method="post">
 
-          <div class="form-group row">
+            <div class="form-group row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body bg-success bg-opacity-10">
 
-            <label for="firstName" class="col-sm-2 col-form-label">Vorname<span class="text-danger">*</span></label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="firstName" id="firstName" value="${member.getFirstName()}" required>
+                            <h5>Persönliche Daten</h5>
+
+                            <label for="salutation" class="col col-form-label">Anrede</label>
+                            <div class="col">
+                                <select class="form-select" name="salutation" id="salutation">
+                                    <option value="">Auswählen</option>
+                                    @for(Salutation sal : Salutation.values())
+                                        <option value="${sal.name()}" selected="${member.getSalutation() != null && member.getSalutation().equals(sal.name())}">
+                                            ${sal.name()}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+
+                            <label for="title" class="col col-form-label">Titel</label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="title" id="title" value="${member.getTitle()}">
+                            </div>
+
+                            <label for="firstName" class="col col-form-label">Vorname<span class="text-danger">*</span></label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="firstName" id="firstName" value="${member.getFirstName()}" required>
+                            </div>
+
+                            <label for="lastName" class="col col-form-label">Nachname<span class="text-danger">*</span></label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="lastName" id="lastName" value="${member.getLastName()}" required>
+                            </div>
+
+                            <label for="birthdate" class="col col-form-label">Gebutsdatum<span class="text-danger">*</span></label>
+                            <div class="col">
+                                <input type="date" class="form-control" name="birthdate" id="birthdate" value="${formatISO(member.getBirthdate())}" required>
+                            </div>
+
+                            <label for="role" class="col col-form-label">Rolle</label>
+                            <div class="col">
+                                <select class="form-select" name="role" id="role">
+                                    <option value="">Einfaches Mitglied</option>
+                                    @for(Role role : roles)
+                                        <option value="${role.getId()}" selected="${member.getRole() != null && member.getRole().getId() == role.getId()}">
+                                            ${role.getRoleName()}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+
+                            @if(member.getId() != null)
+                                <br/>
+                                <b>Zeitguthaben: ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}</b>
+                            @endif
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body bg-success bg-opacity-10">
+
+                            <h5>Kontaktdaten & Adresse</h5>
+
+                            <label for="email" class="col col-form-label">E-Mail</label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="email" id="email" value="${member.getEmail()}">
+                            </div>
+
+                            <label for="institution" class="col col-form-label">Institution</label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="institution" id="institut" value="${member.getInstitution()}">
+                            </div>
+
+                            <label for="street" class="col col-form-label">Straße<span class="text-danger">*</span></label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="street" id="street" value="${member.getStreet()}" required>
+                            </div>
+
+                            <label for="number" class="col col-form-label">Nummer<span class="text-danger">*</span></label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="number" id="number" value="${member.getNumber()}" required>
+                            </div>
+
+                            <label for="zip" class="col col-form-label">PLZ<span class="text-danger">*</span></label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="zip" id="zip" value="${member.getZip()}" required>
+                            </div>
+
+                            <label for="city" class="col col-form-label">Ort<span class="text-danger">*</span></label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="city" id="city" value="${member.getCity()}" required>
+                            </div>
+
+                            <br/>
+
+                            <div class="form-check">
+                                <input type="hidden" name="_directDebitAuthorization" value="on"/>
+                                <input class="form-check-input" type="checkbox"
+                                    id="directDebitAuthorization" name="directDebitAuthorization"
+                                    checked="${member.getDirectDebitAuthorization() != null && member.getDirectDebitAuthorization()}">
+                                <label class="form-check-label" for="directDebitAuthorization">
+                                  Einziehungsauftrag erteilt
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
-            <label for="lastName" class="col-sm-2 col-form-label">Nachname<span class="text-danger">*</span></label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="lastName" id="lastName" value="${member.getLastName()}" required>
+            <br/>
+
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary bi-floppy"> Speichern</button>
+                </div>
             </div>
 
-            <label for="birthdate" class="col-sm-2 col-form-label">Gebutsdatum<span class="text-danger">*</span></label>
-            <div class="col-sm-10">
-              <input type="date" class="form-control" name="birthdate" id="birthdate" value="${member.getBirthdate() != null ? member.getBirthdate().toString() : ""}" required>
-            </div>
 
-          </div>
 
-            <p/>
+            <br/>
 
-          <div class="form-group row">
-
-            <label for="street" class="col-sm-2 col-form-label">Straße<span class="text-danger">*</span></label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="street" id="street" value="${member.getStreet()}" required>
-            </div>
-
-            <label for="number" class="col-sm-2 col-form-label">Nummer<span class="text-danger">*</span></label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="number" id="number" value="${member.getNumber()}" required>
-            </div>
-
-            <label for="zip" class="col-sm-2 col-form-label">PLZ<span class="text-danger">*</span></label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="zip" id="zip" value="${member.getZip()}" required>
-            </div>
-
-            <label for="city" class="col-sm-2 col-form-label">Ort<span class="text-danger">*</span></label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="city" id="city" value="${member.getCity()}" required>
-            </div>
-
-          </div>
-            <p/>
-          <div class="form-group row">
-
-            <label for="role" class="col-sm-2 col-form-label">Rolle</label>
-            <div class="col-sm-10">
-                <select class="form-select" name="roleId" id="role">
-
-                    <option value="">Einfaches Mitglied</option>
-
-                    @for(Role role : roles)
-                        <option value="${role.getId()}" selected="${member.getRole() != null && member.getRole().getId() == role.getId()}">
-                            ${role.getRoleName()}
-                        </option>
-                    @endfor
-                </select>
-             </div>
-
-            <p/>
-
-            <b>Zeitguthaben: ${member.getAccumulatedHours()} h</b>
-
-          </div>
-
-          <p/>
-
-          <div class="form-group row">
-            <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary bi-floppy"> Speichern</button>
-            </div>
-          </div>
-
-      <p/>
-
-      @template.components.display-statusmessage(successMessage, errorMessage)
+            @template.components.display-statusmessage(successMessage, errorMessage)
 
         </form>
 
     </div>
 
-  <p/>
 
-  @if(member.getId() != null)
-    <div class="row">
-      <div class="col-sm-3 mb-3 mb-sm-0">
+    @if(member.getId() != null)
 
-         <!-- FIXME Das Template braucht auch den UserNamen um universell verwendbar zu sein -->
-        @template.components.list-timecheques(timeCheques = purchasedTimeCheques)
+        @if(numberOfTimecheques != null && numberOfTimecheques == 0 && member.getIsImportedMember() == false)
+            <div class="alert alert-info py-2 px-3" role="alert">
+                Dieses Mitglied hat noch keine Zeitschecks. Erfasse gleich den ersten Gratis-Zeitscheck über den Button unten.
+            </div>
+            <form action="/timecheques/new" method="get">
+                <input type="hidden" name="memberId" value="${member.getId()}">
+                <button type="submit" class="btn btn-outline-primary bi-plus-square"> Ersten Zeitscheck erfassen</button>
+            </form>
+        @endif
 
-      </div>
+        <br/>
+
+        <div class="row">
+            <div class="col-sm-12 mb-3 mb-sm-0">
+
+                <ul class="nav nav-tabs" id="memberDetailTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="timecheques-tab" data-bs-toggle="tab" data-bs-target="#timecheques-pane" type="button" role="tab" aria-controls="timecheques-pane" aria-selected="true">
+                            Zeitschecks
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="transfers-tab" data-bs-toggle="tab" data-bs-target="#transfers-pane" type="button" role="tab" aria-controls="transfers-pane" aria-selected="false">
+                            Leistungsempfänger
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="received-tab" data-bs-toggle="tab" data-bs-target="#received-pane" type="button" role="tab" aria-controls="received-pane" aria-selected="false">
+                            Leistungserbringer
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="memberDetailTabsContent">
+                    <div class="tab-pane fade show active" id="timecheques-pane" role="tabpanel" aria-labelledby="timecheques-tab" tabindex="0">
+                        <div class="pt-3">
+                            @template.components.list-timecheques-component(member = member, timeCheques = purchasedTimeCheques)
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="transfers-pane" role="tabpanel" aria-labelledby="transfers-tab" tabindex="0">
+                        <div class="pt-3">
+                            @template.components.list-timetransfers-component(member = member, transfers = givenTimeTransfers)
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="received-pane" role="tabpanel" aria-labelledby="received-tab" tabindex="0">
+                        <div class="pt-3">
+                            @template.components.list-timetransfers-component(member = member, transfers = receivedTimeTransfers)
+                        </div>
+                    </div>
+                </div>
 
 
-
-      <div class="col-sm-9 mb-3 mb-sm-0">
-
-        <!-- FIXME: Daraus sollte nan eine Komponente machen! -->
-
-        @template.components.list-timetransfers(transfers = timeTransfers)
-
-
-      </div>
-    </div>
+            </div>
+        </div>
     @endif
+
 `)
+
+
+
+
 
 
 
