@@ -45,19 +45,6 @@
                     <!-- Links links -->
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                        <!-- Dropdown Verein -->
-                        <li class="nav-item dropdown">
-                            <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
-                                Verein
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Termine verwalten</a></li>
-                                <li><a class="dropdown-item" href="#">Protokolle verwalten</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                        </li>
-
                         <!-- Dropdown Mitglied -->
                         <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
@@ -81,6 +68,7 @@
 
                             </ul>
                         </li>
+
 
                         <!-- Dropdown Zeitschecks -->
                         <li class="nav-item dropdown">
@@ -108,6 +96,21 @@
                                 <li><a class="dropdown-item" href="#">Sonstige Buchung</a></li>
                             </ul>
                         </li>
+
+
+                        <!-- Dropdown Verein -->
+                        <li class="nav-item dropdown">
+                            <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                Verein
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Termine verwalten</a></li>
+                                <li><a class="dropdown-item" href="#">Protokolle verwalten</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            </ul>
+                        </li>
+
 
 
                         <li class="nav-item">
