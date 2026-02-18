@@ -5,8 +5,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.repository.ListCrudRepository;
+
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public interface MemberRepository extends ListCrudRepository<Member, Long> {
 
@@ -30,6 +34,26 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
 
     @EntityGraph(attributePaths = "role")
     Optional<Member> findTopByOrderByMemberNmbrDesc();
+
+    @EntityGraph(attributePaths = "role")
+    @org.springframework.data.jpa.repository.Query("select m from Member m where m.birthdate is not null and MONTH(m.birthdate) = :month order by m.lastName, m.firstName")
+    List<Member> findByBirthMonth(@org.springframework.data.repository.query.Param("month") int month);
+
+    default List<MemberBirthdayForm> findBirthdaysByMonthOffset(int monthOffset) {
+        LocalDate target = LocalDate.now().plusMonths(monthOffset);
+        int targetMonth = target.getMonthValue();
+        int targetYear = target.getYear();
+
+        return findByBirthMonth(targetMonth).stream()
+                .filter(m -> m.getBirthdate() != null)
+                .map(m -> new MemberBirthdayForm(
+                        m.getFirstName(),
+                        m.getLastName(),
+                        m.getBirthdate(),
+                        targetYear - m.getBirthdate().getYear()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
 
 
     Member findByEmail(String email);

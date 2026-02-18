@@ -67,6 +67,7 @@
                                 @if (ctxt.isAuthenticated())
                                     <li><a class="dropdown-item" href="/members">Mitglieder verwalten</a></li>
                                     <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
+                                    <li><a class="dropdown-item" href="/members/birthdays">Geburstage</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/registration/logout">Abmelden</a></li>
                                 @else

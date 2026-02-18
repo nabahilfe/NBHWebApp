@@ -145,6 +145,12 @@ public class MemberController {
     }
 
 
+    @GetMapping("/birthdays")
+    String listBirthdays(final Model model) {
+        model.addAttribute("currentMonth", memberRepository.findBirthdaysByMonthOffset(0));
+        model.addAttribute("nexttMonth", memberRepository.findBirthdaysByMonthOffset(1));
+        return "members/birthdays";
+    }
 
     // --------------------
     // CREATE NEW, UPDATE
