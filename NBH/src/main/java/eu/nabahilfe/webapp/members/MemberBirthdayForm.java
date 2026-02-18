@@ -31,4 +31,8 @@ public class MemberBirthdayForm {
     public int getAge() {
         return age;
     }
+
+    public String getName() {
+        return firstName + " " + lastName;
+    }
 }

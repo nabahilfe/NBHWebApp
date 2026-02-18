@@ -11,7 +11,7 @@
 <div class="row g-3">
     <div class="col-12 col-lg-6">
         <div class="card h-100">
-            <div class="card-header bg-success bg-opacity-10">
+            <div class="card-header bg-info bg-opacity-10">
                 <strong>Geburtstage diesen Monat</strong>
             </div>
             <div class="card-body p-0">
@@ -22,19 +22,17 @@
                         <table class="table mb-0">
                             <thead>
                                 <tr>
-                                    <th>Nachname</th>
-                                    <th>Vorname</th>
-                                    <th>Geburtsdatum</th>
-                                    <th>Alter</th>
+                                    <th>Name</th>
+                                    <th class="text-center">Geburtsdatum</th>
+                                    <th class="text-center">Alter</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @for(MemberBirthdayForm m : currentMonth)
                                     <tr>
-                                        <td>${m.getLastName()}</td>
-                                        <td>${m.getFirstName()}</td>
-                                        <td>${dateDE(m.getBirthdate())}</td>
-                                        <td>${m.getAge()}</td>
+                                        <td>${m.getName()}</td>
+                                        <td class="text-center">${dateReverseDE(m.getBirthdate())}</td>
+                                        <td class="text-center">${m.getAge()}</td>
                                     </tr>
                                 @endfor
                             </tbody>
@@ -58,19 +56,17 @@
                         <table class="table mb-0">
                             <thead>
                                 <tr>
-                                    <th>Nachname</th>
-                                    <th>Vorname</th>
-                                    <th>Geburtsdatum</th>
-                                    <th>Alter</th>
+                                    <th>Name</th>
+                                    <th class="text-center">Geburtsdatum</th>
+                                    <th class="text-center">Alter</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @for(MemberBirthdayForm m : nexttMonth)
                                     <tr>
-                                        <td>${m.getLastName()}</td>
-                                        <td>${m.getFirstName()}</td>
-                                        <td>${dateDE(m.getBirthdate())}</td>
-                                        <td>${m.getAge()}</td>
+                                        <td>${m.getName()}</td>
+                                        <td class="text-center">${dateReverseDE(m.getBirthdate())}</td>
+                                        <td class="text-center">${m.getAge()}</td>
                                     </tr>
                                 @endfor
                             </tbody>

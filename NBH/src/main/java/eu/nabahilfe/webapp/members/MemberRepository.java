@@ -36,7 +36,7 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     Optional<Member> findTopByOrderByMemberNmbrDesc();
 
     @EntityGraph(attributePaths = "role")
-    @org.springframework.data.jpa.repository.Query("select m from Member m where m.birthdate is not null and MONTH(m.birthdate) = :month order by m.lastName, m.firstName")
+    @org.springframework.data.jpa.repository.Query("select m from Member m where m.birthdate is not null and MONTH(m.birthdate) = :month order by m.birthdate asc")
     List<Member> findByBirthMonth(@org.springframework.data.repository.query.Param("month") int month);
 
     default List<MemberBirthdayForm> findBirthdaysByMonthOffset(int monthOffset) {
