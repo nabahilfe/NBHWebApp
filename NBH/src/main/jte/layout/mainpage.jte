@@ -56,6 +56,8 @@
                                     <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
                                     <li><a class="dropdown-item" href="/members/birthdays">Geburstage</a></li>
                                     <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/timetransfers/fromself/${ctxt.getUserId()}">Zeitscheck übergeben</a></li>
+                                    <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/registration/logout">Abmelden</a></li>
                                 @else
                                     <li><a class="dropdown-item" href="/registration/login">Anmelden</a></li>
@@ -77,7 +79,6 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/timetransfers/new">Zeitschecks verbuchen</a></li>
-                                <li><a class="dropdown-item" href="#">Zeitscheck übergeben</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="#">Meine Zeitschecks</a></li>
                             </ul>

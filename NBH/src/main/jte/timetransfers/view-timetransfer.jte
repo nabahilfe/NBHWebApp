@@ -41,7 +41,7 @@
                     <label for="offer" class="col-sm-2 col-form-label">Kategorie</label>
                     <input type="text" class="form-control" readonly value="${tt.getOffer().getDescription()}">
 
-                    <label for="dateOfService" class="col-sm-10 col-form-label">Leistungsdatum</label>
+                    <label for="dateOfService" class="col-sm-10 col-form-label">Datum</label>
                     <div class="col-sm-10">
                         <input type="date" class="form-control" readonly value="${formatISO(tt.getDateOfService())}">
                     </div>

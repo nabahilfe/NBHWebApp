@@ -11,10 +11,6 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@param String fullUsername = null
-@param String username = null
-@param Boolean isAuthenticated = false
-
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
@@ -24,8 +20,6 @@
     csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
-
-    <h3>Zeitscheck verbuchen</h3>
 
     <!--
       Template: Detail form for recording a TimeTransfer (time cheque).
@@ -37,39 +31,30 @@
                service date, hours selector and submit/reset buttons.
     -->
 
-
-    <br/>
-
-    <!-- Main form: POST to /timetransfers; server processes the submitted fields -->
     <form action="/timetransfers" method="post">
         ${csrfHiddenInput}
-        <input type="hidden" name="fromself" id="fromself" value="false">
 
         <div class="row">
-          <div class="col-sm-6">
+          <div class="col-auto">
             <div class="card">
               <div class="card-body bg-success bg-opacity-10">
 
-                <h5 class="card-title text-primary">Zeitscheck von</h5>
-                <p class="card-text text-success">Gibt Zeitscheck ab</p>
+                <h4 class="card-title text-primary">Zeitscheck übergeben</h4>
+                <hr/>
+                <p class="card-text text-success">Ich - <strong>${ctxt.getFullUsername()}</strong> - übergebe einen Zeitscheck</p>
 
                 <!--
                   Payer input (userFrom): visible text input for autocomplete search
-                  - userFromName: typed search string (autocomplete source)
                   - userFromId: hidden input holding the selected user's ID for submission
                   - userFromResults: UL element used to show matching results
                 -->
-                <input type="text" id="userFromName" class="form-control" placeholder="Zeitscheck von..."
-                    autocomplete="off" value="${ttf == null ? "" : ttf.getUserFromName()}">
 
-                <input type="hidden" name="userFromId" id="userFromId"
-                    value="${ttf == null ? "" : ttf.getUserFromId()}">
-
-                <ul id="userFromResults" class="results list-group"></ul>
+                <input type="hidden" name="userFromId" id="userFromId" value="${ctxt.getUserId()}">
+                <input type="hidden" name="fromself" id="fromself" value="true">
 
                 <!-- Offer selection: options populated from the provided offers list -->
-                <label for="offer" class="col-sm-2 col-form-label">Kategorie</label>
-                <div class="col-sm-10">
+                <label for="offer" class="col-form-label">Kategorie</label>
+                <div >
                     <select class="form-select" name="offerId" id="offerId">
                         <option value="">Auswählen</option>
                         @for(Offer offer : offers)
@@ -87,7 +72,7 @@
                 </div>
 
                 <!-- Service date: required date input (yyyy-mm-dd). Prefilled when editing. -->
-                <label for="dateOfService" class="col-sm-10 col-form-label">Datum</label>
+                <label for="dateOfService" class="col-form-label">Datum</label>
                 <div class="col-sm-10">
                       <input type="date" class="form-control" name="dateOfService" id="dateOfService"
                           value="${ttf == null ? "" : formatISO(ttf.getServiceDate())}" required>
@@ -107,19 +92,12 @@
                     </select>
                 </div>
 
-              </div>
-            </div>
-          </div>
+                <hr/>
 
-          <div class="col-sm-6">
-            <div class="card">
-              <div class="card-body bg-success bg-opacity-10">
-
-                <h5 class="card-title text-primary">Zeitscheck an</h5>
-                <p class="card-text text-success">Erhält Zeitscheck</p>
+                <p class="card-text text-success"><strong>Empfänger des Zeitscheck</strong></p>
 
                 <!--
-                  Payee input (userTo): same structure as userFrom
+                  Payee input (userTo):
                   - userToName: visible autocomplete input
                   - userToId: hidden selected user id for submission
                   - userToResults: UL showing matching search results
@@ -131,8 +109,8 @@
                     value="${ttf == null ? "" : ttf.getUserToId()}">
 
                 <ul id="userToResults" class="results list-group"></ul>
-
               </div>
+
             </div>
           </div>
 
@@ -192,11 +170,9 @@
             });
         }
 
-        // Initialize autocompletes for payer and payee
-        setupAutocomplete("userFromName", "userFromId", "userFromResults");
+        // Initialize autocompletes for payee
         setupAutocomplete("userToName", "userToId", "userToResults");
 
-        const userFrom = document.getElementById("userFromId");
         const userTo = document.getElementById("userToId");
         const offer = document.getElementById("offerId");
         const dateOfService = document.getElementById("dateOfService");
@@ -208,20 +184,18 @@
 
         /*
           checkFields()
-          - Validates that all required fields (userFromId, userToId, offerId, dateOfService)
+          - Validates that all required fields (userToId, offerId, dateOfService)
             have non-empty values and enables/disables the submit button accordingly.
           - Called on relevant change/input events and once on DOMContentLoaded.
         */
         function checkFields() {
-            if (userFrom.value.trim() !== "" && userTo.value.trim() !== ""
-                    && offer.value.trim() !== "" && dateOfService.value.trim() !== "") {
+            if (userTo.value.trim() !== "" && offer.value.trim() !== "" && dateOfService.value.trim() !== "") {
                 submitButton.disabled = false;
             } else {
                 submitButton.disabled = true;
             }
         }
 
-        userFrom.addEventListener("change", checkFields);
         userTo.addEventListener("change", checkFields);
         offer.addEventListener("change", checkFields);
         dateOfService.addEventListener("input", checkFields);
@@ -233,9 +207,6 @@
             list elements and do not have a value property.
         */
         function resetInputs() {
-            document.getElementById("userFromName").value = "";
-            document.getElementById("userFromResults").innerHTML = "";
-            document.getElementById("userFromId").value = "";
             document.getElementById("dateOfService").value = "";
 
             document.getElementById("userToName").value = "";
