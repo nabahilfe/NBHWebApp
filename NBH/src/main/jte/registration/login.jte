@@ -27,7 +27,7 @@
     <form action="/registration/login" method="post" class="needs-validation" novalidate>
         ${csrfHiddenInput}
         <div class="mb-3">
-            <label for="username" class="form-label">E-Mail-Adresse<span class="text-danger">*</span></label>
+            <label for="username" class="form-label">E-Mail<span class="text-danger">*</span></label>
             <input type="email"
                    class="form-control"
                    id="username"
@@ -35,7 +35,7 @@
                    placeholder="name@example.com"
                    autocomplete="username"
                    required>
-            <div class="invalid-feedback">Bitte eine gültige E-Mail-Adresse eingeben.</div>
+            <div class="invalid-feedback">Bitte eine gültige E-Mail eingeben.</div>
         </div>
 
         <div class="mb-3">
