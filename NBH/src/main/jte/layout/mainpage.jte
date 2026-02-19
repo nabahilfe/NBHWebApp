@@ -56,7 +56,7 @@
                                     <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
                                     <li><a class="dropdown-item" href="/members/birthdays">Geburstage</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/members/my-data/${ctxt.getUserId()}">Meine Daten</a></li>
+                                    <li><a class="dropdown-item" href="/members/mydata/${ctxt.getUserId()}">Meine Daten</a></li>
                                     <li><a class="dropdown-item" href="/timetransfers/fromself/${ctxt.getUserId()}">Zeitscheck übergeben</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/registration/logout">Abmelden</a></li>

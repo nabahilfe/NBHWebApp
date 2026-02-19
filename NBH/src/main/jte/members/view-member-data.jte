@@ -10,7 +10,7 @@
 @import eu.nabahilfe.webapp.timecheques.TimeCheque
 
 @param Member member
-@param List<Role> roles
+@param String roleNames
 @param List<TimeCheque> purchasedTimeCheques
 @param List<TimeTransfer> receivedTimeTransfers
 @param List<TimeTransfer> givenTimeTransfers
@@ -23,11 +23,6 @@
 @param Integer numberOfTimecheques = null
 
 
-@param String fullUsername = null
-@param String username = null
-@param Boolean isAuthenticated = false
-
-
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
@@ -38,11 +33,29 @@
     content = @`
 
     <h3>
+        Daten von ${ctxt.getFullName()}
     </h3>
 
     <div class="row">
-
-
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">${roleNames}</h5>
+                    <p class="card-text mb-1">
+                        ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}${member.getFirstName()} ${member.getLastName()}
+                    </p>
+                    <p class="card-text mb-1">
+                        ${member.getStreet() != null ? member.getStreet() : ""} ${member.getNumber() != null ? member.getNumber() : ""}
+                    </p>
+                    <p class="card-text mb-1">
+                        ${member.getZip() != null ? member.getZip() : ""} ${member.getCity() != null ? member.getCity() : ""}
+                    </p>
+                    <p class="card-text mb-0">
+                        <a href="mailto:${member.getEmail()}">${member.getEmail()}</a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -88,11 +101,8 @@
             </div>
 
         </div>
-    @endif
+
+    </div>
 
 
 `)
-
-
-
-

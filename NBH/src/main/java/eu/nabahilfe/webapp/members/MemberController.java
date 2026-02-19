@@ -152,6 +152,20 @@ public class MemberController {
         return "members/birthdays";
     }
 
+
+    @GetMapping("/mydata/{id}")
+    String myData(final Model model, @PathVariable Long id) {
+        log.debug("Showing MyData for Member: {}", id);
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id
+                        + ". Please ensure the ID is correct and the member exists in the database."));
+        model.addAttribute("roleNames", member.getRole() != null ? member.getRole().getRoleName() : "Mitglied");
+        model.addAttribute("receivedTimeTransfers", timeTransferRepository.findAllByToMember_IdOrderByDateOfServiceDesc(id));
+        model.addAttribute("givenTimeTransfers", timeTransferRepository.findAllByFromMember_IdOrderByDateOfServiceDesc(id));
+        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(id));
+        return "members/view-member-data";
+    }
+
     // --------------------
     // CREATE NEW, UPDATE
     // --------------------
