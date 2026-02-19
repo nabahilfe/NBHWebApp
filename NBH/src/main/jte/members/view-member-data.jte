@@ -38,7 +38,6 @@
     content = @`
 
     <h3>
-        Daten von ${ctxt.getFullName()}
     </h3>
 
     <div class="row">
