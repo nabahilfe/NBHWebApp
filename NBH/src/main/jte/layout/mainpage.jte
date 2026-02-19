@@ -6,8 +6,8 @@
 @param Boolean isAuthenticated = false
 @param Boolean isAdmin = false
 
-@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
-@param eu.nabahilfe.webapp.security.ViewContext ctxt
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput = null
+@param eu.nabahilfe.webapp.security.ViewContext ctxt = null
 
 
 <!doctype html>
@@ -51,7 +51,7 @@
                                 Mitglied
                             </button>
                             <ul class="dropdown-menu">
-                                @if (ctxt.isAuthenticated())
+                                @if (ctxt != null && ctxt.isAuthenticated())
                                     <li><a class="dropdown-item" href="/members">Mitglieder verwalten</a></li>
                                     <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
                                     <li><a class="dropdown-item" href="/members/birthdays">Geburstage</a></li>
@@ -64,7 +64,7 @@
                                     <li><a class="dropdown-item" href="/registration/login">Anmelden</a></li>
                                     <li><a class="dropdown-item" href="/registration/email">Registrieren</a></li>
                                 @endif
-                                @if (ctxt.isAdmin())
+                                @if (ctxt != null && ctxt.isAdmin())
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/admin">Admin Dashboard</a></li>
                                 @endif
@@ -122,7 +122,7 @@
                     </ul>
 
                     <!-- Username display -->
-                    @if(ctxt.isAuthenticated())
+                    @if(ctxt != null && ctxt.isAuthenticated())
                         <span class="navbar-text me-3">Angemeldet als <b>${ctxt.getUsername()}</b></span>
                     @endif
 

@@ -18,6 +18,7 @@ public class SecurityConfig {
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/css/**", "/js/**").permitAll()
                 .requestMatchers("/registration/**").permitAll()
+                .requestMatchers("/statuscode/**").permitAll()
 
 // FIXME: Hier müssen die Rollen entsprechend der Anforderungen angepasst werden.
 //                .requestMatchers("/admin/**")
@@ -50,7 +51,14 @@ public class SecurityConfig {
                 .deleteCookies("JSESSIONID")             // Session-Cookie löschen
                 .logoutSuccessUrl("/")
                 .permitAll()
+            )
+
+            .exceptionHandling(ex -> ex.accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.sendRedirect("/statuscode/403");
+                })
             );
+
+
 
         return http.build();
     }
