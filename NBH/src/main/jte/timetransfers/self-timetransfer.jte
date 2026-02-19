@@ -41,7 +41,7 @@
 
                 <h4 class="card-title text-primary">Zeitscheck übergeben</h4>
                 <hr/>
-                <p class="card-text text-success">Ich - <strong>${ctxt.getFullUsername()}</strong> - übergebe einen Zeitscheck</p>
+                <p class="card-text text-success">Ich - <strong>${ctxt.getFullName()}</strong> - übergebe einen Zeitscheck</p>
 
                 <!--
                   Payer input (userFrom): visible text input for autocomplete search

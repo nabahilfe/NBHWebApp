@@ -31,7 +31,7 @@
 
                     <h4 class="card-title text-primary">Übergebener Zeitscheck</h4>
                     <hr/>
-                    <p class="card-text text-success">Ich - <strong>${ctxt.getFullUsername()}</strong> - habe diesen Zeitscheck übergeben</p>
+                    <p class="card-text text-success">Ich - <strong>${ctxt.getFullName()}</strong> - habe diesen Zeitscheck übergeben</p>
 
                     <label class="col-form-label">Kategorie</label>
                     <input type="text" class="form-control" disabled value="${tt.getOffer().getDescription()}">

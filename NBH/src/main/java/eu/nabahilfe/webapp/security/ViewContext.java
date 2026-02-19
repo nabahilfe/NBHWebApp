@@ -27,7 +27,7 @@ public class ViewContext {
         return user != null ? user.getFirstName() : "Gast";
     }
 
-    public String getFullUsername() {
+    public String getFullName() {
         return user != null ? user.getName() : "Gast";
     }
 

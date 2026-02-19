@@ -55,7 +55,7 @@ public class CustomUserDetails implements UserDetails {
         return member;
     }
 
-    public String getFullUsername() {
+    public String getFullName() {
         return member.getName();
     }
 

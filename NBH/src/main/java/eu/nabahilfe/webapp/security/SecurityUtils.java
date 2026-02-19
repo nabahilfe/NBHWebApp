@@ -39,10 +39,10 @@ public class SecurityUtils {
         return authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String);
     }
 
-    public String getFullUsername() {
+    public String getFullName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
-            return ((CustomUserDetails) authentication.getPrincipal()).getFullUsername();
+            return ((CustomUserDetails) authentication.getPrincipal()).getFullName();
         }
         return null;
     }
