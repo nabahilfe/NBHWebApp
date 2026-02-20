@@ -23,11 +23,6 @@
 @param Integer numberOfTimecheques = null
 
 
-@param String fullUsername = null
-@param String username = null
-@param Boolean isAuthenticated = false
-
-
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
@@ -221,12 +216,12 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="transfers-tab" data-bs-toggle="tab" data-bs-target="#transfers-pane" type="button" role="tab" aria-controls="transfers-pane" aria-selected="false">
-                            Zeitschecks abgegeben an
+                            Zeitschecks übergeben
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="received-tab" data-bs-toggle="tab" data-bs-target="#received-pane" type="button" role="tab" aria-controls="received-pane" aria-selected="false">
-                            Zeitschecks erhalten von
+                            Zeitschecks erhalten
                         </button>
                     </li>
                 </ul>
