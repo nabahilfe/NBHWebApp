@@ -56,11 +56,13 @@
                         <!-- Dropdown User -->
                         <li class="nav-item dropdown">
                             @if (ctxt != null && ctxt.isAuthenticated())
-                                <button class="nav-link dropdown-toggle bi-person-square" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true"> </button>
+                                <button class="nav-link dropdown-toggle bi-person-square" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                    ${ctxt.getUsername()}
+                                </button>
                                 <ul class="dropdown-menu">
-                                    <li class="dropdown-item" ><b> ${ctxt.getFullName()}</b></li>
                                     <li><a class="dropdown-item" href="/members/mydata/${ctxt.getUserId()}">Meine Daten</a></li>
                                     <li><a class="dropdown-item" href="/timetransfers/fromself/${ctxt.getUserId()}">Zeitscheck übergeben</a></li>
+                                    <li><a class="dropdown-item" href="/timecheques/buyself/${ctxt.getUserId()}">Zeitscheck kaufen</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form action="/registration/logout" method="post">
@@ -70,7 +72,9 @@
                                     </li>
                                 </ul>
                             @else
-                                <button class="nav-link dropdown-toggle bi-person-square" type="button" data-bs-toggle="dropdown" data-bs-display="static" style="color: gray;"> </button>
+                                <button class="nav-link dropdown-toggle bi-person" type="button" data-bs-toggle="dropdown" data-bs-display="static">
+                                    Login
+                                </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item bi-box-arrow-in-right" href="/registration/login"> Anmelden</a></li>
                                     <li><a class="dropdown-item" href="/registration/email">Registrieren / Passwort ändern</a></li>
