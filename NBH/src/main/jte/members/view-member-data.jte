@@ -39,20 +39,27 @@
     <div class="row">
         <div class="col-md-6">
             <div class="card mb-3">
+                <div class="card-header">
+                    <strong>${roleNames}</strong>
+                </div>
+
                 <div class="card-body">
-                    <h5 class="card-title">${roleNames}</h5>
                     <p class="card-text mb-1">
-                        ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}${member.getFirstName()} ${member.getLastName()}
-                    </p>
-                    <p class="card-text mb-1">
-                        ${member.getStreet() != null ? member.getStreet() : ""} ${member.getNumber() != null ? member.getNumber() : ""}
+                        ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}
+                        ${member.getFirstName()} ${member.getLastName()} - ${dateReverseDE(member.getBirthdate())}
                     </p>
                     <p class="card-text mb-1">
-                        ${member.getZip() != null ? member.getZip() : ""} ${member.getCity() != null ? member.getCity() : ""}
+                        ${member.getStreet() + " " + member.getNumber()}
                     </p>
-                    <p class="card-text mb-0">
-                        <a href="mailto:${member.getEmail()}">${member.getEmail()}</a>
+                    <p class="card-text mb-1">
+                        ${member.getZip() + " " + member.getCity()}
                     </p>
+
+                    @if(member.getEmail() != null)
+                        <p class="card-text mb-0">
+                            E-Mail: <a href="mailto:${member.getEmail()}">${member.getEmail()}</a>
+                        </p>
+                    @endif
                 </div>
             </div>
         </div>
@@ -72,12 +79,12 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="transfers-tab" data-bs-toggle="tab" data-bs-target="#transfers-pane" type="button" role="tab" aria-controls="transfers-pane" aria-selected="false">
-                        Zeitschecks abgegeben an
+                        Zeitschecks übergeben
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="received-tab" data-bs-toggle="tab" data-bs-target="#received-pane" type="button" role="tab" aria-controls="received-pane" aria-selected="false">
-                        Zeitschecks erhalten von
+                        Zeitschecks erhalten
                     </button>
                 </li>
             </ul>

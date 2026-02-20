@@ -24,14 +24,14 @@
 
 <div class="card">
     <div class="card-body">
-        <p class="card-text"><strong>${member.getName()} - abgegeben Zeitschecks</strong></p>
+        <p class="card-text"><strong>${member.getName()} - übergebene Zeitschecks</strong></p>
         <div class="table-responsive">
 
             <table class="table table-hover table-sm" id="memberTable">
                 <thead>
                     <tr>
                         <th scope="col">Datum</th>
-                        <th scope="col">abgegeben an</th>
+                        <th scope="col">übergeben an</th>
                         <th scope="col">Kategorie</th>
                         <th scope="col" class="text-end">Stunden</th>
                     </tr>
