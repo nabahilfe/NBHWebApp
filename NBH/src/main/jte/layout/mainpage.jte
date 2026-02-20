@@ -30,7 +30,7 @@
 
           <style>
             body {
-                padding-top: 80px;
+                padding-top: 90px;
             }
           </style>
 
@@ -53,32 +53,45 @@
                     <!-- Links links -->
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                        <!-- Dropdown Mitglied -->
+                        <!-- Dropdown User -->
                         <li class="nav-item dropdown">
-                            <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
-                                Mitglied
-                            </button>
-                            <ul class="dropdown-menu">
-                                @if (ctxt != null && ctxt.isAuthenticated())
-                                    <li><a class="dropdown-item" href="/members">Mitglieder verwalten</a></li>
-                                    <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
-                                    <li><a class="dropdown-item" href="/members/birthdays">Geburstage</a></li>
-                                    <li><hr class="dropdown-divider"></li>
+                            @if (ctxt != null && ctxt.isAuthenticated())
+                                <button class="nav-link dropdown-toggle bi bi-person-square" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true"> </button>
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-item" ><b> ${ctxt.getUsername()}</b></li>
                                     <li><a class="dropdown-item" href="/members/mydata/${ctxt.getUserId()}">Meine Daten</a></li>
                                     <li><a class="dropdown-item" href="/timetransfers/fromself/${ctxt.getUserId()}">Zeitscheck übergeben</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/registration/logout">Abmelden</a></li>
-                                @else
+                                </ul>
+                            @else
+                                <button class="nav-link dropdown-toggle bi bi-person-square" type="button" data-bs-toggle="dropdown" data-bs-display="static" style="color: gray;"> </button>
+                                <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/registration/login">Anmelden</a></li>
                                     <li><a class="dropdown-item" href="/registration/email">Registrieren</a></li>
-                                @endif
-                                @if (ctxt != null && ctxt.isAdmin())
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/admin">Admin Dashboard</a></li>
-                                @endif
-
-                            </ul>
+                                </ul>
+                            @endif
                         </li>
+
+
+                        <!-- Dropdown Mitglied -->
+                        @if (ctxt != null && ctxt.isAuthenticated())
+                            <li class="nav-item dropdown">
+                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                    Mitglieder
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/members">Mitglieder verwalten</a></li>
+                                    <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
+                                    <li><a class="dropdown-item" href="/members/birthdays">Geburstage</a></li>
+                                    @if (ctxt != null && ctxt.isAdmin())
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="/admin">Admin Dashboard</a></li>
+                                    @endif
+
+                                </ul>
+                            </li>
+                        @endif
 
 
                         <!-- Dropdown Zeitschecks -->
@@ -123,16 +136,8 @@
 
 
 
-                        <li class="nav-item">
-                            <a class="nav-link" aria-disabled="true">SomethingElse...</a>
-                        </li>
-
                     </ul>
 
-                    <!-- Username display -->
-                    @if(ctxt != null && ctxt.isAuthenticated())
-                        <span class="navbar-text me-3">Angemeldet als <b>${ctxt.getUsername()}</b></span>
-                    @endif
 
                     <!-- Suchformular rechts -->
                     <form class="d-flex" role="search" action="/members/search" method="get">
@@ -146,8 +151,8 @@
         </nav>
 
         <!-- Haupt-Content -->
-        <div class="container-fluid px-4 pb-4">
-        	${content}
+        <div class="container-fluid justify-content-center px-4 pb-4">
+            ${content}
         </div>
 
         <!-- Bootstrap JS Bundle -->

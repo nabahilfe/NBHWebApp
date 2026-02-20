@@ -7,12 +7,7 @@
     ctxt = ctxt,
     content = @`
 
-    <h1 class="">Nachbarschaftshilfe Maria Anzbach</h1>
-
-    @if (ctxt.isAuthenticated())
-        <h5>Willkommen ${ctxt.getUsername()}! Hier geht es zu deiner Nachbarschaftshilfe Übersicht</h5>
-    @endif
-
+    <h3 class="">Willkommen bei der Nachbarschaftshilfe Maria Anzbach!</h3>
 
     <div class="row mt-4">
 
@@ -40,11 +35,7 @@
                     <h4 class="card-title">Die nächsten Termine</h4>
                     <hr/>
                     <p class="card-text">
-                        Die Nachbarschaftshilfe Maria Anzbach ist ein gemeinnütziger Verein, dessen Mitglieder Unterstützung und Hilfe auf Stunden-Tausch-Basis anbieten.
-                        Auf einem Stundenkonto werden die erworbenen Zeitguthaben verbucht und Sie können sich wiederum von anderen helfen lassen.
-                        <br/>
-                        <br/>
-                        Wir möchten dazu beitragen, dass Sie möglichst lange in Ihrer vertrauten Umgebung Ihre Lebensqualität genießen können.
+
                     </p>
                 </div>
             </div>
