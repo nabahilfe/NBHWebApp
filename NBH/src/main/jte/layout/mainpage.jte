@@ -62,7 +62,12 @@
                                     <li><a class="dropdown-item" href="/members/mydata/${ctxt.getUserId()}">Meine Daten</a></li>
                                     <li><a class="dropdown-item" href="/timetransfers/fromself/${ctxt.getUserId()}">Zeitscheck übergeben</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/registration/logout">Abmelden</a></li>
+                                    <li>
+                                        <form action="/registration/logout" method="post">
+                                            ${csrfHiddenInput}
+                                            <button type="submit" class="dropdown-item btn btn-primary bi-box-arrow-left"> Abmelden</button>
+                                        </form>
+                                    </li>
                                 </ul>
                             @else
                                 <button class="nav-link dropdown-toggle bi bi-person-square" type="button" data-bs-toggle="dropdown" data-bs-display="static" style="color: gray;"> </button>
@@ -151,7 +156,7 @@
         </nav>
 
         <!-- Haupt-Content -->
-        <div class="container-fluid justify-content-center px-4 pb-4">
+        <div class="container-fluid justify-content-center align-items-center px-5 pb-4">
             ${content}
         </div>
 
