@@ -31,99 +31,103 @@
                service date, hours selector and submit/reset buttons.
     -->
 
-    <form action="/timetransfers" method="post">
-        ${csrfHiddenInput}
+    <div class="container d-flex justify-content-center">
+    
+        <form action="/timetransfers" method="post">
+            ${csrfHiddenInput}
 
-        <div class="row">
-          <div class="col-auto">
-            <div class="card">
-              <div class="card-body bg-success bg-opacity-10">
+            <div class="row">
+              <div class="col-auto">
+                <div class="card">
+                  <div class="card-body bg-success bg-opacity-10">
 
-                <h4 class="card-title text-primary">Zeitscheck übergeben</h4>
-                <hr/>
-                <p class="card-text text-success">Ich - <strong>${ctxt.getFullName()}</strong> - übergebe einen Zeitscheck</p>
+                    <h4 class="card-title text-primary">Zeitscheck übergeben</h4>
+                    <hr/>
+                    <p class="card-text text-success">Ich - <strong>${ctxt.getFullName()}</strong> - übergebe einen Zeitscheck</p>
 
-                <!--
-                  Payer input (userFrom): visible text input for autocomplete search
-                  - userFromId: hidden input holding the selected user's ID for submission
-                  - userFromResults: UL element used to show matching results
-                -->
+                    <!--
+                      Payer input (userFrom): visible text input for autocomplete search
+                      - userFromId: hidden input holding the selected user's ID for submission
+                      - userFromResults: UL element used to show matching results
+                    -->
 
-                <input type="hidden" name="userFromId" id="userFromId" value="${ctxt.getUserId()}">
-                <input type="hidden" name="fromself" id="fromself" value="true">
+                    <input type="hidden" name="userFromId" id="userFromId" value="${ctxt.getUserId()}">
+                    <input type="hidden" name="fromself" id="fromself" value="true">
 
-                <!-- Offer selection: options populated from the provided offers list -->
-                <label for="offer" class="col-form-label">Kategorie</label>
-                <div >
-                    <select class="form-select" name="offerId" id="offerId">
-                        <option value="">Auswählen</option>
-                        @for(Offer offer : offers)
-                            @if((ttf != null && ttf.getOfferId() != null) && ttf.getOfferId().equals(offer.getId().toString()))
-                                <option value="${offer.getId()}" selected>
-                                    ${offer.getCode()} - ${offer.getDescription()}
-                                </option>
-                            @else
-                                <option value="${offer.getId()}">
-                                    ${offer.getCode()} - ${offer.getDescription()}
-                                </option>
-                            @endif
-                        @endfor
-                    </select>
+                    <!-- Offer selection: options populated from the provided offers list -->
+                    <label for="offer" class="col-form-label">Kategorie</label>
+                    <div >
+                        <select class="form-select" name="offerId" id="offerId">
+                            <option value="">Auswählen</option>
+                            @for(Offer offer : offers)
+                                @if((ttf != null && ttf.getOfferId() != null) && ttf.getOfferId().equals(offer.getId().toString()))
+                                    <option value="${offer.getId()}" selected>
+                                        ${offer.getCode()} - ${offer.getDescription()}
+                                    </option>
+                                @else
+                                    <option value="${offer.getId()}">
+                                        ${offer.getCode()} - ${offer.getDescription()}
+                                    </option>
+                                @endif
+                            @endfor
+                        </select>
+                    </div>
+
+                    <!-- Service date: required date input (yyyy-mm-dd). Prefilled when editing. -->
+                    <label for="dateOfService" class="col-form-label">Datum</label>
+                    <div class="col-sm-10">
+                          <input type="date" class="form-control" name="dateOfService" id="dateOfService"
+                              value="${ttf == null ? "" : formatISO(ttf.getServiceDate())}" required>
+                    </div>
+
+                    <!-- Hours selector: choose 1..5 hours. Preselect when ttf provided. -->
+                    <label for="stunden" class="col-form-label">Anzahl Stunden</label>
+                    <div >
+                        <select class="form-select" name="hours" id="hoursSelect">
+                            @for(int i = 1; i <= 5; i++)
+                                @if((ttf != null && ttf.getHoursSelected() != null) && ttf.getHoursSelected().equals(String.valueOf(i)))
+                                    <option value="${i}" selected>@if(i == 1) 1 Stunde @else ${i} Stunden @endif</option>
+                                @else
+                                    <option value="${i}">@if(i == 1) 1 Stunde @else ${i} Stunden @endif</option>
+                                @endif
+                            @endfor
+                        </select>
+                    </div>
+
+                    <hr/>
+
+                    <p class="card-text text-success"><strong>Empfänger des Zeitscheck</strong></p>
+
+                    <!--
+                      Payee input (userTo):
+                      - userToName: visible autocomplete input
+                      - userToId: hidden selected user id for submission
+                      - userToResults: UL showing matching search results
+                    -->
+                    <input type="text" id="userToName" class="form-control" placeholder="Zeitscheck an..."
+                        autocomplete="off" value="${ttf == null ? "" : ttf.getUserToName()}">
+
+                    <input type="hidden" name="userToId" id="userToId"
+                        value="${ttf == null ? "" : ttf.getUserToId()}">
+
+                    <ul id="userToResults" class="results list-group"></ul>
+                  </div>
+
                 </div>
-
-                <!-- Service date: required date input (yyyy-mm-dd). Prefilled when editing. -->
-                <label for="dateOfService" class="col-form-label">Datum</label>
-                <div class="col-sm-10">
-                      <input type="date" class="form-control" name="dateOfService" id="dateOfService"
-                          value="${ttf == null ? "" : formatISO(ttf.getServiceDate())}" required>
-                </div>
-
-                <!-- Hours selector: choose 1..5 hours. Preselect when ttf provided. -->
-                <label for="stunden" class="col-form-label">Anzahl Stunden</label>
-                <div >
-                    <select class="form-select" name="hours" id="hoursSelect">
-                        @for(int i = 1; i <= 5; i++)
-                            @if((ttf != null && ttf.getHoursSelected() != null) && ttf.getHoursSelected().equals(String.valueOf(i)))
-                                <option value="${i}" selected>@if(i == 1) 1 Stunde @else ${i} Stunden @endif</option>
-                            @else
-                                <option value="${i}">@if(i == 1) 1 Stunde @else ${i} Stunden @endif</option>
-                            @endif
-                        @endfor
-                    </select>
-                </div>
-
-                <hr/>
-
-                <p class="card-text text-success"><strong>Empfänger des Zeitscheck</strong></p>
-
-                <!--
-                  Payee input (userTo):
-                  - userToName: visible autocomplete input
-                  - userToId: hidden selected user id for submission
-                  - userToResults: UL showing matching search results
-                -->
-                <input type="text" id="userToName" class="form-control" placeholder="Zeitscheck an..."
-                    autocomplete="off" value="${ttf == null ? "" : ttf.getUserToName()}">
-
-                <input type="hidden" name="userToId" id="userToId"
-                    value="${ttf == null ? "" : ttf.getUserToId()}">
-
-                <ul id="userToResults" class="results list-group"></ul>
               </div>
 
             </div>
-          </div>
 
-        </div>
+            <br/>
 
-        <br/>
+            <!-- Form actions: submit posts the transfer; reset clears client-side inputs -->
+            <button id="submitBtn" class="btn btn-primary bi-card-checklist" type="submit"> Zeitscheck verbuchen</button>
+            <button class="btn btn-secondary" type="button" onclick="resetInputs()">Eingabe löschen</button>
 
-        <!-- Form actions: submit posts the transfer; reset clears client-side inputs -->
-        <button id="submitBtn" class="btn btn-primary bi-card-checklist" type="submit"> Zeitscheck verbuchen</button>
-        <button class="btn btn-secondary" type="button" onclick="resetInputs()">Eingabe löschen</button>
-
-    </form>
-
+        </form>
+        
+    </div>
+    
     <br/>
 
     @template.components.display-statusmessage(successMessage, errorMessage)
