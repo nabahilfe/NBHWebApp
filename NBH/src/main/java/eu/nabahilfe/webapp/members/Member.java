@@ -360,6 +360,11 @@ public class Member implements Serializable {
         return directDebitAuthorization;
     }
 
+    public String getEinziehungsauftrgJaNein() {
+        if (Boolean.TRUE.equals(accumulatedHours)) return "JA";
+        return "NEIN";
+    }
+
 
     public void setDirectDebitAuthorization(Boolean directDebitAuthorization) {
         this.directDebitAuthorization = directDebitAuthorization;

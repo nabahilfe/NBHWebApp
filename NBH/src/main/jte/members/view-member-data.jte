@@ -44,22 +44,28 @@
                 </div>
 
                 <div class="card-body">
-                    <p class="card-text mb-1">
+                    <p class="card-text mb-3">
                         ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}
                         ${member.getFirstName()} ${member.getLastName()} - ${dateReverseDE(member.getBirthdate())}
                     </p>
                     <p class="card-text mb-1">
                         ${member.getStreet() + " " + member.getNumber()}
                     </p>
-                    <p class="card-text mb-1">
+                    <p class="card-text mb-3">
                         ${member.getZip() + " " + member.getCity()}
                     </p>
 
                     @if(member.getEmail() != null)
-                        <p class="card-text mb-0">
+                        <p class="card-text mb-3">
                             E-Mail: <a href="mailto:${member.getEmail()}">${member.getEmail()}</a>
                         </p>
                     @endif
+                    <p class="card-text mb-1">
+                        Mein Stundenguthaben beträgt <strong>${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + "" : "0"}</strong> Stunden.
+                    </p>
+                    <p class="card-text mb-1">
+                        Einziehungsauftrag erteilt:  <strong>${member.getEinziehungsauftrgJaNein()}</strong>
+                    </p>
                 </div>
             </div>
         </div>

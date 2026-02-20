@@ -24,8 +24,11 @@
     ctxt = ctxt,
     content = @`
 
+
+    <div class="container d-flex justify-content-center">
+
     <div class="row">
-        <div class="col-lg-7">
+        <div class="col-auto">
             <div class="card">
                 <div class="card-body bg-success bg-opacity-10">
 
@@ -56,6 +59,8 @@
                 </div>
             </div>
         </div>
+
+    </div>
 
     </div>
 

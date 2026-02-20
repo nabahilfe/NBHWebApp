@@ -32,7 +32,7 @@
     -->
 
     <div class="container d-flex justify-content-center">
-    
+
         <form action="/timetransfers" method="post">
             ${csrfHiddenInput}
 
@@ -96,7 +96,7 @@
 
                     <hr/>
 
-                    <p class="card-text text-success"><strong>Empfänger des Zeitscheck</strong></p>
+                    <p class="card-text text-success"><strong>Empfänger des Zeitschecks</strong></p>
 
                     <!--
                       Payee input (userTo):
@@ -125,9 +125,9 @@
             <button class="btn btn-secondary" type="button" onclick="resetInputs()">Eingabe löschen</button>
 
         </form>
-        
+
     </div>
-    
+
     <br/>
 
     @template.components.display-statusmessage(successMessage, errorMessage)
