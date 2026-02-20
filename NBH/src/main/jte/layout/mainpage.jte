@@ -32,11 +32,13 @@
 
 
     <body>
-
         <!-- Navbar -->
-        <nav class="navbar fixed-top navbar-expand-lg navbar-light" style="background-color: #77DD77;">
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #77DD77;">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">NBH Maria Anzbach</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
 
                 <!-- Navbar Collapse -->
@@ -138,11 +140,9 @@
         </nav>
 
         <!-- Haupt-Content -->
-        <main class="container mt-5">
-            <div class="bg-body-tertiary p-5 rounded">
+            <div class="contacontainer mt-5 pb-4 pt-4">
                 ${content}
             </div>
-        </main>
 
         <!-- Bootstrap JS Bundle -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
