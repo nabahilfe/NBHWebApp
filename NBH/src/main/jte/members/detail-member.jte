@@ -102,7 +102,7 @@
 
                             @if(member.getId() != null)
                                 <br/>
-                                <b>Zeitguthaben: ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}</b>
+                                <b>Zeitguthaben: ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() : 0} h</b>
                             @endif
 
 
