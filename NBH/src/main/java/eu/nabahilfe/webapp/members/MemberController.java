@@ -180,7 +180,7 @@ public class MemberController {
     @Transactional
     @PostMapping
     public String saveMember(Model model, @ModelAttribute @Valid Member member,
-                RedirectAttributes redirectAttributes, BindingResult result) {
+                BindingResult result, RedirectAttributes redirectAttributes) {
 
         log.debug("Will Save Member afer Validation: {}", member);
 
@@ -233,10 +233,10 @@ public class MemberController {
 
     @PostMapping("/{id}")
     public String updateMember(Model model, @ModelAttribute @Valid Member member,
-            @RequestParam(required = false) Long roleId,
-            RedirectAttributes redirectAttributes, BindingResult result, @PathVariable Long id) {
+            BindingResult result, @RequestParam(required = false) Long roleId,
+            RedirectAttributes redirectAttributes, @PathVariable Long id) {
         log.debug("Update Member with id {}: {}", id, member);
-        return saveMember(model, member, redirectAttributes, result);
+        return saveMember(model, member, result, redirectAttributes);
     }
 
 
