@@ -58,7 +58,7 @@
     </div>
 
     <div class="p-3 text-success-emphasis bg-success-subtle border border-success-subtle rounded-3">
-        <h4>Impressum</h4>
+        <h2>Impressum</h2>
         <p class="card-text">
             $unsafe{legalNotice}
         </p>
@@ -67,7 +67,7 @@
     <br/>
 
     <div class="p-3 text-success-emphasis bg-success-subtle border border-success-subtle rounded-3">
-        <h4>Datenschutzerklärung</h4>
+        <h2>Datenschutzerklärung</h2>
         <p class="card-text">
             $unsafe{privacyPolicy}
         </p>
