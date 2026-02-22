@@ -11,8 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.Role;
 
-@SuppressWarnings("serial")
 public class CustomUserDetails implements UserDetails {
+
     private static final long serialVersionUID = 1L;
 
     private final Member member;
