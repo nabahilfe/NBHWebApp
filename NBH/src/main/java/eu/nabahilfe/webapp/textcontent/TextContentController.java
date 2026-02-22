@@ -47,7 +47,8 @@ public class TextContentController {
         TextContentForm tcf = new TextContentForm();
         if (contentCode != null) {
             tcf.setContentCode(contentCode);
-            tcf.setContentDescription(contentCode);
+            TextContentType value = TextContentType.valueOf(contentCode);
+            if (value != null) tcf.setContentDescription(value.getCode());
         }
 
         Optional<TextContent> content = repo.findByContentCode(contentCode);
