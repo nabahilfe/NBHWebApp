@@ -1,5 +1,10 @@
-/* für die Persistierung der SPRING_SESSION Funktionalität von Spring Security */
 
+
+/***********************************************************/
+/* ATTENTION! DO NOT OVERWWRITE THE SPRING_SESSION TABLES! */
+/***********************************************************/
+
+/* für die Persistierung der SPRING_SESSION Funktionalität von Spring Security */
 
 CREATE TABLE SPRING_SESSION (
     PRIMARY_ID CHAR(36) NOT NULL,
@@ -25,12 +30,15 @@ CREATE TABLE SPRING_SESSION_ATTRIBUTES (
         REFERENCES SPRING_SESSION(PRIMARY_ID) ON DELETE CASCADE
 );
 
+/***********************************************************/
+/* ATTENTION! DO NOT OVERWWRITE THE SPRING_SESSION TABLES! */
+/***********************************************************/
 
 
 
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-02-12 14:15:11
+ * Generated at 2026-02-22 08:47:25
  * ModelDescription: NBH Entity Modell
  */
 
@@ -115,10 +123,24 @@ create table if not exists EVENTS (
 );
 
 
+/* Texte für die HP. Erfassung als MarkDown, angezeigt wird daraus generiertes HTML */
+create table if not exists TEXT_CONTENTS (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    element_code VARCHAR(20) /* Aus ENUM - Für welches Element gilt der Text */,
+    md_text VARCHAR(4000) /* Text mit Markdoen formatiert */,
+    html_text VARCHAR(4000) /* Aus dem Markdown Text generierter HTML Text */,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,
+    version INTEGER NOT NULL
+);
+
+
 /* Einmal-Codes für die Registrierung mit E-Mail und Code. */
 create table if not exists REGISTRATION_CODES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    code VARCHAR(10) not null /* Zufällige 2-stellige Zahl */,
+    code VARCHAR(10) not null /* Zufällige 6-stellige Zahl */,
     email VARCHAR(80) not null /* E-Mail zum Code */,
     expires_at TIMESTAMP not null /* Gültigkeitsdauer des Codes */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -356,6 +378,8 @@ drop table if exists ROLES cascade;
 drop table if exists AMOUNT_DOMAIN_VALUES cascade;
 
 drop table if exists EVENTS cascade;
+
+drop table if exists TEXT_CONTENTS cascade;
 
 drop table if exists REGISTRATION_CODES cascade;
 
