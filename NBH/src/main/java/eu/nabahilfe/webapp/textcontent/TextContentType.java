@@ -8,7 +8,7 @@ public enum TextContentType {
     ABOUT_US("Über uns"),
     CONTACT("Kontakt"),
     EVENTS("Termine"),
-    NEWS("Neuigkeiten"),
+    NEWS("Aktuelles"),
     FAQ("Häufige Fragen"),
     TERMS_OF_SERVICE("Nutzungsbedingungen"),
     PRIVACY_POLICY("Datenschutzbestimmungen"),

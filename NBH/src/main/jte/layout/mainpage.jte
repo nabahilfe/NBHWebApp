@@ -136,13 +136,15 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.ABOUT_US}">${TextContentType.ABOUT_US.getCode()}</a></li>
-                                <li><a class="dropdown-item" href="#">Protokolle verwalten</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.CONTACT}">${TextContentType.CONTACT.getCode()}</a></li>
+                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.EVENTS}">${TextContentType.EVENTS.getCode()}</a></li>
+                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.NEWS}">${TextContentType.NEWS.getCode()}</a></li>
+                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.FAQ}">${TextContentType.FAQ.getCode()}</a></li>
+                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.TERMS_OF_SERVICE}">${TextContentType.TERMS_OF_SERVICE.getCode()}</a></li>
+                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.PRIVACY_POLICY}">${TextContentType.PRIVACY_POLICY.getCode()}</a></li>
+                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.LEGAL_NOTICE}">${TextContentType.LEGAL_NOTICE.getCode()}</a></li>
                             </ul>
                         </li>
-
-
 
                     </ul>
 
