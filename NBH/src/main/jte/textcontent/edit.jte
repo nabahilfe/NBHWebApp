@@ -31,7 +31,7 @@
                 </div>
             </div>
 
-            <textarea class="form-control" id="mdText" name="mdText" rows="12" required>${textContentForm.getMdText()}</textarea>
+            <textarea class="form-control" id="mdText" name="mdText" rows="16" required>${textContentForm.getMdText()}</textarea>
             <div class="form-text">Nutze Markdown für Formatierung. Vorschau zeigt dir den erzeugten HTML Text an, den du dann auch veröffentliche kannst.</div>
 
             <br/>
