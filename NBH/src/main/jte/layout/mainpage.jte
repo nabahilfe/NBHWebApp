@@ -1,10 +1,9 @@
+@import eu.nabahilfe.webapp.textcontent.TextContentType
+
+
 @param gg.jte.Content content
 @param String searchTerm = null
 
-@param String username = null
-@param String fullUsername = null
-@param Boolean isAuthenticated = false
-@param Boolean isAdmin = false
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput = null
 @param eu.nabahilfe.webapp.security.ViewContext ctxt = null
@@ -130,13 +129,13 @@
                         </li>
 
 
-                        <!-- Dropdown Verein -->
+                        <!-- Dropdown Text Content -->
                         <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
-                                Verein
+                                Content
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Termine verwalten</a></li>
+                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.ABOUT_US}">${TextContentType.ABOUT_US.getCode()}</a></li>
                                 <li><a class="dropdown-item" href="#">Protokolle verwalten</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="#">Something else here</a></li>

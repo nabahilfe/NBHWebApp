@@ -1,6 +1,7 @@
 package eu.nabahilfe.webapp.textcontent;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -31,7 +32,7 @@ public class TextContent  {
     private Long id;
 
     @Size(max = 20)
-    private String elementCode;    // Aus ENUM - Für welches Element gilt der Text
+    private String contentCode;    // Aus ENUM - Für welches Element gilt der Text
 
     @Size(max = 4000)
     private String mdText;    // Text mit Markdoen formatiert
@@ -59,22 +60,101 @@ public class TextContent  {
     @Column(nullable = false)
     private Integer version;
 
+    public Long getId() {
+        return id;
+    }
 
-    // -------------------------------------------------
-    // generate setter/getter methodes with Eclipse here
-    // -------------------------------------------------
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getContentCode() {
+        return contentCode;
+    }
+
+    public void setContentCode(String elementCode) {
+        this.contentCode = elementCode;
+    }
+
+    public String getMdText() {
+        return mdText;
+    }
+
+    public void setMdText(String mdText) {
+        this.mdText = mdText;
+    }
+
+    public String getHtmlText() {
+        return htmlText;
+    }
+
+    public void setHtmlText(String htmlText) {
+        this.htmlText = htmlText;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Member getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Member createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Member getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Member updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
 
+    @Override
+    public String toString() {
+        return "TextContent [id=" + id + ", elementCode=" + contentCode + ", mdText=" + mdText + ", htmlText="
+                + htmlText + ", createdAt=" + createdAt + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt
+                + ", updatedBy=" + updatedBy + ", version=" + version + "]";
+    }
 
-    // ------------------------------------------------------------------------
-    // generate equals/hashCode methodes with Eclipse here - use ONLY id field!
-    // ------------------------------------------------------------------------
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        TextContent other = (TextContent) obj;
+        return Objects.equals(id, other.id);
+    }
 
-    // -----------------------------------------------
-    // Don't forget to generate toString() for logging
-    // -----------------------------------------------
 
 
 
