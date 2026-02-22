@@ -1,3 +1,13 @@
+@param String aboutUs = ""
+@param String contact = ""
+@param String events = ""
+@param String news = ""
+@param String faq = ""
+@param String termsOfService = ""
+@param String privacyPolicy = ""
+
+
+
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
@@ -16,14 +26,10 @@
 
             <div class="card p-3 rounded-3" style="background-color: #d9f6d7;">
                 <div class="card-body">
-                    <h4 class="card-title">Wer wir sind und was wir tun</h4>
+                    <h2 class="card-title">Wer wir sind und was wir tun</h2>
                     <hr/>
                     <p class="card-text">
-                        Die Nachbarschaftshilfe Maria Anzbach ist ein gemeinnütziger Verein, dessen Mitglieder Unterstützung und Hilfe auf Stunden-Tausch-Basis anbieten.
-                        Auf einem Stundenkonto werden die erworbenen Zeitguthaben verbucht und Sie können sich wiederum von anderen helfen lassen.
-                        <br/>
-                        <br/>
-                        Wir möchten dazu beitragen, dass Sie möglichst lange in Ihrer vertrauten Umgebung Ihre Lebensqualität genießen können.
+                        $unsafe{aboutUs}
                     </p>
                 </div>
             </div>
@@ -32,10 +38,10 @@
 
             <div class="card p-3 rounded-3" style="background-color: #d9f6d7;">
                 <div class="card-body">
-                    <h4 class="card-title">Die nächsten Termine</h4>
+                    <h2 class="card-title">Unsere Termin</h2>
                     <hr/>
                     <p class="card-text">
-
+                        $unsafe{events}
                     </p>
                 </div>
             </div>
@@ -47,21 +53,8 @@
             <!-- Right column content (1/3) -->
             <div class="card p-3 rounded-3" style="background-color: #d9f6d7;">
                 <div class="card-body">
-                    <h4 class="card-title">Kontakt</h4>
-                    <hr/>
-                    <p class="card-text">
-                        Sie haben Fragen oder möchten Mitglied werden? Kontaktieren Sie uns gerne!
-                        <br/>
-                        <br/>
-                        <strong>Adresse</strong>
-                        <br/>Hauptstraße 123, 12345 Maria Anzbach
-                        <br/>
-                        <strong>Telefon</strong> <a href="tel:+13055555555">305-555-5555</a>
-                        <br/>
-                        <strong>E-Mail</strong> <a href= "mailto:name@email.com">name@email.com</a>
-                   </p>
-
-
+                    <h2 class="card-title">Kontakt</h2>
+                    $unsafe{contact}
                 </div>
             </div>
         </div>

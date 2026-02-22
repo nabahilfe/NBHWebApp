@@ -5,9 +5,9 @@ public enum TextContentType {
     // NEVER EVER CHANGE THE CODE VALUES, AS THEY ARE USED TO IDENTIFY THE CONTENT IN THE DATABASE
     // But you can change the display values (the ones in brackets) as you like, they are only used for display purposes in the UI
 
-    ABOUT_US("Über uns"),
+    ABOUT_US("Wer wir sind und was wir tun"),
     CONTACT("Kontakt"),
-    EVENTS("Termine"),
+    EVENTS("Unsere Termine"),
     NEWS("Aktuelles"),
     FAQ("Häufige Fragen"),
     TERMS_OF_SERVICE("Nutzungsbedingungen"),

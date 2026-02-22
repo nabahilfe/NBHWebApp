@@ -17,7 +17,7 @@
 
     <div class="container-fluid">
 
-        <h3>Textbaustein Vorschau für: ${textContentForm.getContentDescription()}</h3>
+        <h2>${textContentForm.getContentDescription()}</h2>
 
         <form action="/textcontent/save" method="post" class="mb-4">
             ${csrfHiddenInput}

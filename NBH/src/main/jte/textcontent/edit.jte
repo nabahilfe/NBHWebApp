@@ -16,7 +16,7 @@
 
 
     <div class="container-fluid">
-        <h3>Textbaustein für: ${textContentForm.getContentDescription()}</h3>
+        <h2>${textContentForm.getContentDescription()}</h2>
 
         <form action="/textcontent/preview" method="post" class="mb-4">
             ${csrfHiddenInput}

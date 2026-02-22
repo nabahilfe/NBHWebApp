@@ -27,6 +27,9 @@ public class SecurityConfig {
 
                 .requestMatchers("/textcontent/**").permitAll()
 
+                .requestMatchers("/home").permitAll()
+                .requestMatchers("/home/**").permitAll()
+
 // FIXME: Hier müssen die Rollen entsprechend der Anforderungen angepasst werden.
 //                .requestMatchers("/admin/**")
 //                    .hasRole("ADMIN")

@@ -40,8 +40,9 @@
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #77DD77;">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/">NBH Maria Anzbach</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand" href="/homepage">NBH Maria Anzbach</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
