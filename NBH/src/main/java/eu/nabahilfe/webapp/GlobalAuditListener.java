@@ -40,6 +40,7 @@ public class GlobalAuditListener {
             setIfExists(entity, "updatedBy", user);
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("Audit error", e);
         }
     }
@@ -62,6 +63,7 @@ public class GlobalAuditListener {
             try {
                 return type.getDeclaredField(name);
             } catch (NoSuchFieldException e) {
+                e.printStackTrace();
                 type = type.getSuperclass();
             }
         }

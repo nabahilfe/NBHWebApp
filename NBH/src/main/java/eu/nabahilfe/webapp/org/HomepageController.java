@@ -12,7 +12,7 @@ import eu.nabahilfe.webapp.textcontent.TextContentRepository;
 import eu.nabahilfe.webapp.textcontent.TextContentType;
 
 @Controller
-@RequestMapping("/homepage")public class HomepageController {
+@RequestMapping("/xxxhomepage")public class HomepageController {
 
     private final TextContentRepository textRepo;
 

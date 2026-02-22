@@ -107,6 +107,7 @@ public class GlobalExceptionHandler {
                 // Return the path, or home if it's empty
                 return (path != null && !path.isEmpty()) ? path : "/";
             } catch (Exception e) {
+                e.printStackTrace();
                 // Fall back to home if parsing fails
             }
         }

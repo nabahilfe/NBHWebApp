@@ -5,6 +5,7 @@
 @param String faq = ""
 @param String termsOfService = ""
 @param String privacyPolicy = ""
+@param String legalNotice = ""
 
 
 
@@ -17,51 +18,58 @@
     ctxt = ctxt,
     content = @`
 
-    <h3 class="">Willkommen bei der Nachbarschaftshilfe Maria Anzbach!</h3>
+    <h1 class="">Willkommen bei der Nachbarschaftshilfe Maria Anzbach!</h1>
 
     <div class="row mt-4">
 
         <div class="col-12 col-lg-8 mb-3">
             <!-- Left column content (2/3) -->
 
-            <div class="card p-3 rounded-3" style="background-color: #d9f6d7;">
-                <div class="card-body">
-                    <h2 class="card-title">Wer wir sind und was wir tun</h2>
-                    <hr/>
-                    <p class="card-text">
-                        $unsafe{aboutUs}
-                    </p>
-                </div>
+            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3" style="background-color: #ECFEFF;">
+                <h2>Wer wir sind und was wir tun</h2>
+                <p class="card-text">
+                    $unsafe{aboutUs}
+                </p>
             </div>
 
             <br>
 
-            <div class="card p-3 rounded-3" style="background-color: #d9f6d7;">
-                <div class="card-body">
-                    <h2 class="card-title">Unsere Termin</h2>
-                    <hr/>
-                    <p class="card-text">
-                        $unsafe{events}
-                    </p>
-                </div>
+            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3" style="background-color: #ECFDF5;">
+                <h2 class="card-title">Termine und Veranstaltungen</h2>
+                <p class="card-text">
+                    $unsafe{events}
+                </p>
             </div>
-
 
         </div>
 
-        <div class="col-12 col-lg-4">
+        <div class="col-12 col-lg-4 mb-3">
             <!-- Right column content (1/3) -->
-            <div class="card p-3 rounded-3" style="background-color: #d9f6d7;">
-                <div class="card-body">
-                    <h2 class="card-title">Kontakt</h2>
+
+            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3" style="background-color: #d9f6d7;">
+                <h2>Kontakt</h2>
+                <p class="card-text">
                     $unsafe{contact}
-                </div>
+                </p>
             </div>
+
         </div>
 
     </div>
 
-<div class="p-3 text-success-emphasis bg-success-subtle border border-success-subtle rounded-3">
-  Example element with utilities
-</div>
+    <div class="p-3 text-success-emphasis bg-success-subtle border border-success-subtle rounded-3">
+        <h4>Impressum</h4>
+        <p class="card-text">
+            $unsafe{legalNotice}
+        </p>
+    </div>
+
+    <br/>
+
+    <div class="p-3 text-success-emphasis bg-success-subtle border border-success-subtle rounded-3">
+        <h4>Datenschutzerklärung</h4>
+        <p class="card-text">
+            $unsafe{privacyPolicy}
+        </p>
+    </div>
 `)

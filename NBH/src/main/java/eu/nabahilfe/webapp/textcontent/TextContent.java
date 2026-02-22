@@ -34,10 +34,8 @@ public class TextContent  {
     @Size(max = 20)
     private String contentCode;    // Aus ENUM - Für welches Element gilt der Text
 
-    @Size(max = 4000)
     private String mdText;    // Text mit Markdoen formatiert
 
-    @Size(max = 4000)
     private String htmlText;    // Aus dem Markdown Text generierter HTML Text
 
     // Creation timestamp, value is set by Postgres (see Table definition)

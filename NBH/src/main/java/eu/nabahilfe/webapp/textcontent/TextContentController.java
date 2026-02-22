@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 
 
 @Controller
@@ -76,18 +77,21 @@ public class TextContentController {
 
     /* Preview markdown without saving */
     @PostMapping("/preview")
+    @GetMapping("/preview")
     public String preview(@ModelAttribute("textContentForm") TextContentForm tcf, Model model) {
 
         String html = markdown.toHtml(tcf.getMdText());
         tcf.setHtmlText(html);
 
         log.debug("Previewing TextContent for {}", tcf.toString());
+        log.debug("HTML Text {}", html);
 
         return "textcontent/preview";
     }
 
 
     /* Save after preview */
+    @Transactional
     @PostMapping("/save")
     public String save(@ModelAttribute("textContentForm") TextContentForm tcf, Model model) {
 

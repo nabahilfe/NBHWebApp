@@ -7,11 +7,11 @@ public enum TextContentType {
 
     ABOUT_US("Wer wir sind und was wir tun"),
     CONTACT("Kontakt"),
-    EVENTS("Unsere Termine"),
+    EVENTS("Termine und Veranstaltungen"),
     NEWS("Aktuelles"),
     FAQ("Häufige Fragen"),
     TERMS_OF_SERVICE("Nutzungsbedingungen"),
-    PRIVACY_POLICY("Datenschutzbestimmungen"),
+    PRIVACY_POLICY("Datenschutzerklärung"),
     LEGAL_NOTICE("Impressum");
 
     private final String code;
