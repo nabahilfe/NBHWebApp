@@ -38,7 +38,7 @@ CREATE TABLE SPRING_SESSION_ATTRIBUTES (
 
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-02-22 08:47:25
+ * Generated at 2026-02-22 12:15:34
  * ModelDescription: NBH Entity Modell
  */
 
@@ -126,7 +126,7 @@ create table if not exists EVENTS (
 /* Texte für die HP. Erfassung als MarkDown, angezeigt wird daraus generiertes HTML */
 create table if not exists TEXT_CONTENTS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    element_code VARCHAR(20) /* Aus ENUM - Für welches Element gilt der Text */,
+    content_code VARCHAR(20) /* Aus ENUM - Für welches Element gilt der Text */,
     md_text VARCHAR(4000) /* Text mit Markdoen formatiert */,
     html_text VARCHAR(4000) /* Aus dem Markdown Text generierter HTML Text */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -332,6 +332,11 @@ alter table TRANSACTIONS
 
 alter table ASSOCIATIONS
     add constraint uc_name_associations unique (name)
+;
+
+
+alter table TEXT_CONTENTS
+    add constraint uc_content_code_text_contents unique (content_code)
 ;
 
 
