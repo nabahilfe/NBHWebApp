@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import jakarta.servlet.http.HttpServletRequest;
+
 
 @Controller
 @RequestMapping("/textcontent")
@@ -28,8 +29,16 @@ public class TextContentController {
         this.markdown = markdown;
     }
 
-    /* Liste */
 
+    @ModelAttribute("textContentForm")
+    public TextContentForm addTextContentForm(HttpServletRequest request) {
+        if (request.getSession().getAttribute("textContentForm") != null)
+            return (TextContentForm) request.getSession().getAttribute("textContentForm");
+        return new TextContentForm();
+    }
+
+
+    /* Liste */
     @GetMapping
     public String list(Model model) {
 
@@ -42,58 +51,54 @@ public class TextContentController {
 
     /* Edit/Create form */
     @GetMapping({"/edit", "/edit/cc/{contentCode}"})
-    public String edit(final Model model, @PathVariable String contentCode) {
+    public String edit(final Model model, @ModelAttribute("textContentForm") TextContentForm tcf, @PathVariable String contentCode) {
 
-        TextContentForm tcf = new TextContentForm();
         if (contentCode != null) {
             tcf.setContentCode(contentCode);
             TextContentType value = TextContentType.valueOf(contentCode);
-            if (value != null) tcf.setContentDescription(value.getCode());
+            tcf.setContentDescription(value.getCode());
         }
 
-        Optional<TextContent> content = repo.findByContentCode(contentCode);
+        Optional<TextContent> content = repo.findByContentCode(tcf.getContentCode());
 
         if (!content.isEmpty()) {
-            log.debug("Loading existing TextContent for contentCode={}", contentCode);
+            log.debug("Loading existing TextContent for contentCode={}", tcf.getContentCode());
             tcf.setContentCode(content.get().getContentCode());
             tcf.setMdText(content.get().getMdText());
             tcf.setHtmlText(content.get().getHtmlText());
         }
 
-        model.addAttribute("textContentForm", tcf);
+        log.debug("Editing TextContent for {}", tcf.toString());
+
         return "textcontent/edit";
     }
 
 
     /* Preview markdown without saving */
     @PostMapping("/preview")
-    public String preview(@ModelAttribute TextContentForm textContentForm, Model model) {
+    public String preview(@ModelAttribute("textContentForm") TextContentForm tcf, Model model) {
 
-        String html = markdown.toHtml(textContentForm.getMdText());
-        log.debug("Markdown: {} -> HTML: {}", textContentForm.getMdText(), html);
+        String html = markdown.toHtml(tcf.getMdText());
+        tcf.setHtmlText(html);
 
-        textContentForm.setHtmlText(html);
+        log.debug("Previewing TextContent for {}", tcf.toString());
 
-        model.addAttribute("textContentForm", textContentForm);
-        return "textcontent/view";
+        return "textcontent/preview";
     }
 
 
     /* Save after preview */
     @PostMapping("/save")
-    public String save(@ModelAttribute TextContentForm textContentForm, Model model) {
+    public String save(@ModelAttribute("textContentForm") TextContentForm tcf, Model model) {
 
-        TextContent content = repo.findByContentCode(textContentForm.getContentCode())
-                .orElseGet(TextContent::new);
+        TextContent content = repo.findByContentCode(tcf.getContentCode()).orElseGet(TextContent::new);
 
-        content.setContentCode(textContentForm.getContentCode());
-        content.setMdText(textContentForm.getMdText());
-        content.setHtmlText(markdown.toHtml(Optional.ofNullable(textContentForm.getMdText()).orElse("")));
+        content.setContentCode(tcf.getContentCode());
+        content.setMdText(tcf.getMdText());
+        content.setHtmlText(markdown.toHtml(Optional.ofNullable(tcf.getMdText()).orElse("")));
 
         repo.save(content);
         log.debug("Saved TextContent for contentCode={}", content.getContentCode());
-
-        model.addAttribute("textContentForm", textContentForm);
 
         model.addAttribute("successMessage", "TextContent gespeichert.");
         return "textcontent/edit";

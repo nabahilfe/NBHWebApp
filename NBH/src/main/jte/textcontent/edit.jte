@@ -21,6 +21,10 @@
         <form action="/textcontent/preview" method="post" class="mb-4">
             ${csrfHiddenInput}
 
+            <input type="hidden" name="contentCode" value="${textContentForm.getContentCode()}">
+            <input type="hidden" name="contentDescription" value="${textContentForm.getContentDescription()}">
+            <input type="hidden" name="htmlText" value="${textContentForm.getHtmlText()}">
+
             <div class="mb-3">
                 <label for="mdText" class="form-label">Markdown Text</label>
                 <textarea class="form-control" id="mdText" name="mdText" rows="12" required>${textContentForm.getMdText()}</textarea>
@@ -29,8 +33,9 @@
 
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-secondary">Vorschau</button>
-                <button type="submit" formaction="/textcontent/save" class="btn btn-success">Speichern</button>
             </div>
+
+
         </form>
 
 
@@ -40,9 +45,7 @@
                  <span>Vorschau bisheriger Text</span>
              </div>
              <div class="card-body">
-                 <div class="border rounded p-3" style="min-height: 120px;">
-                    $unsafe{textContentForm.getMdText()}
-                 </div>
+                $unsafe{textContentForm.getHtmlText()}
              </div>
          </div>
 

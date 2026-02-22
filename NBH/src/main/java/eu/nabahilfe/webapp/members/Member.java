@@ -362,7 +362,7 @@ public class Member implements Serializable {
     }
 
     public String getEinziehungsauftrgJaNein() {
-        if (Boolean.TRUE.equals(accumulatedHours)) return "JA";
+        if (Boolean.TRUE.equals(directDebitAuthorization)) return "JA";
         return "NEIN";
     }
 
