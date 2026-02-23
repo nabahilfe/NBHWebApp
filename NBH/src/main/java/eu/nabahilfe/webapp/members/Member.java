@@ -186,9 +186,10 @@ public class Member implements Serializable {
 
     // Email muss immer in lower-case gespeichert werden und darf nicht leer sein, sondern nur null
     public void setEmail(String email) {
-        if (email != null) email = email.trim();
-        if (email != null) email = email.toLowerCase();
-        if (email.length() == 0) email = null;
+        if (email != null) {
+            email = email.trim().toLowerCase();
+            if (email.length() == 0) email = null;
+        }
         this.email = email;
     }
 
