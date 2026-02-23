@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import eu.nabahilfe.webapp.NbhConst;
+import eu.nabahilfe.webapp.email.EmailComposer;
+import eu.nabahilfe.webapp.email.EmailDetails;
+import eu.nabahilfe.webapp.email.EmailService;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +35,8 @@ public class RegistrationController {
     private final MemberRepository memberRepository;
     private final RegistrationCodeRepository registrationCodeRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+    private final EmailComposer emailComposer;
 
     private static final Logger log = LoggerFactory.getLogger(RegistrationController.class);
 
@@ -43,10 +48,12 @@ public class RegistrationController {
 
 
     public RegistrationController(MemberRepository memberRepository, RegistrationCodeRepository registrationCodeRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder, EmailService emailService) {
         this.memberRepository = memberRepository;
         this.registrationCodeRepository = registrationCodeRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
+        this.emailComposer = new EmailComposer();
 
     }
 
@@ -73,7 +80,7 @@ public class RegistrationController {
         }
 
         String code = randomCode();
-        sendCode(email, code);
+        sendCode(email, existing.getFirstName() + " " + existing.getLastName(), code);
 
         RegistrationCode registrationCode = new RegistrationCode();
         registrationCode.setEmail(email);
@@ -220,9 +227,10 @@ public class RegistrationController {
 
 
 
-    private void sendCode(@Valid String email, String randomCode) {
-        // FIXME Add final implementation to send the code to the user via email
-        log.warn("Generated code {} for email {}", randomCode, email);
+    private void sendCode(@Valid String recipient, String name, String randomCode) {
+        EmailDetails email = emailComposer.composeConfirmationCodeEmail(recipient, name, randomCode);
+        emailService.sendEmailHtml(email);
+        log.debug("Generated code ##### {} ##### for email {}", randomCode, email);
     }
 
 
