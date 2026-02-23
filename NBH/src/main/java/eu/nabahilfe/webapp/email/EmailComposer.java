@@ -31,8 +31,8 @@ public class EmailComposer {
         EmailDetails details = new EmailDetails(
                 recipient,
                 "Registrierungscode für die Nachbarschaftshilfe",
-                "<p>Hallo<strong> " + name + "</strong>!</p>"
-                + "Vielen Dank für dein Registrierung bei der Nachbarschaftshilfe!<br>"
+                "<p>Hallo " + name + "!</p>"
+                + "Vielen Dank für Deine Registrierung bei der Nachbarschaftshilfe!<br>"
                 + "Hier ist dein Registrierungscode:<br>"
                 + "<h3>&nbsp;&nbsp;&nbsp;" + code + "</h3>"
                 + "<p>Bitte gib diesen Code auf der Registrierungsseite ein, um deine Registrierung abzuschließen.</p>"
