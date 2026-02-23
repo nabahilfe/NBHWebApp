@@ -16,7 +16,19 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@template.layout.main(content = @`
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
+
+
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
+
+@template.layout.mainpage(
+    csrfHiddenInput = csrfHiddenInput,
+    ctxt = ctxt,
+    content = @`
 
     <h3>Nicht verbuchte Zeitschecks</h3>
 
@@ -39,6 +51,7 @@
         <tbody class="table-group-divider">
             @for (TimeCheque tc : timeCheques)
                 <form method="post" action="/accountings/new-accountable">
+                    ${csrfHiddenInput}
                     <tr>
                         <td scope="row">${dateDE(tc.getTransactionDate())}</td>
                         <td scope="row">${tc.getAssignedTo().getNameAndAddress()}</td>

@@ -4,6 +4,18 @@ public enum TransactionType {
 
     // Never Ever Change this names! They are used in the database!
 
-    INCOME,     // INCOME = Einnahme (z.B. Verkauf eines Zeitschecks)
-    EXPENSE     // EXPENSE = Ausgabe (z.B. Weihnachtsessen, Spende, Büromaterial, ...)
+    INCOME("Einnahme"),     // z.B. Verkauf eines Zeitschecks, Mitgliedsbeitrag, ...
+    EXPENSE("Ausgabe");     // z.B. Weihnachtsessen, Spende, Büromaterial, ...
+
+    private final String code;
+
+    TransactionType(String code) {
+        this.code = code;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
 }
+

@@ -3,16 +3,28 @@
 
 @param java.lang.String email = null
 
-@template.layout.main(content = @`
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
+
+
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
+
+@template.layout.mainpage(
+    csrfHiddenInput = csrfHiddenInput,
+    ctxt = ctxt,
+    content = @`
 
     <h3>Registrierungscode anfordern</h3>
     <p>Gib deine E-Mail ein um einen 6-stelligen Registrierungscode zu erhalten.<br/>
-    Der Code ist 15 Minuten gültig und wird für die Aktivierung deines Kontos benötigt.</p>
+    Der Code, den du per e-Mail erhälts, ist 15 Minuten gültig und wird für die Aktivierung deines Kontos benötigt.</p>
     <p>Hinweis: Du kannst mit diesem Formular auch ein neues Paswort erstellen, falls du dein Passwort vergessen hast.</p>
 
 
     <form action="/registration/email" method="post" class="needs-validation" novalidate>
-
+        ${csrfHiddenInput}
         <div class="mb-3">
             <label for="email" class="form-label">Meine E-Mail<span class="text-danger">*</span></label>
             <input type="email"

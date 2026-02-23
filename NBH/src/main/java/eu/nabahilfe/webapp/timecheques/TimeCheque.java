@@ -7,12 +7,14 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import eu.nabahilfe.webapp.GlobalAuditListener;
 import eu.nabahilfe.webapp.accountings.Accountable;
 import eu.nabahilfe.webapp.accountings.AccountingEntry;
 import eu.nabahilfe.webapp.accountings.TransactionType;
 import eu.nabahilfe.webapp.members.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +29,7 @@ import jakarta.persistence.Version;
  * Zeitscheck - zuerst angelegt und dann später verbucht vom Kassier. TransactionType ist immer INCOME
  */
 @Entity
+@EntityListeners(GlobalAuditListener.class)
 @Table(name = "TIME_CHEQUES")
 public class TimeCheque implements Accountable {
 

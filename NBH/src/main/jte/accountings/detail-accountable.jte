@@ -10,8 +10,20 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
 
-@template.layout.main(content = @`
+
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
+
+@template.layout.mainpage(
+    csrfHiddenInput = csrfHiddenInput,
+    ctxt = ctxt,
+    content = @`
+
     <h3>Buchungsdatensatz anlegen</h3>
     <p>Damit wird dokumentiert, dass die Buchung durchgeführt wurde.</p>
     <br/>
@@ -19,6 +31,7 @@
     <div class="row">
         <!-- first action is for create, second action is for update -->
         <form action="${accountingEntry.getId() == null ? "/accountings/save-accounting" : "/accountings/view-accounting/" + accountingEntry.getId()}" method="post">
+            ${csrfHiddenInput}
             <div class="form-group row">
                 <label for="accountableClass" class="col-sm-2 col-form-label">Buchung für</label>
                 <div class="col-sm-10">

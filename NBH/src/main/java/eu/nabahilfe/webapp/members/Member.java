@@ -1,5 +1,6 @@
 package eu.nabahilfe.webapp.members;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -7,8 +8,10 @@ import java.util.Objects;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import eu.nabahilfe.webapp.GlobalAuditListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,7 +30,10 @@ import jakarta.validation.constraints.Size;
  */
 @Entity
 @Table(name = "MEMBERS")
-public class Member  {
+@EntityListeners(GlobalAuditListener.class)
+public class Member implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -91,7 +97,7 @@ public class Member  {
 
     private Integer accumulatedHours;    // Gut-Stunden - kommt aus Gutschrift bei Eintritt, Stundenkauf, Stundenerwerb durch Hilfestellung, ...
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)	// FetchType.EAGER damit Login funktioniert, da die Rolle für die Autorisierung benötigt wird.
     @JoinColumn(name = "role_id")
     private Role role;    // Nur befüllt wenn zusätlich Rolle zum normalen Mitglied
 
@@ -356,6 +362,11 @@ public class Member  {
         return directDebitAuthorization;
     }
 
+    public String getEinziehungsauftrgJaNein() {
+        if (Boolean.TRUE.equals(directDebitAuthorization)) return "JA";
+        return "NEIN";
+    }
+
 
     public void setDirectDebitAuthorization(Boolean directDebitAuthorization) {
         this.directDebitAuthorization = directDebitAuthorization;
@@ -402,6 +413,13 @@ public class Member  {
     }
 
 
+    public boolean isActive() {
+        LocalDate today = LocalDate.now();
+        return resignationDate == null || resignationDate.isAfter(today);
+    }
+
+
+
     // ------------------------------------------------------------------------
     // generate equals/hasCode methodes with Eclipse here - use ONLY id field!
     // ------------------------------------------------------------------------
@@ -434,8 +452,10 @@ public class Member  {
                 + ", zip=" + zip + ", city=" + city + ", directDebitAuthorization=" + directDebitAuthorization
                 + ", isImportedMember=" + isImportedMember
                 + ", accumulatedHours=" + accumulatedHours + ", role=" + role + ", createdAt=" + createdAt
-                + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt + ", updatedBy=" + updatedBy + ", version="
+                + ", createdById=" + (createdBy == null ? "" : createdBy.getId()) + ", updatedAt=" + updatedAt
+                + ", updatedById=" + (updatedBy == null ? "" : updatedBy.getId()) + ", version="
                 + version + "]";
     }
+
 
 }

@@ -20,10 +20,17 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@param Integer numberOfTimecheques = null		/* so we can display button to create first TimeCheque only if there are none yet */
+@param Integer numberOfTimecheques = null
 
 
-@template.layout.main(content = @`
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
+
+@template.layout.mainpage(
+    csrfHiddenInput = csrfHiddenInput,
+    ctxt = ctxt,
+    content = @`
 
     <h3>
         ${member.getId() != null ? "Mitglied bearbeiten" : "Neues Mitglied anlegen"}
@@ -35,6 +42,7 @@
 
         <!-- first action is for save, second action is for update -->
         <form action="${member.getId() == null ? "/members" : "/members/" + member.getId()}" method="post">
+            ${csrfHiddenInput}
 
             <div class="form-group row">
                 <div class="col">
@@ -78,7 +86,7 @@
                             <label for="role" class="col col-form-label">Rolle</label>
                             <div class="col">
                                 <select class="form-select" name="role" id="role">
-                                    <option value="">Einfaches Mitglied</option>
+                                    <option value=""></option>
                                     @for(Role role : roles)
                                         <option value="${role.getId()}" selected="${member.getRole() != null && member.getRole().getId() == role.getId()}">
                                             ${role.getRoleName()}
@@ -89,7 +97,7 @@
 
                             @if(member.getId() != null)
                                 <br/>
-                                <b>Zeitguthaben: ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}</b>
+                                <b>Zeitguthaben: ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() : 0} h</b>
                             @endif
 
 
@@ -145,6 +153,13 @@
                                 </label>
                             </div>
 
+                            <!-- Hidden mirrors to submit disabled values -->
+                            <input type="hidden" id="firstName-hidden">
+                            <input type="hidden" id="lastName-hidden">
+                            <input type="hidden" id="institution-hidden">
+                            <input type="hidden" id="role-hidden">
+                            <input type="hidden" id="title-hidden">
+                            <input type="hidden" id="email-hidden">
                         </div>
                     </div>
                 </div>
@@ -172,14 +187,20 @@
 
     @if(member.getId() != null)
 
-        @if(numberOfTimecheques != null && numberOfTimecheques == 0 && member.getIsImportedMember() == false)
-            <div class="alert alert-info py-2 px-3" role="alert">
-                Dieses Mitglied hat noch keine Zeitschecks. Erfasse gleich den ersten Gratis-Zeitscheck über den Button unten.
+        @if(member.getSalutation() != null && member.getSalutation().equals("SOZIALKONTO"))
+            <div class="alert alert-warning py-2 px-3" role="alert">
+                Sozialkonto der Nachbarschaftshilfe. Zeitschecks können nur durch Spenden von anderen Mitgliedern hinzugefügt werden, nicht durch kaufen.
             </div>
-            <form action="/timecheques/new" method="get">
-                <input type="hidden" name="memberId" value="${member.getId()}">
-                <button type="submit" class="btn btn-outline-primary bi-plus-square"> Ersten Zeitscheck erfassen</button>
-            </form>
+        @else
+            @if(numberOfTimecheques != null && numberOfTimecheques == 0 && member.getIsImportedMember() == false)
+                <div class="alert alert-info py-2 px-3" role="alert">
+                    Dieses Mitglied hat noch keine Zeitschecks. Erfasse gleich den ersten Gratis-Zeitscheck über den Button unten.
+                </div>
+                <form action="/timecheques/new" method="get">
+                    <input type="hidden" name="memberId" value="${member.getId()}">
+                    <button type="submit" class="btn btn-outline-primary bi-plus-square"> Ersten Zeitscheck erfassen</button>
+                </form>
+            @endif
         @endif
 
         <br/>
@@ -190,17 +211,17 @@
                 <ul class="nav nav-tabs" id="memberDetailTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="timecheques-tab" data-bs-toggle="tab" data-bs-target="#timecheques-pane" type="button" role="tab" aria-controls="timecheques-pane" aria-selected="true">
-                            Zeitschecks
+                            Zeitschecks gekauft
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="transfers-tab" data-bs-toggle="tab" data-bs-target="#transfers-pane" type="button" role="tab" aria-controls="transfers-pane" aria-selected="false">
-                            Leistungsempfänger
+                            Zeitschecks übergeben
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="received-tab" data-bs-toggle="tab" data-bs-target="#received-pane" type="button" role="tab" aria-controls="received-pane" aria-selected="false">
-                            Leistungserbringer
+                            Zeitschecks erhalten
                         </button>
                     </li>
                 </ul>
@@ -213,12 +234,12 @@
                     </div>
                     <div class="tab-pane fade" id="transfers-pane" role="tabpanel" aria-labelledby="transfers-tab" tabindex="0">
                         <div class="pt-3">
-                            @template.components.list-timetransfers-component(member = member, transfers = givenTimeTransfers)
+                            @template.components.list-timetransfers-given-component(member = member, transfers = givenTimeTransfers)
                         </div>
                     </div>
                     <div class="tab-pane fade" id="received-pane" role="tabpanel" aria-labelledby="received-tab" tabindex="0">
                         <div class="pt-3">
-                            @template.components.list-timetransfers-component(member = member, transfers = receivedTimeTransfers)
+                            @template.components.list-timetransfers-received-component(member = member, transfers = receivedTimeTransfers)
                         </div>
                     </div>
                 </div>
@@ -228,10 +249,124 @@
         </div>
     @endif
 
+    <script>
+        (function() {
+            const salutation = document.getElementById('salutation');
+            const title = document.getElementById('title');
+            const firstName = document.getElementById('firstName');
+            const lastName = document.getElementById('lastName');
+            const email = document.getElementById('email');
+            const institution = document.getElementById('institut');
+            const role = document.getElementById('role');
+            const directDebitAuthorization = document.getElementById('directDebitAuthorization');
+
+            const firstNameHidden = document.getElementById('firstName-hidden');
+            const lastNameHidden = document.getElementById('lastName-hidden');
+            const institutionHidden = document.getElementById('institution-hidden');
+            const roleHidden = document.getElementById('role-hidden');
+            const titleHidden = document.getElementById('title-hidden');
+            const emailHidden = document.getElementById('email-hidden');
+
+            const isExisting = ${member.getId() != null};
+            const savedSalutation = '${member.getSalutation() != null ? member.getSalutation() : ""}';
+
+            // Preserve user-entered values when toggling Sozialkonto on/off
+            const snapshot = {
+                title: title.value,
+                firstName: firstName.value,
+                lastName: lastName.value,
+                email: email.value,
+                institution: institution.value,
+                role: role.value,
+                directDebitAuthorization: directDebitAuthorization.checked
+            };
+
+            const mirror = (field, hidden, enabled) => {
+                if (enabled) {
+                    hidden.removeAttribute('name');
+                    hidden.value = '';
+                    field.disabled = false;
+                } else {
+                    hidden.name = field.name;
+                    hidden.value = field.value;
+                    field.disabled = true;
+                }
+            };
+
+            const applySocialLock = (enable) => {
+                if (enable) {
+                    snapshot.title = title.value;
+                    snapshot.firstName = firstName.value;
+                    snapshot.lastName = lastName.value;
+                    snapshot.email = email.value;
+                    snapshot.institution = institution.value;
+                    snapshot.role = role.value;
+                    snapshot.directDebitAuthorization = directDebitAuthorization.checked;
+
+                    title.value = '';
+                    institution.value = 'Nachbarschaftshilfe';
+                    firstName.value = 'SOZIALKONTO';
+                    lastName.value = 'NACHBARSCHAFTSHILFE';
+                    role.value = '';
+
+                    mirror(title, titleHidden, false);
+                    mirror(institution, institutionHidden, false);
+                    mirror(firstName, firstNameHidden, false);
+                    mirror(lastName, lastNameHidden, false);
+                    mirror(role, roleHidden, false);
+
+                    directDebitAuthorization.disabled = true;
+                    directDebitAuthorization.checked = false;
+                } else {
+                    mirror(title, titleHidden, true);
+                    mirror(institution, institutionHidden, true);
+                    mirror(firstName, firstNameHidden, true);
+                    mirror(lastName, lastNameHidden, true);
+                    mirror(role, roleHidden, true);
+
+                    title.value = snapshot.title;
+                    institution.value = snapshot.institution;
+                    firstName.value = snapshot.firstName;
+                    lastName.value = snapshot.lastName;
+                    role.value = snapshot.role;
+
+                    directDebitAuthorization.disabled = false;
+                    directDebitAuthorization.checked = snapshot.directDebitAuthorization;
+                }
+            };
+
+            const enforceSalutationOptions = () => {
+                const options = Array.from(salutation.options);
+                if (!isExisting) {
+                    return;
+                }
+
+                if (savedSalutation === 'SOZIALKONTO') {
+                    options.forEach(opt => {
+                        opt.disabled = opt.value !== 'SOZIALKONTO';
+                        opt.hidden = opt.value !== 'SOZIALKONTO';
+                    });
+                    salutation.value = 'SOZIALKONTO';
+                    salutation.disabled = true;
+                } else {
+                    options
+                        .filter(opt => opt.value === 'SOZIALKONTO')
+                        .forEach(opt => opt.remove());
+                }
+            };
+
+            const handleSalutationChange = () => {
+                const isSocial = salutation.value === 'SOZIALKONTO';
+                applySocialLock(isSocial);
+            };
+
+            enforceSalutationOptions();
+            handleSalutationChange();
+            salutation.addEventListener('change', handleSalutationChange);
+        })();
+    </script>
+
 `)
-
-
-
 
 
 

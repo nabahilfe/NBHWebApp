@@ -145,21 +145,26 @@ public class MemberController {
     }
 
 
-    @GetMapping("/register")
-    String registerMember(final Model model) {
-        log.debug("Registering new Member");
-        return "members/validate-email";
+    @GetMapping("/birthdays")
+    String listBirthdays(final Model model) {
+        model.addAttribute("currentMonth", memberRepository.findBirthdaysByMonthOffset(0));
+        model.addAttribute("nexttMonth", memberRepository.findBirthdaysByMonthOffset(1));
+        return "members/birthdays";
     }
 
-    @PostMapping("/register")
 
-
-    @GetMapping("/login")
-    String loginMember(final Model model) {
-        log.debug("Member login");
-        return "members/login-member";
+    @GetMapping("/mydata/{id}")
+    String myData(final Model model, @PathVariable Long id) {
+        log.debug("Showing MyData for Member: {}", id);
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id
+                        + ". Please ensure the ID is correct and the member exists in the database."));
+        model.addAttribute("roleNames", member.getRole() != null ? member.getRole().getRoleName() : "Mitglied");
+        model.addAttribute("receivedTimeTransfers", timeTransferRepository.findAllByToMember_IdOrderByDateOfServiceDesc(id));
+        model.addAttribute("givenTimeTransfers", timeTransferRepository.findAllByFromMember_IdOrderByDateOfServiceDesc(id));
+        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(id));
+        return "members/view-member-data";
     }
-
 
     // --------------------
     // CREATE NEW, UPDATE
@@ -175,7 +180,7 @@ public class MemberController {
     @Transactional
     @PostMapping
     public String saveMember(Model model, @ModelAttribute @Valid Member member,
-                RedirectAttributes redirectAttributes, BindingResult result) {
+                BindingResult result, RedirectAttributes redirectAttributes) {
 
         log.debug("Will Save Member afer Validation: {}", member);
 
@@ -189,6 +194,12 @@ public class MemberController {
             member.setMemberNmbr(getNextMemberNumber());
             member.setJoiningDate(LocalDate.now());
             member.setIsImportedMember(false);
+
+            String error = validateOnlyOneSozialkonto(member);
+            if (error != null) {
+                model.addAttribute("errorMessage", error);
+                return "members/detail-member";
+            }
         }
 
         log.debug("Saving Member: {}", member);
@@ -204,6 +215,15 @@ public class MemberController {
     }
 
 
+    private String validateOnlyOneSozialkonto(@Valid Member member) {
+        if (member.getSalutation() != null && member.getSalutation().equals(NbhConst.SOZIALKONTO) && memberRepository.findBySalutation(NbhConst.SOZIALKONTO).size() > 0) {
+            return "Es gibt bereits ein Sozialkonto, es kann kein weiteres Sozialkonto angelgt werden!";
+        }
+
+        return null;
+    }
+
+
     private Integer getNextMemberNumber() {
         return memberRepository.findTopByOrderByMemberNmbrDesc()
                 .map(m -> m.getMemberNmbr() + 1)
@@ -213,10 +233,10 @@ public class MemberController {
 
     @PostMapping("/{id}")
     public String updateMember(Model model, @ModelAttribute @Valid Member member,
-            @RequestParam(required = false) Long roleId,
-            RedirectAttributes redirectAttributes, BindingResult result, @PathVariable Long id) {
+            BindingResult result, @RequestParam(required = false) Long roleId,
+            RedirectAttributes redirectAttributes, @PathVariable Long id) {
         log.debug("Update Member with id {}: {}", id, member);
-        return saveMember(model, member, redirectAttributes, result);
+        return saveMember(model, member, result, redirectAttributes);
     }
 
 

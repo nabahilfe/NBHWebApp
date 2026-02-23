@@ -24,16 +24,14 @@
 
 <div class="card">
     <div class="card-body">
-        <h5>Gehandelte Zeitschecks</h5>
-        <p class="card-text"><strong>${member.getName()}</strong></p>
+        <p class="card-text"><strong>${member.getName()} - Erhaltene Zeitschecks</strong></p>
         <div class="table-responsive">
 
             <table class="table table-hover table-sm" id="memberTable">
                 <thead>
                     <tr>
                         <th scope="col">Datum</th>
-                        <th scope="col">von</th>
-                        <th scope="col">an</th>
+                        <th scope="col">erhalten von</th>
                         <th scope="col">Kategorie</th>
                         <th scope="col" class="text-end">Stunden</th>
                     </tr>
@@ -43,7 +41,6 @@
                         <tr>
                             <td scope="row">${dateDE(tt.getDateOfService())}</td>
                             <td scope="row">${boldMemberNameIfSameId(member.getId(), tt.getFromMember())}</td>
-                            <td scope="row">${boldMemberNameIfSameId(member.getId(), tt.getToMember())}</td>
                             <td scope="row">${tt.getOffer().getDescription()}</td>
                             <td scope="row" class="text-end">${tt.getHours()}</td>
                         </tr>

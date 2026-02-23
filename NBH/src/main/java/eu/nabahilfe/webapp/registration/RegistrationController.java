@@ -5,6 +5,7 @@ import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
@@ -29,6 +31,7 @@ public class RegistrationController {
 
     private final MemberRepository memberRepository;
     private final RegistrationCodeRepository registrationCodeRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private static final Logger log = LoggerFactory.getLogger(RegistrationController.class);
 
@@ -39,15 +42,18 @@ public class RegistrationController {
     }
 
 
-    public RegistrationController(MemberRepository memberRepository, RegistrationCodeRepository registrationCodeRepository) {
+    public RegistrationController(MemberRepository memberRepository, RegistrationCodeRepository registrationCodeRepository,
+            PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.registrationCodeRepository = registrationCodeRepository;
+        this.passwordEncoder = passwordEncoder;
+
     }
 
 
     @GetMapping("/email")
     public String showEmailForm(@Valid @ModelAttribute("email") String email, BindingResult binding,
-            @ModelAttribute("registrationSession") RegistrationSession session ) {
+            @ModelAttribute("registrationSession") RegistrationSession session, HttpServletRequest request) {
 
         return "registration/email";
     }
@@ -56,7 +62,7 @@ public class RegistrationController {
 
     @PostMapping("/email")
     public String processEmail(Model model, @Valid @RequestParam("email") String email,
-            @ModelAttribute("registrationSession") RegistrationSession session ) {
+            @ModelAttribute("registrationSession") RegistrationSession session, HttpServletRequest request) {
 
         email = email.trim().toLowerCase();
 
@@ -81,6 +87,18 @@ public class RegistrationController {
         return "redirect:/registration/confirm";
     }
 
+
+    @GetMapping("/logout")
+    public String showLogoutForm(Model model, HttpServletRequest request) {
+        return "registration/logout";
+    }
+
+
+    @PostMapping("/logout")
+    public String doLogout(Model model, HttpServletRequest request, SessionStatus sessionStatus) {
+        sessionStatus.setComplete();
+        return "redirect:/";
+    }
 
 
     @GetMapping("/confirm")
@@ -123,8 +141,7 @@ public class RegistrationController {
 
 
         Member member = memberRepository.findByEmail(session.getEmail());
-        // FIXME - Implementation missing hashing for password
-        member.setPassword(form.getPassword());
+        member.setPassword(passwordEncoder.encode(form.getPassword()));
 
         // delete all existing codes for this email
         long deleted = registrationCodeRepository.deleteByEmail(session.getEmail());
@@ -151,7 +168,7 @@ public class RegistrationController {
 
 
     @PostMapping("/login")
-    public String processLogin(Model model, @RequestParam("email") String email, @RequestParam("password") String password) {
+    public String processLogin(Model model, @RequestParam("username") String email, @RequestParam("password") String password, HttpServletRequest request) {
 
         if (email != null) {
             email = email.trim().toLowerCase();

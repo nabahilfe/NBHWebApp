@@ -13,7 +13,19 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@template.layout.main(content = @`
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
+
+
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
+
+@template.layout.mainpage(
+    csrfHiddenInput = csrfHiddenInput,
+    ctxt = ctxt,
+    content = @`
 
     <h3>Aktuelles Zeitguthaben</h3>
 
@@ -36,7 +48,7 @@
 
     <div class="card">
         <div class="card-body">
-            <h5>Erworbene Zeitschecks von FIXME: Username</h5>
+            <h5>Erworbene Zeitschecks</h5>
 
             <table class="table table-hover table-sm" id="memberTable">
                 <thead>

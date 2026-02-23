@@ -1,12 +1,17 @@
 package eu.nabahilfe.webapp.members;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
+import eu.nabahilfe.webapp.GlobalAuditListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,8 +28,10 @@ import jakarta.validation.constraints.Size;
  * Rollen im Verein. Über die Rollen werden auch die Berechtigungen vergeben.
  */
 @Entity
+@EntityListeners(GlobalAuditListener.class)
 @Table(name = "ROLES")
-public class Role  {
+public class Role implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -212,4 +219,44 @@ public class Role  {
         this.isTreasurer = false;
         this.isSecretary = false;
     }
+
+    // for spring security
+
+    public Set<String> getAuthorities() {
+
+        Set<String> auths = new HashSet<>();
+
+        auths.add("ROLE_USER");   // Alle Rollen haben die Rolle USER
+
+        if (Boolean.TRUE.equals(isAdmin)) {
+            auths.add("ROLE_ADMIN");
+        }
+
+        if (Boolean.TRUE.equals(isBoardMember)) {
+            auths.add("ROLE_BOARD_MEMBER");
+        }
+
+        if (Boolean.TRUE.equals(isTreasurer)) {
+            auths.add("ROLE_TREASURER");
+        }
+
+        if (Boolean.TRUE.equals(isSecretary)) {
+            auths.add("ROLE_SECRETARY");
+        }
+
+        if (Boolean.TRUE.equals(isAuditor)) {
+            auths.add("ROLE_AUDITOR");
+        }
+
+        if (Boolean.TRUE.equals(isTimeKeeper)) {
+            auths.add("ROLE_TIME_KEEPER");
+        }
+
+        if (Boolean.TRUE.equals(isMiscellaneous)) {
+            auths.add("ROLE_MISC");
+        }
+
+        return auths;
+    }
+
 }

@@ -11,7 +11,19 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@template.layout.main(content = @`
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
+
+
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
+
+@template.layout.mainpage(
+    csrfHiddenInput = csrfHiddenInput,
+    ctxt = ctxt,
+    content = @`
 
     <h3>Zeitscheck verbuchen</h3>
 
@@ -30,14 +42,16 @@
 
     <!-- Main form: POST to /timetransfers; server processes the submitted fields -->
     <form action="/timetransfers" method="post">
+        ${csrfHiddenInput}
+        <input type="hidden" name="fromself" id="fromself" value="false">
 
         <div class="row">
           <div class="col-sm-6">
             <div class="card">
               <div class="card-body bg-success bg-opacity-10">
 
-                <h5 class="card-title text-primary">Leistungsempfänger</h5>
-                <p class="card-text text-success">Gibt Zeitscheck an Leistungserbringer</p>
+                <h5 class="card-title text-primary">Zeitscheck von</h5>
+                <p class="card-text text-success">Gibt Zeitscheck ab</p>
 
                 <!--
                   Payer input (userFrom): visible text input for autocomplete search
@@ -73,10 +87,10 @@
                 </div>
 
                 <!-- Service date: required date input (yyyy-mm-dd). Prefilled when editing. -->
-                <label for="dateOfService" class="col-sm-10 col-form-label">Leistungsdatum</label>
+                <label for="dateOfService" class="col-sm-10 col-form-label">Datum</label>
                 <div class="col-sm-10">
                       <input type="date" class="form-control" name="dateOfService" id="dateOfService"
-                          value="${ttf == null ? "" : dateDE(ttf.getServiceDate())}" required>
+                          value="${ttf == null ? "" : formatISO(ttf.getServiceDate())}" required>
                 </div>
 
                 <!-- Hours selector: choose 1..5 hours. Preselect when ttf provided. -->
@@ -101,8 +115,8 @@
             <div class="card">
               <div class="card-body bg-success bg-opacity-10">
 
-                <h5 class="card-title text-primary">Leistungserbringer</h5>
-                <p class="card-text text-success">Erhält Zeitscheck vom Leistungsempfänger</p>
+                <h5 class="card-title text-primary">Zeitscheck an</h5>
+                <p class="card-text text-success">Erhält Zeitscheck</p>
 
                 <!--
                   Payee input (userTo): same structure as userFrom

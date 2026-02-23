@@ -7,8 +7,19 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
 
-@template.layout.main(content = @`
+
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
+
+@template.layout.mainpage(
+    csrfHiddenInput = csrfHiddenInput,
+    ctxt = ctxt,
+    content = @`
 
     <h3>
         ${role.getId() != null ? "Rolle bearbeiten" : "Neue Rolle anlegen"}
@@ -21,7 +32,7 @@
 
         <!-- first action is for save, second action is for update -->
         <form action="${role.getId() == null ? "/roles" : "/roles/" + role.getId()}" method="post">
-
+          ${csrfHiddenInput}
           <div class="form-group row">
             <label for="roleName" class="col-sm-2 col-form-label">Rollenbezeichnung <span class="text-danger">*</span></label>
             <div class="col-sm-10">

@@ -5,7 +5,19 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@template.layout.main(content = @`
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
+
+
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
+
+@template.layout.mainpage(
+    csrfHiddenInput = csrfHiddenInput,
+    ctxt = ctxt,
+    content = @`
 
     <h3>Rollen und Berechtigungen für Mitglieder
         <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#helpModal">
@@ -115,6 +127,7 @@
 
     <!-- Hidden form so we can submit the delete -->
     <form id="deleteForm" method="post" style="display: none;">
+        ${csrfHiddenInput}
         <input type="hidden" name="roleId" id="roleIdInput">
     </form>
 

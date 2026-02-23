@@ -14,13 +14,22 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@template.layout.main(content = @`
+
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
+
+@template.layout.mainpage(
+    csrfHiddenInput = csrfHiddenInput,
+    ctxt = ctxt,
+    content = @`
 
     <h3>Zeitscheck erstellen für</h3>
     <br/>
 
 
     <form id="tcForm" action="/timecheques" method="POST">
+        ${csrfHiddenInput}
         <div class="card">
             <div class="card-body bg-success bg-opacity-10">
                 <h4 class="text-primary">${timeCheque.getAssignedTo().getName()}</h4>
@@ -61,8 +70,7 @@
     <br/>
     <div class="card">
         <div class="card-body">
-            <!-- FIXME: Username -->
-            <h5>Erworbene Zeitschecks von FIXME: Username</h5>
+            <h5>Erworbene Zeitschecks</h5>
 
             <table class="table table-hover table-sm" id="memberTable">
                 <thead>

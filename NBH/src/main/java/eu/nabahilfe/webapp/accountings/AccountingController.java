@@ -1,11 +1,9 @@
 package eu.nabahilfe.webapp.accountings;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,11 +12,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import eu.nabahilfe.webapp.timecheques.TimeCheque;
 import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
@@ -126,7 +122,7 @@ public class AccountingController {
         log.debug("AccountingEntry saved with ID: " + accountingEntry.getId());
 
         redirectAttributes.addFlashAttribute("accountingEntry", accountingEntry);
-        redirectAttributes.addFlashAttribute("successMessage", "Accounting entry saved successfully.");
+        redirectAttributes.addFlashAttribute("successMessage", "Buchung wurde gespeichert.");
         return "redirect:/accountings/view-accounting/" + accountingEntry.getId();
     }
 

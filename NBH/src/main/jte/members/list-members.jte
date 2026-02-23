@@ -13,8 +13,17 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@template.layout.main(
-    searchTerm = searchTerm,
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
+
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
+
+@template.layout.mainpage(
+    csrfHiddenInput = csrfHiddenInput,
+    ctxt = ctxt,
     content = @`
 
   <!-- Hidden form to handle sorting -->
@@ -105,6 +114,7 @@
 
     <!-- Hidden form so we can submit the delete -->
     <form id="hiddenForm" method="post" style="display: none;">
+        ${csrfHiddenInput}
         <input type="hidden" name="memberId" id="memberIdInput">
     </form>
 

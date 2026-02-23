@@ -1,6 +1,44 @@
+
+
+/***********************************************************/
+/* ATTENTION! DO NOT OVERWWRITE THE SPRING_SESSION TABLES! */
+/***********************************************************/
+
+/* für die Persistierung der SPRING_SESSION Funktionalität von Spring Security */
+
+CREATE TABLE SPRING_SESSION (
+    PRIMARY_ID CHAR(36) NOT NULL,
+    SESSION_ID CHAR(36) NOT NULL,
+    CREATION_TIME BIGINT NOT NULL,
+    LAST_ACCESS_TIME BIGINT NOT NULL,
+    MAX_INACTIVE_INTERVAL INT NOT NULL,
+    EXPIRY_TIME BIGINT NOT NULL,
+    PRINCIPAL_NAME VARCHAR(100),
+    CONSTRAINT SPRING_SESSION_PK PRIMARY KEY (PRIMARY_ID)
+);
+
+CREATE UNIQUE INDEX SPRING_SESSION_IX1 ON SPRING_SESSION (SESSION_ID);
+CREATE INDEX SPRING_SESSION_IX2 ON SPRING_SESSION (EXPIRY_TIME);
+CREATE INDEX SPRING_SESSION_IX3 ON SPRING_SESSION (PRINCIPAL_NAME);
+
+CREATE TABLE SPRING_SESSION_ATTRIBUTES (
+    SESSION_PRIMARY_ID CHAR(36) NOT NULL,
+    ATTRIBUTE_NAME VARCHAR(200) NOT NULL,
+    ATTRIBUTE_BYTES BYTEA NOT NULL,
+    CONSTRAINT SPRING_SESSION_ATTRIBUTES_PK PRIMARY KEY (SESSION_PRIMARY_ID, ATTRIBUTE_NAME),
+    CONSTRAINT SPRING_SESSION_ATTRIBUTES_FK FOREIGN KEY (SESSION_PRIMARY_ID)
+        REFERENCES SPRING_SESSION(PRIMARY_ID) ON DELETE CASCADE
+);
+
+/***********************************************************/
+/* ATTENTION! DO NOT OVERWWRITE THE SPRING_SESSION TABLES! */
+/***********************************************************/
+
+
+
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-02-12 14:15:11
+ * Generated at 2026-02-22 12:15:34
  * ModelDescription: NBH Entity Modell
  */
 
@@ -85,10 +123,24 @@ create table if not exists EVENTS (
 );
 
 
+/* Texte für die HP. Erfassung als MarkDown, angezeigt wird daraus generiertes HTML */
+create table if not exists TEXT_CONTENTS (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    content_code VARCHAR(20) /* Aus ENUM - Für welches Element gilt der Text */,
+    md_text VARCHAR(4000) /* Text mit Markdoen formatiert */,
+    html_text VARCHAR(4000) /* Aus dem Markdown Text generierter HTML Text */,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,
+    version INTEGER NOT NULL
+);
+
+
 /* Einmal-Codes für die Registrierung mit E-Mail und Code. */
 create table if not exists REGISTRATION_CODES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    code VARCHAR(10) not null /* Zufällige 2-stellige Zahl */,
+    code VARCHAR(10) not null /* Zufällige 6-stellige Zahl */,
     email VARCHAR(80) not null /* E-Mail zum Code */,
     expires_at TIMESTAMP not null /* Gültigkeitsdauer des Codes */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -283,6 +335,11 @@ alter table ASSOCIATIONS
 ;
 
 
+alter table TEXT_CONTENTS
+    add constraint uc_content_code_text_contents unique (content_code)
+;
+
+
 alter table MEMBERS
     add constraint uc_nmbr_members unique (member_nmbr),
     add constraint uc_email_members unique (email)
@@ -326,6 +383,8 @@ drop table if exists ROLES cascade;
 drop table if exists AMOUNT_DOMAIN_VALUES cascade;
 
 drop table if exists EVENTS cascade;
+
+drop table if exists TEXT_CONTENTS cascade;
 
 drop table if exists REGISTRATION_CODES cascade;
 

@@ -8,10 +8,12 @@ import java.util.Objects;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import eu.nabahilfe.webapp.GlobalAuditListener;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.timecheques.TimeCheque;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,6 +30,7 @@ import jakarta.validation.constraints.Size;
  * Buchungsdatensatz zu Zeitscheck-Kauf, Mitgliedschaft, Weihnachtsessen, usw.
  */
 @Entity
+@EntityListeners(GlobalAuditListener.class)
 @Table(name = "ACCOUNTING_ENTRIES")
 public class AccountingEntry  {
 

@@ -1,7 +1,6 @@
 package eu.nabahilfe.webapp.accountings;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 /**
  * Interface für alles was verbucht wird (Zeitscheck kauf, Mitgliedschaft...)

@@ -31,4 +31,6 @@ public final class NbhConst {
     public static final String ACCOUNTING_OUTGOING = "OUTGOING";
 
 
+    public static final String SOZIALKONTO = "SOZIALKONTO";
+
 }

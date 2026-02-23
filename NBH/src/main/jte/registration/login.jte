@@ -1,7 +1,19 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@template.layout.main(content = @`
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
+
+
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
+
+@template.layout.mainpage(
+    csrfHiddenInput = csrfHiddenInput,
+    ctxt = ctxt,
+    content = @`
 
 @if(successMessage != null)
 
@@ -10,19 +22,20 @@
 @else
 
     <h3>Anmelden</h3>
-    <p>Bitte melde dich mit deiner E-Mail-Adresse und deinem Passwort an.</p>
+    <p>Bitte melde dich mit deiner E-Mail und deinem Passwort an.</p>
 
     <form action="/registration/login" method="post" class="needs-validation" novalidate>
+        ${csrfHiddenInput}
         <div class="mb-3">
-            <label for="email" class="form-label">E-Mail-Adresse<span class="text-danger">*</span></label>
+            <label for="username" class="form-label">E-Mail<span class="text-danger">*</span></label>
             <input type="email"
                    class="form-control"
-                   id="email"
-                   name="email"
+                   id="username"
+                   name="username"
                    placeholder="name@example.com"
                    autocomplete="username"
                    required>
-            <div class="invalid-feedback">Bitte eine gültige E-Mail-Adresse eingeben.</div>
+            <div class="invalid-feedback">Bitte eine gültige E-Mail eingeben.</div>
         </div>
 
         <div class="mb-3">

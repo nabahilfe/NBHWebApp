@@ -26,8 +26,7 @@
 
 <div class="card">
     <div class="card-body">
-        <h5>Erworbene Zeitschecks</h5>
-        <p class="card-text"><strong>${member.getName()}</strong></p>
+        <p class="card-text"><strong>${member.getName()} - Gekaufte Zeitschecks</strong></p>
 
         <table class="table table-hover table-sm" id="memberTable">
             <thead>

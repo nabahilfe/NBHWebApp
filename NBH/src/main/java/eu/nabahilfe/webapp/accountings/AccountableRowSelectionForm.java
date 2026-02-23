@@ -1,13 +1,10 @@
 package eu.nabahilfe.webapp.accountings;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-
-import eu.nabahilfe.webapp.members.Member;
 
 public class AccountableRowSelectionForm implements Accountable {
 
-    private String accountableClassName;    	// MemberFee, TimeCheque, Transaction, ...
+    private String accountableClassName;    // MemberFee, TimeCheque, Transaction, ...
     private Long accountableId;				// ID der konkreten Accountable Entity, also der accountableClass
 
     private Long accountableMemberId;    	// Nur bei Zeitscheck-Kauf oder Mitgliedsgebühr relevant, sonst null

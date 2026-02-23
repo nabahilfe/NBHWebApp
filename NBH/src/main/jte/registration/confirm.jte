@@ -3,18 +3,31 @@
 
 @param eu.nabahilfe.webapp.registration.RegisterConfirmForm form = null
 
-@template.layout.main(content = @`
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
+
+
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
+
+@template.layout.mainpage(
+    csrfHiddenInput = csrfHiddenInput,
+    ctxt = ctxt,
+    content = @`
 
     <h3>Registrieren</h3>
     <p>Bitte gib deinen Code und ein sicheres Passwort ein, um dein Konto zu aktivieren.</p>
 
     <form action="/registration/confirm" method="post" class="needs-validation" novalidate>
+        ${csrfHiddenInput}
         <div class="mb-3">
-            <label for="email" class="form-label">Deine E-Mail Adresse</label>
-            <input type="email" readonly
+            <label for="username" class="form-label">Deine E-Mail Adresse</label>
+            <input type="email"
                    class="form-control"
-                   id="email"
-                   name="email"
+                   id="username"
+                   name="username"
                    value="${form.getEmail()}"
                    required>
             <div class="invalid-feedback">Bitte eine gültige E-Mail Adresse eingeben.</div>

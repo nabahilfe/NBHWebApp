@@ -9,8 +9,19 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
+@param String fullUsername = null
+@param String username = null
+@param Boolean isAuthenticated = false
 
-@template.layout.main(content = @`
+
+@param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
+
+@template.layout.mainpage(
+    csrfHiddenInput = csrfHiddenInput,
+    ctxt = ctxt,
+    content = @`
 
     <h3>Buchung</h3>
 

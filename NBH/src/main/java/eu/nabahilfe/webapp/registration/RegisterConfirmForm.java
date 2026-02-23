@@ -11,7 +11,7 @@ public class RegisterConfirmForm {
     private String password;
 
     @NotBlank
-    private String email;
+    private String username;
 
     public String getCode() {
         return code;
@@ -29,12 +29,23 @@ public class RegisterConfirmForm {
         this.password = password;
     }
 
+    // for registration and login, we use the email as username, so we can have getEmail and setEmail for better readability
+
     public String getEmail() {
-        return email;
+        return username;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.username = email;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 
 }
