@@ -9,6 +9,7 @@ import java.util.Set;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import eu.nabahilfe.webapp.GlobalAuditListener;
+import eu.nabahilfe.webapp.NbhConst;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -97,7 +98,7 @@ public class Role implements Serializable {
     }
 
     public Boolean getIsAdmin() {
-        return isAdmin;
+        return isAdmin == null ? false : isAdmin;
     }
 
     public void setIsAdmin(Boolean isAdmin) {
@@ -128,13 +129,15 @@ public class Role implements Serializable {
         this.version = version;
     }
 
+    // TODO BRAUCHEN WIR DAS?
     public String adminSymbol() {
-        if (isAdmin) return "✔️";
+        if (Boolean.TRUE.equals(isAdmin)) return "✔️";
         return "";
     }
 
+    // TODO BRAUCHEN WIR DAS?
     public String boardMemberSymbol() {
-        if (isBoardMember) return "✔️";
+        if (Boolean.TRUE.equals(isBoardMember)) return "✔️";
         return "";
     }
 
@@ -176,6 +179,10 @@ public class Role implements Serializable {
 
     public void setIsSecretary(Boolean isSecretary) {
         this.isSecretary = isSecretary;
+    }
+
+    public boolean isSystemAdminiRole() {
+        return NbhConst.ADMIN_ROLE_NAME.equalsIgnoreCase(roleName);
     }
 
 

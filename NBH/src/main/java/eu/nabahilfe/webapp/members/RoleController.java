@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import eu.nabahilfe.webapp.NbhConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -60,8 +61,16 @@ public class RoleController {
 
 
     @GetMapping("/{id}")
-    String editRole(final Model model, @PathVariable Long id) {
+    String editRole(final Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
         Optional<Role> role = roleRepository.findById(id);
+        if (role.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Rolle mit ID " + id + " wurde nicht gefunden.");
+            return "redirect:/roles";
+        }
+        if (NbhConst.ADMIN_ROLE_NAME.equalsIgnoreCase(role.get().getRoleName())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Die Rolle '" + NbhConst.ADMIN_ROLE_NAME+ "' kann nicht geändert werden.");
+            return "redirect:/roles";
+        }
         model.addAttribute("role", role.get());
         log.debug("Editing Role: {}", role.get());
         return "roles/detail-role";
@@ -83,6 +92,15 @@ public class RoleController {
     @PostMapping
     String saveRole(Model model, @ModelAttribute @Valid Role role,
             RedirectAttributes redirectAttributes, BindingResult result, HttpServletRequest request) {
+
+        boolean isPersistedAdmin = role.getId() != null && roleRepository.findById(role.getId())
+                .map(r -> NbhConst.ADMIN_ROLE_NAME.equalsIgnoreCase(r.getRoleName()))
+                .orElse(false);
+
+        if (isPersistedAdmin || NbhConst.ADMIN_ROLE_NAME.equalsIgnoreCase(role.getRoleName())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Die Rolle '" + NbhConst.ADMIN_ROLE_NAME + "' kann nicht geändert werden.");
+            return "redirect:/roles";
+        }
 
         String roleError = validateRoleAttributes(role);
         if (roleError != null) {
@@ -111,6 +129,14 @@ public class RoleController {
     String deleteRole(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
         Optional<Role> role = roleRepository.findById(id);
+        if (role.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Rolle mit ID " + id + " wurde nicht gefunden.");
+            return "redirect:/roles";
+        }
+        if (NbhConst.ADMIN_ROLE_NAME.equalsIgnoreCase(role.get().getRoleName())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Die Rolle '" + NbhConst.ADMIN_ROLE_NAME + "' kann nicht gelöscht werden.");
+            return "redirect:/roles";
+        }
         roleRepository.delete(role.get());
         redirectAttributes.addFlashAttribute("successMessage", "Rolle " + role.get().getRoleName() + " wurde gelöscht.");
         log.debug("Role with id {} deleted.", id);
@@ -174,8 +200,8 @@ public class RoleController {
             return "Es darf nur eine Vereinsrolle (Vorstand, Kassier, Schriftführer, Rechnungsprüfer) ausgewählt werden!";
 
         // Check rule 3: ZUSATZ-ROLLE Admin und TimeKeeper müssen eine der Vereinsrollen BoardMember, Treasurer, Secretary haben
-        if ((role.getIsAdmin() || role.getIsTimeKeeper()) && !(role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary()))
-            return "Rollen mit Funktion 'Administrator' oder 'Zeitschecks' müssen eine der Vereinsrollen Vorstand, Kassier oder Schriftführer haben!";
+        if ((role.getIsTimeKeeper()) && !(role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary()))
+            return "Rollen mit Funktion 'Zeitschecks' müssen eine der Vereinsrollen Vorstand, Kassier oder Schriftführer haben!";
 
         // Check rule 4: Admin nicht mit TimeKeeper kombinieren, da Admin alle Rechte hat und TimeKeeper nur Zeit-Schecks vergeben kann
         if (role.getIsAdmin() && role.getIsTimeKeeper())

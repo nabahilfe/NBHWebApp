@@ -49,7 +49,7 @@
              </ul>
              <p>Einer <b>Rolle</b> können auch <b>mehrere Berechtigungen</b> zugeordnet werden, z.B. Obmann/Obfrau auch die Berechtigung für Zeitschecks,
                 oder ein Schriftführer könnte auch Administrator sein.</p>
-             <p>Die Funktionen <b>Zeitschecks</b> und <b>Administrator</b> müssen immer mit einer Vereins-Funktion wie Vorstand, Schriftführer oder Kassier kombiniert werden.</p>
+             <p>Die Funktionen <b>Zeitschecks</b> musse immer mit einer Vereins-Funktion wie Vorstand, Schriftführer oder Kassier kombiniert werden.</p>
              <b>Die Funktionen <i>Prüfer</i> und <i>Sonstiges</i> lassen sich <i>nicht</i> mit anderen Berechtigungen kombinieren!</b>
           </div>
         </div>
