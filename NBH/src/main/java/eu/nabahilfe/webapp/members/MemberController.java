@@ -136,7 +136,13 @@ public class MemberController {
 
 
     @GetMapping("/{id}")
-    String editMember(final Model model, @PathVariable Long id) {
+    String editMember(final Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Optional<Member> member = memberRepository.findById(id);
+        if (member.isPresent() && isSystemAdmin(member.get())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Das Mitglied 'System Administrator' kann nicht geändert werden.");
+            return "redirect:/members";
+        }
         log.debug("Editing Member: {}", id);
         model.addAttribute("receivedTimeTransfers", timeTransferRepository.findAllByToMember_IdOrderByDateOfServiceDesc(id));
         model.addAttribute("givenTimeTransfers", timeTransferRepository.findAllByFromMember_IdOrderByDateOfServiceDesc(id));
@@ -183,6 +189,18 @@ public class MemberController {
                 BindingResult result, RedirectAttributes redirectAttributes) {
 
         log.debug("Will Save Member afer Validation: {}", member);
+
+        // Protect System-Administrator member from being modified
+        if (member.getId() != null && isSystemAdminById(member.getId())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Das Mitglied 'System Administrator' kann nicht geändert werden.");
+            return "redirect:/members";
+        }
+        if (NbhConst.ADMIN_EMAIL.equalsIgnoreCase(member.getEmail())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Die E-Mail-Adresse '" + NbhConst.ADMIN_EMAIL + "' ist für den System-Administrator reserviert.");
+            return "redirect:/members";
+        }
 
         String validationError = validateData(member);
         if (validationError != null) {
@@ -248,6 +266,11 @@ public class MemberController {
     @Transactional
     String deletMember(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
         Optional<Member> member = memberRepository.findById(id);
+        if (member.isPresent() && isSystemAdmin(member.get())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Das Mitglied 'System Administrator' kann nicht gelöscht werden.");
+            return "redirect:/members";
+        }
         memberRepository.delete(member.get());
         redirectAttributes.addFlashAttribute("successMessage", "Mitglied '" + member.get().getName() + "' wurde gelöscht.");
         log.debug("Deleted Member: {}", member.get());
@@ -267,5 +290,19 @@ public class MemberController {
         return null;
     }
 
+
+    // ------------------
+    // System-Administrator protection
+    // ------------------
+
+    private boolean isSystemAdmin(Member member) {
+        return NbhConst.ADMIN_EMAIL.equalsIgnoreCase(member.getEmail());
+    }
+
+    private boolean isSystemAdminById(Long id) {
+        return memberRepository.findById(id)
+                .map(this::isSystemAdmin)
+                .orElse(false);
+    }
 
 }

@@ -35,5 +35,7 @@ public final class NbhConst {
 
     public static final String ADMIN_ROLE_NAME = "System-Administrator";
 
+    public static final String ADMIN_EMAIL = "webmaster@nabahilfe.eu";
+
 
 }
