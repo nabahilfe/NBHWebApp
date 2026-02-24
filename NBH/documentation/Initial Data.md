@@ -25,7 +25,6 @@ Both entities, the user and the role, are not editable nor deletable.
   - admin@weissboeck.info
   - at least a second admin must be set
  
-
 **info@nabahilfe.eu** is the email address that is used for sending emails from the system. 
 
 - This email address is used for all outgoing emails, such as registration, notifications, etc.
@@ -36,6 +35,8 @@ Both entities, the user and the role, are not editable nor deletable.
 - incoming emails to this address are forwarded to email addresses as configured in hetzner Webmail of this account.
 - all incoming emails are deleted after forwarding to the configured accounts.
 - current forwarding configuration is as follows:
-  - 
+  - mweissboeck@gmail.com
+
+**test@nabhilfe.eu** only for testing
 
 
