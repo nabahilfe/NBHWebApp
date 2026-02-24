@@ -16,20 +16,21 @@
 
 <div class="card">
     <div class="card-header bg-success bg-opacity-10">
-        <strong>Vorstand</strong>
+        <strong>Mitglieder im Vorstand</strong>
     </div>
-    <div class="card-body p-0">
+    <div class="card-body p-0 pb-3">
         @if(boardMembers == null || boardMembers.isEmpty())
             <div class="p-3 text-muted">Keine Vorstandsmitglieder vorhanden.</div>
         @else
-            <div class="table-responsive">
+            <div class="table-responsive px-3">
                 <table class="table table-hover table-sm mb-0">
                     <thead>
                         <tr>
                             <th scope="col">Name</th>
-                            <th scope="col">Rolle</th>
+                            <th scope="col">Funktion</th>
                         </tr>
                     </thead>
+
                     <tbody class="table-group-divider">
                         @for(Member m : boardMembers)
                             <tr>
