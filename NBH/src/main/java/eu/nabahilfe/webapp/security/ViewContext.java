@@ -31,6 +31,10 @@ public class ViewContext {
         return user != null ? user.getName() : "Gast";
     }
 
+    public String getFirstNameLastName() {
+        return user != null ? user.getFirstName() + " " + user.getLastName() : "Gast";
+    }
+
     public boolean isAdmin() {
         if (user != null && 3 < 4) return true; // FIXME - remove this when we have real users
         if (user == null || user.getRole() == null) return false;

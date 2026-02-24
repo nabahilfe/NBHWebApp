@@ -57,7 +57,7 @@
                         <li class="nav-item dropdown">
                             @if (ctxt != null && ctxt.isAuthenticated())
                                 <button class="nav-link dropdown-toggle bi-person-square" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
-                                    ${ctxt.getUsername()}
+                                    ${ctxt.getFirstNameLastName()}
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/members/mydata/${ctxt.getUserId()}">Meine Daten</a></li>

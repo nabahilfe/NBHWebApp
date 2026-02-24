@@ -31,13 +31,15 @@ public class EmailComposer {
         EmailDetails details = new EmailDetails(
                 recipient,
                 "Registrierungscode für die Nachbarschaftshilfe",
-                "<p>Hallo " + name + "!</p>"
+                "<p><strong>Hallo " + name + "!</strong></p>"
                 + "Vielen Dank für Deine Registrierung bei der Nachbarschaftshilfe!<br>"
                 + "Hier ist dein Registrierungscode:<br>"
                 + "<h3>&nbsp;&nbsp;&nbsp;" + code + "</h3>"
                 + "<p>Bitte gib diesen Code auf der Registrierungsseite ein, um deine Registrierung abzuschließen.</p>"
                 + "<p>Falls du diese E-Mail nicht angefordert hast, kannst du sie einfach ignorieren.</p>"
                 + "<p>Liebe Grüße,<br>Dein Nachbarschaftshilfe Team</p>"
+                + "<br>"
+                + "<p><i>Diese E-Mail wurde automatisch generiert, bitte nicht antworten!</i></p>"
                 );
         return details;
     }
