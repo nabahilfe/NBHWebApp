@@ -6,6 +6,7 @@
 @param String termsOfService = ""
 @param String privacyPolicy = ""
 @param String legalNotice = ""
+@param java.util.List<eu.nabahilfe.webapp.members.Member> boardMembers = java.util.Collections.emptyList()
 
 
 
@@ -52,6 +53,10 @@
                     $unsafe{contact}
                 </p>
             </div>
+
+            <br>
+
+            @template.components.list-board-members(boardMembers = boardMembers)
 
         </div>
 

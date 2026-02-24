@@ -60,4 +60,11 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
 
     List<Member> findBySalutation(String salutation);
 
+    @EntityGraph(attributePaths = "role")
+    @org.springframework.data.jpa.repository.Query(
+        "SELECT m FROM Member m JOIN m.role r " +
+        "WHERE r.isBoardMember = true OR r.isTreasurer = true OR r.isSecretary = true " +
+        "ORDER BY r.isBoardMember DESC, r.isTreasurer DESC, r.isSecretary DESC")
+    List<Member> findBoardMembers();
+
 }
