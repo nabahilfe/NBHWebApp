@@ -14,11 +14,12 @@
 
 @param List<Member> boardMembers
 
-<div class="card">
-    <div class="card-header bg-success bg-opacity-10">
-        <strong>Mitglieder im Vorstand</strong>
-    </div>
-    <div class="card-body p-0 pb-3">
+<div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow p-3 mb-5">
+
+    <h2>Vertretungsbefugte Organe</h2>
+
+    <div class="card-text">
+
         @if(boardMembers == null || boardMembers.isEmpty())
             <div class="p-3 text-muted">Keine Vorstandsmitglieder vorhanden.</div>
         @else
@@ -31,7 +32,7 @@
                         </tr>
                     </thead>
 
-                    <tbody class="table-group-divider">
+                    <tbody class="table-group-divider" style="background-color: #ECFEFF;">
                         @for(Member m : boardMembers)
                             <tr>
                                 <td>${m.getName()}</td>
@@ -42,5 +43,7 @@
                 </table>
             </div>
         @endif
+
     </div>
+
 </div>
