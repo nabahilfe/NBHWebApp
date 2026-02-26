@@ -5,9 +5,9 @@ import eu.nabahilfe.webapp.members.Member;
 public class ViewContext {
 
     // FIXME ? - use CustomUserDetails instead of Member
-    private final Member user;
+    private final CustomUserDetails user;
 
-    public ViewContext(Member user) {
+    public ViewContext(CustomUserDetails user) {
         this.user = user;
     }
 
@@ -15,16 +15,12 @@ public class ViewContext {
         return user != null;
     }
 
-    public Member getUser() {
-        return user;
-    }
-
     public Long getUserId() {
         return user != null ? user.getId() : null;
     }
 
     public String getUsername() {
-        return user != null ? user.getFirstName() : "Gast";
+        return user != null ? user.getUsername() : "Gast";
     }
 
     public String getFullName() {
@@ -32,13 +28,33 @@ public class ViewContext {
     }
 
     public String getFirstNameLastName() {
-        return user != null ? user.getFirstName() + " " + user.getLastName() : "Gast";
+        return user != null ? user.getFirstNameLastName() : "Gast";
     }
 
+
     public boolean isAdmin() {
-        if (user != null && 3 < 4) return true; // FIXME - remove this when we have real users
-        if (user == null || user.getRole() == null) return false;
-        return user.getRole().getAuthorities().contains("ROLE_ADMIN");
+        return user != null && user.isAdmin() ? true : false;
     }
+
+    public boolean isBoardMember() {
+        return user != null && user.isBoardMember() ? true : false;
+    }
+
+    public boolean isTreasurer() {
+        return user != null && user.isTreasurer() ? true : false;
+    }
+
+    public boolean isAuditor() {
+        return user != null && user.isAuditor() ? true : false;
+    }
+
+    public boolean isSecretary() {
+        return user != null && user.isSecretary() ? true : false;
+    }
+
+     public boolean isTimeKeeper() {
+        return user != null && user.isTimeKeeper() ? true : false;
+    }
+
 
 }

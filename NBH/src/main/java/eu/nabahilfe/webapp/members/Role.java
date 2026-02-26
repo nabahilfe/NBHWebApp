@@ -259,10 +259,6 @@ public class Role implements Serializable {
             auths.add("ROLE_TIME_KEEPER");
         }
 
-        if (Boolean.TRUE.equals(isMiscellaneous)) {
-            auths.add("ROLE_MISC");
-        }
-
         return auths;
     }
 

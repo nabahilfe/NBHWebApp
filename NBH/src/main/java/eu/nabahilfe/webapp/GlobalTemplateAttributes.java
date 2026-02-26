@@ -17,7 +17,7 @@ public class GlobalTemplateAttributes {
 
     @ModelAttribute("ctxt")
     public ViewContext viewContext(@AuthenticationPrincipal CustomUserDetails cud) {
-        return new ViewContext(cud != null ? cud.getMember() : null);
+        return new ViewContext(cud != null ? cud : null);
     }
 
 

@@ -38,11 +38,6 @@ public class HomePageController {
     @GetMapping({"/", "/hompage"})
     public String home(Model model) {
 
-        // FIXME - get rid of SecurityUtils and use ctxt
-        String currentUsername = securityUtils.getCurrentUsername();
-
-        log.debug("Accessing home page. User: {}, Authenticated: {}", currentUsername, securityUtils.isAuthenticated());
-
         Optional<TextContent> tc = null;
 
         tc = textRepo.findByContentCode(TextContentType.ABOUT_US.toString());

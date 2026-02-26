@@ -4,8 +4,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import eu.nabahilfe.webapp.members.Member;
@@ -52,13 +54,53 @@ public class CustomUserDetails implements UserDetails {
         return member.isActive();
     }
 
-    public Member getMember() {
-        return member;
+    // other methods -> true
+
+
+
+    public Long getId() {
+        return member.getId();
     }
 
-    public String getFullName() {
+    public String getName() {
         return member.getName();
     }
 
-    // other methods -> true
+    public String getFirstNameLastName() {
+        return member.getFirstName() + " " + member.getLastName();
+    }
+
+
+    public Member getUser() {
+        return member;
+    }
+
+
+    // acces to roles
+
+    public boolean isAdmin() {
+        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+    }
+
+    public boolean isBoardMember() {
+        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_BOARD_MEMBER"));
+    }
+
+    public boolean isTreasurer() {
+        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_TREASURER"));
+    }
+
+    public boolean isSecretary() {
+        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SECRETARY"));
+    }
+
+    public boolean isAuditor() {
+        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_AUDITOR"));
+    }
+
+    public boolean isTimeKeeper() {
+        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_TIME_KEEPER"));
+    }
+
+
 }
