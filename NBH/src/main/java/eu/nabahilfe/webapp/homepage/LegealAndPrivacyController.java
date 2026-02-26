@@ -25,29 +25,28 @@ public class LegealAndPrivacyController {
     private final TextContentRepository textRepo;
     private final MemberRepository memberRepository;
 
-    private static final Logger log = LoggerFactory.getLogger(LegealAndPrivacyController.class);
-
 
     public LegealAndPrivacyController(TextContentRepository textRepo, MemberRepository memberRepository) {
         this.textRepo = textRepo;
         this.memberRepository = memberRepository;
     }
 
-    @GetMapping("/legal_and_privacy")
+
+    @GetMapping("/home/legal-and-privacy-policy")
     public String home(Model model) {
 
-        Optional<TextContent> tc = null;
+        Optional<TextContent> textContent = null;
 
-        tc = textRepo.findByContentCode(TextContentType.PRIVACY_POLICY.toString());
-        setModelAttribut("privacyPolicy", tc, model);
+        textContent = textRepo.findByContentCode(TextContentType.PRIVACY_POLICY.toString());
+        setModelAttribut("privacyPolicy", textContent, model);
 
-        tc = textRepo.findByContentCode(TextContentType.LEGAL_NOTICE.toString());
-        setModelAttribut("legalNotice", tc, model);
+        textContent = textRepo.findByContentCode(TextContentType.LEGAL_NOTICE.toString());
+        setModelAttribut("legalNotice", textContent, model);
 
         List<Member> boardMembers = memberRepository.findBoardMembers();
         model.addAttribute("boardMembers", boardMembers);
 
-        return "legal-and-privacy";
+        return "home/legal-and-privacy-policy";
     }
 
 

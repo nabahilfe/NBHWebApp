@@ -38,31 +38,31 @@ public class HomePageController {
     @GetMapping({"/", "/hompage"})
     public String home(Model model) {
 
-        Optional<TextContent> tc = null;
+        Optional<TextContent> textContent = null;
 
-        tc = textRepo.findByContentCode(TextContentType.ABOUT_US.toString());
-        setModelAttribut("aboutUs", tc, model);
+        textContent = textRepo.findByContentCode(TextContentType.ABOUT_US.toString());
+        setModelAttribut("aboutUs", textContent, model);
 
-        tc =  textRepo.findByContentCode(TextContentType.CONTACT.toString());
-        setModelAttribut("contact", tc, model);
+        textContent =  textRepo.findByContentCode(TextContentType.CONTACT.toString());
+        setModelAttribut("contact", textContent, model);
 
-        tc = textRepo.findByContentCode(TextContentType.EVENTS.toString());
-        setModelAttribut("events", tc, model);
+        textContent = textRepo.findByContentCode(TextContentType.EVENTS.toString());
+        setModelAttribut("events", textContent, model);
 
-        tc = textRepo.findByContentCode(TextContentType.NEWS.toString());
-        setModelAttribut("news", tc, model);
+        textContent = textRepo.findByContentCode(TextContentType.NEWS.toString());
+        setModelAttribut("news", textContent, model);
 
-        tc = textRepo.findByContentCode(TextContentType.FAQ.toString());
-        setModelAttribut("faq", tc, model);
+        textContent = textRepo.findByContentCode(TextContentType.FAQ.toString());
+        setModelAttribut("faq", textContent, model);
 
-        tc = textRepo.findByContentCode(TextContentType.TERMS_OF_SERVICE.toString());
-        setModelAttribut("termsOfService", tc, model);
+        textContent = textRepo.findByContentCode(TextContentType.TERMS_OF_SERVICE.toString());
+        setModelAttribut("termsOfService", textContent, model);
 
-        tc = textRepo.findByContentCode(TextContentType.PRIVACY_POLICY.toString());
-        setModelAttribut("privacyPolicy", tc, model);
+        textContent = textRepo.findByContentCode(TextContentType.PRIVACY_POLICY.toString());
+        setModelAttribut("privacyPolicy", textContent, model);
 
-        tc = textRepo.findByContentCode(TextContentType.LEGAL_NOTICE.toString());
-        setModelAttribut("legalNotice", tc, model);
+        textContent = textRepo.findByContentCode(TextContentType.LEGAL_NOTICE.toString());
+        setModelAttribut("legalNotice", textContent, model);
 
         List<Member> boardMembers = memberRepository.findBoardMembers();
         model.addAttribute("boardMembers", boardMembers);

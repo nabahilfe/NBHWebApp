@@ -22,13 +22,13 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/css/**", "/js/**").permitAll()
+                .requestMatchers("/images/**").permitAll()
                 .requestMatchers("/registration/**").permitAll()
                 .requestMatchers("/statuscode/**").permitAll()
+                .requestMatchers("/home", "/home/**").permitAll()
 
                 .requestMatchers("/textcontent/**").permitAll()
 
-                .requestMatchers("/home").permitAll()
-                .requestMatchers("/home/**").permitAll()
 
 // FIXME: Hier müssen die Rollen entsprechend der Anforderungen angepasst werden.
 //                .requestMatchers("/admin/**")

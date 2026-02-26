@@ -71,7 +71,7 @@
 
         <div>
 
-            <p><a href="/legal_and_privacy">Datenschutzerklärung und Impressum</a></p>
+            <p><a href="/home/legal-and-privacy-policy">Datenschutzerklärung und Impressum</a></p>
 
         </div>
 
