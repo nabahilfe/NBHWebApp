@@ -62,7 +62,7 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/members/mydata/${ctxt.getUserId()}">Meine Daten</a></li>
                                     <li><a class="dropdown-item" href="/timetransfers/fromself/${ctxt.getUserId()}">Zeitscheck übergeben</a></li>
-                                    <li><a class="dropdown-item" href="/timecheques/buyself/${ctxt.getUserId()}">Zeitscheck kaufen</a></li>
+                                    <li><a class="dropdown-item" href="/timecheques/new/${ctxt.getUserId()}">Zeitscheck kaufen</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form action="/registration/logout" method="post">
@@ -92,12 +92,8 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/members">Mitglieder verwalten</a></li>
                                     <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
+                                    <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/members/birthdays">Geburstage</a></li>
-                                    @if (ctxt != null && ctxt.isAdmin())
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="/admin">Admin Dashboard</a></li>
-                                    @endif
-
                                 </ul>
                             </li>
                         @endif
@@ -111,8 +107,7 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/timetransfers/new">Zeitschecks verbuchen</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#">Meine Zeitschecks</a></li>
+                                    <li><a class="dropdown-item" href="/members">Zeitscheck erstellen</a></li>
                                 </ul>
                             </li>
                         @endif
