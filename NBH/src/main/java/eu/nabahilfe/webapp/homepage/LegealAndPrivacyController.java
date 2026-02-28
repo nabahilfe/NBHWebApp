@@ -3,15 +3,12 @@ package eu.nabahilfe.webapp.homepage;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
-import eu.nabahilfe.webapp.security.SecurityUtils;
 import eu.nabahilfe.webapp.textcontent.TextContent;
 import eu.nabahilfe.webapp.textcontent.TextContentRepository;
 import eu.nabahilfe.webapp.textcontent.TextContentType;

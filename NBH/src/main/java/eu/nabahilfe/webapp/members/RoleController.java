@@ -53,7 +53,7 @@ public class RoleController {
     // LIST & DETAIL
     // --------------------
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER', 'SECRETARY', 'TIME_KEEPER')")
     @GetMapping
     String listAllRoles(final Model model) {
         List<Role> roles = roleRepository.findAllBy(Sort.by("roleName"));
@@ -156,7 +156,7 @@ public class RoleController {
     // --------------------
 
     // FIXME : Add actions to table header to enable sorting - see how it is done in list-members
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER', 'SECRETARY', 'TIME_KEEPER')")
     @GetMapping("/sort/{sortField}")
     String listAll(final Model model, @PathVariable String sortField) {
         List<Role> roles = roleRepository.findAllBy(Sort.by(sortField).descending());

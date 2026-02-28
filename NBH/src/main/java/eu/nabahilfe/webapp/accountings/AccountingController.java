@@ -66,6 +66,8 @@ public class AccountingController {
         return "accountings/view-accounting";
     }
 
+    // FIXME: Add ListAccountings per year, month, accountable class, etc. as needed
+
 
     // --------------------
     // CREATE NEW, UPDATE
