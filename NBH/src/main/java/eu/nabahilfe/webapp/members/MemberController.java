@@ -91,8 +91,8 @@ public class MemberController {
         return "redirect:/members";
     }
 
-
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    // FIXME: Role USER muss hier noch weg, eigene Ansicht für User
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'BOARD_MEMBER')")
     @GetMapping
     String listAllMembersPaginated(final Model model,
             @RequestParam(required = false, defaultValue = "lastName") String orderBy,
