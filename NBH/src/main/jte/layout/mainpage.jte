@@ -104,17 +104,18 @@
 
 
                         <!-- Dropdown Zeitschecks -->
-                        <li class="nav-item dropdown">
-                            <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
-                                Zeitschecks
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/timetransfers/new">Zeitschecks verbuchen</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Meine Zeitschecks</a></li>
-                            </ul>
-                        </li>
-
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER"))
+                            <li class="nav-item dropdown">
+                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                    Zeitschecks
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/timetransfers/new">Zeitschecks verbuchen</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Meine Zeitschecks</a></li>
+                                </ul>
+                            </li>
+                        @endif
 
                         <!-- Dropdown Buchungen -->
                         <li class="nav-item dropdown">

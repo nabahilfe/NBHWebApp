@@ -4,8 +4,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import eu.nabahilfe.webapp.members.Member;
@@ -102,6 +104,42 @@ public class CustomUserDetails implements UserDetails {
 
     public boolean isTimeKeeper() {
         return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_TIME_KEEPER"));
+    }
+
+
+    public boolean hasAnyRole(String... roles) {
+        if (roles == null || roles.length == 0) {
+            return false;
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return false;
+        }
+
+        Set<String> userAuths = new HashSet<>();
+        for (GrantedAuthority auth : authentication.getAuthorities()) {
+            if (auth != null && auth.getAuthority() != null) {
+                userAuths.add(auth.getAuthority());
+            }
+        }
+
+        for (String role : roles) {
+            if (role == null) {
+                continue;
+            }
+            String normalized = role.startsWith("ROLE_") ? role : "ROLE_" + role;
+            if (userAuths.contains(normalized)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    public boolean hasRole(String roleName) {
+        return hasAnyRole(roleName);
     }
 
 
