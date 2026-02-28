@@ -23,7 +23,7 @@
         @if(boardMembers == null || boardMembers.isEmpty())
             <div class="p-3 text-muted">Keine Vorstandsmitglieder vorhanden.</div>
         @else
-            <div class="table-responsive px-3">
+            <div class="table-responsive">
                 <table class="table table-hover table-sm mb-0">
                     <thead>
                         <tr>

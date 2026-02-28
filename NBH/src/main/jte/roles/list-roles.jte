@@ -39,8 +39,8 @@
             <p>Die <b>Rollen</b> bieten einerseitzs die Möglichkeit <b>Bezeichnungen für Funktionen</b> zu vergeben,
                 andererseits sind damit auch <b>bestimmte Berechtigungen</b> vebunden.</p>
             <ul>
-              <li><b>Vorstand</b> - kann Mitglieder verwalten, Kassaführung einsehen.</li>
-              <li><b>Schriftführer</b> - kann Protokolle erstellen und verwalten.</li>
+              <li><b>Vorstand</b> - kann Mitglieder verwalten, Kassaführung einsehen und Content bearbeiten.</li>
+              <li><b>Schriftführer</b> - kann Content bearbeiten, Protokolle erstellen und verwalten.</li>
               <li><b>Kassier</b> - kann Zahlungen erfassen und die Kassaführung verwalten.</li>
               <li><b>Prüfer</b> - kann Zahlungen und Kassaführung einsehen.</li>
               <li><b>Zeitschecks</b> - kann Zeitschecks erfassen und verwalten.</li>
