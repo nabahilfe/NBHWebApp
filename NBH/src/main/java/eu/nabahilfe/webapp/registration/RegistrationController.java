@@ -59,7 +59,7 @@ public class RegistrationController {
 
 
     @GetMapping("/email")
-    public String showEmailForm(@Valid @ModelAttribute("email") String email, BindingResult binding,
+    public String showEmailForm(@Valid @ModelAttribute String email, BindingResult binding,
             @ModelAttribute("registrationSession") RegistrationSession session, HttpServletRequest request) {
 
         return "registration/email";
@@ -68,7 +68,7 @@ public class RegistrationController {
 
 
     @PostMapping("/email")
-    public String processEmail(Model model, @Valid @RequestParam("email") String email,
+    public String processEmail(Model model, @Valid @RequestParam String email,
             @ModelAttribute("registrationSession") RegistrationSession session, HttpServletRequest request) {
 
         email = email.trim().toLowerCase();
@@ -129,7 +129,7 @@ public class RegistrationController {
 
     @PostMapping("/confirm")
     @Transactional
-    public String processConfirm(Model model, @Valid @ModelAttribute("form") RegisterConfirmForm form, BindingResult binding,
+    public String processConfirm(Model model, @Valid @ModelAttribute RegisterConfirmForm form, BindingResult binding,
             @ModelAttribute("registrationSession") RegistrationSession session, SessionStatus sessionStatus ) {
 
         if (session.isExpired() || session.getStep() != RegistrationStep.EMAIL_VERIFIED) {
@@ -175,7 +175,7 @@ public class RegistrationController {
 
 
     @PostMapping("/login")
-    public String processLogin(Model model, @RequestParam("username") String email, @RequestParam("password") String password, HttpServletRequest request) {
+    public String processLogin(Model model, @RequestParam("username") String email, @RequestParam String password, HttpServletRequest request) {
 
         if (email != null) {
             email = email.trim().toLowerCase();

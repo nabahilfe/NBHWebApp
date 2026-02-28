@@ -1,7 +1,5 @@
 package eu.nabahilfe.webapp.security;
 
-import eu.nabahilfe.webapp.members.Member;
-
 public class ViewContext {
 
     // FIXME ? - use CustomUserDetails instead of Member

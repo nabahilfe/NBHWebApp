@@ -35,11 +35,11 @@ public class SecurityConfig {
                 .loginPage("/registration/login")			// page
                 .loginProcessingUrl("/registration/login") 	// form action
                 .successHandler((request, response, authentication) -> {
-                    log.info("User '{}' logged in successfully. Auth authorities: {}",
+                    log.debug("User '{}' logged in successfully. Auth authorities: {}",
                             authentication.getName(),
                             authentication.getAuthorities());
                     if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-                        log.info("User '{}' Spring Security roles: {}",
+                        log.debug("User '{}' Spring Security roles: {}",
                                 authentication.getName(),
                                 userDetails.getAuthorities());
                     }
