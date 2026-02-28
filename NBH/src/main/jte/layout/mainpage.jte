@@ -73,7 +73,7 @@
                                 </ul>
                             @else
                                 <button class="nav-link dropdown-toggle bi-person" type="button" data-bs-toggle="dropdown" data-bs-display="static">
-                                    Login
+                                    Anmelden / Registrieren
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item bi-box-arrow-in-right" href="/registration/login"> Anmelden</a></li>
