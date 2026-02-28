@@ -27,4 +27,9 @@ public class SecurityUtils {
         return authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String);
     }
 
+
+    public boolean memberIdMatchesCurrentUser(Long memberId) {
+        return getCurrentUser() != null && getCurrentUser().getId().equals(memberId);
+    }
+
 }

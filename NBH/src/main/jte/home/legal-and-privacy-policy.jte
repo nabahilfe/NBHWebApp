@@ -11,7 +11,7 @@
     ctxt = ctxt,
     content = @`
 
-    <h1 class="">Rechtliche Information zur Nachbarschaftshilfe Maria Anzbach!</h1>
+    <h1 class="">Rechtliche Informationen NBH Maria Anzbach</h1>
 
     <div class="row mt-4">
 

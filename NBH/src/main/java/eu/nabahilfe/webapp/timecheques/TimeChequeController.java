@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +46,7 @@ public class TimeChequeController {
     // --------------------
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
     @GetMapping("/{id}")
     String viewTimeCheque(final Model model, @PathVariable Long id) {
 
@@ -70,6 +72,7 @@ public class TimeChequeController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR')")
     @GetMapping("/unaccounted")
     String listUnaccountedTimeCheques(final Model model) {
         log.debug("Listing unaccounted TimeCheques");
@@ -85,6 +88,7 @@ public class TimeChequeController {
 
     // Create TimeCheque for specific Member
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
     @GetMapping("/new")
     String addTimeCheque(final Model model, @RequestParam Long memberId) {
 
@@ -121,6 +125,7 @@ public class TimeChequeController {
 
     // Save the new TimeCheque and update Member's accumulated hours
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
     @PostMapping
     @Transactional
     String saveTimeCheque(final Model model, @RequestParam LocalDate orderDate) {

@@ -192,6 +192,8 @@ public class RegistrationController {
             return "registration/login";
         }
 
+        log.debug("User {} logged in successfully", email);
+
         model.addAttribute("successMessage", "Erfolgreich angemeldet.");
         return "registration/login";
     }

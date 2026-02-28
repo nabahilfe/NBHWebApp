@@ -19,6 +19,7 @@ import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import eu.nabahilfe.webapp.org.Offer;
 import eu.nabahilfe.webapp.org.OfferRepository;
+import eu.nabahilfe.webapp.security.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 
@@ -35,14 +36,16 @@ public class TimeTransferController {
     private final MemberRepository memberRepository;
     private final OfferRepository offerRepository;
     private final TimeTransferRepository timeTransferRepository;
+    private final SecurityUtils securityUtils;
 
     private static final Logger log = LoggerFactory.getLogger(TimeTransferController.class);
 
     public TimeTransferController(MemberRepository memberRepository, OfferRepository offerRepository,
-            TimeTransferRepository timeTransferRepository) {
+            TimeTransferRepository timeTransferRepository, SecurityUtils securityUtils) {
         this.memberRepository = memberRepository;
         this.offerRepository = offerRepository;
         this.timeTransferRepository = timeTransferRepository;
+        this.securityUtils = securityUtils;
     }
 
 
@@ -57,11 +60,18 @@ public class TimeTransferController {
             model.addAttribute("errorMessage", "Zeitübertragung mit ID " + id + " nicht gefunden.");
             return "error";
         }
+
+        if (! securityUtils.memberIdMatchesCurrentUser(tt.getFromMember().getId())) {
+            model.addAttribute("errorMessage", "Sie haben keine Berechtigung, diese Zeitübertragung anzusehen.");
+            return "redirect:/error";
+        }
+
         model.addAttribute("tt", tt);
         String fullUrl = request.getRequestURL().append(request.getQueryString() != null ? "?" + request.getQueryString() : "").toString();
         if (fullUrl.contains("self-timetransfer")) {
             return "timetransfers/view-self-timetransfer";
         }
+
         return "timetransfers/view-timetransfer";
     }
 

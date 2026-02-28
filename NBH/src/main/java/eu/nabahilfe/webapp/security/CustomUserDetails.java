@@ -35,6 +35,10 @@ public class CustomUserDetails implements UserDetails {
                 authorities.add(new SimpleGrantedAuthority(auth));
             }
         }
+        else {
+            // if no role is assigned, give the user a default role
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        }
 
         return authorities;
     }

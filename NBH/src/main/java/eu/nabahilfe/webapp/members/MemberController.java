@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -52,6 +53,7 @@ public class MemberController {
     }
 
 
+    @PreAuthorize("hasRole('USER')")
     @ModelAttribute("member")
     public Member findMember(@PathVariable(required = false) Long id) {
         return id == null ? new Member() : memberRepository.findById(id)
@@ -59,12 +61,14 @@ public class MemberController {
                         + ". Please ensure the ID is correct and the member exists in the database."));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @ModelAttribute("roles")
     public List<Role> getAllRoles() {
         return roleRepository.findAllBy(Sort.by("roleName").ascending());
     }
 
 
+    @PreAuthorize("hasRole('USER')")
     @ModelAttribute("numberOfTimecheques")
     public Integer getNumberOfTimecheques(@ModelAttribute Member member) {
         if (member.getId() != null)
@@ -78,6 +82,7 @@ public class MemberController {
     // SEARCH, LIST & DETAIL
     // ----------------------
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/search")
     public String searchMembers(@RequestParam String searchTerm, Model model, RedirectAttributes redirectAttributes) {
         // save current value of searchTerm
@@ -87,6 +92,7 @@ public class MemberController {
     }
 
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping
     String listAllMembersPaginated(final Model model,
             @RequestParam(required = false, defaultValue = "lastName") String orderBy,
@@ -135,6 +141,7 @@ public class MemberController {
     }
 
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/{id}")
     String editMember(final Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
         Optional<Member> member = memberRepository.findById(id);
@@ -151,6 +158,7 @@ public class MemberController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @GetMapping("/birthdays")
     String listBirthdays(final Model model) {
         model.addAttribute("currentMonth", memberRepository.findBirthdaysByMonthOffset(0));
@@ -159,9 +167,10 @@ public class MemberController {
     }
 
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/mydata/{id}")
     String myData(final Model model, @PathVariable Long id) {
-        log.debug("Showing MyData for Member: {}", id);
+        log.debug("Showing /users/mydata/{}", id);
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id
                         + ". Please ensure the ID is correct and the member exists in the database."));
@@ -176,6 +185,7 @@ public class MemberController {
     // CREATE NEW, UPDATE
     // --------------------
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @GetMapping("/new")
     String newMember(final Model model) {
         log.debug("Creating new Member");
@@ -183,6 +193,7 @@ public class MemberController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @Transactional
     @PostMapping
     public String saveMember(Model model, @ModelAttribute @Valid Member member,
@@ -249,6 +260,7 @@ public class MemberController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @PostMapping("/{id}")
     public String updateMember(Model model, @ModelAttribute @Valid Member member,
             BindingResult result, @RequestParam(required = false) Long roleId,
@@ -262,6 +274,7 @@ public class MemberController {
     // LÖSCHEN
     // --------------------
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @PostMapping("/delete/{id}")
     @Transactional
     String deletMember(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {

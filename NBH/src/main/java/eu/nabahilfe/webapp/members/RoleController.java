@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,6 +40,7 @@ public class RoleController {
     // mapping model attribute 'role' to fetch Role by id or create new one
     // --------------------
 
+    @PreAuthorize("hasRole('USER')")
     @ModelAttribute("role")
     public Role findRole(@PathVariable(required = false) Long id) {
         return id == null ? new Role() : roleRepository.findById(id)
@@ -51,6 +53,7 @@ public class RoleController {
     // LIST & DETAIL
     // --------------------
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping
     String listAllRoles(final Model model) {
         List<Role> roles = roleRepository.findAllBy(Sort.by("roleName"));
@@ -59,7 +62,7 @@ public class RoleController {
         return "roles/list-roles";
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     String editRole(final Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
         Optional<Role> role = roleRepository.findById(id);
@@ -81,6 +84,7 @@ public class RoleController {
     // CREATE NEW, UPDATE
     // --------------------
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/new")
     String newRole(final Model model) {
         log.debug("Creating new Role: {}", model.getAttribute("role"));
@@ -89,6 +93,7 @@ public class RoleController {
 
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     String saveRole(Model model, @ModelAttribute @Valid Role role,
             RedirectAttributes redirectAttributes, BindingResult result, HttpServletRequest request) {
@@ -116,6 +121,7 @@ public class RoleController {
     }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{id}")
     public String updateRole(Model model, @ModelAttribute @Valid Role role,
             RedirectAttributes redirectAttributes, BindingResult result, HttpServletRequest request, @PathVariable Long id) {
@@ -124,6 +130,7 @@ public class RoleController {
     }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/delete/{id}")
     @Transactional
     String deleteRole(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
@@ -149,6 +156,7 @@ public class RoleController {
     // --------------------
 
     // FIXME : Add actions to table header to enable sorting - see how it is done in list-members
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/sort/{sortField}")
     String listAll(final Model model, @PathVariable String sortField) {
         List<Role> roles = roleRepository.findAllBy(Sort.by(sortField).descending());
