@@ -72,7 +72,7 @@ public class TimeChequeController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER')")
     @GetMapping("/unaccounted")
     String listUnaccountedTimeCheques(final Model model) {
         log.debug("Listing unaccounted TimeCheques");

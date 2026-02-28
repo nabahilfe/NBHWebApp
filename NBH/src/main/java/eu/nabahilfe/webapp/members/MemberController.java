@@ -92,7 +92,7 @@ public class MemberController {
     }
 
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @GetMapping
     String listAllMembersPaginated(final Model model,
             @RequestParam(required = false, defaultValue = "lastName") String orderBy,
