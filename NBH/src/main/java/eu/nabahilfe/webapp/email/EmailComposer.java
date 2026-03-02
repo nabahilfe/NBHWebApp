@@ -1,5 +1,9 @@
 package eu.nabahilfe.webapp.email;
 
+import org.springframework.stereotype.Component;
+
+
+@Component
 public class EmailComposer {
 
     public EmailDetails composeWelcomeEmail(String recipient, String name) {
@@ -15,17 +19,20 @@ public class EmailComposer {
         return details;
     }
 
-    public EmailDetails composeTimeChecksToBookEmail(String recipient, String name) {
+
+    public EmailDetails composeTimeChecksToBookEmail(String recipient, String name, int timeChecksToBook) {
         EmailDetails details = new EmailDetails(
             recipient,
-            "neue Zeitchecks zu verbuchen",
+            "Es gibt neue Zeitchecks zu verbuchen!",
             "<h3>Hallo " + name + "</h3>"
                     + "<p>"
-                    + "<a href=\"https://nabahilfe.eu\"> zur Website</a>"
+                    + "Es gibt <strong>" + timeChecksToBook + "</strong> Zeitchecks zu verbuchen!<br>"
+                    + "<a href=\"https://nabahilfe.eu/\">Zeitschecks zu verbuchen</a>"
                     + "</p>"
         );
         return details;
     }
+
 
     public EmailDetails composeConfirmationCodeEmail(String recipient, String name, String code) {
         EmailDetails details = new EmailDetails(

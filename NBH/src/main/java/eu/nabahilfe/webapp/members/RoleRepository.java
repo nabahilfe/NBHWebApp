@@ -13,6 +13,12 @@ public interface RoleRepository extends ListCrudRepository<Role, Long> {
 
     List<Role>findByIsAdmin(Boolean isAdmin);
 
+    List<Role>findByIsTreasurer(Boolean isTreasurer);
+
+    List<Role>findByIsSecretary(Boolean isSecretary);
+
+    List<Role>findByIsAuditor(Boolean isAuditor);
+
     List<Role> findAllByRoleNameContainingIgnoreCase(String roleName);
 
     List<Role> findAllBy(Sort sort);

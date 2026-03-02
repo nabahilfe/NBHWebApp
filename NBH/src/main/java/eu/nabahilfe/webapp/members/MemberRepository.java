@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 
 public interface MemberRepository extends ListCrudRepository<Member, Long> {
 
+    List<Member> findByRole(Role role);
+
     @EntityGraph(attributePaths = "role")
     Page<Member> findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCase(
             String lastName, String firstName, Pageable pageable);
