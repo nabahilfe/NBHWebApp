@@ -3,34 +3,33 @@
 
 /* Daten für ROLES */
 
-INSERT INTO roles (is_board_member,  is_treasurer, is_secretary, is_auditor, is_time_keeper, is_admin, is_miscellaneous, role_name,      	version) VALUES
-                    (true,             false,          false,       false,      false,       true,       false,          'Obmann',          	0),
-                    (true,             false,          false,       false,      false,       true,       false,          'Obmann Stv.',     	0),
-                    (true,             false,          false,       false,      true,        false,      false,          'Obfrau',          	0),
-                    (true,             false,          false,       false,      true,        false,      false,          'Obfrau Stv.',     	0),
-                    (false,            true,           false,       false,      false,       false,      false,          'Kassier',         	0),
-                    (false,            true,           false,       false,      false,       false,      false,          'Kassier Stv.',    	0),
-                    (false,            false,          false,       true,       false,       false,      false,          'Rechnungsprüfer', 	0),
+INSERT INTO roles (is_board_member,  is_treasurer, is_secretary, is_auditor, is_time_keeper, is_admin, is_miscellaneous, role_name,          version) VALUES
+                    (true,             false,          false,       false,      false,       true,       false,          'Obmann',              0),
+                    (true,             false,          false,       false,      false,       true,       false,          'Obmann Stv.',         0),
+                    (true,             false,          false,       false,      true,        false,      false,          'Obfrau',              0),
+                    (true,             false,          false,       false,      true,        false,      false,          'Obfrau Stv.',         0),
+                    (false,            true,           false,       false,      false,       false,      false,          'Kassier',             0),
+                    (false,            true,           false,       false,      false,       false,      false,          'Kassier Stv.',        0),
+                    (false,            false,          false,       true,       false,       false,      false,          'Rechnungsprüfer',     0),
                     (false,            false,          false,       true,       false,       false,      false,          'Rechnungsprüfer Stv.', 0),
-                    (false,            false,          true,        false,      false,       true,       false,          'Schriftührer',    	0),
-                    (false,            false,          true,        false,      false,       true,       false,          'Schriftührer Stv.', 	0),
-                    (false,            false,          false,       false,      false,       false,      true,           'Ehrenmitglied',   	0);
+                    (false,            false,          true,        false,      false,       true,       false,          'Schriftührer',        0),
+                    (false,            false,          true,        false,      false,       true,       false,          'Schriftührer Stv.',     0),
+                    (false,            false,          false,       false,      false,       false,      true,           'Ehrenmitglied',       0);
 
 
 
 /* Daten für Offers / Tätigkeiten */
 
 insert into offers (code, description, version) values
-('000','Vereinstätigkeit', 0),
 ('100','Erfahrungsaustausch und Gespräche', 0),
-('200','Haushalts- und alltägliche Hilfsdienste', 0),
+('200','Alltägliche Hilfsdienste', 0),
 ('300','Initiieren und Organisieren von Freizeitaktivitäten', 0),
-('400','Büroarbeiten - Unterstützung bei Formularen sowie Behördenkontakten', 0),
-('500','Sicherung der Mobilität - Transport und Fahrtendienste', 0),
-('600','Hilfe beim Organisieren von Festen und Veranstaltungen', 0),
-('600','Außenarbeiten', 0),
-('800','Hilfe beim Bedienen technischer Geräte', 0),
-('900','Spende von Stunden von/für Sozialkonto', 0),
+('400','Unterstützung bei Formularen sowie Behördenkontakten', 0),
+('500','Transport und Fahrtendienste', 0),
+('600','Leih-Oma / Leih-Opa', 0),
+('700','Kleinere Außen- oder Reparaturarbeiten', 0),
+('800','Hilfe beim Bedienen technischer Geräte und Computer', 0),
+('900','Spende von/für Sozialkonto', 0),
 ('999','KORREKTURBUCHUNG', 0);
 
 
