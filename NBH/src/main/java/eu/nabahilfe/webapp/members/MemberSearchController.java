@@ -2,12 +2,20 @@ package eu.nabahilfe.webapp.members;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
+/**
+ * Controller für die Suche nach Mitgliedern. Es wird nur die ID und der Name zurück
+ * Verwendet z.B. für Zeitscheck Zuweisungen um die Mitglieder zu finden in einem Suche/Dropdown
+ */
+
 @RestController
+@PreAuthorize("hasRole('USER')")
 @RequestMapping("/api/members")
 public class MemberSearchController {
 

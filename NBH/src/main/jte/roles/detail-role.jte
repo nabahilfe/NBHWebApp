@@ -59,7 +59,7 @@
                     id="isBoardMember" name="isBoardMember"
                     checked="${role.getIsBoardMember()}">
                 <label class="form-check-label" for="isBoardMember">
-                  Vorstand - kann Mitglieder verwalten, Kassaführung einsehen
+                  Vorstand - kann Mitglieder verwalten, Kassaführung einsehen und Content bearbeiten
                 </label>
               </div>
 
@@ -69,7 +69,7 @@
                     id="isSecretary" name="isSecretary"
                     checked="${role.getIsSecretary()}">
                 <label class="form-check-label" for="isSecretary">
-                  Schriftführer - kann Protokolle erstellen und verwalten
+                  Schriftführer - kann Content bearbeiten, Protokolle erstellen und verwalten
                 </label>
               </div>
 

@@ -415,7 +415,7 @@ public class Member implements Serializable {
 
     public boolean isActive() {
         LocalDate today = LocalDate.now();
-        return resignationDate == null || resignationDate.isAfter(today);
+        return resignationDate == null || resignationDate.isAfter(today.minusDays(1));
     }
 
 

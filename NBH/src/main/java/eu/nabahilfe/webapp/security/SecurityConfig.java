@@ -20,36 +20,31 @@ public class SecurityConfig {
 
         http
             .authorizeHttpRequests(auth -> auth
+
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/css/**", "/js/**").permitAll()
+                .requestMatchers("/images/**").permitAll()
                 .requestMatchers("/registration/**").permitAll()
                 .requestMatchers("/statuscode/**").permitAll()
+                .requestMatchers("/home", "/home/**").permitAll()
 
-                .requestMatchers("/textcontent/**").permitAll()
-
-                .requestMatchers("/home").permitAll()
-                .requestMatchers("/home/**").permitAll()
-
-// FIXME: Hier müssen die Rollen entsprechend der Anforderungen angepasst werden.
-//                .requestMatchers("/admin/**")
-//                    .hasRole("ADMIN")
-//
-//                .requestMatchers("/billing/**")
-//                    .hasAnyRole("TREASURER", "AUDITOR")
-//
-//                .requestMatchers("/docs/**")
-//                    .hasRole("SECRETARY")
-//
-//                .requestMatchers("/time/**")
-//                    .hasRole("TIME_KEEPER")
-
-                .anyRequest().hasRole("USER")
+                .anyRequest().authenticated()
             )
 
             .formLogin(form -> form
                 .loginPage("/registration/login")			// page
                 .loginProcessingUrl("/registration/login") 	// form action
-                .defaultSuccessUrl("/", true)
+                .successHandler((request, response, authentication) -> {
+                    log.debug("User '{}' logged in successfully. Auth authorities: {}",
+                            authentication.getName(),
+                            authentication.getAuthorities());
+                    if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
+                        log.debug("User '{}' Spring Security roles: {}",
+                                authentication.getName(),
+                                userDetails.getAuthorities());
+                    }
+                    response.sendRedirect("/");
+                })
                 .failureUrl("/registration/login-error")
                 .permitAll()
             )

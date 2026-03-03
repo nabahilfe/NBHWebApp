@@ -4,8 +4,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import eu.nabahilfe.webapp.members.Member;
@@ -33,6 +35,10 @@ public class CustomUserDetails implements UserDetails {
                 authorities.add(new SimpleGrantedAuthority(auth));
             }
         }
+        else {
+            // if no role is assigned, give the user a default role
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        }
 
         return authorities;
     }
@@ -52,13 +58,89 @@ public class CustomUserDetails implements UserDetails {
         return member.isActive();
     }
 
-    public Member getMember() {
-        return member;
+    // other methods -> true
+
+
+
+    public Long getId() {
+        return member.getId();
     }
 
-    public String getFullName() {
+    public String getName() {
         return member.getName();
     }
 
-    // other methods -> true
+    public String getFirstNameLastName() {
+        return member.getFirstName() + " " + member.getLastName();
+    }
+
+
+    public Member getUser() {
+        return member;
+    }
+
+
+    // acces to roles
+
+    public boolean isAdmin() {
+        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+    }
+
+    public boolean isBoardMember() {
+        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_BOARD_MEMBER"));
+    }
+
+    public boolean isTreasurer() {
+        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_TREASURER"));
+    }
+
+    public boolean isSecretary() {
+        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SECRETARY"));
+    }
+
+    public boolean isAuditor() {
+        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_AUDITOR"));
+    }
+
+    public boolean isTimeKeeper() {
+        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_TIME_KEEPER"));
+    }
+
+
+    public boolean hasAnyRole(String... roles) {
+        if (roles == null || roles.length == 0) {
+            return false;
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return false;
+        }
+
+        Set<String> userAuths = new HashSet<>();
+        for (GrantedAuthority auth : authentication.getAuthorities()) {
+            if (auth != null && auth.getAuthority() != null) {
+                userAuths.add(auth.getAuthority());
+            }
+        }
+
+        for (String role : roles) {
+            if (role == null) {
+                continue;
+            }
+            String normalized = role.startsWith("ROLE_") ? role : "ROLE_" + role;
+            if (userAuths.contains(normalized)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    public boolean hasRole(String roleName) {
+        return hasAnyRole(roleName);
+    }
+
+
 }

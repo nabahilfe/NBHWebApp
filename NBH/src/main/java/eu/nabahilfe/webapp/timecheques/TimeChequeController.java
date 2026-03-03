@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +45,8 @@ public class TimeChequeController {
     // LIST & DETAIL
     // --------------------
 
-
+    // FIXME: Allow only display of own TimeCheques for USER role, all TimeCheques for ADMIN and TIME_KEEPER roles
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/{id}")
     String viewTimeCheque(final Model model, @PathVariable Long id) {
 
@@ -70,6 +72,7 @@ public class TimeChequeController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER')")
     @GetMapping("/unaccounted")
     String listUnaccountedTimeCheques(final Model model) {
         log.debug("Listing unaccounted TimeCheques");
@@ -84,7 +87,7 @@ public class TimeChequeController {
     // --------------------
 
     // Create TimeCheque for specific Member
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
     @GetMapping("/new")
     String addTimeCheque(final Model model, @RequestParam Long memberId) {
 
@@ -94,6 +97,43 @@ public class TimeChequeController {
             return "error";
         }
 
+        // FIXME: EXTRACT DUPLICATE CHECKING LOGIC INTO HELPER METHOD
+        // Business Logic: determine TimeCheque hours based on existing TimeCheques
+        TimeCheque tc = null;
+        int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
+        if (existingTimeCheques == 0 && (member.getIsImportedMember() != true)) {
+            log.debug("Member id={} has no existing TimeCheques, is not imported Member, using first hours of {}", memberId, NbhConst.FIRST_TIME_CHEQUE_HOURS);
+            tc = createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member);
+        } else {
+            tc = createTimeCheque(NbhConst.REGULAR_TIME_CHEQUE_HOURS, member);
+            log.debug("Member id={} has {} existing TimeCheques, using regular hours of {}", memberId, existingTimeCheques, NbhConst.REGULAR_TIME_CHEQUE_HOURS);
+        }
+
+        model.addAttribute("timeCheque", tc);
+        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(memberId));
+
+        String validationError = validateData(member, tc, existingTimeCheques);
+        if (validationError != null) {
+            model.addAttribute("errorMessage", validationError);
+            log.debug("Validation error for TimeCheque for Member id={}: {}", memberId, validationError);
+        }
+
+        return "timecheques/create-timecheque";
+    }
+
+
+    // Create TimeCheque for self Member
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/new/{memberId}")
+    String addSelfTimeCheque(final Model model, @PathVariable Long memberId) {
+
+        Member member = memberRepository.findById(memberId).orElse(null);
+        if (member == null) {
+            model.addAttribute("errorMessage", "Mitglied mit ID " + memberId + " nicht gefunden.");
+            return "error";
+        }
+
+        // FIXME: EXTRACT DUPLICATE CHECKING LOGIC INTO HELPER METHOD
         // Business Logic: determine TimeCheque hours based on existing TimeCheques
         TimeCheque tc = null;
         int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
@@ -121,6 +161,7 @@ public class TimeChequeController {
 
     // Save the new TimeCheque and update Member's accumulated hours
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping
     @Transactional
     String saveTimeCheque(final Model model, @RequestParam LocalDate orderDate) {

@@ -17,39 +17,22 @@ import eu.nabahilfe.webapp.textcontent.TextContentType;
 
 
 @Controller
-public class HomePageController {
+public class LegealAndPrivacyController {
 
     private final TextContentRepository textRepo;
     private final MemberRepository memberRepository;
 
 
-    public HomePageController(TextContentRepository textRepo, MemberRepository memberRepository) {
+    public LegealAndPrivacyController(TextContentRepository textRepo, MemberRepository memberRepository) {
         this.textRepo = textRepo;
         this.memberRepository = memberRepository;
     }
 
-    @GetMapping({"/", "/hompage"})
+
+    @GetMapping("/home/legal-and-privacy-policy")
     public String home(Model model) {
 
         Optional<TextContent> textContent = null;
-
-        textContent = textRepo.findByContentCode(TextContentType.ABOUT_US.toString());
-        setModelAttribut("aboutUs", textContent, model);
-
-        textContent =  textRepo.findByContentCode(TextContentType.CONTACT.toString());
-        setModelAttribut("contact", textContent, model);
-
-        textContent = textRepo.findByContentCode(TextContentType.EVENTS.toString());
-        setModelAttribut("events", textContent, model);
-
-        textContent = textRepo.findByContentCode(TextContentType.NEWS.toString());
-        setModelAttribut("news", textContent, model);
-
-        textContent = textRepo.findByContentCode(TextContentType.FAQ.toString());
-        setModelAttribut("faq", textContent, model);
-
-        textContent = textRepo.findByContentCode(TextContentType.TERMS_OF_SERVICE.toString());
-        setModelAttribut("termsOfService", textContent, model);
 
         textContent = textRepo.findByContentCode(TextContentType.PRIVACY_POLICY.toString());
         setModelAttribut("privacyPolicy", textContent, model);
@@ -60,7 +43,7 @@ public class HomePageController {
         List<Member> boardMembers = memberRepository.findBoardMembers();
         model.addAttribute("boardMembers", boardMembers);
 
-        return "home";
+        return "home/legal-and-privacy-policy";
     }
 
 
@@ -70,6 +53,5 @@ public class HomePageController {
         else
             model.addAttribute(attr, "");
     }
-
 
 }

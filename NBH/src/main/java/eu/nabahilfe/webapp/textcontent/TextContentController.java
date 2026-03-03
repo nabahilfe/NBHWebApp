@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +41,7 @@ public class TextContentController {
 
 
     /* Liste */
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'SECRETARY')")
     @GetMapping
     public String list(Model model) {
 
@@ -51,6 +53,7 @@ public class TextContentController {
 
 
     /* Edit/Create form */
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'SECRETARY')")
     @GetMapping({"/edit", "/edit/cc/{contentCode}"})
     public String edit(final Model model, @ModelAttribute("textContentForm") TextContentForm tcf, @PathVariable String contentCode) {
 
@@ -78,6 +81,7 @@ public class TextContentController {
     /* Preview markdown without saving */
     @PostMapping("/preview")
     @GetMapping("/preview")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'SECRETARY')")
     public String preview(@ModelAttribute("textContentForm") TextContentForm tcf, Model model) {
 
         String html = markdown.toHtml(tcf.getMdText());
@@ -93,6 +97,7 @@ public class TextContentController {
     /* Save after preview */
     @Transactional
     @PostMapping("/save")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'SECRETARY')")
     public String save(@ModelAttribute("textContentForm") TextContentForm tcf, Model model) {
 
         TextContent content = repo.findByContentCode(tcf.getContentCode()).orElseGet(TextContent::new);

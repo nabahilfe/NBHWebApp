@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 
 public interface MemberRepository extends ListCrudRepository<Member, Long> {
 
+    List<Member> findByRole(Role role);
+
     @EntityGraph(attributePaths = "role")
     Page<Member> findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCase(
             String lastName, String firstName, Pageable pageable);
@@ -59,5 +61,12 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     Member findByEmail(String email);
 
     List<Member> findBySalutation(String salutation);
+
+    @EntityGraph(attributePaths = "role")
+    @org.springframework.data.jpa.repository.Query(
+        "SELECT m FROM Member m JOIN m.role r " +
+        "WHERE r.isBoardMember = true OR r.isTreasurer = true OR r.isSecretary = true " +
+        "ORDER BY m.lastName ASC")
+    List<Member> findBoardMembers();
 
 }

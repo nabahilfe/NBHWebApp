@@ -40,50 +40,60 @@
         <thead>
         <tr>
           <th scope="col" data-col="lastName" data-order="${orderBy.equals("lastName") ? order : ""}">
-            Nachname ${orderBy.equals("lastName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+                Nachname ${orderBy.equals("lastName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
           <th scope="col" data-col="firstName" data-order="${orderBy.equals("firstName") ? order : ""}">
-            Vorname ${orderBy.equals("firstName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+                Vorname ${orderBy.equals("firstName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
           <th scope="col">Adresse</th>
           <th scope="col" data-col="role.roleName" data-order="${orderBy.equals("role.roleName") ? order : ""}">
-            Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+                Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
           <th scope="col" data-col="email" data-order="${orderBy.equals("email") ? order : ""}">
-            E-Mail ${orderBy.equals("email") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
-          <th scope="col" class="text-center">Edit</th>
-          <th scope="col" class="text-center">Delete</th>
-          <th scope="col" class="text-end" data-col="accumulatedHours" data-order="${orderBy.equals("accumulatedHours") ? order : ""}">
-            Guthaben ${orderBy.equals("accumulatedHours") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
-          <th scope="col" class="text-center">Zeitscheck</th>
+                E-Mail ${orderBy.equals("email") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+
+          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+              <th scope="col" class="text-center">Edit</th>
+              <th scope="col" class="text-center">Delete</th>
+              <th scope="col" class="text-end" data-col="accumulatedHours" data-order="${orderBy.equals("accumulatedHours") ? order : ""}">
+                    Guthaben ${orderBy.equals("accumulatedHours") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+              <th scope="col" class="text-center">Zeitscheck</th>
+          @endif
         </tr>
       </thead>
 
         <tbody class="table-group-divider">
         @for (Member member : memberPage.getContent())
         <tr>
-          <td><a class="text-decoration-none" href="/members/${member.getId()}"><b>${member.getLastName()}</b></a></td>
+          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+              <td><a class="text-decoration-none" href="/members/${member.getId()}"><b>${member.getLastName()}</b></a></td>
+          @else
+            <td>${member.getLastName()}</td>
+          @endif
           <td>${member.getFirstName()}</td>
-
           <td>${member.getAddress()}</td>
           <td>${member.getRole() != null ? member.getRole().getRoleName() : ""}</td>
           <td>${member.getEmail() != null ? member.getEmail() : ""}</td>
-          <td class="text-center">
-            <a class="btn btn-outline-primary btn-sm bi-pencil"
-                href="/members/${member.getId()}"
-                role="button"></a>
-          </td>
-          <td class="text-center">
-              <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
-            <button type="button" class="btn btn-outline-danger btn-sm bi-x-lg"
-                data-bs-toggle="modal"
-                data-bs-target="#confirmModal"
-                data-item-id="${member.getId()}"></button>
-          </td>
-          <td class="text-end">
-            ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}
-          </td>
-          <td class="text-center">
-            <a class="btn btn-outline-primary btn-sm bi-plus-lg" href="/timecheques/new?memberId=${member.getId()}"
-                role="button"></a>
-          </td>
+
+          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+              <td class="text-center">
+                <a class="btn btn-outline-primary btn-sm bi-pencil"
+                    href="/members/${member.getId()}"
+                    role="button"></a>
+              </td>
+              <td class="text-center">
+                  <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
+                <button type="button" class="btn btn-outline-danger btn-sm bi-x-lg"
+                    data-bs-toggle="modal"
+                    data-bs-target="#confirmModal"
+                    data-item-id="${member.getId()}"></button>
+              </td>
+              <td class="text-end">
+                ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}
+              </td>
+              <td class="text-center">
+                <a class="btn btn-outline-primary btn-sm bi-plus-lg" href="/timecheques/new?memberId=${member.getId()}"
+                    role="button"></a>
+              </td>
+          @endif
+
         </tr>
         @endfor
       </tbody>
@@ -118,12 +128,13 @@
         <input type="hidden" name="memberId" id="memberIdInput">
     </form>
 
-    <!-- add an item -->
-    <form action="/members/new" method="get">
-        <button type="submit" class="btn btn-outline-primary bi-plus-circle"> Mitglied hinzufügen</button>
-    </form>
-
-    <br/>
+    @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+        <!-- add button to creeate new member -->
+        <form action="/members/new" method="get">
+            <button type="submit" class="btn btn-outline-primary bi-plus-circle"> Mitglied hinzufügen</button>
+        </form>
+        <br/>
+    @endif
 
     <!-- Pagination controls -->
     @if(memberPage.getTotalPages() > 0)

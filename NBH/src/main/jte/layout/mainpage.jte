@@ -57,12 +57,12 @@
                         <li class="nav-item dropdown">
                             @if (ctxt != null && ctxt.isAuthenticated())
                                 <button class="nav-link dropdown-toggle bi-person-square" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
-                                    ${ctxt.getUsername()}
+                                    ${ctxt.getFirstNameLastName()}
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/members/mydata/${ctxt.getUserId()}">Meine Daten</a></li>
                                     <li><a class="dropdown-item" href="/timetransfers/fromself/${ctxt.getUserId()}">Zeitscheck übergeben</a></li>
-                                    <li><a class="dropdown-item" href="/timecheques/buyself/${ctxt.getUserId()}">Zeitscheck kaufen</a></li>
+                                    <li><a class="dropdown-item" href="/timecheques/new/${ctxt.getUserId()}">Zeitscheck kaufen</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form action="/registration/logout" method="post">
@@ -73,7 +73,7 @@
                                 </ul>
                             @else
                                 <button class="nav-link dropdown-toggle bi-person" type="button" data-bs-toggle="dropdown" data-bs-display="static">
-                                    Login
+                                    Anmelden / Registrieren
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item bi-box-arrow-in-right" href="/registration/login"> Anmelden</a></li>
@@ -84,7 +84,7 @@
 
 
                         <!-- Dropdown Mitglied -->
-                        @if (ctxt != null && ctxt.isAuthenticated())
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Mitglieder
@@ -92,60 +92,68 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/members">Mitglieder verwalten</a></li>
                                     <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
+                                    <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/members/birthdays">Geburstage</a></li>
-                                    @if (ctxt != null && ctxt.isAdmin())
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="/admin">Admin Dashboard</a></li>
-                                    @endif
-
                                 </ul>
                             </li>
                         @endif
 
 
                         <!-- Dropdown Zeitschecks -->
-                        <li class="nav-item dropdown">
-                            <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
-                                Zeitschecks
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/timetransfers/new">Zeitschecks verbuchen</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Meine Zeitschecks</a></li>
-                            </ul>
-                        </li>
-
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER"))
+                            <li class="nav-item dropdown">
+                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                    Zeitschecks
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/timetransfers/new">Zeitschecks verbuchen</a></li>
+                                    <li><a class="dropdown-item" href="/members">Zeitscheck erstellen</a></li>
+                                </ul>
+                            </li>
+                        @endif
 
                         <!-- Dropdown Buchungen -->
-                        <li class="nav-item dropdown">
-                            <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
-                                Buchungen
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/timecheques/unaccounted">Offene Zeitschecks</a></li>
-                                <li><a class="dropdown-item" href="#">Offene Mitgliedsbeiträge</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Sonstige Buchung</a></li>
-                            </ul>
-                        </li>
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER", "TREASURER"))
+                            <li class="nav-item dropdown">
+                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                    Buchungen
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/timecheques/unaccounted">Offene Zeitschecks</a></li>
+                                    <li><a class="dropdown-item" href="#">Offene Mitgliedsbeiträge</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Sonstige Buchung</a></li>
+                                </ul>
+                            </li>
+                        @endif
 
 
                         <!-- Dropdown Text Content -->
-                        <li class="nav-item dropdown">
-                            <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
-                                Content
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.ABOUT_US}">${TextContentType.ABOUT_US.getCode()}</a></li>
-                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.CONTACT}">${TextContentType.CONTACT.getCode()}</a></li>
-                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.EVENTS}">${TextContentType.EVENTS.getCode()}</a></li>
-                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.NEWS}">${TextContentType.NEWS.getCode()}</a></li>
-                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.FAQ}">${TextContentType.FAQ.getCode()}</a></li>
-                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.TERMS_OF_SERVICE}">${TextContentType.TERMS_OF_SERVICE.getCode()}</a></li>
-                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.PRIVACY_POLICY}">${TextContentType.PRIVACY_POLICY.getCode()}</a></li>
-                                <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.LEGAL_NOTICE}">${TextContentType.LEGAL_NOTICE.getCode()}</a></li>
-                            </ul>
-                        </li>
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "SECRETARY"))
+                            <li class="nav-item dropdown">
+                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                    Content
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.ABOUT_US}">
+                                            ${TextContentType.ABOUT_US.getCode()}</a></li>
+                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.CONTACT}">
+                                            ${TextContentType.CONTACT.getCode()}</a></li>
+                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.EVENTS}">
+                                            ${TextContentType.EVENTS.getCode()}</a></li>
+                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.NEWS}">
+                                            ${TextContentType.NEWS.getCode()}</a></li>
+                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.FAQ}">
+                                            ${TextContentType.FAQ.getCode()}</a></li>
+                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.TERMS_OF_SERVICE}">
+                                            ${TextContentType.TERMS_OF_SERVICE.getCode()}</a></li>
+                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.PRIVACY_POLICY}">
+                                            ${TextContentType.PRIVACY_POLICY.getCode()}</a></li>
+                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.LEGAL_NOTICE}">
+                                            ${TextContentType.LEGAL_NOTICE.getCode()}</a></li>
+                                </ul>
+                            </li>
+                        @endif
 
                     </ul>
 

@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import eu.nabahilfe.webapp.NbhConst;
+import eu.nabahilfe.webapp.email.EmailComposer;
+import eu.nabahilfe.webapp.email.EmailDetails;
+import eu.nabahilfe.webapp.email.EmailService;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +35,8 @@ public class RegistrationController {
     private final MemberRepository memberRepository;
     private final RegistrationCodeRepository registrationCodeRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+    private final EmailComposer emailComposer;
 
     private static final Logger log = LoggerFactory.getLogger(RegistrationController.class);
 
@@ -43,16 +48,18 @@ public class RegistrationController {
 
 
     public RegistrationController(MemberRepository memberRepository, RegistrationCodeRepository registrationCodeRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder, EmailService emailService) {
         this.memberRepository = memberRepository;
         this.registrationCodeRepository = registrationCodeRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
+        this.emailComposer = new EmailComposer();
 
     }
 
 
     @GetMapping("/email")
-    public String showEmailForm(@Valid @ModelAttribute("email") String email, BindingResult binding,
+    public String showEmailForm(@Valid @ModelAttribute String email, BindingResult binding,
             @ModelAttribute("registrationSession") RegistrationSession session, HttpServletRequest request) {
 
         return "registration/email";
@@ -61,7 +68,7 @@ public class RegistrationController {
 
 
     @PostMapping("/email")
-    public String processEmail(Model model, @Valid @RequestParam("email") String email,
+    public String processEmail(Model model, @Valid @RequestParam String email,
             @ModelAttribute("registrationSession") RegistrationSession session, HttpServletRequest request) {
 
         email = email.trim().toLowerCase();
@@ -73,7 +80,7 @@ public class RegistrationController {
         }
 
         String code = randomCode();
-        sendCode(email, code);
+        sendCode(email, existing.getFirstName() + " " + existing.getLastName(), code);
 
         RegistrationCode registrationCode = new RegistrationCode();
         registrationCode.setEmail(email);
@@ -122,7 +129,7 @@ public class RegistrationController {
 
     @PostMapping("/confirm")
     @Transactional
-    public String processConfirm(Model model, @Valid @ModelAttribute("form") RegisterConfirmForm form, BindingResult binding,
+    public String processConfirm(Model model, @Valid @ModelAttribute RegisterConfirmForm form, BindingResult binding,
             @ModelAttribute("registrationSession") RegistrationSession session, SessionStatus sessionStatus ) {
 
         if (session.isExpired() || session.getStep() != RegistrationStep.EMAIL_VERIFIED) {
@@ -168,7 +175,7 @@ public class RegistrationController {
 
 
     @PostMapping("/login")
-    public String processLogin(Model model, @RequestParam("username") String email, @RequestParam("password") String password, HttpServletRequest request) {
+    public String processLogin(Model model, @RequestParam("username") String email, @RequestParam String password, HttpServletRequest request) {
 
         if (email != null) {
             email = email.trim().toLowerCase();
@@ -184,6 +191,8 @@ public class RegistrationController {
             model.addAttribute("errorMessage", "E-Mail oder Passwort ist falsch.");
             return "registration/login";
         }
+
+        log.debug("User {} logged in successfully", email);
 
         model.addAttribute("successMessage", "Erfolgreich angemeldet.");
         return "registration/login";
@@ -220,9 +229,10 @@ public class RegistrationController {
 
 
 
-    private void sendCode(@Valid String email, String randomCode) {
-        // FIXME Add final implementation to send the code to the user via email
-        log.warn("Generated code {} for email {}", randomCode, email);
+    private void sendCode(@Valid String recipient, String name, String randomCode) {
+        EmailDetails email = emailComposer.composeConfirmationCodeEmail(recipient, name, randomCode);
+        emailService.sendEmailHtml(email);
+        log.debug("Generated code ##### {} ##### for email {}", randomCode, email);
     }
 
 

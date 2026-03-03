@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import eu.nabahilfe.webapp.org.Offer;
 import eu.nabahilfe.webapp.org.OfferRepository;
+import eu.nabahilfe.webapp.security.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 
@@ -35,14 +37,16 @@ public class TimeTransferController {
     private final MemberRepository memberRepository;
     private final OfferRepository offerRepository;
     private final TimeTransferRepository timeTransferRepository;
+    private final SecurityUtils securityUtils;
 
     private static final Logger log = LoggerFactory.getLogger(TimeTransferController.class);
 
     public TimeTransferController(MemberRepository memberRepository, OfferRepository offerRepository,
-            TimeTransferRepository timeTransferRepository) {
+            TimeTransferRepository timeTransferRepository, SecurityUtils securityUtils) {
         this.memberRepository = memberRepository;
         this.offerRepository = offerRepository;
         this.timeTransferRepository = timeTransferRepository;
+        this.securityUtils = securityUtils;
     }
 
 
@@ -50,18 +54,50 @@ public class TimeTransferController {
     // LIST & DETAIL
     // --------------------
 
-    @GetMapping({"/{id}", "/self-timetransfer/{id}"})
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/self-timetransfer/{id}")
+    String viewSelfTimeTransfer(final Model model, @PathVariable Long id, HttpServletRequest request) {
+        TimeTransfer tt = timeTransferRepository.findById(id).orElse(null);
+        if (tt == null) {
+            model.addAttribute("errorMessage", "Zeitübertragung mit ID " + id + " nicht gefunden.");
+            return "error";
+        }
+
+        if (! securityUtils.memberIdMatchesCurrentUser(tt.getFromMember().getId())) {
+            model.addAttribute("errorMessage", "Sie haben keine Berechtigung, diese Zeitübertragung anzusehen.");
+            return "redirect:/error";
+        }
+
+        model.addAttribute("tt", tt);
+        String fullUrl = request.getRequestURL().append(request.getQueryString() != null ? "?" + request.getQueryString() : "").toString();
+        if (fullUrl.contains("self-timetransfer")) {
+            return "timetransfers/view-self-timetransfer";
+        }
+
+        return "timetransfers/view-timetransfer";
+    }
+
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
+    @GetMapping("/{id}")
     String viewTimeTransfer(final Model model, @PathVariable Long id, HttpServletRequest request) {
         TimeTransfer tt = timeTransferRepository.findById(id).orElse(null);
         if (tt == null) {
             model.addAttribute("errorMessage", "Zeitübertragung mit ID " + id + " nicht gefunden.");
             return "error";
         }
+
+        if (! securityUtils.memberIdMatchesCurrentUser(tt.getFromMember().getId())) {
+            model.addAttribute("errorMessage", "Sie haben keine Berechtigung, diese Zeitübertragung anzusehen.");
+            return "redirect:/error";
+        }
+
         model.addAttribute("tt", tt);
         String fullUrl = request.getRequestURL().append(request.getQueryString() != null ? "?" + request.getQueryString() : "").toString();
         if (fullUrl.contains("self-timetransfer")) {
             return "timetransfers/view-self-timetransfer";
         }
+
         return "timetransfers/view-timetransfer";
     }
 
@@ -70,11 +106,38 @@ public class TimeTransferController {
     // CREATE NEW
     // --------------------
 
-    @GetMapping(value = {"fromself/{fromMemberId}", "/new", "/new/{fromMemberId}"})
-    String addTimeTransfer(final Model model, @PathVariable(required = false) Long fromMemberId, HttpServletRequest request) {
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping(value = "fromself/{fromMemberId}")
+    String addSelfTimeTransfer(final Model model, @PathVariable(required = false) Long fromMemberId) {
 
-        String fullUrl = request.getRequestURL().append(request.getQueryString() != null ? "?" + request.getQueryString() : "").toString();
-        log.debug("Full request URL: {}", fullUrl);
+        TimeTransferForm ttf = new TimeTransferForm();;
+        log.debug("Adding new SELF-TimeTransfer, fromMemberId={}", fromMemberId);
+
+        if (fromMemberId != null) {
+            Member fromMember = memberRepository.findById(fromMemberId).orElse(null);
+            if (fromMember == null) {
+                model.addAttribute("errorMessage", "Mitglied mit ID " + fromMemberId + " nicht gefunden.");
+                return "error";
+            }
+            ttf.setUserFromId(fromMemberId);
+            ttf.setUserFromName(fromMember.getNameAndAddress());
+            log.debug("Creating new SELF-TimeTransfer, pre-filled form: {}", ttf);
+        }
+
+
+        log.debug("Creating new Self-TimeTransfer, pre-filled form: {}", ttf);
+
+        model.addAttribute("offers", offerRepository.findAllByOrderByCodeAsc());
+        model.addAttribute("ttf", ttf);
+
+        return "timetransfers/self-timetransfer";
+    }
+
+
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
+    @GetMapping(value = {"/new", "/new/{fromMemberId}"})
+    String addTimeTransfer(final Model model, @PathVariable(required = false) Long fromMemberId) {
 
         TimeTransferForm ttf = new TimeTransferForm();;
         log.debug("Adding new TimeTransfer, fromMemberId={}", fromMemberId);
@@ -93,13 +156,12 @@ public class TimeTransferController {
         model.addAttribute("offers", offerRepository.findAllByOrderByCodeAsc());
         model.addAttribute("ttf", ttf);
 
-        if (fullUrl.contains("fromself")) {
-            return "timetransfers/self-timetransfer";
-        }
         return "timetransfers/create-timetransfer";
     }
 
 
+    // FIXME: Prüfe ob das ein Security Problem sien kann, sollte wegen CSRF Token eigentlich nicht sein
+    @PreAuthorize("hasRole('USER')")
     @PostMapping
     @Transactional
     String saveTimeTransfer(final Model model, @RequestParam Long userFromId, @RequestParam Long userToId,

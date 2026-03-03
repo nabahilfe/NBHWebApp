@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import eu.nabahilfe.webapp.NbhConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -38,6 +40,7 @@ public class RoleController {
     // mapping model attribute 'role' to fetch Role by id or create new one
     // --------------------
 
+    @PreAuthorize("hasRole('USER')")
     @ModelAttribute("role")
     public Role findRole(@PathVariable(required = false) Long id) {
         return id == null ? new Role() : roleRepository.findById(id)
@@ -50,6 +53,7 @@ public class RoleController {
     // LIST & DETAIL
     // --------------------
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER', 'SECRETARY', 'TIME_KEEPER')")
     @GetMapping
     String listAllRoles(final Model model) {
         List<Role> roles = roleRepository.findAllBy(Sort.by("roleName"));
@@ -58,10 +62,18 @@ public class RoleController {
         return "roles/list-roles";
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
-    String editRole(final Model model, @PathVariable Long id) {
+    String editRole(final Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
         Optional<Role> role = roleRepository.findById(id);
+        if (role.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Rolle mit ID " + id + " wurde nicht gefunden.");
+            return "redirect:/roles";
+        }
+        if (NbhConst.ADMIN_ROLE_NAME.equalsIgnoreCase(role.get().getRoleName())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Die Rolle '" + NbhConst.ADMIN_ROLE_NAME+ "' kann nicht geändert werden.");
+            return "redirect:/roles";
+        }
         model.addAttribute("role", role.get());
         log.debug("Editing Role: {}", role.get());
         return "roles/detail-role";
@@ -72,6 +84,7 @@ public class RoleController {
     // CREATE NEW, UPDATE
     // --------------------
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/new")
     String newRole(final Model model) {
         log.debug("Creating new Role: {}", model.getAttribute("role"));
@@ -80,9 +93,19 @@ public class RoleController {
 
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     String saveRole(Model model, @ModelAttribute @Valid Role role,
             RedirectAttributes redirectAttributes, BindingResult result, HttpServletRequest request) {
+
+        boolean isPersistedAdmin = role.getId() != null && roleRepository.findById(role.getId())
+                .map(r -> NbhConst.ADMIN_ROLE_NAME.equalsIgnoreCase(r.getRoleName()))
+                .orElse(false);
+
+        if (isPersistedAdmin || NbhConst.ADMIN_ROLE_NAME.equalsIgnoreCase(role.getRoleName())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Die Rolle '" + NbhConst.ADMIN_ROLE_NAME + "' kann nicht geändert werden.");
+            return "redirect:/roles";
+        }
 
         String roleError = validateRoleAttributes(role);
         if (roleError != null) {
@@ -98,6 +121,7 @@ public class RoleController {
     }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{id}")
     public String updateRole(Model model, @ModelAttribute @Valid Role role,
             RedirectAttributes redirectAttributes, BindingResult result, HttpServletRequest request, @PathVariable Long id) {
@@ -106,11 +130,20 @@ public class RoleController {
     }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/delete/{id}")
     @Transactional
     String deleteRole(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
         Optional<Role> role = roleRepository.findById(id);
+        if (role.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Rolle mit ID " + id + " wurde nicht gefunden.");
+            return "redirect:/roles";
+        }
+        if (NbhConst.ADMIN_ROLE_NAME.equalsIgnoreCase(role.get().getRoleName())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Die Rolle '" + NbhConst.ADMIN_ROLE_NAME + "' kann nicht gelöscht werden.");
+            return "redirect:/roles";
+        }
         roleRepository.delete(role.get());
         redirectAttributes.addFlashAttribute("successMessage", "Rolle " + role.get().getRoleName() + " wurde gelöscht.");
         log.debug("Role with id {} deleted.", id);
@@ -123,6 +156,7 @@ public class RoleController {
     // --------------------
 
     // FIXME : Add actions to table header to enable sorting - see how it is done in list-members
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER', 'SECRETARY', 'TIME_KEEPER')")
     @GetMapping("/sort/{sortField}")
     String listAll(final Model model, @PathVariable String sortField) {
         List<Role> roles = roleRepository.findAllBy(Sort.by(sortField).descending());
@@ -174,8 +208,8 @@ public class RoleController {
             return "Es darf nur eine Vereinsrolle (Vorstand, Kassier, Schriftführer, Rechnungsprüfer) ausgewählt werden!";
 
         // Check rule 3: ZUSATZ-ROLLE Admin und TimeKeeper müssen eine der Vereinsrollen BoardMember, Treasurer, Secretary haben
-        if ((role.getIsAdmin() || role.getIsTimeKeeper()) && !(role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary()))
-            return "Rollen mit Funktion 'Administrator' oder 'Zeitschecks' müssen eine der Vereinsrollen Vorstand, Kassier oder Schriftführer haben!";
+        if ((role.getIsTimeKeeper()) && !(role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary()))
+            return "Rollen mit Funktion 'Zeitschecks' müssen eine der Vereinsrollen Vorstand, Kassier oder Schriftführer haben!";
 
         // Check rule 4: Admin nicht mit TimeKeeper kombinieren, da Admin alle Rechte hat und TimeKeeper nur Zeit-Schecks vergeben kann
         if (role.getIsAdmin() && role.getIsTimeKeeper())

@@ -39,8 +39,8 @@
             <p>Die <b>Rollen</b> bieten einerseitzs die Möglichkeit <b>Bezeichnungen für Funktionen</b> zu vergeben,
                 andererseits sind damit auch <b>bestimmte Berechtigungen</b> vebunden.</p>
             <ul>
-              <li><b>Vorstand</b> - kann Mitglieder verwalten, Kassaführung einsehen.</li>
-              <li><b>Schriftführer</b> - kann Protokolle erstellen und verwalten.</li>
+              <li><b>Vorstand</b> - kann Mitglieder verwalten, Kassaführung einsehen und Content bearbeiten.</li>
+              <li><b>Schriftführer</b> - kann Content bearbeiten, Protokolle erstellen und verwalten.</li>
               <li><b>Kassier</b> - kann Zahlungen erfassen und die Kassaführung verwalten.</li>
               <li><b>Prüfer</b> - kann Zahlungen und Kassaführung einsehen.</li>
               <li><b>Zeitschecks</b> - kann Zeitschecks erfassen und verwalten.</li>
@@ -49,7 +49,7 @@
              </ul>
              <p>Einer <b>Rolle</b> können auch <b>mehrere Berechtigungen</b> zugeordnet werden, z.B. Obmann/Obfrau auch die Berechtigung für Zeitschecks,
                 oder ein Schriftführer könnte auch Administrator sein.</p>
-             <p>Die Funktionen <b>Zeitschecks</b> und <b>Administrator</b> müssen immer mit einer Vereins-Funktion wie Vorstand, Schriftführer oder Kassier kombiniert werden.</p>
+             <p>Die Funktionen <b>Zeitschecks</b> musse immer mit einer Vereins-Funktion wie Vorstand, Schriftführer oder Kassier kombiniert werden.</p>
              <b>Die Funktionen <i>Prüfer</i> und <i>Sonstiges</i> lassen sich <i>nicht</i> mit anderen Berechtigungen kombinieren!</b>
           </div>
         </div>

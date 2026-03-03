@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -51,6 +52,8 @@ public class AccountingController {
     // VIEW
     // --------------------
 
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER', 'BOARD_MEMBER', 'AUDITOR')")
     @GetMapping("/view-accounting/{id}")
     public String viewAccountingEntry(final Model model, @PathVariable Long id) {
 
@@ -63,12 +66,15 @@ public class AccountingController {
         return "accountings/view-accounting";
     }
 
+    // FIXME: Add ListAccountings per year, month, accountable class, etc. as needed
+
 
     // --------------------
     // CREATE NEW, UPDATE
     // --------------------
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER')")
     @PostMapping("/new-accountable")
     public String newAccountable(final Model model, @ModelAttribute @Valid AccountableRowSelectionForm formRowData) {
 
@@ -93,6 +99,7 @@ public class AccountingController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER')")
     @PostMapping("/save-accounting")
     @Transactional
     public String saveAccountingEntry(final Model model,  @ModelAttribute @Valid AccountingEntry accountingEntry,
@@ -125,7 +132,6 @@ public class AccountingController {
         redirectAttributes.addFlashAttribute("successMessage", "Buchung wurde gespeichert.");
         return "redirect:/accountings/view-accounting/" + accountingEntry.getId();
     }
-
 
 
 }
