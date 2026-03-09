@@ -14,7 +14,7 @@
 
 @param List<Member> boardMembers
 
-<div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow p-3 mb-5">
+<div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow p-3 mb-5 bg-white">
 
     <h2>Vertretungsbefugte Organe</h2>
 

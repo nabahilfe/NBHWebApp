@@ -38,10 +38,11 @@
 
         </div>
 
-        <div class="col-12 col-lg-4 mb-3">
+        <div class="col-12 col-lg-4 mb-3 ">
             <!-- Right column content (1/3) -->
 
-            <img src="/images/nbh-logo.webp" class="rounded mx-auto d-block" alt="NBH Logo">
+            <img src="/images/nbh-logo.002.png" alt="NBH Logo">
+            <!--img src="/images/nbh-logo.002.png" class="rounded mx-auto d-block rounded-3 shadow p-3 bg-transparent" alt="NBH Logo"-->
 
         </div>
 
