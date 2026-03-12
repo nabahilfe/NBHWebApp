@@ -28,9 +28,10 @@
          <div class="col-12 col-lg-4 mb-3 ">
 
             <!-- Left column content (1/3) -->
-            <img src="/images/nbh-logo-neu-rund-2.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
-            <img src="/images/nbh-logo-neu-rund-5.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
             <img src="/images/nbh-logo-gelb.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
+            <img src="/images/nbh-logo-neu-bg-white.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
+            <img src="/images/nbh-logo-neu.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
+            <img src="/images/nbh-logo-neu-filled.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
 
             <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow p-3 mb-5"
             style="background-color: #ECFEFF;">
