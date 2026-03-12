@@ -97,17 +97,17 @@
 
             <div class="tab-content" id="memberDetailTabsContent">
                 <div class="tab-pane fade show active" id="timecheques-pane" role="tabpanel" aria-labelledby="timecheques-tab" tabindex="0">
-                    <div class="pt-3">
+                    <div>
                         @template.components.list-timecheques-component(member = member, timeCheques = purchasedTimeCheques)
                     </div>
                 </div>
                 <div class="tab-pane fade" id="transfers-pane" role="tabpanel" aria-labelledby="transfers-tab" tabindex="0">
-                    <div class="pt-3">
+                    <div>
                         @template.components.list-timetransfers-given-component(member = member, transfers = givenTimeTransfers)
                     </div>
                 </div>
                 <div class="tab-pane fade" id="received-pane" role="tabpanel" aria-labelledby="received-tab" tabindex="0">
-                    <div class="pt-3">
+                    <div>
                         @template.components.list-timetransfers-received-component(member = member, transfers = receivedTimeTransfers)
                     </div>
                 </div>
