@@ -166,7 +166,7 @@ public class TimeTransferController {
     @Transactional
     String saveTimeTransfer(final Model model, @RequestParam Long userFromId, @RequestParam Long userToId,
             @RequestParam Integer hours, @RequestParam Long offerId, @RequestParam LocalDate dateOfService,
-            @RequestParam String fromself, RedirectAttributes redirectAttributes) {
+            @RequestParam String fromself, @RequestParam(required = false) String note, RedirectAttributes redirectAttributes) {
 
         log.debug("Saving TimeTransfer from user {} to user {} of hours {} for offer {} on date {}",
                 userFromId, userToId, hours, offerId, dateOfService);
@@ -179,7 +179,7 @@ public class TimeTransferController {
         // validate transfer is not to self
         if (memberFrom.getId() == memberTo.getId()) {
             // create form with submitted values to re-display form with error message
-            TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo);
+            TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo, note);
             log.debug("\nTransfer from {} to same member, re-displaying form with error.", ttf);
             model.addAttribute("ttf", ttf);
             model.addAttribute("errorMessage", "Leistungsemfänger und Leistungserbringer dürfen nicht identisch sein!");
@@ -192,7 +192,7 @@ public class TimeTransferController {
         // validate sufficient hours
         if (memberFrom.getAccumulatedHours() == null || memberFrom.getAccumulatedHours() < hours) {
             // create form with submitted values to re-display form with error message
-            TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo);
+            TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo, note);
             log.debug("\nInsufficient hours for member {}, re-displaying form with error.", memberFrom.getName());
             model.addAttribute("ttf", ttf);
             model.addAttribute("errorMessage", memberFrom.getName()
@@ -215,7 +215,7 @@ public class TimeTransferController {
                 if (!code.equals("900")  && !code.equals("999")) {
                     log.debug("\nTransfer involves Sozialkonto, category {} is not allowed. Must be 900 or 999", code);
                     // create form with submitted values to re-display form with error message
-                    TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo);
+                    TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo, note);
                     log.debug("\nTransfer from Sozialkonto {}, re-displaying form with error.", memberFrom);
                     model.addAttribute("ttf", ttf);
                     model.addAttribute("errorMessage", "Bei Sozialkonto muss Kategorie 900 (oder 999) ausgewählt werden!");
@@ -234,7 +234,7 @@ public class TimeTransferController {
         tt.setHours(hours);
         tt.setDateOfService(dateOfService);
         tt.setOffer(offerRepository.findById(offerId).get());
-        // tt.setNote();
+        if (note != null && !note.trim().isEmpty()) tt.setNote(note.trim());
 
         timeTransferRepository.save(tt);
 
@@ -262,7 +262,7 @@ public class TimeTransferController {
     // --------------------
 
     private TimeTransferForm createTimeTransferForm(Long userFromId, Long userToId, Integer hours,
-            Long offerId, LocalDate dateOfService, Member memberFrom, Member memberTo) {
+            Long offerId, LocalDate dateOfService, Member memberFrom, Member memberTo, String note) {
         TimeTransferForm ttf = new TimeTransferForm();
 
         ttf.setUserFromId(userFromId);
@@ -274,6 +274,7 @@ public class TimeTransferController {
         ttf.setOfferId(offerId);
         ttf.setHoursSelected(hours.toString());
         ttf.setServiceDate(dateOfService);
+        ttf.setNote(note);
         return ttf;
     }
 

@@ -45,7 +45,7 @@ public class TimeTransfer  {
     private Integer hours;    // Wie viele Stunden, mögliche Werte z.B. 1 .. 5
 
     @Size(max = 250)
-    private String note;    // Anmerkung zur erbrachten Leistung
+    private String note;    // Anmerkung zur erbrachten Leistung (Beschreibung)
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "offer_id")

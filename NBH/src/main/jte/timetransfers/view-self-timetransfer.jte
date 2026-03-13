@@ -38,6 +38,9 @@
 
                     <label class="col-form-label">Kategorie</label>
                     <input type="text" class="form-control" disabled value="${tt.getOffer().getDescription()}">
+                    @if(tt.getNote() != null && !tt.getNote().isEmpty())
+                        <div class="small text-muted">Beschreibung: ${tt.getNote()}</div>
+                    @endif
 
                     <label class="col-form-label">Datum</label>
                     <div class="col-sm-10">
