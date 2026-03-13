@@ -46,6 +46,21 @@ public class RegistrationController {
         return new RegistrationSession();
     }
 
+    @ModelAttribute("form")
+    public RegisterConfirmForm registerConfirmForm(@ModelAttribute("registrationSession") RegistrationSession session) {
+        if (session.getEmail() == null || session.isExpired()) {
+            return new RegisterConfirmForm(); // leeres Formular, da kein gültiger Session-Status vorhanden
+        }
+        else if (session.getStep() != RegistrationStep.EMAIL_VERIFIED) {
+            return new RegisterConfirmForm(); // leeres Formular, da Session-Status nicht passend
+        }
+        else {
+            RegisterConfirmForm form = new RegisterConfirmForm();
+            form.setEmail(session.getEmail());
+            return form; // Formular mit vorausgefüllter E-Mail, da gültiger Session-Status vorhanden
+        }
+    }
+
 
     public RegistrationController(MemberRepository memberRepository, RegistrationCodeRepository registrationCodeRepository,
             PasswordEncoder passwordEncoder, EmailService emailService) {
@@ -128,12 +143,39 @@ public class RegistrationController {
             return "registration/confirm";
         }
 
+        // fetch latest code for this email
+        RegistrationCode regCode = registrationCodeRepository.findFirstByEmailOrderByIdDesc(session.getEmail());
+
+        if (regCode == null) {
+            model.addAttribute("errorMessage", "Kein Registrierungscode gefunden. Bitte neu anfordern.");
+            sessionStatus.setComplete();
+            return "registration/confirm";
+        }
+
+        // check code validity
         if (!verifyCode(session.getEmail(), form.getCode())) {
+            // increment failed attempts on the found registration code
+            try {
+                regCode.setFailedAttempts(regCode.getFailedAttempts() + 1);
+                registrationCodeRepository.save(regCode);
+            } catch (Exception e) {
+                log.warn("Could not increment failedAttempts for regCode {}: {}", regCode, e.getMessage());
+            }
+
+            final int MAX_ATTEMPTS = 3;
+            if (regCode.getFailedAttempts() >= MAX_ATTEMPTS) {
+                // delete the code after too many failed attempts
+                registrationCodeRepository.deleteByEmail(session.getEmail());
+                model.addAttribute("errorMessage", "Zu viele ungültige Versuche. Bitte neuen Code anfordern.");
+                sessionStatus.setComplete();
+                return "registration/confirm";
+            }
+
             model.addAttribute("errorMessage", "Ungültiger oder abgelaufener Code!");
             return "registration/confirm";
         }
 
-
+        // code verified successfully - proceed with password set
         Member member = memberRepository.findByEmail(session.getEmail());
         member.setPassword(passwordEncoder.encode(form.getPassword()));
 

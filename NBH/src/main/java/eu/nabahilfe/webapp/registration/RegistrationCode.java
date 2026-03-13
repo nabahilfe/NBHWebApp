@@ -45,6 +45,9 @@ public class RegistrationCode  {
     @Column(nullable = false)
     private Integer version;
 
+    @Column(nullable = false)
+    private Integer failedAttempts = 0; // number of failed confirmation attempts for this code
+
 
     // getters/setters
 
@@ -92,13 +95,21 @@ public class RegistrationCode  {
         return id;
     }
 
+    public Integer getFailedAttempts() {
+        return failedAttempts;
+    }
+
+    public void setFailedAttempts(Integer failedAttempts) {
+        this.failedAttempts = failedAttempts;
+    }
+
 
     // toString
 
     @Override
     public String toString() {
         return "RegistrationCode [id=" + id + ", code=" + code + ", email=" + email + ", expiresAt=" + expiresAt
-                + ", createdAt=" + createdAt + ", version=" + version + "]";
+                + ", createdAt=" + createdAt + ", version=" + version + ", failedAttempts=" + failedAttempts + "]";
     }
 
 
