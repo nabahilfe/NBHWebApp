@@ -183,13 +183,15 @@ public class MemberController {
         }
 
         // verify requested id matches current session user by id and email
-        java.util.Optional<Member> safe = memberRepository.findByIdAndEmail(id, current.getEmail());
-        if (safe.isEmpty()) {
-            // requested resource does not belong to current user -> redirect to centralized 403 handler
+        // prefer centralized helper: authenticated + id match
+        if (!securityUtils.isAuthenticatedAndMatches(id)) {
+            // either not authenticated (handled above) or id mismatch
             log.warn("Unauthorized access attempt to /members/mydata/{} by user {}", id, current.getEmail());
             return "redirect:/statuscode/403";
         }
-        Member member = safe.get();
+
+        // now safe to load the member record
+        Member member = memberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id));
         model.addAttribute("roleNames", member.getRole() != null ? member.getRole().getRoleName() : "Mitglied");
         model.addAttribute("receivedTimeTransfers", timeTransferRepository.findAllByToMember_IdOrderByDateOfServiceDesc(id));
         model.addAttribute("givenTimeTransfers", timeTransferRepository.findAllByFromMember_IdOrderByDateOfServiceDesc(id));
