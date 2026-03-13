@@ -184,7 +184,12 @@ public class MemberController {
 
         // verify requested id matches current session user by id and email
         java.util.Optional<Member> safe = memberRepository.findByIdAndEmail(id, current.getEmail());
-        Member member = safe.orElseThrow(() -> new IllegalArgumentException("Unauthorized access or member not found. Requested id: " + id));
+        if (safe.isEmpty()) {
+            // requested resource does not belong to current user -> show 403 page
+            model.addAttribute("errorMessage", "Sie haben keine Berechtigung, diese Seite aufzurufen.");
+            return "403";
+        }
+        Member member = safe.get();
         model.addAttribute("roleNames", member.getRole() != null ? member.getRole().getRoleName() : "Mitglied");
         model.addAttribute("receivedTimeTransfers", timeTransferRepository.findAllByToMember_IdOrderByDateOfServiceDesc(id));
         model.addAttribute("givenTimeTransfers", timeTransferRepository.findAllByFromMember_IdOrderByDateOfServiceDesc(id));
