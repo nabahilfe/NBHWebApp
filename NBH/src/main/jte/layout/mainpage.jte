@@ -27,12 +27,12 @@
 
         <meta name="theme-color" content="#712cf9" />
 
-          <style>
+        <style>
             body {
                 padding-top: 90px;
                 background: #e9fbe9;
             }
-          </style>
+        </style>
 
     </head>
 
