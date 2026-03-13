@@ -156,7 +156,25 @@ public class RegistrationController {
 
 
     @GetMapping("/login")
-    public String showLoginForm() {
+    public String showLoginForm(@RequestParam(value = "error", required = false) String error, Model model, HttpServletRequest request) {
+        if ("true".equals(error)) {
+            model.addAttribute("errorMessage", "E-Mail oder Passwort falsch!");
+        }
+
+        // Restore submitted username from session if present (set by failure handler)
+        try {
+            var session = request.getSession(false);
+            if (session != null) {
+                Object lastUser = session.getAttribute("LAST_USERNAME");
+                if (lastUser != null) {
+                    model.addAttribute("username", lastUser.toString());
+                    session.removeAttribute("LAST_USERNAME");
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Could not restore last username from session: {}", e.getMessage());
+        }
+
         return "registration/login";
     }
 

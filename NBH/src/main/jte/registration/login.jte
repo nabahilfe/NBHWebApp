@@ -34,6 +34,7 @@
                    name="username"
                    placeholder="name@example.com"
                    autocomplete="username"
+                   value="${username != null ? username : (fullUsername != null ? fullUsername : "") }"
                    required>
             <div class="invalid-feedback">Bitte eine gültige E-Mail eingeben.</div>
         </div>
