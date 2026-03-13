@@ -95,19 +95,6 @@ public class RegistrationController {
     }
 
 
-    @GetMapping("/logout")
-    public String showLogoutForm(Model model, HttpServletRequest request) {
-        return "registration/logout";
-    }
-
-
-    @PostMapping("/logout")
-    public String doLogout(Model model, HttpServletRequest request, SessionStatus sessionStatus) {
-        sessionStatus.setComplete();
-        return "redirect:/";
-    }
-
-
     @GetMapping("/confirm")
     public String showConfirmForm(@ModelAttribute("registrationSession") RegistrationSession session, Model model) {
 
@@ -173,30 +160,6 @@ public class RegistrationController {
         return "registration/login";
     }
 
-
-    @PostMapping("/login")
-    public String processLogin(Model model, @RequestParam("username") String email, @RequestParam String password, HttpServletRequest request) {
-
-        if (email != null) {
-            email = email.trim().toLowerCase();
-        }
-
-        Member member = memberRepository.findByEmail(email);
-        if (member == null) {
-            model.addAttribute("errorMessage", "E-Mail oder Passwort ist falsch.");
-            return "registration/login";
-        }
-
-        if (member.getPassword() == null || !member.getPassword().equals(password)) {
-            model.addAttribute("errorMessage", "E-Mail oder Passwort ist falsch.");
-            return "registration/login";
-        }
-
-        log.debug("User {} logged in successfully", email);
-
-        model.addAttribute("successMessage", "Erfolgreich angemeldet.");
-        return "registration/login";
-    }
 
 
     // Helper methods
