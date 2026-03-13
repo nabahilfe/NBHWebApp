@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 
 import java.time.LocalDate;
@@ -38,7 +39,7 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     Optional<Member> findTopByOrderByMemberNmbrDesc();
 
     @EntityGraph(attributePaths = "role")
-    @org.springframework.data.jpa.repository.Query("select m from Member m where m.birthdate is not null and MONTH(m.birthdate) = :month order by m.birthdate asc")
+    @Query("select m from Member m where m.birthdate is not null and MONTH(m.birthdate) = :month order by m.birthdate asc")
     List<Member> findByBirthMonth(@org.springframework.data.repository.query.Param("month") int month);
 
     default List<MemberBirthdayForm> findBirthdaysByMonthOffset(int monthOffset) {
@@ -60,10 +61,14 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
 
     Member findByEmail(String email);
 
+    @Query("SELECT m FROM Member m WHERE m.id = :id AND lower(m.email) = lower(:email)")
+    java.util.Optional<Member> findByIdAndEmail(@org.springframework.data.repository.query.Param("id") Long id,
+            @org.springframework.data.repository.query.Param("email") String email);
+
     List<Member> findBySalutation(String salutation);
 
     @EntityGraph(attributePaths = "role")
-    @org.springframework.data.jpa.repository.Query(
+    @Query(
         "SELECT m FROM Member m JOIN m.role r " +
         "WHERE r.isBoardMember = true OR r.isTreasurer = true OR r.isSecretary = true " +
         "ORDER BY m.lastName ASC")
