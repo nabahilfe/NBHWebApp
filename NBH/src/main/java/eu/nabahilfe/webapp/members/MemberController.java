@@ -185,9 +185,9 @@ public class MemberController {
         // verify requested id matches current session user by id and email
         java.util.Optional<Member> safe = memberRepository.findByIdAndEmail(id, current.getEmail());
         if (safe.isEmpty()) {
-            // requested resource does not belong to current user -> show 403 page
-            model.addAttribute("errorMessage", "Sie haben keine Berechtigung, diese Seite aufzurufen.");
-            return "403";
+            // requested resource does not belong to current user -> redirect to centralized 403 handler
+            log.warn("Unauthorized access attempt to /members/mydata/{} by user {}", id, current.getEmail());
+            return "redirect:/statuscode/403";
         }
         Member member = safe.get();
         model.addAttribute("roleNames", member.getRole() != null ? member.getRole().getRoleName() : "Mitglied");
