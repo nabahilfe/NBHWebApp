@@ -39,7 +39,7 @@
             <div class="row">
               <div class="col-auto">
                 <div class="card">
-                  <div class="card-body bg-success bg-opacity-10">
+                  <div class="card-body bg-success bg-opacity-25">
 
                     <h4 class="card-title text-primary">Zeitscheck übergeben</h4>
                     <hr/>

@@ -31,7 +31,7 @@
     <form id="tcForm" action="/timecheques" method="POST">
         ${csrfHiddenInput}
         <div class="card">
-            <div class="card-body bg-success bg-opacity-10">
+            <div class="card-body bg-success bg-opacity-25">
                 <h4 class="text-primary">${timeCheque.getAssignedTo().getName()}</h4>
                 <p>${timeCheque.getAssignedTo().getAddress()}</p>
 
