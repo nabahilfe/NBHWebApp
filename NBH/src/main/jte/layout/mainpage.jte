@@ -30,7 +30,7 @@
           <style>
             body {
                 padding-top: 90px;
-                background: linear-gradient(180deg, #e9fbe9 0%, #c8eac8 100%);
+                background: #e9fbe9;
             }
           </style>
 
