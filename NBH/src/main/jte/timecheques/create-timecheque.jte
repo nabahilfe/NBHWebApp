@@ -24,36 +24,52 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>Zeitscheck erstellen für</h3>
-    <br/>
 
+    <div class="container d-flex justify-content-center">
 
-    <form id="tcForm" action="/timecheques" method="POST">
-        ${csrfHiddenInput}
-        <div class="card">
-            <div class="card-body bg-success bg-opacity-25">
-                <h4 class="text-primary">${timeCheque.getAssignedTo().getName()}</h4>
-                <p>${timeCheque.getAssignedTo().getAddress()}</p>
+        <form id="tcForm" action="/timecheques" method="POST">
+            ${csrfHiddenInput}
 
-                Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours() == null ? 0
-                        : timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
+            <div class="row">
+                <div class="col-auto">
+                    <div class="card">
+                        <div class="card-body bg-success bg-opacity-25">
 
-                <p>
-                    ${timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS ? "Kostenlos bei Eintritt" : "Kauf von Zeitschecks"}:
-                    <b>${timeCheque.getHours()} h</b>
-                </p>
+                            <h4 class="card-title text-primary">Zeitscheck erstellen / kaufen für</h4>
+                            <hr/>
+                            <h4>${timeCheque.getAssignedTo().getName()}</h4>
+                            <h5>${timeCheque.getAssignedTo().getAddress()}</h5>
+                            <hr/>
 
-                <div class="row g-3 align-items-center">
-                    <div class="col-auto">
-                        <label for="orderDate" class="col-form-label">Erstellungsdatum:</label>
+                            Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours() == null ? 0
+                                    : timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
+                            <br/>
+                            ${timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS ? "Kostenlos bei Eintritt" : "Kauf von Zeitschecks"}:
+                            <b>${timeCheque.getHours()} h</b>
+
+                            @if (timeCheque.getHours() != NbhConst.FIRST_TIME_CHEQUE_HOURS)
+                                <br/>
+                                Kosten: <b>${timeCheque.getHours()} € FIXME - Berechnen!</b>
+                            @endif
+
+                            <div class="row g-3 align-items-center">
+                                <div class="col-auto">
+                                    <label for="orderDate" class="col-form-label">Erstellungsdatum:</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="date" class="form-control" name="orderDate" id="orderDate" value="${formatISO(timeCheque.getTransactionDate())}" required>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-                    <div class="col-auto">
-                        <input type="date" class="form-control" name="orderDate" id="orderDate" value="${formatISO(timeCheque.getTransactionDate())}" required>
-                    </div>
+
                 </div>
             </div>
-        </div>
-    </form>
+
+        </form>
+
+    </div>
 
 
     @if (errorMessage == null)
@@ -118,6 +134,7 @@
             </div>
         </div>
     </div>
+
 
 
     <script>
