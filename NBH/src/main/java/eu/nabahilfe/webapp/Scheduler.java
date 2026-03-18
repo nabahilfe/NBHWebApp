@@ -51,7 +51,7 @@ public class Scheduler {
         }
 
         for(Member member : treasurers) {
-            EmailDetails email =emailComposer.composeTimeChecksToBookEmail(member.getEmail(), member.getName(), timeChecksToBook);
+            EmailDetails email = emailComposer.composeTimeChecksToBookEmail(member.getEmail(), member.getName(), timeChecksToBook);
             emailService.sendEmailHtml(email);
             log.debug("Sent email {} to {}", email.getSubject(), email.getRecipient());
         }
