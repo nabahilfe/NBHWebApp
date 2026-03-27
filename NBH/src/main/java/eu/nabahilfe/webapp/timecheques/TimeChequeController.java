@@ -112,28 +112,30 @@ public class TimeChequeController {
             return "error";
         }
 
-        // FIXME: EXTRACT DUPLICATE CHECKING LOGIC INTO HELPER METHOD
-        // Business Logic: determine TimeCheque hours based on existing TimeCheques
-        TimeCheque tc = null;
-        int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
-        if (existingTimeCheques == 0 && (member.getIsImportedMember() != true)) {
-            log.debug("Member id={} has no existing TimeCheques, is not imported Member, using first hours of {}", memberId, NbhConst.FIRST_TIME_CHEQUE_HOURS);
-            tc = createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member);
-        } else {
-            tc = createTimeCheque(NbhConst.REGULAR_TIME_CHEQUE_HOURS, member);
-            log.debug("Member id={} has {} existing TimeCheques, using regular hours of {}", memberId, existingTimeCheques, NbhConst.REGULAR_TIME_CHEQUE_HOURS);
-        }
+        TimeCheque tc = createNewTimeCheque(member);
 
         model.addAttribute("timeCheque", tc);
         model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(memberId));
 
-        String validationError = validateData(member, tc, existingTimeCheques);
+        String validationError = validateData(member, tc, timeChequeRepository.countByAssignedTo(member), false);
         if (validationError != null) {
             model.addAttribute("errorMessage", validationError);
             log.debug("Validation error for TimeCheque for Member id={}: {}", memberId, validationError);
         }
 
         return "timecheques/create-timecheque";
+    }
+
+
+    // Business Logic: determine TimeCheque hours based on existing TimeCheques
+    private TimeCheque createNewTimeCheque(Member member) {
+        int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
+        if (existingTimeCheques == 0 && (! member.getIsImportedMember())) {
+            log.debug("Member id={} has no existing TimeCheques, is not imported Member, using first hours of {}", member.getId(), NbhConst.FIRST_TIME_CHEQUE_HOURS);
+            return createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member);
+        }
+        log.debug("Member id={} has {} existing TimeCheques, using regular hours of {}", member.getId(), existingTimeCheques, NbhConst.REGULAR_TIME_CHEQUE_HOURS);
+        return createTimeCheque(NbhConst.REGULAR_TIME_CHEQUE_HOURS, member);
     }
 
 
@@ -153,22 +155,12 @@ public class TimeChequeController {
             return "error";
         }
 
-        // FIXME: EXTRACT DUPLICATE CHECKING LOGIC INTO HELPER METHOD
-        // Business Logic: determine TimeCheque hours based on existing TimeCheques
-        TimeCheque tc = null;
-        int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
-        if (existingTimeCheques == 0 && (member.getIsImportedMember() != true)) {
-            log.debug("Member id={} has no existing TimeCheques, is not imported Member, using first hours of {}", memberId, NbhConst.FIRST_TIME_CHEQUE_HOURS);
-            tc = createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member);
-        } else {
-            tc = createTimeCheque(NbhConst.REGULAR_TIME_CHEQUE_HOURS, member);
-            log.debug("Member id={} has {} existing TimeCheques, using regular hours of {}", memberId, existingTimeCheques, NbhConst.REGULAR_TIME_CHEQUE_HOURS);
-        }
+        TimeCheque tc = createNewTimeCheque(member);
 
         model.addAttribute("timeCheque", tc);
         model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(memberId));
 
-        String validationError = validateData(member, tc, existingTimeCheques);
+        String validationError = validateData(member, tc, timeChequeRepository.countByAssignedTo(member), true);
         if (validationError != null) {
             model.addAttribute("errorMessage", validationError);
             log.debug("Validation error for TimeCheque for Member id={}: {}", memberId, validationError);
@@ -228,12 +220,16 @@ public class TimeChequeController {
     }
 
 
-    private String validateData(Member member, TimeCheque timeCheque, int existingTimeCheques) {
+    private String validateData(Member member, TimeCheque timeCheque, int existingTimeCheques, boolean isSelfPurchase) {
         // Business Rule: TimeCheques can only be purchased if Member has less than 5 accumulated hours,
         // except for the first TimeCheque, which is free of charge.
         if (member.getAccumulatedHours() != null && member.getAccumulatedHours() >= NbhConst.MIN_HOURS_FOR_TIME_CHEQUE && existingTimeCheques > 0) {
             return "Zeitschecks können erst bei weniger als 5 Stunden Zeitguthaben erworben werden." +
                    " Aktuelles Zeitguthaben: " + member.getAccumulatedHours() + " Stunden.";
+        }
+        // Business Rule: Self-purchase of TimeCheques is only allowed if directDebitAuthorization is true.
+        if (isSelfPurchase && !member.getDirectDebitAuthorization()) {
+            return "Selbstkauf von Zeitschecks ist nur möglich, wenn eine Lastschriftgenehmigung vorliegt.";
         }
         return null;
     }
