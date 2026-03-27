@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
+import eu.nabahilfe.webapp.security.SecurityUtils;
+import eu.nabahilfe.webapp.timetransfers.TimeTransfer;
 import jakarta.transaction.Transactional;
 
 @Controller
@@ -28,14 +30,16 @@ public class TimeChequeController {
     private final TimeChequeRepository timeChequeRepository;
     private final MemberRepository memberRepository;
     private final TimeChequeRepository timeCheckRepository;
+    private final SecurityUtils securityUtils;
 
     private static final Logger log = LoggerFactory.getLogger(TimeChequeController.class);
 
     public TimeChequeController(TimeChequeRepository timeChequeRepository, MemberRepository memberRepository,
-            TimeChequeRepository timeCheckRepository) {
+            TimeChequeRepository timeCheckRepository, SecurityUtils securityUtils) {
         this.timeChequeRepository = timeChequeRepository;
         this.memberRepository = memberRepository;
         this.timeCheckRepository = timeCheckRepository;
+        this.securityUtils = securityUtils;
     }
 
 
@@ -124,8 +128,13 @@ public class TimeChequeController {
 
     // Create TimeCheque for self Member
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/new/{memberId}")
+    @GetMapping("/newfromself/{memberId}")
     String addSelfTimeCheque(final Model model, @PathVariable Long memberId) {
+
+        // For security, only allow access to buy timecheques where the current user is the logged in user
+        if (!securityUtils.isAuthenticatedAndMatches(memberId)) {
+            return "redirect:/statuscode/403";
+        }
 
         Member member = memberRepository.findById(memberId).orElse(null);
         if (member == null) {
