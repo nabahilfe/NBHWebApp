@@ -41,7 +41,7 @@
                         <tr>
                             <td scope="row">${dateDE(tt.getDateOfService())}</td>
                             <td scope="row">${boldMemberNameIfSameId(member.getId(), tt.getToMember())}</td>
-                            <td scope="row">${tt.getOffer().getDescription()}@if(tt.getNote() != null && !tt.getNote().isEmpty())<div class="small text-muted">Beschreibung: ${tt.getNote()}</div>@endif</td>
+                            <td scope="row">${tt.getOffer().getDescription()}@if(tt.getNote() != null && !tt.getNote().isEmpty())<div class="small text-muted">${tt.getNote()}</div>@endif</td>
                             <td scope="row" class="text-end">${tt.getHours()}</td>
                         </tr>
                     @endfor
