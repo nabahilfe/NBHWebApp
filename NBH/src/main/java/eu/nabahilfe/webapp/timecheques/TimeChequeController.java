@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,10 +55,20 @@ public class TimeChequeController {
     @GetMapping("/{id}")
     String viewTimeCheque(final Model model, @PathVariable Long id) {
 
+        // Check if user has ADMIN or TIME_KEEPER role
+        boolean isAdminOrTimeKeeper = SecurityContextHolder.getContext().getAuthentication()
+                .getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_TIME_KEEPER"));
+
         TimeCheque tc = timeChequeRepository.findById(id).orElse(null);
         if (tc == null) {
             model.addAttribute("errorMessage", "Zeitscheck mit ID " + id + " nicht gefunden.");
             return "error";
+        }
+
+        // If user is not ADMIN or TIME_KEEPER, only allow viewing own TimeCheques
+        if (!isAdminOrTimeKeeper && !securityUtils.isAuthenticatedAndMatches(tc.getAssignedTo().getId())) {
+            return "redirect:/statuscode/403";
         }
 
         Member member = memberRepository.findById(tc.getAssignedTo().getId()).orElse(null);

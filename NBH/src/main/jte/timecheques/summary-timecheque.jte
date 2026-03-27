@@ -48,7 +48,7 @@
 
     <div class="card">
         <div class="card-body">
-            <h5>Erworbene Zeitschecks</h5>
+            <h5>Gekaufte Zeitschecks</h5>
 
             <table class="table table-hover table-sm" id="memberTable">
                 <thead>
@@ -76,10 +76,11 @@
 
     <br/>
 
-    <form action="/members/${member.getId()}" method="get">
-        <button type="submit" class="btn btn-outline-primary bi-arrow-left"> Zurück zum Mitglied</button>
-    </form>
-
+    @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+        <form action="/members/${member.getId()}" method="get">
+            <button type="submit" class="btn btn-outline-primary bi-arrow-left"> Zurück zum Mitglied</button>
+        </form>
+    @endif
 
 `)
 

@@ -86,7 +86,7 @@
     <br/>
     <div class="card">
         <div class="card-body">
-            <h5>Erworbene Zeitschecks</h5>
+            <h5>Gekaufte Zeitschecks</h5>
 
             <table class="table table-hover table-sm" id="memberTable">
                 <thead>
