@@ -46,8 +46,8 @@
 
             <div class="form-group row">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-body bg-success bg-opacity-10">
+                    <div class="card shadow" style="background-color: #ECFEFF;"">
+                        <div class="card-body">
 
                             <h5>Persönliche Daten</h5>
 
@@ -106,8 +106,8 @@
                 </div>
 
                 <div class="col">
-                    <div class="card">
-                        <div class="card-body bg-success bg-opacity-10">
+                    <div class="card shadow" style="background-color: #ECFEFF;"">
+                        <div class="card-body">
 
                             <h5>Kontaktdaten & Adresse</h5>
 

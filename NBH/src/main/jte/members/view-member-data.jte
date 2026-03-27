@@ -38,34 +38,43 @@
 
     <div class="row">
         <div class="col-md-6">
-            <div class="card mb-3">
+            <div class="card shadow" style="background-color: #ECFEFF;">
                 <div class="card-header">
                     <strong>${roleNames}</strong>
                 </div>
 
                 <div class="card-body">
-                    <p class="card-text mb-3">
+                    <p class="card-text">
                         ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}
-                        ${member.getFirstName()} ${member.getLastName()} - ${dateReverseDE(member.getBirthdate())}
+                        <strong>${member.getFirstName()} ${member.getLastName()}</strong>
+                        <br/>
+                        Geburtsdatum: ${dateReverseDE(member.getBirthdate())}
+                        <br/>
+                        Mitglied seit: ${dateReverseDE(member.getJoiningDate())}
+                        <br/>
+                        Mitgliedsnummer: ${member.getMemberNmbr()}
                     </p>
-                    <p class="card-text mb-1">
+                    <p class="card-text">
+                        <strong>Adresse</strong>
+                        <br/>
                         ${member.getStreet() + " " + member.getNumber()}
-                    </p>
-                    <p class="card-text mb-3">
+                        <br/>
                         ${member.getZip() + " " + member.getCity()}
                     </p>
 
                     @if(member.getEmail() != null)
-                        <p class="card-text mb-3">
+                        <p class="card-text">
                             E-Mail: <a href="mailto:${member.getEmail()}">${member.getEmail()}</a>
                         </p>
                     @endif
-                    <p class="card-text mb-1">
+                    <p class="card-text">
                         Mein Stundenguthaben beträgt <strong>${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + "" : "0"}</strong> Stunden.
-                    </p>
-                    <p class="card-text mb-1">
+                        <br/>
                         Einziehungsauftrag erteilt:  <strong>${member.getEinziehungsauftrgJaNein()}</strong>
                     </p>
+
+                    <hr/>
+                    <i>Letztes Update: ${dateTimeDE(member.getUpdatedAt())}</i>
                 </div>
             </div>
         </div>
@@ -76,7 +85,7 @@
 
     <div class="row">
         <div class="col-sm-12 mb-3 mb-sm-0">
-
+        
             <ul class="nav nav-tabs" id="memberDetailTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="timecheques-tab" data-bs-toggle="tab" data-bs-target="#timecheques-pane" type="button" role="tab" aria-controls="timecheques-pane" aria-selected="true">

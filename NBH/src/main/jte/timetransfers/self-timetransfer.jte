@@ -38,8 +38,8 @@
 
             <div class="row">
               <div class="col-auto">
-                <div class="card">
-                  <div class="card-body bg-success bg-opacity-25">
+                <div class="card shadow" style="background-color: #ECFEFF;">
+                  <div class="card-body">
 
                     <h4 class="card-title text-primary">Zeitscheck übergeben</h4>
                     <hr/>

@@ -1,6 +1,7 @@
 package eu.nabahilfe.webapp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -42,6 +43,16 @@ public class DateFormatter {
         if (date == null) return "";
         return date.toString();
     }
+
+    /**
+     * @param dateTime
+     * @return DateTime String with ISO Format yyyy-MM-dd HH:mm:ss
+     */
+    public static String dateTimeDE(LocalDateTime dateTime) {
+        if (dateTime == null) return "";
+        return dateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
+    }
+
 
 }
 
