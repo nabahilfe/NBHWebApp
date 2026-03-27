@@ -102,7 +102,7 @@ public class AccountingController {
     @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER')")
     @PostMapping("/save-accounting")
     @Transactional
-    public String saveAccountingEntry(final Model model,  @ModelAttribute @Valid AccountingEntry accountingEntry,
+    public String saveAccountingEntry(final Model model, @ModelAttribute @Valid AccountingEntry accountingEntry,
             BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         log.debug("Saving AccountingEntry: " + accountingEntry.toString());
