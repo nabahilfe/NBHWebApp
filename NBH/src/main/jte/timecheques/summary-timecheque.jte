@@ -30,10 +30,10 @@
     <h3>Aktuelles Zeitguthaben</h3>
 
     <div class="card">
-        <div class="card-body bg-success bg-opacity-10">
-            <h4 class="text-primary">${member.getName()}</h4>
-            <p>${member.getAddress()}</p>
-
+        <div class="card-body bg-success bg-opacity-25">
+            <h4>${member.getName()}</h4>
+            <h5>${member.getAddress()}</h5>
+            <hr/>
             <b>Aktuelles Zeitguthaben: ${member.getAccumulatedHours()} h</b>
         </div>
     </div>
