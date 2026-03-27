@@ -18,6 +18,8 @@ public class TimeTransferForm {
 
     String note; // Beschreibung, optional
 
+    String fromself; // "true" if self-transfer, "false" otherwise
+
     public TimeTransferForm() {
         super();
     }
@@ -86,12 +88,24 @@ public class TimeTransferForm {
         this.note = note;
     }
 
+    public String getFromself() {
+        return fromself == null ? "false" : fromself;
+    }
+
+    public void setFromself(String fromself) {
+        this.fromself = fromself;
+    }
+
+    public boolean isFromself() {
+        return "true".equals(fromself);
+    }
+
 
     @Override
     public String toString() {
         return "TimeTransferForm [userFromName=" + userFromName + ", userFromId=" + userFromId + ", offerId=" + offerId
                 + ", serviceDate=" + serviceDate + ", hoursSelected=" + hoursSelected + ", userToName=" + userToName
-                + ", userToId=" + userToId + ", note=" + note + "]";
+                + ", userToId=" + userToId + ", note=" + note + ", fromself=" + fromself + "]";
     }
 
 

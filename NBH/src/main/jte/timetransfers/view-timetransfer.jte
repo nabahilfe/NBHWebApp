@@ -54,7 +54,8 @@
                     <input type="text" class="form-control" readonly value="${tt.getHours()} h">
 
                     <br/>
-                    <form action="/timetransfers/new/${tt.getFromMember().getId()}"  method="get">
+                    <form action="/timetransfers/new" method="get">
+                        <input type="hidden" name="fromMemberId" value="${tt.getFromMember().getId()}">
                         <button type="submit" class="btn btn-outline-primary bi-play-btn"> Weiteren Zeitscheck von diesem Mitglied</button>
                     </form>
                 </div>
@@ -71,7 +72,8 @@
                     <input type="text" class="form-control" readonly value="${tt.getToMember().getNameAndAddress()}">
 
                     <br/>
-                    <form action="/timetransfers/new/${tt.getFromMember().getId()}"  method="get">
+                    <form action="/timetransfers/new" method="get">
+                        <input type="hidden" name="fromMemberId" value="${tt.getFromMember().getId()}">
                         <button type="submit" class="btn btn-outline-primary bi-play-btn"> Weiteren Zeitscheck an dieses Mitglied - IMPLEMENT!</button>
                     </form>
                 </div>

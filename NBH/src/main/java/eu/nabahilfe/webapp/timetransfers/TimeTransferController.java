@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,13 +21,16 @@ import eu.nabahilfe.webapp.members.MemberRepository;
 import eu.nabahilfe.webapp.org.Offer;
 import eu.nabahilfe.webapp.org.OfferRepository;
 import eu.nabahilfe.webapp.security.SecurityUtils;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+
 
 
 /**
  * Controller for TimeTransfer operations from one Member to another.
  * Has to check hour balances and update Member hours accordingly.
+ *
+ * No IDs are used in any URL path. All parameters are exchanged via
+ * {@link TimeTransferForm} (POST) or query parameters (GET).
  */
 
 @Controller
@@ -51,12 +54,12 @@ public class TimeTransferController {
 
 
     // --------------------
-    // LIST & DETAIL
+    // VIEW (after save)
     // --------------------
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/self-timetransfer/{id}")
-    String viewSelfTimeTransfer(final Model model, @PathVariable Long id, HttpServletRequest request) {
+    @GetMapping("/self-timetransfer")
+    String viewSelfTimeTransfer(final Model model, @RequestParam("id") Long id) {
 
         // For security, only allow access to time transfers where the current user is the fromMember
         TimeTransfer tt = timeTransferRepository.findByIdAndFromMember_Id(id, securityUtils.getCurrentUserId()).orElse(null);
@@ -65,48 +68,34 @@ public class TimeTransferController {
         }
 
         model.addAttribute("tt", tt);
-        String fullUrl = request.getRequestURL().append(request.getQueryString() != null ? "?" + request.getQueryString() : "").toString();
-        if (fullUrl.contains("self-timetransfer")) {
-            return "timetransfers/view-self-timetransfer";
-        }
-
-        return "timetransfers/view-timetransfer";
+        return "timetransfers/view-self-timetransfer";
     }
 
 
     @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
-    @GetMapping("/{id}")
-    String viewTimeTransfer(final Model model, @PathVariable Long id, HttpServletRequest request) {
+    @GetMapping("/view")
+    String viewTimeTransfer(final Model model, @RequestParam("id") Long id) {
         TimeTransfer tt = timeTransferRepository.findById(id).orElse(null);
         if (tt == null) {
             model.addAttribute("errorMessage", "Zeitübertragung mit ID " + id + " nicht gefunden.");
             return "error";
         }
 
-        if (! securityUtils.memberIdMatchesCurrentUser(tt.getFromMember().getId())) {
-            model.addAttribute("errorMessage", "Sie haben keine Berechtigung, diese Zeitübertragung anzusehen.");
-            return "redirect:/error";
-        }
-
         model.addAttribute("tt", tt);
-        String fullUrl = request.getRequestURL().append(request.getQueryString() != null ? "?" + request.getQueryString() : "").toString();
-        if (fullUrl.contains("self-timetransfer")) {
-            return "timetransfers/view-self-timetransfer";
-        }
-
         return "timetransfers/view-timetransfer";
     }
 
 
     // --------------------
-    // CREATE NEW
+    // CREATE NEW (show form)
     // --------------------
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping(value = "fromself/{fromMemberId}")
-    String addSelfTimeTransfer(final Model model, @PathVariable(required = false) Long fromMemberId) {
+    @GetMapping("/fromself")
+    String addSelfTimeTransfer(final Model model, @RequestParam(name = "fromMemberId", required = false) Long fromMemberId) {
 
-        TimeTransferForm ttf = new TimeTransferForm();;
+        TimeTransferForm ttf = new TimeTransferForm();
+        ttf.setFromself("true");
         log.debug("Adding new SELF-TimeTransfer, fromMemberId={}", fromMemberId);
 
         // Security: if a fromMemberId is supplied, ensure the current session user matches it
@@ -124,7 +113,6 @@ public class TimeTransferController {
         }
 
         Member fromMember = memberRepository.findById(fromMemberId).orElse(null);
-        // This should not happen due to the security check above, but handle gracefully just in case
         if (fromMember == null) {
             model.addAttribute("status", 404);
             model.addAttribute("error", "Not Found");
@@ -143,12 +131,12 @@ public class TimeTransferController {
     }
 
 
-
     @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
-    @GetMapping(value = {"/new", "/new/{fromMemberId}"})
-    String addTimeTransfer(final Model model, @PathVariable(required = false) Long fromMemberId) {
+    @GetMapping("/new")
+    String addTimeTransfer(final Model model, @RequestParam(name = "fromMemberId", required = false) Long fromMemberId) {
 
-        TimeTransferForm ttf = new TimeTransferForm();;
+        TimeTransferForm ttf = new TimeTransferForm();
+        ttf.setFromself("false");
         log.debug("Adding new TimeTransfer, fromMemberId={}", fromMemberId);
 
         if (fromMemberId != null) {
@@ -169,13 +157,25 @@ public class TimeTransferController {
     }
 
 
+    // --------------------
+    // SAVE (process form)
+    // --------------------
+
     // FIXME: Prüfe ob das ein Security Problem sein kann, sollte wegen CSRF Token eigentlich nicht sein
     @PreAuthorize("hasRole('USER')")
     @PostMapping
     @Transactional
-    String saveTimeTransfer(final Model model, @RequestParam Long userFromId, @RequestParam Long userToId,
-            @RequestParam Integer hours, @RequestParam Long offerId, @RequestParam LocalDate dateOfService,
-            @RequestParam String fromself, @RequestParam(required = false) String note, RedirectAttributes redirectAttributes) {
+    String saveTimeTransfer(final Model model, @ModelAttribute TimeTransferForm ttf,
+            RedirectAttributes redirectAttributes) {
+
+        Long userFromId = ttf.userFromId;
+        Long userToId = ttf.userToId;
+        Integer hours = (ttf.hoursSelected != null && !ttf.hoursSelected.isBlank())
+                ? Integer.valueOf(ttf.hoursSelected) : null;
+        Long offerId = ttf.offerId;
+        LocalDate dateOfService = ttf.getServiceDate();
+        String note = ttf.getNote();
+        boolean fromself = ttf.isFromself();
 
         log.debug("Saving TimeTransfer from user {} to user {} of hours {} for offer {} on date {}",
                 userFromId, userToId, hours, offerId, dateOfService);
@@ -186,22 +186,21 @@ public class TimeTransferController {
         Member memberTo = memberRepository.findById(userToId).get();
 
         // validate transfer is not to self
-        if (memberFrom.getId() == memberTo.getId()) {
-            // create form with submitted values to re-display form with error message
-            TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo, note);
+        if (memberFrom.getId().equals(memberTo.getId())) {
+            ttf.setUserFromName(memberFrom.getNameAndAddress());
+            ttf.setUserToName(memberTo.getNameAndAddress());
             log.debug("\nTransfer from {} to same member, re-displaying form with error.", ttf);
             model.addAttribute("ttf", ttf);
             model.addAttribute("errorMessage", "Leistungsemfänger und Leistungserbringer dürfen nicht identisch sein!");
 
-            if (fromself.equals("true")) return "timetransfers/self-timetransfer";
-            return "timetransfers/detail-timetransfer";
+            if (fromself) return "timetransfers/self-timetransfer";
+            return "timetransfers/create-timetransfer";
         }
-
 
         // validate sufficient hours
         if (memberFrom.getAccumulatedHours() == null || memberFrom.getAccumulatedHours() < hours) {
-            // create form with submitted values to re-display form with error message
-            TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo, note);
+            ttf.setUserFromName(memberFrom.getNameAndAddress());
+            ttf.setUserToName(memberTo.getNameAndAddress());
             log.debug("\nInsufficient hours for member {}, re-displaying form with error.", memberFrom.getName());
             model.addAttribute("ttf", ttf);
             model.addAttribute("errorMessage", memberFrom.getName()
@@ -209,28 +208,27 @@ public class TimeTransferController {
                     + (memberFrom.getAccumulatedHours() == null ? "0" : memberFrom.getAccumulatedHours())
                     + " h) für diese Übertragung!");
 
-            if (fromself.equals("true")) return "timetransfers/self-timetransfer";
-            return "timetransfers/detail-timetransfer";
+            if (fromself) return "timetransfers/self-timetransfer";
+            return "timetransfers/create-timetransfer";
         }
 
-
-        // validate category is 900 or 999 if Sozialkonte is involved
+        // validate category is 900 or 999 if Sozialkonto is involved
         if ((memberFrom.getSalutation() != null && memberFrom.getSalutation().equals(NbhConst.SOZIALKONTO))
                 || (memberTo.getSalutation() != null && memberTo.getSalutation().equals(NbhConst.SOZIALKONTO))) {
 
             Optional<Offer> offer = offerRepository.findById(offerId);
             if (offer.isPresent()) {
                 String code = offer.get().getCode();
-                if (!code.equals("900")  && !code.equals("999")) {
+                if (!code.equals("900") && !code.equals("999")) {
                     log.debug("\nTransfer involves Sozialkonto, category {} is not allowed. Must be 900 or 999", code);
-                    // create form with submitted values to re-display form with error message
-                    TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo, note);
+                    ttf.setUserFromName(memberFrom.getNameAndAddress());
+                    ttf.setUserToName(memberTo.getNameAndAddress());
                     log.debug("\nTransfer from Sozialkonto {}, re-displaying form with error.", memberFrom);
                     model.addAttribute("ttf", ttf);
                     model.addAttribute("errorMessage", "Bei Sozialkonto muss Kategorie 900 (oder 999) ausgewählt werden!");
 
-                    if (fromself.equals("true")) return "timetransfers/self-timetransfer";
-                    return "timetransfers/detail-timetransfer";
+                    if (fromself) return "timetransfers/self-timetransfer";
+                    return "timetransfers/create-timetransfer";
                 }
             }
         }
@@ -261,32 +259,9 @@ public class TimeTransferController {
         redirectAttributes.addFlashAttribute("successMessage",
                 (hours == 1 ? "Eine Stunde für " : hours + " Stunden für ") + memberTo.getName() + " verbucht.");
 
-        if (fromself.equals("true")) return "redirect:/timetransfers/self-timetransfer/" + tt.getId();
-        return "redirect:/timetransfers/" + tt.getId();
+        if (fromself) return "redirect:/timetransfers/self-timetransfer?id=" + tt.getId();
+        return "redirect:/timetransfers/view?id=" + tt.getId();
     }
-
-
-    // --------------------
-    // helper methods
-    // --------------------
-
-    private TimeTransferForm createTimeTransferForm(Long userFromId, Long userToId, Integer hours,
-            Long offerId, LocalDate dateOfService, Member memberFrom, Member memberTo, String note) {
-        TimeTransferForm ttf = new TimeTransferForm();
-
-        ttf.setUserFromId(userFromId);
-        ttf.setUserFromName(memberFrom.getNameAndAddress());
-
-        ttf.setUserToId(userToId);
-        ttf.setUserToName(memberTo.getNameAndAddress());
-
-        ttf.setOfferId(offerId);
-        ttf.setHoursSelected(hours.toString());
-        ttf.setServiceDate(dateOfService);
-        ttf.setNote(note);
-        return ttf;
-    }
-
 
 
 }
