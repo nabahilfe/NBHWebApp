@@ -32,8 +32,8 @@ public class SecurityConfig {
             )
 
             .formLogin(form -> form
-                .loginPage("/registration/login")			// page
-                .loginProcessingUrl("/registration/login") 	// form action
+                .loginPage("/registration/login")            // page
+                .loginProcessingUrl("/registration/login")     // form action
                 .successHandler((request, response, authentication) -> {
                     log.debug("User '{}' logged in successfully. Auth authorities: {}",
                             authentication.getName(),
@@ -45,7 +45,16 @@ public class SecurityConfig {
                     }
                     response.sendRedirect("/");
                 })
-                .failureUrl("/registration/login-error")
+                .failureHandler((request, response, exception) -> {
+                    // store submitted username temporarily in the session so the login page can repopulate it
+                    try {
+                        var session = request.getSession();
+                        session.setAttribute("LAST_USERNAME", request.getParameter("username"));
+                    } catch (Exception e) {
+                        log.warn("Could not save last username in session: {}", e.getMessage());
+                    }
+                    response.sendRedirect("/registration/login?error=true");
+                })
                 .permitAll()
             )
 

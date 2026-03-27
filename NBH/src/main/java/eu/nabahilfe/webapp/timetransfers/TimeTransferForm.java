@@ -16,6 +16,8 @@ public class TimeTransferForm {
     String userToName;
     Long userToId;
 
+    String note; // Beschreibung, optional
+
     public TimeTransferForm() {
         super();
     }
@@ -76,14 +78,21 @@ public class TimeTransferForm {
         this.hoursSelected = hoursSelected;
     }
 
+    public String getNote() {
+        return note == null ? "" : note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
 
     @Override
     public String toString() {
         return "TimeTransferForm [userFromName=" + userFromName + ", userFromId=" + userFromId + ", offerId=" + offerId
                 + ", serviceDate=" + serviceDate + ", hoursSelected=" + hoursSelected + ", userToName=" + userToName
-                + ", userToId=" + userToId + "]";
+                + ", userToId=" + userToId + ", note=" + note + "]";
     }
-
 
 
 

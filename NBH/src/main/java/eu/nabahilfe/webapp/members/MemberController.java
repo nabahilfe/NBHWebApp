@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import eu.nabahilfe.webapp.NbhConst;
+import eu.nabahilfe.webapp.security.SecurityUtils;
 import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
 import eu.nabahilfe.webapp.timetransfers.TimeTransferRepository;
 import jakarta.transaction.Transactional;
@@ -40,16 +41,18 @@ public class MemberController {
     private final RoleRepository roleRepository;
     private final TimeTransferRepository timeTransferRepository;
     private final TimeChequeRepository timeCheckRepository;
+    private final SecurityUtils securityUtils;
 
 
     private static final Logger log = LoggerFactory.getLogger(MemberController.class);
 
     public MemberController(MemberRepository memberRepository, RoleRepository roleRepository,
-            TimeTransferRepository timeTransferRepository, TimeChequeRepository timeCheckRepository) {
+            TimeTransferRepository timeTransferRepository, TimeChequeRepository timeCheckRepository, SecurityUtils securityUtils) {
         this.memberRepository = memberRepository;
         this.roleRepository = roleRepository;
         this.timeTransferRepository = timeTransferRepository;
         this.timeCheckRepository = timeCheckRepository;
+        this.securityUtils = securityUtils;
     }
 
 
@@ -171,15 +174,30 @@ public class MemberController {
     @GetMapping("/mydata/{id}")
     String myData(final Model model, @PathVariable Long id) {
         log.debug("Showing /users/mydata/{}", id);
-        Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id
-                        + ". Please ensure the ID is correct and the member exists in the database."));
+        // Ensure that the member has only access to his own data
+        // get current authenticated user from security context
+        Member current = securityUtils.getCurrentUser();
+        if (current == null) {
+            model.addAttribute("errorMessage", "Nicht authentifiziert.");
+            return "redirect:/login";
+        }
+
+        // verify requested id matches current session user by id and email
+        // prefer centralized helper: authenticated + id match
+        if (!securityUtils.isAuthenticatedAndMatches(id)) {
+            // either not authenticated (handled above) or id mismatch
+            log.warn("Unauthorized access attempt to /members/mydata/{} by user {}", id, current.getEmail());
+            return "redirect:/statuscode/403";
+        }
+
+        // now safe to load the member record
+        Member member = memberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id));
         model.addAttribute("roleNames", member.getRole() != null ? member.getRole().getRoleName() : "Mitglied");
         model.addAttribute("receivedTimeTransfers", timeTransferRepository.findAllByToMember_IdOrderByDateOfServiceDesc(id));
         model.addAttribute("givenTimeTransfers", timeTransferRepository.findAllByFromMember_IdOrderByDateOfServiceDesc(id));
         model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(id));
         return "members/view-member-data";
-    }
+     }
 
     // --------------------
     // CREATE NEW, UPDATE

@@ -39,7 +39,7 @@
             <div class="row">
               <div class="col-auto">
                 <div class="card">
-                  <div class="card-body bg-success bg-opacity-10">
+                  <div class="card-body bg-success bg-opacity-25">
 
                     <h4 class="card-title text-primary">Zeitscheck übergeben</h4>
                     <hr/>
@@ -92,6 +92,14 @@
                                 @endif
                             @endfor
                         </select>
+                    </div>
+
+                    <hr/>
+
+                    <!-- Optional note/description -->
+                    <label for="note" class="col-form-label">Beschreibung</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" id="note" name="note" rows="2" placeholder="Beschreibung (optional)">${ttf == null ? "" : ttf.getNote()}</textarea>
                     </div>
 
                     <hr/>
@@ -226,6 +234,7 @@
     </script>
 
 `)
+
 
 
 

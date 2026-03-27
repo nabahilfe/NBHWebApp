@@ -1,6 +1,7 @@
 package eu.nabahilfe.webapp.timetransfers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.ListCrudRepository;
 
@@ -15,6 +16,8 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
 
 
     List<TimeTransfer> findAllByFromMember_IdOrderByDateOfServiceDesc(Long memberId);
+
+    Optional<TimeTransfer> findByIdAndFromMember_Id(Long id, Long fromMemberId);
 
 }
 

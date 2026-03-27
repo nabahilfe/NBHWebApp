@@ -19,8 +19,11 @@
 
     <h3>Registrierungscode anfordern</h3>
     <p>Gib deine E-Mail ein um einen 6-stelligen Registrierungscode zu erhalten.<br/>
-    Der Code, den du per e-Mail erhälts, ist 15 Minuten gültig und wird für die Aktivierung deines Kontos benötigt.</p>
-    <p>Hinweis: Du kannst mit diesem Formular auch ein neues Paswort erstellen, falls du dein Passwort vergessen hast.</p>
+    Der Code, den du per E-Mail erhälts, ist 15 Minuten gültig und wird für die Aktivierung
+    deines Kontos benötigt.</p>
+
+    <p>Hinweis: du kannst mit diesem Formular auch ein neues Passwort erstellen,
+    falls du dein Passwort vergessen hast.</p>
 
 
     <form action="/registration/email" method="post" class="needs-validation" novalidate>
@@ -36,6 +39,9 @@
                    required>
             <div class="invalid-feedback">Bitte eine gültige E-Mail Adresse eingeben.</div>
         </div>
+
+        <p><strong>Wichtig</strong>: Überprüfe auch deinen Spam-Ordner,
+                falls du die E-Mail nicht in deinem Posteingang findest!</p>
 
         <button type="submit" class="btn btn-primary">Code anfordern</button>
 

@@ -25,8 +25,32 @@
 
     <div class="row mt-4">
 
+         <div class="col-12 col-lg-4 mb-3 ">
+
+            <!-- Left column content (1/3) -->
+            <img src="/images/nbh-logo-gelb.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
+            <img src="/images/nbh-logo-neu-bg-white.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
+            <img src="/images/nbh-logo-neu.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
+            <img src="/images/nbh-logo-neu-filled.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
+
+            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow p-3 mb-5"
+            style="background-color: #ECFEFF;">
+                <h2>Kontakt</h2>
+                <p class="card-text">
+                    $unsafe{contact}
+                </p>
+
+                <br/>
+                <a href="/home/legal-and-privacy-policy">Datenschutzerklärung und Impressum</a>
+
+            </div>
+
+
+        </div>
+
+
         <div class="col-12 col-lg-8 mb-3">
-            <!-- Left column content (2/3) -->
+            <!-- Right column content (2/3) -->
 
             <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow p-3 mb-5"
                     style="background-color: #ECFEFF;">
@@ -34,22 +58,13 @@
                 <p class="card-text">
                     $unsafe{aboutUs}
                 </p>
+
+                <br/>
+                Weitere Informationen LINK-TBD
             </div>
 
-        </div>
-
-        <div class="col-12 col-lg-4 mb-3">
-            <!-- Right column content (1/3) -->
-
-            <img src="/images/nbh-logo.webp" class="rounded mx-auto d-block" alt="NBH Logo">
-
-        </div>
-
-        <div class="col-12 col-lg-8 mb-3">
-            <!-- Left column content (2/3) -->
-
             <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow p-3 mb-5"
-                    style="background-color: #ECFDF5;">
+                    style="background-color: #ECFEFF;">
                 <h2>Termine und Veranstaltungen</h2>
                 <p class="card-text">
                     $unsafe{events}
@@ -58,22 +73,6 @@
 
         </div>
 
-        <div class="col-12 col-lg-4 mb-3">
-
-            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow p-3 mb-5" style="background-color: #d9f6d7;">
-                <h2>Kontakt</h2>
-                <p class="card-text">
-                    $unsafe{contact}
-                </p>
-            </div>
-
-        </div>
-
-        <div>
-
-            <p><a href="/home/legal-and-privacy-policy">Datenschutzerklärung und Impressum</a></p>
-
-        </div>
 
     </div>
 

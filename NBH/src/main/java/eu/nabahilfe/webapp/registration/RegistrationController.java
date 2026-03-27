@@ -46,6 +46,21 @@ public class RegistrationController {
         return new RegistrationSession();
     }
 
+    @ModelAttribute("form")
+    public RegisterConfirmForm registerConfirmForm(@ModelAttribute("registrationSession") RegistrationSession session) {
+        if (session.getEmail() == null || session.isExpired()) {
+            return new RegisterConfirmForm(); // leeres Formular, da kein gültiger Session-Status vorhanden
+        }
+        else if (session.getStep() != RegistrationStep.EMAIL_VERIFIED) {
+            return new RegisterConfirmForm(); // leeres Formular, da Session-Status nicht passend
+        }
+        else {
+            RegisterConfirmForm form = new RegisterConfirmForm();
+            form.setEmail(session.getEmail());
+            return form; // Formular mit vorausgefüllter E-Mail, da gültiger Session-Status vorhanden
+        }
+    }
+
 
     public RegistrationController(MemberRepository memberRepository, RegistrationCodeRepository registrationCodeRepository,
             PasswordEncoder passwordEncoder, EmailService emailService) {
@@ -95,19 +110,6 @@ public class RegistrationController {
     }
 
 
-    @GetMapping("/logout")
-    public String showLogoutForm(Model model, HttpServletRequest request) {
-        return "registration/logout";
-    }
-
-
-    @PostMapping("/logout")
-    public String doLogout(Model model, HttpServletRequest request, SessionStatus sessionStatus) {
-        sessionStatus.setComplete();
-        return "redirect:/";
-    }
-
-
     @GetMapping("/confirm")
     public String showConfirmForm(@ModelAttribute("registrationSession") RegistrationSession session, Model model) {
 
@@ -141,12 +143,39 @@ public class RegistrationController {
             return "registration/confirm";
         }
 
+        // fetch latest code for this email
+        RegistrationCode regCode = registrationCodeRepository.findFirstByEmailOrderByIdDesc(session.getEmail());
+
+        if (regCode == null) {
+            model.addAttribute("errorMessage", "Kein Registrierungscode gefunden. Bitte neu anfordern.");
+            sessionStatus.setComplete();
+            return "registration/confirm";
+        }
+
+        // check code validity
         if (!verifyCode(session.getEmail(), form.getCode())) {
+            // increment failed attempts on the found registration code
+            try {
+                regCode.setFailedAttempts(regCode.getFailedAttempts() + 1);
+                registrationCodeRepository.save(regCode);
+            } catch (Exception e) {
+                log.warn("Could not increment failedAttempts for regCode {}: {}", regCode, e.getMessage());
+            }
+
+            final int MAX_ATTEMPTS = 3;
+            if (regCode.getFailedAttempts() >= MAX_ATTEMPTS) {
+                // delete the code after too many failed attempts
+                registrationCodeRepository.deleteByEmail(session.getEmail());
+                model.addAttribute("errorMessage", "Zu viele ungültige Versuche. Bitte neuen Code anfordern.");
+                sessionStatus.setComplete();
+                return "registration/confirm";
+            }
+
             model.addAttribute("errorMessage", "Ungültiger oder abgelaufener Code!");
             return "registration/confirm";
         }
 
-
+        // code verified successfully - proceed with password set
         Member member = memberRepository.findByEmail(session.getEmail());
         member.setPassword(passwordEncoder.encode(form.getPassword()));
 
@@ -169,34 +198,28 @@ public class RegistrationController {
 
 
     @GetMapping("/login")
-    public String showLoginForm() {
+    public String showLoginForm(@RequestParam(value = "error", required = false) String error, Model model, HttpServletRequest request) {
+        if ("true".equals(error)) {
+            model.addAttribute("errorMessage", "E-Mail oder Passwort falsch!");
+        }
+
+        // Restore submitted username from session if present (set by failure handler)
+        try {
+            var session = request.getSession(false);
+            if (session != null) {
+                Object lastUser = session.getAttribute("LAST_USERNAME");
+                if (lastUser != null) {
+                    model.addAttribute("username", lastUser.toString());
+                    session.removeAttribute("LAST_USERNAME");
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Could not restore last username from session: {}", e.getMessage());
+        }
+
         return "registration/login";
     }
 
-
-    @PostMapping("/login")
-    public String processLogin(Model model, @RequestParam("username") String email, @RequestParam String password, HttpServletRequest request) {
-
-        if (email != null) {
-            email = email.trim().toLowerCase();
-        }
-
-        Member member = memberRepository.findByEmail(email);
-        if (member == null) {
-            model.addAttribute("errorMessage", "E-Mail oder Passwort ist falsch.");
-            return "registration/login";
-        }
-
-        if (member.getPassword() == null || !member.getPassword().equals(password)) {
-            model.addAttribute("errorMessage", "E-Mail oder Passwort ist falsch.");
-            return "registration/login";
-        }
-
-        log.debug("User {} logged in successfully", email);
-
-        model.addAttribute("successMessage", "Erfolgreich angemeldet.");
-        return "registration/login";
-    }
 
 
     // Helper methods

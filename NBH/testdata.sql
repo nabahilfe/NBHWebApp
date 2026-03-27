@@ -29,7 +29,7 @@ insert into offers (code, description, version) values
 ('600','Leih-Oma / Leih-Opa', 0),
 ('700','Kleinere Außen- oder Reparaturarbeiten', 0),
 ('800','Hilfe beim Bedienen technischer Geräte und Computer', 0),
-('900','Spende von/für Sozialkonto', 0),
+('900','Spende von/an Sozialkonto', 0),
 ('999','KORREKTURBUCHUNG', 0);
 
 

@@ -21,6 +21,13 @@ public class SecurityUtils {
         return null;
     }
 
+    public Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            return ((CustomUserDetails) authentication.getPrincipal()).getId();
+        }
+        return null;
+    }
 
     public Boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -30,6 +37,15 @@ public class SecurityUtils {
 
     public boolean memberIdMatchesCurrentUser(Long memberId) {
         return getCurrentUser() != null && getCurrentUser().getId().equals(memberId);
+    }
+
+    /**
+     * Returns true if there is an authenticated current user and their id equals the provided id.
+     * This centralizes the common "is authenticated and owns resource" check used in controllers.
+     */
+    public boolean isAuthenticatedAndMatches(Long memberId) {
+        Member current = getCurrentUser();
+        return current != null && current.getId() != null && current.getId().equals(memberId);
     }
 
 }

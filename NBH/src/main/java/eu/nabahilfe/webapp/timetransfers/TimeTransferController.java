@@ -57,15 +57,11 @@ public class TimeTransferController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/self-timetransfer/{id}")
     String viewSelfTimeTransfer(final Model model, @PathVariable Long id, HttpServletRequest request) {
-        TimeTransfer tt = timeTransferRepository.findById(id).orElse(null);
-        if (tt == null) {
-            model.addAttribute("errorMessage", "Zeitübertragung mit ID " + id + " nicht gefunden.");
-            return "error";
-        }
 
-        if (! securityUtils.memberIdMatchesCurrentUser(tt.getFromMember().getId())) {
-            model.addAttribute("errorMessage", "Sie haben keine Berechtigung, diese Zeitübertragung anzusehen.");
-            return "redirect:/error";
+        // For security, only allow access to time transfers where the current user is the fromMember
+        TimeTransfer tt = timeTransferRepository.findByIdAndFromMember_Id(id, securityUtils.getCurrentUserId()).orElse(null);
+        if (tt == null) {
+            return "redirect:/statuscode/403";
         }
 
         model.addAttribute("tt", tt);
@@ -113,19 +109,32 @@ public class TimeTransferController {
         TimeTransferForm ttf = new TimeTransferForm();;
         log.debug("Adding new SELF-TimeTransfer, fromMemberId={}", fromMemberId);
 
+        // Security: if a fromMemberId is supplied, ensure the current session user matches it
         if (fromMemberId != null) {
-            Member fromMember = memberRepository.findById(fromMemberId).orElse(null);
-            if (fromMember == null) {
-                model.addAttribute("errorMessage", "Mitglied mit ID " + fromMemberId + " nicht gefunden.");
-                return "error";
+            if (!securityUtils.isAuthenticated()) {
+                model.addAttribute("errorMessage", "Nicht authentifiziert.");
+                return "redirect:/login";
             }
-            ttf.setUserFromId(fromMemberId);
-            ttf.setUserFromName(fromMember.getNameAndAddress());
-            log.debug("Creating new SELF-TimeTransfer, pre-filled form: {}", ttf);
+
+            if (!securityUtils.isAuthenticatedAndMatches(fromMemberId)) {
+                String email = securityUtils.getCurrentUser() == null ? "anonymous" : securityUtils.getCurrentUser().getEmail();
+                log.warn("Unauthorized attempt to open self-time-transfer form for memberId {} by user {}", fromMemberId, email);
+                return "redirect:/statuscode/403";
+            }
         }
 
+        Member fromMember = memberRepository.findById(fromMemberId).orElse(null);
+        // This should not happen due to the security check above, but handle gracefully just in case
+        if (fromMember == null) {
+            model.addAttribute("status", 404);
+            model.addAttribute("error", "Not Found");
+            model.addAttribute("message", "Mitglied mit ID " + fromMemberId + " wurde nicht gefunden.");
+            return "error";
+        }
 
-        log.debug("Creating new Self-TimeTransfer, pre-filled form: {}", ttf);
+        ttf.setUserFromId(fromMemberId);
+        ttf.setUserFromName(fromMember.getNameAndAddress());
+        log.debug("Creating new SELF-TimeTransfer, pre-filled form: {}", ttf);
 
         model.addAttribute("offers", offerRepository.findAllByOrderByCodeAsc());
         model.addAttribute("ttf", ttf);
@@ -160,13 +169,13 @@ public class TimeTransferController {
     }
 
 
-    // FIXME: Prüfe ob das ein Security Problem sien kann, sollte wegen CSRF Token eigentlich nicht sein
+    // FIXME: Prüfe ob das ein Security Problem sein kann, sollte wegen CSRF Token eigentlich nicht sein
     @PreAuthorize("hasRole('USER')")
     @PostMapping
     @Transactional
     String saveTimeTransfer(final Model model, @RequestParam Long userFromId, @RequestParam Long userToId,
             @RequestParam Integer hours, @RequestParam Long offerId, @RequestParam LocalDate dateOfService,
-            @RequestParam String fromself, RedirectAttributes redirectAttributes) {
+            @RequestParam String fromself, @RequestParam(required = false) String note, RedirectAttributes redirectAttributes) {
 
         log.debug("Saving TimeTransfer from user {} to user {} of hours {} for offer {} on date {}",
                 userFromId, userToId, hours, offerId, dateOfService);
@@ -179,7 +188,7 @@ public class TimeTransferController {
         // validate transfer is not to self
         if (memberFrom.getId() == memberTo.getId()) {
             // create form with submitted values to re-display form with error message
-            TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo);
+            TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo, note);
             log.debug("\nTransfer from {} to same member, re-displaying form with error.", ttf);
             model.addAttribute("ttf", ttf);
             model.addAttribute("errorMessage", "Leistungsemfänger und Leistungserbringer dürfen nicht identisch sein!");
@@ -192,7 +201,7 @@ public class TimeTransferController {
         // validate sufficient hours
         if (memberFrom.getAccumulatedHours() == null || memberFrom.getAccumulatedHours() < hours) {
             // create form with submitted values to re-display form with error message
-            TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo);
+            TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo, note);
             log.debug("\nInsufficient hours for member {}, re-displaying form with error.", memberFrom.getName());
             model.addAttribute("ttf", ttf);
             model.addAttribute("errorMessage", memberFrom.getName()
@@ -215,7 +224,7 @@ public class TimeTransferController {
                 if (!code.equals("900")  && !code.equals("999")) {
                     log.debug("\nTransfer involves Sozialkonto, category {} is not allowed. Must be 900 or 999", code);
                     // create form with submitted values to re-display form with error message
-                    TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo);
+                    TimeTransferForm ttf = createTimeTransferForm(userFromId, userToId, hours, offerId, dateOfService, memberFrom, memberTo, note);
                     log.debug("\nTransfer from Sozialkonto {}, re-displaying form with error.", memberFrom);
                     model.addAttribute("ttf", ttf);
                     model.addAttribute("errorMessage", "Bei Sozialkonto muss Kategorie 900 (oder 999) ausgewählt werden!");
@@ -234,7 +243,7 @@ public class TimeTransferController {
         tt.setHours(hours);
         tt.setDateOfService(dateOfService);
         tt.setOffer(offerRepository.findById(offerId).get());
-        // tt.setNote();
+        if (note != null && !note.trim().isEmpty()) tt.setNote(note.trim());
 
         timeTransferRepository.save(tt);
 
@@ -262,7 +271,7 @@ public class TimeTransferController {
     // --------------------
 
     private TimeTransferForm createTimeTransferForm(Long userFromId, Long userToId, Integer hours,
-            Long offerId, LocalDate dateOfService, Member memberFrom, Member memberTo) {
+            Long offerId, LocalDate dateOfService, Member memberFrom, Member memberTo, String note) {
         TimeTransferForm ttf = new TimeTransferForm();
 
         ttf.setUserFromId(userFromId);
@@ -274,6 +283,7 @@ public class TimeTransferController {
         ttf.setOfferId(offerId);
         ttf.setHoursSelected(hours.toString());
         ttf.setServiceDate(dateOfService);
+        ttf.setNote(note);
         return ttf;
     }
 

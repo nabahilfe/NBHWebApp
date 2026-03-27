@@ -1,6 +1,3 @@
-@param java.lang.Integer status = null
-@param java.lang.String error = null
-@param java.lang.String message = null
 
 <!--
     A template to display error messages.
@@ -11,9 +8,21 @@
     - message: The detailed message (String)
 -->
 
-<h1>StatusCode: ${status}</h1>
-<h2>${error}</h2>
-<p>${message}</p>
 
-<p><a href="/">Zurück zur Startseite</a></p>
+@param eu.nabahilfe.webapp.security.ViewContext ctxt
+
+@param java.lang.Integer status = null
+@param java.lang.String error = null
+@param java.lang.String message = null
+
+
+@template.layout.mainpage(
+    ctxt = ctxt,
+    content = @`
+
+    <h2>StatusCode: ${status}</h2>
+    <h2>${error}</h2>
+    <p>${message}</p>
+`)
+
 

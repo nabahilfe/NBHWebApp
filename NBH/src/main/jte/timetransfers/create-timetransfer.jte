@@ -107,6 +107,12 @@
                     </select>
                 </div>
 
+                <!-- Optional note/description -->
+                <label for="note" class="col-form-label">Beschreibung</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" id="note" name="note" rows="2" placeholder="Beschreibung (optional)">${ttf == null ? "" : ttf.getNote()}</textarea>
+                </div>
+
               </div>
             </div>
           </div>
@@ -251,6 +257,7 @@
     </script>
 
 `)
+
 
 
 
