@@ -1,5 +1,5 @@
 Hier ist eine **funktionale Beschreibung der NBH Web App** (Repo: `nabahilfe/NBHWebApp`) **abgeleitet aus allen vorhandenen Issues**, die ich abrufen konnte (Stand: **2026-04-10**). Grundlage ist eine reine Ticketanalyse (Titel/Labels/Status), d. h. Details aus Issue-Beschreibungen/Kommentaren könnten noch zusätzliche Anforderungen enthalten.
-
+ 
 ---
 
 ## 1) Überblick / Ziel der App
