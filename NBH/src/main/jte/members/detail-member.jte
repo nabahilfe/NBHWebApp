@@ -167,6 +167,11 @@
             </div>
 
             <br/>
+            <p>
+                <i>Letztes Update: ${dateTimeDE(member.getUpdatedAt())}</i>
+            </p>
+
+            <br/>
 
             <div class="form-group row">
                 <div class="col-sm-10">
