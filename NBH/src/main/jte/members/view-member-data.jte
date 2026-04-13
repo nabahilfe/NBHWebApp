@@ -74,6 +74,14 @@
                     </p>
 
                     <hr/>
+
+                    <!-- download a personalized Zeitscheck.pdf -->
+                    <form action="/download/timecheque-pdf" method="get">
+                        <input type="hidden" name="memberId" value="${member.getId()}">
+                        <button type="submit" class="btn btn-outline-primary bi-download"> Zeitscheck als PDF herunterladen</button>
+                    </form>
+
+                    <hr/>
                     <i>Letztes Update: ${dateTimeDE(member.getUpdatedAt())}</i>
                 </div>
             </div>
@@ -85,7 +93,7 @@
 
     <div class="row">
         <div class="col-sm-12 mb-3 mb-sm-0">
-        
+
             <ul class="nav nav-tabs" id="memberDetailTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="timecheques-tab" data-bs-toggle="tab" data-bs-target="#timecheques-pane" type="button" role="tab" aria-controls="timecheques-pane" aria-selected="true">
