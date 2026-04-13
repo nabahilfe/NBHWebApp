@@ -1,0 +1,177 @@
+Hier ist eine **funktionale Beschreibung der NBH Web App** (Repo: `nabahilfe/NBHWebApp`) **abgeleitet aus allen vorhandenen Issues**, die ich abrufen konnte (Stand: **2026-04-10**). Grundlage ist eine reine Ticketanalyse (Titel/Labels/Status), d. h. Details aus Issue-Beschreibungen/Kommentaren könnten noch zusätzliche Anforderungen enthalten.
+ 
+---
+
+## 1) Überblick / Ziel der App
+Die NBH Web App ist eine **Web-Anwendung für einen Nachbarschaftshilfe-Verein**, mit Fokus auf:
+
+- **Mitgliederverwaltung** (Personendaten, Rollen, Mitgliedsnummern, Status)
+- **Zeitkonto-/Zeitscheck-System** zur Abbildung von Zeitguthaben („Stunden“), inkl. **Erwerb, Vergabe/Übergabe, Verbuchung (Transfer)** und **Kauf**
+- **Benachrichtigungen per E‑Mail** im Kontext von Zeitscheck-Aktionen
+- **Auswertungen/Statistiken** zu Mitgliedern sowie Zeit-/Buchungsdaten
+- **Rechte-/Sicherheitskonzept** (Rollen, Einschränkungen, Absicherung von Controller-URLs)
+
+---
+
+## 2) Rollen / Berechtigungskonzept (aus Tickets abgeleitet)
+### Rollen (implizit)
+- **System Administrator**
+  - Muss **eingeschränkt** sein (mehrere Issues dazu), u. a.:
+    - darf **keine Zeitschecks bekommen oder vergeben** (#32)
+    - generelle Einschränkungen/Regeln sind zu definieren (#35)
+- **Standard-Rollen**
+  - Sollen **automatisch beim Startup** angelegt werden, falls nicht vorhanden (#31)
+- **Standard Admin**
+  - Wird **beim Start der App angelegt** (#24, closed)
+
+### Berechtigungsregeln (implizit)
+- Controller-/Service-URLs müssen abgesichert werden (#27)
+- Es gibt ein Problem/eine Sicherheitslücke bei **Self-Time-Transfer** (#28)
+- Rollenänderungen an Mitgliedern waren fehlerhaft (#17, closed) → zeigt, dass Rollen Bestandteil des Member-Modells/UI sind.
+
+---
+
+## 3) Kernfunktionen nach Modulen
+
+### A) Mitgliederverwaltung
+Funktionalitäten:
+- Mitglieder **anzeigen**, **bearbeiten**, vermutlich auch **anlegen** (aus mehreren UI-Fixes ableitbar)
+- **Anzeige-Reihenfolge Name**: zuerst Nachname, dann Vorname (#4, closed)
+- **Mitgliedsnummer**: Anpassungen/Regeln (#41)
+- **Mitgliedsstatus**:
+  - Mitglieder **ruhend stellen** und **reaktivieren** (#18)
+  - **Beitritts- und Austrittsdatum** müssen in der Maske vorhanden sein (#48)
+- **Zusatzdaten / Stammdaten**
+  - **Telefonnummer hinzufügen** (Ticket unvollständig betitelt) (#51)
+  - Beim Bearbeiten fehlen Felder (zwei Tickets ohne genaue Felder im Titel) (#52, #48)
+- **Kennzeichnung/Anrede**
+  - Anrede/Kennzeichnung von Vereinsmitgliedern, Titel, Institution (#11, closed)
+- **Vorstand**
+  - Alle Vorstandsmitglieder anzeigen (#25, closed)
+
+**Konzeptionelle Datenobjekte**
+- Member/Mitglied:
+  - Mitgliedsnummer
+  - Vorname, Nachname
+  - Anrede, Titel, Institution
+  - Telefonnummer
+  - Rollen (1..n)
+  - Status (aktiv/ruhend/ausgetreten?)
+  - Beitrittsdatum, Austrittsdatum
+
+---
+
+### B) Zeitschecks / Zeitkonto / Buchungen
+Die App hat ein zentrales Zeitwert-System:
+
+**Zeitscheck-Aktionen (aus Tickets)**
+- Zeitscheck **anlegen/erstellen** (#9, closed)
+- Zeitscheck **verbuchen** (Transfer „von → an“) (#9, #15 closed, #21 closed)
+- Zeitscheck **Zuweisung** / Korrektur (#1 open)
+- **Validierungen** beim Erstellen (#3, closed)
+- **Read-only Felder** nachdem Zeitscheck angelegt wurde (#14, closed)
+- **Beschreibungsfeld bei Übergabe** (#42, closed)
+- **Kauf von Zeitschecks** (Pakete 10/20) (#36)
+- „Selbst erstellen/kaufen“ nur mit **Einziehungsauftrag** (#33)
+- Regeln rund um **SOZIALKONTO**:
+  - Umsetzung Sozialkonto (#10, closed)
+  - Sozialkonto und Kategorie (#46, closed)
+  - Für Sozialkonto **Geburtsdatum automatisch eintragen** (#49)
+  - Für Sozialkonto **Kauf von Stunden verhindern** (#50)
+
+**Benachrichtigungen**
+- Mails versenden bei Zeitscheck-Aktionen (#47)
+- Email Service (#7, closed)
+- Email Tests (#20, closed)
+- Batch Job für E-Mail Versand (#8, open)
+
+**Konzeptionelle Datenobjekte**
+- Zeitscheck:
+  - Stunden/Einheiten
+  - Status (erstellt/zugewiesen/übergeben/verbucht?)
+  - ggf. Kategorie (v. a. Sozialkonto)
+  - Metadaten: Beschreibung bei Übergabe
+  - ggf. Ersteller, Empfänger, Zeitpunkte
+- Buchung/Transfer:
+  - Von-Mitglied / An-Mitglied
+  - Betrag (Stunden)
+  - Typ (Vergabe/Übertragung/Kauf/Einlösung?)
+  - Datum
+  - Referenz auf Zeitscheck
+
+---
+
+### C) Auswertungen / Statistiken / Reporting
+Es gibt mehrere Tickets zu Auswertungen; daraus lässt sich ein Reporting-Modul ableiten:
+
+- „Auswertungen für alle Zeit- und Buchungs-Daten“ (#37)
+- „Auswertung der Buchungen nach Jahr und Ein-/Ausgaben“ (#29)
+- Sub-Issues (vermutlich Detailanforderungen zu #37 oder #29):
+  - Statistiken für erworbene, vergebene und gekaufte Zeitschecks (#38)
+  - Auswertung Einnahmen und Ausgaben (#39)
+  - Entwicklung der Mitgliederzahlen (#40)
+
+---
+
+### D) Administration / Multi-Tenant (zukünftig)
+- „Organisation verwalten – erst bei Multi Tenant relevant“ (#30)
+  - deutet an: spätere Fähigkeit, mehrere Organisationen/Vereine in einer Instanz zu verwalten.
+
+---
+
+### E) UI/Navigation & Stabilität
+- Menü besser strukturieren (#16)
+- UI-Bug: Aktionen-Menü funktioniert nach Auswahl Zeitbuchung nicht mehr (#15, closed; #21, closed)
+- Seite `summary-timecheque` nicht refresh-sicher (#2, closed)
+- Form-Layout auf 2-spaltig umbauen (#13, closed)
+
+---
+
+## 4) Nicht-funktionale Anforderungen (NFRs) / Qualitätsziele
+Aus Issues ableitbar:
+- **Security**
+  - Absicherung Controller/URLs (#27)
+  - „self-timetransfer – security hole“ (#28)
+- **Performance/DB**
+  - Hibernate 1+N Probleme finden und lösen (#26)
+- **Robustheit/UX**
+  - Refresh-sichere Seiten (#2)
+  - Stabilität von Menüs/Navigation nach Aktionen (#15/#21)
+- **Testbarkeit**
+  - Email Tests (#20)
+- **Auditierbarkeit (implizit)**
+  - Reporting/Statistiken (#37-#40) → Daten müssen konsistent historisiert werden
+
+---
+
+## 5) Offene Punkte / Rückfragen (damit die Spezifikation “rund” wird)
+1) **Was ist ein „Zeitscheck“ genau?**
+   - Ist das ein „Voucher“ (einzelnes Objekt) oder nur eine Buchung? Gibt es mehrere Typen (gekauft/verdient/gespendet/Sozialkonto)?
+
+2) **SOZIALKONTO-Regeln**
+   - Wer ist Sozialkonto-Inhaber (Mitgliedstyp)? Welche Kategorien gibt es? Warum muss Geburtsdatum automatisch gesetzt werden (#49) – aus welchem Feld/Quelle?
+
+3) **Rollenmodell**
+   - Welche Standard-Rollen sollen beim Startup angelegt werden (#31)? (z. B. Admin, Vorstand, Kassier, Mitglied, System Admin?)
+   - Welche Aktionen dürfen die Rollen jeweils (insb. rund um Zeitscheck-Kauf/Transfer)?
+
+4) **Einziehungsauftrag**
+   - Wie wird „Einziehungsauftrag vorhanden“ technisch/inhaltlich modelliert (Flag beim Mitglied? SEPA-Mandat-Objekt?) und was genau wird dadurch freigeschaltet (#33)?
+
+5) **E-Mail Benachrichtigungen**
+   - Bei welchen Events sollen Mails rausgehen (Erstellung, Übergabe, Verbuchung, Kauf, Storno?) (#47/#8)?
+   - Wer bekommt die Mail (Sender, Empfänger, Admin/Board)?
+
+6) **Reporting**
+   - Welche Zeiträume/Filter werden benötigt (Jahr, Quartal, Mitglied, Kategorie)?
+   - Sollen Auswertungen exportierbar sein (CSV/PDF)?
+
+---
+
+## 6) Vollständige Issue-Liste (aus dem Abruf)
+(Es sind **38 Issues** in den Ergebnissen meines Abrufs; Status/Title wie im Repo.)
+
+- Open: #48, #51, #52, #50, #49, #47, #33, #35, #28, #38, #39, #40, #41, #30, #37, #36, #32, #31, #29, #27, #26, #8, #19, #18, #16, #1
+- Closed: #9, #46, #14, #42, #17, #24, #25, #5, #10, #7, #20, #21, #15, #11, #12, #13, #3, #4, #2
+
+Wenn du möchtest, kann ich als nächsten Schritt daraus auch **eine “Feature Map” (Epics → Stories)** und **User Journeys** (z. B. „Mitglied kauft Zeitschecks“, „Admin verbucht Übergabe“, „Vorstand sieht Statistik“) formulieren.
