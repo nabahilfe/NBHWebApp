@@ -229,7 +229,7 @@ public class TimeChequeController {
         }
         // Business Rule: Self-purchase of TimeCheques is only allowed if directDebitAuthorization is true.
         if (isSelfPurchase && !member.getDirectDebitAuthorization()) {
-            return "Selbstkauf von Zeitschecks ist nur möglich, wenn eine Lastschriftgenehmigung vorliegt.";
+            return "Selbstkauf von Zeitschecks ist nur möglich wenn eine Lastschriftgenehmigung vorliegt.";
         }
         return null;
     }
