@@ -54,14 +54,15 @@ public class ViewContext {
         return user != null && user.isTimeKeeper() ? true : false;
     }
 
-
     public boolean hasAnyRole(String...roles) {
         return user != null && user.hasAnyRole(roles) ? true : false;
     }
-
 
     public boolean hasRole(String role) {
         return user != null && user.hasAnyRole(role) ? true : false;
     }
 
+    public int getAccumulatedHours() {
+        return user != null ? user.getUser().getAccumulatedHours() : 0;
+    }
 }

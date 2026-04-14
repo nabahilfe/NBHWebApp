@@ -27,57 +27,83 @@
 
     <div class="container d-flex justify-content-center">
 
-        <form id="tcForm" action="/timecheques" method="POST">
-            ${csrfHiddenInput}
-
             <div class="row">
                 <div class="col-auto">
                     <div class="card shadow" style="background-color: #ECFEFF;"">
                         <div class="card-body">
 
-                            <h4 class="card-title text-primary">Zeitscheck erstellen / kaufen für</h4>
-                            <hr/>
-                            <h4>${timeCheque.getAssignedTo().getName()}</h4>
-                            <h5>${timeCheque.getAssignedTo().getAddress()}</h5>
-                            <hr/>
+                            <form id="tcForm" action="/timecheques" method="POST">
+                                ${csrfHiddenInput}
 
-                            Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours() == null ? 0
-                                    : timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
-                            <br/>
-                            ${timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS ? "Kostenlos bei Eintritt" : "Kauf von Zeitschecks"}:
-                            <b>${timeCheque.getHours()} h</b>
+                                <h4 class="card-title text-primary">Zeitschecks erstellen / kaufen für</h4>
+                                <hr/>
+                                <h4>${timeCheque.getAssignedTo().getName()}</h4>
+                                <h5>${timeCheque.getAssignedTo().getAddress()}</h5>
+                                <hr/>
 
-                            @if (timeCheque.getHours() != NbhConst.FIRST_TIME_CHEQUE_HOURS)
+                                Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours() == null ? 0
+                                        : timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
                                 <br/>
-                                Kosten: <b>${timeCheque.getHours()} € FIXME - Berechnen!</b>
-                            @endif
+                                ${timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS ? "Kostenlos bei Eintritt" : "Kauf von Zeitscheckss"}:
+                                <b>${timeCheque.getHours()} h</b>
 
-                            <div class="row g-3 align-items-center">
-                                <div class="col-auto">
-                                    <label for="orderDate" class="col-form-label">Erstellungsdatum:</label>
+                                @if (timeCheque.getHours() != NbhConst.FIRST_TIME_CHEQUE_HOURS)
+                                    <br/>
+                                    Kosten: <b>${timeCheque.getHours()} € FIXME - Berechnen!</b>
+                                @endif
+
+                                <div class="row g-3 align-items-center">
+                                    <div class="col-auto">
+                                        <label for="orderDate" class="col-form-label">Erstellungsdatum:</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="date" class="form-control" name="orderDate" id="orderDate" value="${formatISO(timeCheque.getTransactionDate())}" required>
+                                    </div>
                                 </div>
-                                <div class="col-auto">
-                                    <input type="date" class="form-control" name="orderDate" id="orderDate" value="${formatISO(timeCheque.getTransactionDate())}" required>
-                                </div>
-                            </div>
+
+                                <hr/>
+
+                                @if (errorMessage == null)
+                                    <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
+                                    <div class="text-center">
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
+                                                data-item-id="${timeCheque.getAssignedTo().getId()}">Erstellen / kaufen</button>
+                                    </div>
+                                @endif
+
+
+                            </form>
 
                         </div>
                     </div>
 
                 </div>
-            </div>
 
-        </form>
+                <div class="col-auto">
+
+                    <div class="card shadow" style="background-color: #ECFEFF;"">
+                        <div class="card-body">
+                            <h4 class="card-title text-primary">Zeitschecks ausdrucken für</h4>
+                            <hr/>
+                            <h4>${timeCheque.getAssignedTo().getName()}</h4>
+                            <h5>${timeCheque.getAssignedTo().getAddress()}</h5>
+                            <hr/>
+
+                            <!-- download a personalized Zeitscheck.pdf -->
+                            <form action="/download/timecheque-pdf" method="get">
+                                <input type="hidden" name="memberId" value="${timeCheque.getAssignedTo().getId()}">
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary bi-download"> Zeitschecks herunterladen</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
 
     </div>
 
-
-    @if (errorMessage == null)
-        <br/>
-        <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
-            data-item-id="${timeCheque.getAssignedTo().getId()}">Erstellen️️</button>
-    @endif
 
 
     <br/>
@@ -86,7 +112,7 @@
     <br/>
     <div class="card">
         <div class="card-body">
-            <h5>Gekaufte Zeitschecks</h5>
+            <h5>Gekaufte </h5>
 
             <table class="table table-hover table-sm" id="memberTable">
                 <thead>

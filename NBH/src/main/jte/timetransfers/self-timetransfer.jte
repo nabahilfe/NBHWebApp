@@ -43,6 +43,8 @@
 
                     <h4 class="card-title text-primary">Zeitscheck übergeben</h4>
                     <hr/>
+                    Mein aktuelles Zeitguthaben: <b> ${ctxt.getAccumulatedHours()} h</b>
+                    <hr/>
                     <p class="card-text text-success">Ich - <strong>${ctxt.getFullName()}</strong> - übergebe einen Zeitscheck</p>
 
                     <!--

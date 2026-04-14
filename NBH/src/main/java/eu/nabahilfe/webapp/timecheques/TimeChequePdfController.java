@@ -29,7 +29,7 @@ public class TimeChequePdfController {
     public void downloadPdf(@RequestParam("memberId") Long memberId, HttpServletResponse response) throws IOException {
 
         // Security: only allow download for own data unless ADMIN/TIME_KEEPER
-        if (!securityUtils.isAuthenticatedAndMatches(memberId)) {
+        if (!securityUtils.isAuthenticatedAndMatches(memberId) && !securityUtils.hasAnyRole("ADMIN", "TIME_KEEPER")) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
