@@ -48,7 +48,7 @@
                         ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}
                         <strong>${member.getFirstName()} ${member.getLastName()}</strong>
                         <br/>
-                        Geburtsdatum: ${dateReverseDE(member.getBirthdate())}
+                        Geburtstag: ${dateReverseDE(member.getBirthdate())}
                         <br/>
                         Mitglied seit: ${dateReverseDE(member.getJoiningDate())}
                         <br/>
@@ -78,7 +78,7 @@
                     <!-- download a personalized Zeitscheck.pdf -->
                     <form action="/download/timecheque-pdf" method="get">
                         <input type="hidden" name="memberId" value="${member.getId()}">
-                        <button type="submit" class="btn btn-outline-primary bi-download"> Zeitscheck als PDF herunterladen</button>
+                        <button type="submit" class="btn btn-primary bi-download"> Zeitscheck zum selber ausdrucken herunterladen</button>
                     </form>
 
                     <hr/>
