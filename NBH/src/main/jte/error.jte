@@ -20,8 +20,8 @@
     ctxt = ctxt,
     content = @`
 
-    <h2>StatusCode: ${status}</h2>
-    <h2>${error}</h2>
+    <h2>StatusCode: ${status == null ? -1 : status}</h2>
+    <h2>${error == null ? "Ungültige Operation" : error}</h2>
     <p>${message}</p>
 `)
 

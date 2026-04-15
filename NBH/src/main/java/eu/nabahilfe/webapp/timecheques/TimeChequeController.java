@@ -62,7 +62,9 @@ public class TimeChequeController {
 
         TimeCheque tc = timeChequeRepository.findById(id).orElse(null);
         if (tc == null) {
-            model.addAttribute("errorMessage", "Zeitscheck mit ID " + id + " nicht gefunden.");
+            model.addAttribute("status", 404);
+            model.addAttribute("error", "Not Found");
+            model.addAttribute("message", "Zeitscheck mit ID " + id + " nicht gefunden.");
             return "error";
         }
 
@@ -73,7 +75,9 @@ public class TimeChequeController {
 
         Member member = memberRepository.findById(tc.getAssignedTo().getId()).orElse(null);
         if (member == null) {
-            model.addAttribute("errorMessage", "Mitglied mit ID " + id + " nicht gefunden.");
+            model.addAttribute("status", 404);
+            model.addAttribute("error", "Not Found");
+            model.addAttribute("message", "Mitglied mit ID " + tc.getAssignedTo().getId() + " nicht gefunden.");
             return "error";
         }
 
