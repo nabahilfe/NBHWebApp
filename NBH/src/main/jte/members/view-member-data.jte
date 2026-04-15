@@ -32,58 +32,57 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>
-        Daten von ${ctxt.getFullName()}
-    </h3>
+    <div class="container d-flex justify-content-center">
+        <div class="row">
+            <div class="col-auto">
+                <div class="card shadow" style="background-color: #ECFEFF;">
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card shadow" style="background-color: #ECFEFF;">
-                <div class="card-header">
-                    <strong>${roleNames}</strong>
-                </div>
+                    <div class="card-body">
 
-                <div class="card-body">
-                    <p class="card-text">
-                        ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}
-                        <strong>${member.getFirstName()} ${member.getLastName()}</strong>
-                        <br/>
-                        Geburtstag: ${dateReverseDE(member.getBirthdate())}
-                        <br/>
-                        Mitglied seit: ${dateReverseDE(member.getJoiningDate())}
-                        <br/>
-                        Mitgliedsnummer: ${member.getMemberNmbr()}
-                    </p>
-                    <p class="card-text">
-                        <strong>Adresse</strong>
-                        <br/>
-                        ${member.getStreet() + " " + member.getNumber()}
-                        <br/>
-                        ${member.getZip() + " " + member.getCity()}
-                    </p>
+                        <h4 class="card-title text-primary">${ctxt.getFullName()}</h4>
+                        <strong>${roleNames}</strong>
+                        <hr/>
 
-                    @if(member.getEmail() != null)
+
                         <p class="card-text">
-                            E-Mail: <a href="mailto:${member.getEmail()}">${member.getEmail()}</a>
+                            ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}
+                            <br/>
+                            <strong>${member.getFirstName()} ${member.getLastName()}</strong>
+                            <br/>
+                            ${member.getStreet() + " " + member.getNumber()}
+                            <br/>
+                            ${member.getZip() + " " + member.getCity()}
+                            <hr/>
+                            Geburtstag: ${dateReverseDE(member.getBirthdate())}
+                            @if(member.getEmail() != null)
+                                <p class="card-text">
+                                    E-Mail: <a href="mailto:${member.getEmail()}">${member.getEmail()}</a>
+                                </p>
+                            @endif
+                            <hr/>
+                            Mitgliedsnummer: ${member.getMemberNmbr()}
+                            <br/>
+                            Mitglied seit: ${dateReverseDE(member.getJoiningDate())}
+                            <br/>
+                            Austritt am: ${member.getResignationDate() != null ? dateReverseDE(member.getResignationDate()) : "aktives Mitglied"}
+                            <hr/>
+                            Einziehungsauftrag:  <strong>${member.getEinziehungsauftrgJaNein()}</strong>
+                            <hr/>
+                            Stundenguthaben: <strong>${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + "" : "0"} h</strong>
                         </p>
-                    @endif
-                    <p class="card-text">
-                        Mein Stundenguthaben beträgt <strong>${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + "" : "0"}</strong> Stunden.
-                        <br/>
-                        Einziehungsauftrag erteilt:  <strong>${member.getEinziehungsauftrgJaNein()}</strong>
-                    </p>
 
-                    <hr/>
+                        <hr/>
 
-                    <!-- download a personalized Zeitscheck.pdf -->
-                    <form action="/download/timecheque-pdf" method="get">
-                        <input type="hidden" name="memberId" value="${member.getId()}">
-                        <div class="text-center">
-                            Zeitschecks herunterladen zum ausdrucken
-                            <br/><br/>
-                           <button type="submit" class="btn btn-primary bi-download"> Zeitschecks herunterladen</button>
-                        </div>
-                    </form>
+                        <!-- download a personalized Zeitscheck.pdf -->
+                        <form action="/download/timecheque-pdf" method="get">
+                            <input type="hidden" name="memberId" value="${member.getId()}">
+                            <div class="text-center">
+                                Zeitschecks herunterladen zum Ausdrucken
+                                <br/><br/>
+                               <button type="submit" class="btn btn-primary bi-download"> Zeitschecks herunterladen</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
