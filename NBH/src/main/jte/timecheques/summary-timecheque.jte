@@ -52,7 +52,7 @@
 
                         <hr/>
 
-                        Zeitschecks herunterladen zum selber auszudrucken.
+                        Zeitschecks herunterladen zum ausdrucken
                         <br/>
                         <br/>
 

@@ -62,8 +62,8 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/members/mydata/${ctxt.getUserId()}">Meine Daten</a></li>
-                                    <li><a class="dropdown-item" href="/timetransfers/fromself?fromMemberId=${ctxt.getUserId()}">Zeitscheck übergeben</a></li>
-                                    <li><a class="dropdown-item" href="/timecheques/newfromself/${ctxt.getUserId()}">Zeitscheck kaufen / ausdrucken</a></li>
+                                    <li><a class="dropdown-item" href="/timetransfers/fromself?fromMemberId=${ctxt.getUserId()}">Zeitschecks übergeben</a></li>
+                                    <li><a class="dropdown-item" href="/timecheques/newfromself/${ctxt.getUserId()}">Zeitschecks kaufen</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form action="/registration/logout" method="post">

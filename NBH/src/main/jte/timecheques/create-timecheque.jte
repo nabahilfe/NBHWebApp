@@ -74,22 +74,6 @@
                                 @endif
                             </form>
 
-
-                            <hr/>
-
-                            Zeitschecks herunterladen zum selber auszudrucken.
-                            <br/>
-                            <br/>
-
-                            <!-- download a personalized Zeitscheck.pdf -->
-                            <form action="/download/timecheque-pdf" method="get">
-                                <input type="hidden" name="memberId" value="${timeCheque.getAssignedTo().getId()}">
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-primary bi-download"> Zeitschecks herunterladen</button>
-                                </div>
-                            </form>
-
-
                         </div>
                     </div>
 
@@ -105,30 +89,11 @@
     @template.components.display-statusmessage(successMessage, errorMessage)
 
     <br/>
+
     <div class="card">
-        <div class="card-body">
-            <h5>Gekaufte Zeitschecks</h5>
 
-            <table class="table table-hover table-sm" id="memberTable">
-                <thead>
-                    <tr>
-                        <th scope="col">Datum</th>
-                        <th scope="col">erstellt von</th>
-                        <th scope="col" class="text-end">Stunden</th>
-                    </tr>
-                </thead>
-                <tbody class="table-group-divider">
-                    @for (TimeCheque tc : purchasedTimeCheques)
-                    <tr>
-                        <td>${dateDE(tc.getTransactionDate())}</td>
-                        <td>${tc.getCreatedBy().getName()}</td>
-                        <td class="text-end">${tc.getHours()}</td>
-                    </tr>
-                    @endfor
-                </tbody>
-            </table>
+       @template.components.list-timecheques-component(member = timeCheque.getAssignedTo(), timeCheques = purchasedTimeCheques)
 
-        </div>
     </div>
 
 

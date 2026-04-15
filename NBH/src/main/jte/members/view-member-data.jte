@@ -72,13 +72,27 @@
                         <br/>
                         Einziehungsauftrag erteilt:  <strong>${member.getEinziehungsauftrgJaNein()}</strong>
                     </p>
+
                     <hr/>
-                    <i>Letztes Update: ${dateTimeDE(member.getUpdatedAt())}</i>
+
+                    <!-- download a personalized Zeitscheck.pdf -->
+                    <form action="/download/timecheque-pdf" method="get">
+                        <input type="hidden" name="memberId" value="${member.getId()}">
+                        <div class="text-center">
+                            Zeitschecks herunterladen zum ausdrucken
+                            <br/><br/>
+                           <button type="submit" class="btn btn-primary bi-download"> Zeitschecks herunterladen</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
+    <br/>
+    <div>
+        <i>Letztes Update: ${dateTimeDE(member.getUpdatedAt())}</i>
+    </div>
 
     <br/>
 

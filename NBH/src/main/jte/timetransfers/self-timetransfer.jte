@@ -41,7 +41,7 @@
                 <div class="card shadow" style="background-color: #ECFEFF;">
                   <div class="card-body">
 
-                    <h4 class="card-title text-primary">Zeitscheck übergeben</h4>
+                    <h4 class="card-title text-primary">Zeitschecks übergeben</h4>
                     <hr/>
                     Mein aktuelles Zeitguthaben: <b> ${ttf.getAccumulatedHours()} h</b>
                     <hr/>
