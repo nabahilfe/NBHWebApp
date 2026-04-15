@@ -122,6 +122,7 @@ public class TimeTransferController {
 
         ttf.setUserFromId(fromMemberId);
         ttf.setUserFromName(fromMember.getNameAndAddress());
+        ttf.setAccumulatedHours(fromMember.getAccumulatedHours());
         log.debug("Creating new SELF-TimeTransfer, pre-filled form: {}", ttf);
 
         model.addAttribute("offers", offerRepository.findAllByOrderByCodeAsc());

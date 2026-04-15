@@ -61,33 +61,25 @@
                                     </div>
                                 </div>
 
-                                <hr/>
-
                                 @if (errorMessage == null)
                                     <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
+                                    <br/>
+                                    Zeitschecks kaufen für <b>${timeCheque.getAssignedTo().getName()}</b>.
+                                    <br/>
+                                    <br/>
                                     <div class="text-center">
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
                                                 data-item-id="${timeCheque.getAssignedTo().getId()}">Zeitschecks kaufen</button>
                                     </div>
                                 @endif
-
-
                             </form>
 
-                        </div>
-                    </div>
 
-                </div>
-
-                <div class="col-auto">
-
-                    <div class="card shadow" style="background-color: #ECFEFF;"">
-                        <div class="card-body">
-                            <h4 class="card-title text-primary">Zeitschecks ausdrucken für</h4>
                             <hr/>
-                            <h4>${timeCheque.getAssignedTo().getName()}</h4>
-                            <h5>${timeCheque.getAssignedTo().getAddress()}</h5>
-                            <hr/>
+
+                            Zeitschecks herunterladen zum selber auszudrucken.
+                            <br/>
+                            <br/>
 
                             <!-- download a personalized Zeitscheck.pdf -->
                             <form action="/download/timecheque-pdf" method="get">
@@ -97,9 +89,12 @@
                                 </div>
                             </form>
 
+
                         </div>
                     </div>
+
                 </div>
+
             </div>
 
     </div>

@@ -52,7 +52,8 @@
           @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
               <th scope="col" class="text-end" data-col="accumulatedHours" data-order="${orderBy.equals("accumulatedHours") ? order : ""}">
                     Guthaben ${orderBy.equals("accumulatedHours") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
-              <th scope="col" class="text-center">Zeitscheck</th>
+              <th scope="col" class="text-center" title="Zeitschecks kaufen">Zeitscheck</th>
+              <th scope="col" class="text-center" title="Zeitschecks herunterladen">Download</th>
               <th scope="col" class="text-center">Delete</th>
           @endif
         </tr>
@@ -77,8 +78,18 @@
               </td>
               <td class="text-center">
                 <a class="btn btn-outline-primary btn-sm bi-plus-lg" href="/timecheques/new?memberId=${member.getId()}"
-                    role="button"></a>
+                    role="button" title="Zeitschecks kaufen"></a>
               </td>
+
+              <td>
+                <form action="/download/timecheque-pdf" method="get">
+                    <input type="hidden" name="memberId" value="${member.getId()}">
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-outline-primary btn-sm bi-download" title="Zeitschecks herunterladen"></button>
+                    </div>
+                </form>
+              </td>
+
               <td class="text-center">
                   <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
                 <button type="button" class="btn btn-outline-danger btn-sm bi-x-lg"

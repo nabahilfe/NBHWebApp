@@ -62,7 +62,4 @@ public class ViewContext {
         return user != null && user.hasAnyRole(role) ? true : false;
     }
 
-    public int getAccumulatedHours() {
-        return user != null ? user.getUser().getAccumulatedHours() : 0;
-    }
 }

@@ -20,6 +20,8 @@ public class TimeTransferForm {
 
     String fromself; // "true" if self-transfer, "false" otherwise
 
+    Integer accumulatedHours;
+
     public TimeTransferForm() {
         super();
     }
@@ -100,6 +102,13 @@ public class TimeTransferForm {
         return "true".equals(fromself);
     }
 
+    public void setAccumulatedHours(Integer accumulatedHours) {
+        this.accumulatedHours = accumulatedHours;
+    }
+
+    public Integer getAccumulatedHours() {
+        return accumulatedHours;
+    }
 
     @Override
     public String toString() {
@@ -107,6 +116,7 @@ public class TimeTransferForm {
                 + ", serviceDate=" + serviceDate + ", hoursSelected=" + hoursSelected + ", userToName=" + userToName
                 + ", userToId=" + userToId + ", note=" + note + ", fromself=" + fromself + "]";
     }
+
 
 
 
