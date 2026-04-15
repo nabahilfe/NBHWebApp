@@ -35,7 +35,7 @@
                             <form id="tcForm" action="/timecheques" method="POST">
                                 ${csrfHiddenInput}
 
-                                <h4 class="card-title text-primary">Zeitschecks erstellen / kaufen für</h4>
+                                <h4 class="card-title text-primary">Zeitschecks kaufen für</h4>
                                 <hr/>
                                 <h4>${timeCheque.getAssignedTo().getName()}</h4>
                                 <h5>${timeCheque.getAssignedTo().getAddress()}</h5>
@@ -67,7 +67,7 @@
                                     <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
                                     <div class="text-center">
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
-                                                data-item-id="${timeCheque.getAssignedTo().getId()}">Erstellen / kaufen</button>
+                                                data-item-id="${timeCheque.getAssignedTo().getId()}">Zeitschecks kaufen</button>
                                     </div>
                                 @endif
 
@@ -112,7 +112,7 @@
     <br/>
     <div class="card">
         <div class="card-body">
-            <h5>Gekaufte </h5>
+            <h5>Gekaufte Zeitschecks</h5>
 
             <table class="table table-hover table-sm" id="memberTable">
                 <thead>
