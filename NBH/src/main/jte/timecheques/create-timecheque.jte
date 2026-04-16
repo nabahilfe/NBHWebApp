@@ -11,6 +11,8 @@
 @param TimeCheque timeCheque
 @param List<TimeCheque> purchasedTimeCheques
 
+@param Float pricePerHour = 3.60f
+
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
@@ -53,8 +55,13 @@
                                 @else
 
                                     Kauf von Zeitschecks:
+                                    <select name="hours" id="hours" class="form-select d-inline-block w-auto" onchange="calculatePrice()">
+                                        <option value="10" selected>10 h</option>
+                                        <option value="20">20 h</option>
+                                    </select>
+
                                     <br/>
-                                    Kosten: <b></b>
+                                    Kosten: <b><span id="calculatedPrice"></span> €</b>
 
                                 @endif
 
@@ -135,6 +142,17 @@
 
 
     <script>
+        const pricePerHour = ${pricePerHour};
+
+        function calculatePrice() {
+            const hours = parseInt(document.getElementById('hours').value);
+            const priceSpan = document.getElementById('calculatedPrice');
+            if (priceSpan) {
+                priceSpan.textContent = (hours * pricePerHour).toFixed(2);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', calculatePrice);
+
         var modalPanel = document.getElementById('confirmModal');
 
         // save the selectet id inside the modal so we have acces to upon delete confirm
