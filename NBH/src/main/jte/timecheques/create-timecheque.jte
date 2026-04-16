@@ -35,7 +35,7 @@
                             <form id="tcForm" action="/timecheques" method="POST">
                                 ${csrfHiddenInput}
 
-                                <h4 class="card-title text-primary">Zeitschecks kaufen für</h4>
+                                <h4 class="card-title text-primary">Zeitschecks erstellen für</h4>
                                 <hr/>
                                 <h4>${timeCheque.getAssignedTo().getName()}</h4>
                                 <h5>${timeCheque.getAssignedTo().getAddress()}</h5>
@@ -63,13 +63,19 @@
 
                                 @if (errorMessage == null)
                                     <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
-                                    <br/>
-                                    Zeitschecks kaufen für <b>${timeCheque.getAssignedTo().getName()}</b>.
-                                    <br/>
-                                    <br/>
+                                    <hr/>
                                     <div class="text-center">
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
-                                                data-item-id="${timeCheque.getAssignedTo().getId()}">Zeitschecks kaufen</button>
+                                        Zeitschecks für <b>${timeCheque.getAssignedTo().getName()}</b>
+                                        <br/>
+                                        <br/>
+                                        <button type="button" class="btn btn-primary bi-plus-square" data-bs-toggle="modal" data-bs-target="#confirmModal"
+                                                data-item-id="${timeCheque.getAssignedTo().getId()}">
+                                                @if (timeCheque.getHours() != NbhConst.FIRST_TIME_CHEQUE_HOURS)
+                                                    Zeitschecks kaufen
+                                                @else
+                                                    Zeitschecks zuweisen
+                                                @endif
+                                        </button>
                                     </div>
                                 @endif
                             </form>
