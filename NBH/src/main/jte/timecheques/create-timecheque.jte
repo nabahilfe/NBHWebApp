@@ -43,13 +43,19 @@
 
                                 Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours() == null ? 0
                                         : timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
-                                <br/>
-                                ${timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS ? "Kostenlos bei Eintritt" : "Kauf von Zeitscheckss"}:
-                                <b>${timeCheque.getHours()} h</b>
 
-                                @if (timeCheque.getHours() != NbhConst.FIRST_TIME_CHEQUE_HOURS)
+                                <br/>
+
+                                @if(timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS)
+
+                                    Kostenlos bei Eintritt: <b>${timeCheque.getHours()} h</b>
+
+                                @else
+
+                                    Kauf von Zeitschecks:
                                     <br/>
-                                    Kosten: <b>${timeCheque.getHours()} € FIXME - Berechnen!</b>
+                                    Kosten: <b></b>
+
                                 @endif
 
                                 <div class="row g-3 align-items-center">
