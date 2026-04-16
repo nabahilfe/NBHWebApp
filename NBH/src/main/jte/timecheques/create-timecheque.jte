@@ -51,6 +51,7 @@
                                 @if(timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS)
 
                                     Kostenlos bei Eintritt: <b>${timeCheque.getHours()} h</b>
+                                    <input type="hidden" name="hours" value="${timeCheque.getHours()}">
 
                                 @else
 

@@ -180,10 +180,14 @@ public class TimeChequeController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping
     @Transactional
-    String saveTimeCheque(final Model model, @RequestParam LocalDate orderDate) {
+    String saveTimeCheque(final Model model, @RequestParam LocalDate orderDate, @RequestParam int hours) {
 
         TimeCheque tc = (TimeCheque) model.getAttribute("timeCheque");
         tc.setTransactionDate(orderDate);
+        tc.setHours(hours);
+        // FIXME - use current price of hours from TC-Kosten table instead of hardcoded price per hour
+        // tc.setAmount(hours <= 5 ? BigDecimal.valueOf(0) : BigDecimal.valueOf(NbhConst.PRICE_PER_HOUR * hours));
+        tc.setAmount(hours <= 5 ? BigDecimal.valueOf(0) : BigDecimal.valueOf(3.60f * hours));
         timeChequeRepository.save(tc);
 
         // BusinessRule: Update Member's accumulated hours
