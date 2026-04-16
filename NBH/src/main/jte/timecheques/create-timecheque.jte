@@ -61,9 +61,8 @@
                                 <div class="row g-3 align-items-center">
                                     <div class="col-auto">
                                         <label for="orderDate" class="col-form-label">Erstellungsdatum:</label>
-                                    </div>
-                                    <div class="col-auto">
-                                        <input type="date" class="form-control" name="orderDate" id="orderDate" value="${formatISO(timeCheque.getTransactionDate())}" required>
+                                        <b>${dateReverseDE(timeCheque.getTransactionDate())}</b>
+                                        <input type="hidden" name="orderDate" value="${formatISO(timeCheque.getTransactionDate())}">
                                     </div>
                                 </div>
 
