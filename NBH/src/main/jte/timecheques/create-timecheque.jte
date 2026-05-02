@@ -2,6 +2,7 @@
 @import java.time.LocalDate
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
+@import static eu.nabahilfe.webapp.NumberFormatter.*
 @import static eu.nabahilfe.webapp.jte.TemplateHelpers.*
 
 @import eu.nabahilfe.webapp.NbhConst
