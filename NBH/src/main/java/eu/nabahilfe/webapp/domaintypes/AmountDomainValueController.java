@@ -43,13 +43,23 @@ public class AmountDomainValueController {
     public String list(Model model, @RequestParam(required = false) String type) {
         List<AmountDomainValue> values;
         if (type != null && !type.isBlank()) {
-            values = repo.findByCode(type);
+            values = repo.findByCodeOrderByValidFromDesc(type);
         } else {
-            values = repo.findAllByOrderByCodeAsc();
+            values = repo.findAllByOrderByValidFromDesc();
+        }
+        // Build a set of IDs that are the latest (highest validFrom) per code and may be deleted
+        java.util.Set<Long> deletableIds = new java.util.HashSet<>();
+        for (AmountDomainType t : AmountDomainType.values()) {
+            repo.findLatestByCode(t.name()).ifPresent(latest -> {
+                if (latest.getValidFrom().getYear() > LocalDate.now().getYear()) {
+                    deletableIds.add(latest.getId());
+                }
+            });
         }
         model.addAttribute("amountDomainValues", values);
         model.addAttribute("amountDomainTypes", AmountDomainType.values());
         model.addAttribute("selectedType", type);
+        model.addAttribute("deletableIds", deletableIds);
         return "domaintypes/list-domain-values";
     }
 
@@ -96,12 +106,23 @@ public class AmountDomainValueController {
     }
 
 
+    private static final String EDIT_FORBIDDEN_MSG =
+            "Einträge für das aktuelle oder vergangene Jahre dürfen nicht bearbeitet oder gelöscht werden.";
+
+    private boolean isProtected(AmountDomainValue adv) {
+        return adv.getValidFrom().getYear() <= LocalDate.now().getYear();
+    }
+
     /* Show edit form */
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         Optional<AmountDomainValue> adv = repo.findById(id);
         if (adv.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Eintrag mit ID " + id + " nicht gefunden.");
+            return "redirect:/domaintypes";
+        }
+        if (isProtected(adv.get())) {
+            redirectAttributes.addFlashAttribute("errorMessage", EDIT_FORBIDDEN_MSG);
             return "redirect:/domaintypes";
         }
         addFormAttributes(model, adv.get());
@@ -114,6 +135,15 @@ public class AmountDomainValueController {
     @PostMapping("/save")
     public String save(@Valid @ModelAttribute AmountDomainValue amountDomainValue, RedirectAttributes redirectAttributes, Model model) {
         boolean isNew = (amountDomainValue.getId() == null);
+
+        if (!isNew) {
+            // Guard: existing records for current year or earlier must not be modified
+            Optional<AmountDomainValue> existing = repo.findById(amountDomainValue.getId());
+            if (existing.isPresent() && isProtected(existing.get())) {
+                redirectAttributes.addFlashAttribute("errorMessage", EDIT_FORBIDDEN_MSG);
+                return "redirect:/domaintypes";
+            }
+        }
 
         if (isNew) {
             // For new entries validTo is always 9999-12-31
@@ -163,8 +193,30 @@ public class AmountDomainValueController {
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Optional<AmountDomainValue> adv = repo.findById(id);
         if (adv.isPresent()) {
+            if (isProtected(adv.get())) {
+                redirectAttributes.addFlashAttribute("errorMessage", EDIT_FORBIDDEN_MSG);
+                return "redirect:/domaintypes";
+            }
+            // Only the record with the highest validFrom for its code may be deleted
+            Optional<AmountDomainValue> latest = repo.findLatestByCode(adv.get().getCode());
+            if (latest.isEmpty() || !latest.get().getId().equals(id)) {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "Nur der neueste Eintrag einer Reihe darf gelöscht werden, um Lücken in der Datenreihe zu vermeiden.");
+                return "redirect:/domaintypes";
+            }
             repo.delete(adv.get());
             log.debug("AmountDomainValue deleted: {}", adv.get());
+
+            // Re-open the previous record for the same code (set validTo back to 9999-12-31).
+            // The predecessor was closed with validTo = deletedRecord.validFrom - 1 day.
+            LocalDate predecessorValidTo = adv.get().getValidFrom().minusDays(1);
+            repo.findByCodeAndValidTo(adv.get().getCode(), predecessorValidTo)
+                .ifPresent(prev -> {
+                    prev.setValidTo(OPEN_DATE);
+                    repo.save(prev);
+                    log.debug("Re-opened previous AmountDomainValue: {}", prev);
+                });
+
             redirectAttributes.addFlashAttribute("successMessage", "Eintrag wurde gelöscht.");
         } else {
             redirectAttributes.addFlashAttribute("errorMessage", "Eintrag mit ID " + id + " nicht gefunden.");

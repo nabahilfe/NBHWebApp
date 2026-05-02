@@ -55,14 +55,14 @@
                                         <option value="">-- Bitte wählen --</option>
                                         @for(AmountDomainType t : amountDomainTypes)
                                             @if(t.name().equals(amountDomainValue.getCode()))
-                                                <option value="${t.name()}" selected>${t.name()}</option>
+                                                <option value="${t.name()}" selected>${t.getDescription()}</option>
                                             @else
-                                                <option value="${t.name()}">${t.name()}</option>
+                                                <option value="${t.name()}">${t.getDescription()}</option>
                                             @endif
                                         @endfor
                                     </select>
                                 @else
-                                    <input type="text" class="form-control" value="${amountDomainValue.getCode()}" readonly>
+                                    <input type="text" class="form-control" value="${AmountDomainType.valueOf(amountDomainValue.getCode()).getDescription()}" readonly>
                                     <input type="hidden" name="code" value="${amountDomainValue.getCode()}">
                                 @endif
                             </div>
@@ -76,9 +76,9 @@
                                        required>
                             </div>
 
-                            <!-- Gültig von -->
+                            <!-- Gültig ab -->
                             <div class="mb-3">
-                                <label for="validFrom" class="form-label">Gültig von (1. Januar)</label>
+                                <label for="validFrom" class="form-label">Gültig immer ab 1. Jänner</label>
                                 @if(amountDomainValue.getId() == null)
                                     <input type="text" id="validFromDisplay" class="form-control"
                                            value="${computedValidFrom != null ? computedValidFrom.toString() : ""}" readonly>
@@ -104,16 +104,9 @@
                                 @endif
                             </div>
 
-                            <!-- Gültig bis: fixed for new entries, readonly display -->
-                            <div class="mb-3">
-                                <label class="form-label">Gültig bis</label>
-                                <input type="text" class="form-control"
-                                       value="${amountDomainValue.getId() == null ? "9999-12-31" : amountDomainValue.getValidTo().toString()}"
-                                       readonly>
-                                @if(amountDomainValue.getId() != null)
-                                    <input type="hidden" name="validTo" value="${amountDomainValue.getValidTo().toString()}">
-                                @endif
-                            </div>
+                            @if(amountDomainValue.getId() != null)
+                                <input type="hidden" name="validTo" value="${amountDomainValue.getValidTo().toString()}">
+                            @endif
 
                             <div class="d-flex gap-2 mt-3">
                                 <button type="submit" class="btn btn-primary">Speichern</button>

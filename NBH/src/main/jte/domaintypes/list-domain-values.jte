@@ -1,4 +1,5 @@
 @import java.util.List
+@import java.util.Set
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
 @import static eu.nabahilfe.webapp.NumberFormatter.*
@@ -10,6 +11,7 @@
 @param AmountDomainType[] amountDomainTypes
 
 @param String selectedType = null
+@param Set<Long> deletableIds = null
 
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
@@ -23,7 +25,7 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>Fachliche Werte (Domain Values)</h3>
+    <h3>Mitgliedsbeitrag und Zeitscheck Kosten</h3>
 
     <br/>
 
@@ -39,9 +41,9 @@
                 <option value="">-- Alle --</option>
                 @for(AmountDomainType t : amountDomainTypes)
                     @if(t.name().equals(selectedType))
-                        <option value="${t.name()}" selected>${t.name()}</option>
+                        <option value="${t.name()}" selected>${t.getDescription()}</option>
                     @else
-                        <option value="${t.name()}">${t.name()}</option>
+                        <option value="${t.name()}">${t.getDescription()}</option>
                     @endif
                 @endfor
             </select>
@@ -52,27 +54,31 @@
     <table class="table table-hover table-sm">
         <thead>
             <tr>
-                <th scope="col">Code</th>
+                <th scope="col">Typ</th>
                 <th scope="col" class="text-end">Betrag</th>
-                <th scope="col">Gültig von</th>
-                <th scope="col">Gültig bis</th>
+                <th scope="col">Gültig ab</th>
                 <th scope="col" class="text-center">Aktionen</th>
             </tr>
         </thead>
         <tbody>
             @for(AmountDomainValue adv : amountDomainValues)
                 <tr>
-                    <td>${adv.getCode()}</td>
+                    <td>${AmountDomainType.valueOf(adv.getCode()).getDescription()}</td>
                     <td class="text-end">${numberDE(adv.getAmount())} €</td>
                     <td>${dateDE(adv.getValidFrom())}</td>
-                    <td>${dateDE(adv.getValidTo())}</td>
                     <td class="text-center">
-                        <a href="/domaintypes/edit/${adv.getId()}" class="btn btn-sm btn-outline-primary bi-pencil"></a>
-                        <form method="POST" action="/domaintypes/delete/${adv.getId()}" class="d-inline">
-                            ${csrfHiddenInput}
-                            <button type="submit" class="btn btn-sm btn-outline-danger bi-trash"
-                                    onclick="return confirm('Wirklich löschen?')"></button>
-                        </form>
+                        @if(adv.getValidFrom().getYear() > java.time.LocalDate.now().getYear())
+                            <a href="/domaintypes/edit/${adv.getId()}" class="btn btn-sm btn-outline-primary bi-pencil"></a>
+                            @if(deletableIds != null && deletableIds.contains(adv.getId()))
+                                <form method="POST" action="/domaintypes/delete/${adv.getId()}" class="d-inline">
+                                    ${csrfHiddenInput}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger bi-trash"
+                                            onclick="return confirm('Wirklich löschen?')"></button>
+                                </form>
+                            @endif
+                        @else
+                            <span class="text-muted small">geschützt</span>
+                        @endif
                     </td>
                 </tr>
             @endfor

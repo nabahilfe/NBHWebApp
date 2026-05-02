@@ -13,9 +13,18 @@ public interface AmountDomainValueRepository extends ListCrudRepository<AmountDo
 
     List<AmountDomainValue> findByCode(String code);
 
-    List<AmountDomainValue> findAllByOrderByCodeAsc();
+    List<AmountDomainValue> findAllByOrderByValidFromDesc();
 
-    /** Find the currently open record (validTo = 9999-12-31) for a given code */
+    List<AmountDomainValue> findByCodeOrderByValidFromDesc(String code);
+
+    /** Find the record with the highest validFrom for a given code */
+    @Query("SELECT a FROM AmountDomainValue a WHERE a.code = :code ORDER BY a.validFrom DESC LIMIT 1")
+    Optional<AmountDomainValue> findLatestByCode(String code);
+
+    /** Find the record for a given code whose validTo equals the given date (used to re-open the predecessor after deletion) */
+    @Query("SELECT a FROM AmountDomainValue a WHERE a.code = :code AND a.validTo = :validTo")
+    Optional<AmountDomainValue> findByCodeAndValidTo(String code, LocalDate validTo);
+
     @Query("SELECT a FROM AmountDomainValue a WHERE a.code = :code AND a.validTo = :openDate")
     Optional<AmountDomainValue> findOpenByCode(String code, LocalDate openDate);
 }
