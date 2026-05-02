@@ -28,13 +28,11 @@
                 <div class="card shadow" style="min-width: 400px;">
                     <div class="card-body">
 
-                        @template.components.display-statusmessage(successMessage, errorMessage)
-
                         <h4 class="card-title text-primary">
                             @if(amountDomainValue.getId() == null)
-                                Neuen Domain-Wert erstellen
+                                Neuen Gebühren-Satz erstellen
                             @else
-                                Domain-Wert bearbeiten
+                                Gebühren-Satz bearbeiten
                             @endif
                         </h4>
                         <hr/>
@@ -114,6 +112,12 @@
                             </div>
 
                         </form>
+
+                        <br/>
+
+                        @template.components.display-statusmessage(successMessage, errorMessage)
+
+
                     </div>
                 </div>
             </div>

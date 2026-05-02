@@ -29,7 +29,6 @@
 
     <br/>
 
-    @template.components.display-statusmessage(successMessage, errorMessage)
 
     <!-- Filter by AmountDomainType -->
     <form method="GET" action="/domaintypes" class="row g-3 align-items-center mb-3">
@@ -86,5 +85,9 @@
     </table>
 
     <a href="/domaintypes/create" class="btn btn-primary bi-plus-square"> Neuen Eintrag erstellen</a>
+
+    <br/><br/>
+
+    @template.components.display-statusmessage(successMessage, errorMessage)
 
 `)
