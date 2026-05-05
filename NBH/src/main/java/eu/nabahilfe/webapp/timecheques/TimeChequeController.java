@@ -23,7 +23,7 @@ import eu.nabahilfe.webapp.domaintypes.AmountDomainValueRepository;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import eu.nabahilfe.webapp.security.SecurityUtils;
-import eu.nabahilfe.webapp.timetransfers.TimeTransfer;
+import eu.nabahilfe.webapp.timetransfers.TimeTransferRepository;
 import jakarta.transaction.Transactional;
 
 @Controller
@@ -38,17 +38,20 @@ public class TimeChequeController {
     private final TimeChequeRepository timeCheckRepository;
     private final SecurityUtils securityUtils;
     private final AmountDomainValueRepository amountDomainValueRepository;
+    private final TimeTransferRepository timeTransferRepository;
 
     // ...existing code...
 
     public TimeChequeController(TimeChequeRepository timeChequeRepository, MemberRepository memberRepository,
             TimeChequeRepository timeCheckRepository, SecurityUtils securityUtils,
-            AmountDomainValueRepository amountDomainValueRepository) {
+            AmountDomainValueRepository amountDomainValueRepository,
+            TimeTransferRepository timeTransferRepository) {
         this.timeChequeRepository = timeChequeRepository;
         this.memberRepository = memberRepository;
         this.timeCheckRepository = timeCheckRepository;
         this.securityUtils = securityUtils;
         this.amountDomainValueRepository = amountDomainValueRepository;
+        this.timeTransferRepository = timeTransferRepository;
     }
 
 
@@ -113,9 +116,10 @@ public class TimeChequeController {
     @GetMapping("/statistics")
     String statistics(final Model model, @RequestParam(required = false) Integer year) {
         int selectedYear = (year != null) ? year : LocalDate.now().getYear();
-        List<Object[]> stats = timeChequeRepository.findStatsByYear(selectedYear);
         model.addAttribute("selectedYear", selectedYear);
-        model.addAttribute("stats", stats);
+        model.addAttribute("stats", timeChequeRepository.findStatsByYear(selectedYear));
+        model.addAttribute("transferStats", timeTransferRepository.findEarnedHoursStatsByYear(selectedYear));
+        model.addAttribute("givenStats", timeTransferRepository.findGivenHoursStatsByYear(selectedYear));
         return "timecheques/time-cheque-statistics";
     }
 
