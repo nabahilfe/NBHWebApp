@@ -48,6 +48,7 @@
                 Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
           <th scope="col" data-col="email" data-order="${orderBy.equals("email") ? order : ""}">
                 E-Mail ${orderBy.equals("email") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+          <th scope="col">Telefon</th>
 
           @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
               <th scope="col" class="text-end" data-col="accumulatedHours" data-order="${orderBy.equals("accumulatedHours") ? order : ""}">
@@ -70,7 +71,18 @@
           <td>${member.getFirstName()}</td>
           <td>${member.getAddress()}</td>
           <td>${member.getRole() != null ? member.getRole().getRoleName() : ""}</td>
-          <td>${member.getEmail() != null ? member.getEmail() : ""}</td>
+          <td>
+              @if(member.getEmail() != null && !member.getEmail().isBlank())
+                  <a href="mailto:${member.getEmail()}" class="text-decoration-none">${member.getEmail()}</a>
+              @endif
+          </td>
+          <td>
+              @if(member.getPhoneNumber() != null && !member.getPhoneNumber().isBlank())
+                  <a href="tel:${member.getPhoneNumber().replace(" ", "")}" class="text-decoration-none">
+                      ${member.getPhoneNumber()}
+                  </a>
+              @endif
+          </td>
 
           @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
               <td class="text-end">
