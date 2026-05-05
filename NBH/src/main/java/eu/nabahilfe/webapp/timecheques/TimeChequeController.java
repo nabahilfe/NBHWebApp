@@ -2,6 +2,7 @@ package eu.nabahilfe.webapp.timecheques;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,6 +108,20 @@ public class TimeChequeController {
         return "timecheques/list-unaccounted-timecheques";
     }
 
+    
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
+    @GetMapping("/statistics")
+    String statistics(final Model model, @RequestParam(required = false) Integer year) {
+        int selectedYear = (year != null) ? year : LocalDate.now().getYear();
+        List<Object[]> stats = timeChequeRepository.findStatsByYear(selectedYear);
+        model.addAttribute("selectedYear", selectedYear);
+        model.addAttribute("stats", stats);
+        return "timecheques/time-cheque-statistics";
+    }
+
+    
+    // --------------------
+    
 
     // --------------------
     // CREATE NEW
@@ -136,18 +151,6 @@ public class TimeChequeController {
         }
 
         return "timecheques/create-timecheque";
-    }
-
-
-    // Business Logic: determine TimeCheque hours based on existing TimeCheques
-    private TimeCheque createNewTimeCheque(Member member) {
-        int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
-        if (existingTimeCheques == 0 && (! member.getIsImportedMember())) {
-            log.debug("Member id={} has no existing TimeCheques, is not imported Member, using first hours of {}", member.getId(), NbhConst.FIRST_TIME_CHEQUE_HOURS);
-            return createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member);
-        }
-        log.debug("Member id={} has {} existing TimeCheques, using regular hours of {}", member.getId(), existingTimeCheques, NbhConst.REGULAR_TIME_CHEQUE_HOURS);
-        return createTimeCheque(NbhConst.REGULAR_TIME_CHEQUE_HOURS, member);
     }
 
 
@@ -220,18 +223,25 @@ public class TimeChequeController {
     // helper methods
     // --------------------
 
+
+    private TimeCheque createNewTimeCheque(Member member) {
+        int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
+        if (existingTimeCheques == 0 && (!member.getIsImportedMember())) {
+            log.debug("Member id={} has no existing TimeCheques, is not imported Member, using first hours of {}", member.getId(), NbhConst.FIRST_TIME_CHEQUE_HOURS);
+            return createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member);
+        }
+        log.debug("Member id={} has {} existing TimeCheques, using regular hours of {}", member.getId(), existingTimeCheques, NbhConst.REGULAR_TIME_CHEQUE_HOURS);
+        return createTimeCheque(NbhConst.REGULAR_TIME_CHEQUE_HOURS, member);
+    }
+
     private TimeCheque createTimeCheque(int timeChequeHours, Member member) {
-
         TimeCheque tc = new TimeCheque();
-
         tc.setHours(timeChequeHours);
         BigDecimal pricePerHour = resolveTimechequeeFeePerHour(LocalDate.now());
         tc.setAmount(timeChequeHours <= 5 ? BigDecimal.valueOf(0) : pricePerHour.multiply(BigDecimal.valueOf(timeChequeHours)));
         tc.setAssignedTo(member);
         tc.setTransactionDate(LocalDate.now());
-
         log.debug("\nCreated TimeCheque: {}", tc);
-
         return tc;
     }
 

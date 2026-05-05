@@ -172,6 +172,18 @@
                             </li>
                         @endif
 
+                        <!-- Dropdown Auswertung -->
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                            <li class="nav-item dropdown">
+                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                    Auswertungen
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/timecheques/statistics">Zeitscheks pro Mitglied</a></li>
+                                </ul>
+                            </li>
+                        @endif
+
 
 
                     </ul>
