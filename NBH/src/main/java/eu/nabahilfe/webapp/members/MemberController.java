@@ -365,6 +365,13 @@ public class MemberController {
                 return "Das Austrittsdatum darf nicht mehr als 3 Monate in der Zukunft liegen (spätestens: " + latestResignation + ").";
         }
 
+        // phoneNumber rules
+        if (member.getPhoneNumber() != null && !member.getPhoneNumber().isBlank()) {
+            String phone = member.getPhoneNumber();
+            if (!phone.matches("[+0][0-9 ]*") || phone.contains("  "))
+                return "Telefonnummer muss mit + (dann keine 0 vor der Vorwahl) oder 0 beginnen und darf nur Ziffern und einzelne Leerzeichen enthalten.";
+        }
+
         return null;
     }
 

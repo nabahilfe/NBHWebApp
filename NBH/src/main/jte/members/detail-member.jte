@@ -139,13 +139,20 @@
 
                             <label for="email" class="col col-form-label">E-Mail</label>
                             <div class="col">
-                                <input type="text" class="form-control" name="email" id="email" value="${member.getEmail()}">
+                                <input type="email" class="form-control" name="email" id="email"
+                                       value="${member.getEmail() != null ? member.getEmail() : ""}"
+                                       pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                                       title="Bitte eine gültige E-Mail-Adresse eingeben (z.B. name@beispiel.de).">
+                                <div class="form-text">Format: name@domain.tld</div>
                             </div>
 
                             <label for="phoneNumber" class="col col-form-label">Telefon</label>
                             <div class="col">
                                 <input type="tel" class="form-control" name="phoneNumber" id="phoneNumber"
-                                       value="${member.getPhoneNumber() != null ? member.getPhoneNumber() : ""}">
+                                       value="${member.getPhoneNumber() != null ? member.getPhoneNumber() : ""}"
+                                       pattern="[+0][0-9 ]*"
+                                       title="Telefonnummer muss mit + oder 0 beginnen und darf nur Ziffern und einzelne Leerzeichen enthalten.">
+                                <div class="form-text">Format: beginnt mit + (dann keine 0 für die Vorwahl) oder 0, nur Ziffern und Leerzeichen erlaubt.</div>
                             </div>
 
                             <label for="institution" class="col col-form-label">Institution</label>
@@ -288,7 +295,56 @@
 
     <script>
         (function() {
-            const salutation = document.getElementById('salutation');
+            // Phone number validation: must start with + or 0, only digits and single spaces
+            const phoneInput = document.getElementById('phoneNumber');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function() {
+                    let val = this.value;
+                    // Remove any character that is not +, digit or space
+                    val = val.replace(/[^+0-9 ]/g, '');
+                    // Ensure it starts with + or 0 only
+                    if (val.length > 0 && val[0] !== '+' && val[0] !== '0') {
+                        val = val.substring(1);
+                    }
+                    // + only allowed at position 0
+                    if (val.length > 0) val = val[0] + val.substring(1).replace(/\+/g, '');
+                    // Collapse consecutive spaces into a single space
+                    val = val.replace(/ {2,}/g, ' ');
+                    this.value = val;
+                });
+
+                phoneInput.addEventListener('blur', function() {
+                    const pattern = /^[+0][0-9 ]*$/;
+                    if (this.value && !pattern.test(this.value)) {
+                        this.setCustomValidity('Telefonnummer muss mit + oder 0 beginnen und darf nur Ziffern und einzelne Leerzeichen enthalten.');
+                        this.reportValidity();
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            }
+
+            // Email validation
+            const emailInput = document.getElementById('email');
+            if (emailInput) {
+                const emailPattern = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+
+                emailInput.addEventListener('input', function() {
+                    // Strip whitespace silently as the user types
+                    this.value = this.value.replace(/\s/g, '');
+                    this.setCustomValidity('');
+                });
+
+                emailInput.addEventListener('blur', function() {
+                    if (this.value && !emailPattern.test(this.value)) {
+                        this.setCustomValidity('Bitte eine gültige E-Mail-Adresse eingeben (z.B. name@beispiel.de).');
+                        this.reportValidity();
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            }
+
             const title = document.getElementById('title');
             const firstName = document.getElementById('firstName');
             const lastName = document.getElementById('lastName');
