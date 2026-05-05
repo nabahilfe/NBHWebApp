@@ -12,7 +12,7 @@
 @param TimeCheque timeCheque
 @param List<TimeCheque> purchasedTimeCheques
 
-@param Float pricePerHour = 3.60f
+@param Float pricePerHour
 
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null

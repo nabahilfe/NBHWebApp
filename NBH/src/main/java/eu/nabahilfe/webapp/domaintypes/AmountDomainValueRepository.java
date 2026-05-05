@@ -21,7 +21,9 @@ public interface AmountDomainValueRepository extends ListCrudRepository<AmountDo
     @Query("SELECT a FROM AmountDomainValue a WHERE a.code = :code ORDER BY a.validFrom DESC LIMIT 1")
     Optional<AmountDomainValue> findLatestByCode(String code);
 
-    /** Find the record for a given code whose validTo equals the given date (used to re-open the predecessor after deletion) */
+    /** Find the record valid for a specific date (validFrom <= date <= validTo) */
+    @Query("SELECT a FROM AmountDomainValue a WHERE a.code = :code AND a.validFrom <= :date AND a.validTo >= :date")
+    Optional<AmountDomainValue> findByCodeAndDate(String code, LocalDate date);
     @Query("SELECT a FROM AmountDomainValue a WHERE a.code = :code AND a.validTo = :validTo")
     Optional<AmountDomainValue> findByCodeAndValidTo(String code, LocalDate validTo);
 

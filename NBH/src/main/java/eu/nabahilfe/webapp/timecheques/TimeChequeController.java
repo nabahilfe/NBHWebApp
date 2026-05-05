@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import eu.nabahilfe.webapp.NbhConst;
+import eu.nabahilfe.webapp.domaintypes.AmountDomainType;
+import eu.nabahilfe.webapp.domaintypes.AmountDomainValueRepository;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import eu.nabahilfe.webapp.security.SecurityUtils;
@@ -28,19 +30,24 @@ import jakarta.transaction.Transactional;
 @SessionAttributes("timeCheque")
 public class TimeChequeController {
 
+    private static final Logger log = LoggerFactory.getLogger(TimeChequeController.class);
+
     private final TimeChequeRepository timeChequeRepository;
     private final MemberRepository memberRepository;
     private final TimeChequeRepository timeCheckRepository;
     private final SecurityUtils securityUtils;
+    private final AmountDomainValueRepository amountDomainValueRepository;
 
-    private static final Logger log = LoggerFactory.getLogger(TimeChequeController.class);
+    // ...existing code...
 
     public TimeChequeController(TimeChequeRepository timeChequeRepository, MemberRepository memberRepository,
-            TimeChequeRepository timeCheckRepository, SecurityUtils securityUtils) {
+            TimeChequeRepository timeCheckRepository, SecurityUtils securityUtils,
+            AmountDomainValueRepository amountDomainValueRepository) {
         this.timeChequeRepository = timeChequeRepository;
         this.memberRepository = memberRepository;
         this.timeCheckRepository = timeCheckRepository;
         this.securityUtils = securityUtils;
+        this.amountDomainValueRepository = amountDomainValueRepository;
     }
 
 
@@ -120,6 +127,7 @@ public class TimeChequeController {
 
         model.addAttribute("timeCheque", tc);
         model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(memberId));
+        model.addAttribute("pricePerHour", resolveTimechequeeFeePerHour(LocalDate.now()).floatValue());
 
         String validationError = validateData(member, tc, timeChequeRepository.countByAssignedTo(member), false);
         if (validationError != null) {
@@ -163,6 +171,7 @@ public class TimeChequeController {
 
         model.addAttribute("timeCheque", tc);
         model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(memberId));
+        model.addAttribute("pricePerHour", resolveTimechequeeFeePerHour(LocalDate.now()).floatValue());
 
         String validationError = validateData(member, tc, timeChequeRepository.countByAssignedTo(member), true);
         if (validationError != null) {
@@ -185,9 +194,8 @@ public class TimeChequeController {
         TimeCheque tc = (TimeCheque) model.getAttribute("timeCheque");
         tc.setTransactionDate(orderDate);
         tc.setHours(hours);
-        // FIXME - use current price of hours from TC-Kosten table instead of hardcoded price per hour
-        // tc.setAmount(hours <= 5 ? BigDecimal.valueOf(0) : BigDecimal.valueOf(NbhConst.PRICE_PER_HOUR * hours));
-        tc.setAmount(hours <= 5 ? BigDecimal.valueOf(0) : BigDecimal.valueOf(3.60f * hours));
+        BigDecimal pricePerHour = resolveTimechequeeFeePerHour(orderDate);
+        tc.setAmount(hours <= 5 ? BigDecimal.valueOf(0) : pricePerHour.multiply(BigDecimal.valueOf(hours)));
         timeChequeRepository.save(tc);
 
         // BusinessRule: Update Member's accumulated hours
@@ -217,8 +225,8 @@ public class TimeChequeController {
         TimeCheque tc = new TimeCheque();
 
         tc.setHours(timeChequeHours);
-        // FIXME: Richtigen Betrag aus TC-Kosten Tabelle holen
-        tc.setAmount(timeChequeHours <= 5 ? BigDecimal.valueOf(0) : BigDecimal.valueOf(3.60 * timeChequeHours));
+        BigDecimal pricePerHour = resolveTimechequeeFeePerHour(LocalDate.now());
+        tc.setAmount(timeChequeHours <= 5 ? BigDecimal.valueOf(0) : pricePerHour.multiply(BigDecimal.valueOf(timeChequeHours)));
         tc.setAssignedTo(member);
         tc.setTransactionDate(LocalDate.now());
 
@@ -227,6 +235,14 @@ public class TimeChequeController {
         return tc;
     }
 
+
+    private BigDecimal resolveTimechequeeFeePerHour(LocalDate date) {
+        return amountDomainValueRepository
+                .findByCodeAndDate(AmountDomainType.TIMECHEQUE_FEE.name(), date)
+                .map(adv -> adv.getAmount())
+                .orElseThrow(() -> new IllegalStateException(
+                        "Kein TIMECHEQUE_FEE Eintrag für das Datum " + date + " gefunden."));
+    }
 
     private String validateData(Member member, TimeCheque timeCheque, int existingTimeCheques, boolean isSelfPurchase) {
         // Business Rule: TimeCheques can only be purchased if Member has less than 5 accumulated hours,
