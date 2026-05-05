@@ -69,7 +69,12 @@
             <td>${member.getLastName()}</td>
           @endif
           <td>${member.getFirstName()}</td>
-          <td>${member.getAddress()}</td>
+          <td>
+              <a href="https://www.google.com/maps/search/?api=1&query=${member.getAddress().replace(" ", "+")}"
+                 target="_blank" rel="noopener noreferrer" class="text-decoration-none" title="In Google Maps öffnen">
+                  ${member.getAddress()}
+              </a>
+          </td>
           <td>${member.getRole() != null ? member.getRole().getRoleName() : ""}</td>
           <td>
               @if(member.getEmail() != null && !member.getEmail().isBlank())
