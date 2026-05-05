@@ -175,6 +175,28 @@ public class MemberController {
 
 
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @GetMapping("/statistics")
+    String memberStatistics(final Model model) {
+        // Merge joined and resigned counts by year into a combined list
+        List<Object[]> joined = memberRepository.findJoinedCountPerYear();
+        List<Object[]> resigned = memberRepository.findResignedCountPerYear();
+
+        // Build a sorted map: year -> [joinedCount, resignedCount]
+        java.util.TreeMap<Integer, long[]> byYear = new java.util.TreeMap<>();
+        for (Object[] row : joined) {
+            int year = ((Number) row[0]).intValue();
+            byYear.computeIfAbsent(year, y -> new long[2])[0] = ((Number) row[1]).longValue();
+        }
+        for (Object[] row : resigned) {
+            int year = ((Number) row[0]).intValue();
+            byYear.computeIfAbsent(year, y -> new long[2])[1] = ((Number) row[1]).longValue();
+        }
+
+        model.addAttribute("memberStats", byYear);
+        return "members/member-statistics";
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @GetMapping("/birthdays")
     String listBirthdays(final Model model) {
         model.addAttribute("currentMonth", memberRepository.findBirthdaysByMonthOffset(0));

@@ -74,4 +74,12 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
         "ORDER BY m.lastName ASC")
     List<Member> findBoardMembers();
 
+    /** Returns [year, joinedCount] grouped by joiningDate year, ordered ascending */
+    @Query("SELECT YEAR(m.joiningDate), COUNT(m) FROM Member m GROUP BY YEAR(m.joiningDate) ORDER BY YEAR(m.joiningDate) ASC")
+    List<Object[]> findJoinedCountPerYear();
+
+    /** Returns [year, resignedCount] grouped by resignationDate year, ordered ascending */
+    @Query("SELECT YEAR(m.resignationDate), COUNT(m) FROM Member m WHERE m.resignationDate IS NOT NULL GROUP BY YEAR(m.resignationDate) ORDER BY YEAR(m.resignationDate) ASC")
+    List<Object[]> findResignedCountPerYear();
+
 }

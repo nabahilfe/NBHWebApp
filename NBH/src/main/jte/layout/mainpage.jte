@@ -180,6 +180,7 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/timecheques/statistics">Zeitscheks pro Mitglied</a></li>
+                                    <li><a class="dropdown-item" href="/members/statistics">Mitgliederentwicklung</a></li>
                                 </ul>
                             </li>
                         @endif
