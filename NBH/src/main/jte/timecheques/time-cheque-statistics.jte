@@ -40,7 +40,7 @@
         </form>
 
 
-        <h4>Zeitschecks erhalten für erbrachte Leistungen</h4>
+        <h4>Zeitschecks erhalten (für erbrachte Leistungen)</h4>
         <br/>
         @if(transferStats == null || transferStats.isEmpty())
             <div class="alert alert-info">Keine Zeitgutschriften für das Jahr ${selectedYear} gefunden.</div>
@@ -83,7 +83,7 @@
         @endif
 
         <br/>
-        <h4>Zeitschecks übergeben für erhaltene Leistungen</h4>
+        <h4>Zeitschecks übergeben (für erhaltene Leistungen)</h4>
 
         @if(givenStats == null || givenStats.isEmpty())
             <div class="alert alert-info">Keine übergebenen Zeitgutschriften für das Jahr ${selectedYear} gefunden.</div>
@@ -126,7 +126,7 @@
         @endif
 
         <br/>
-        <h4>Zeitschecks gekauft bzw. erhalten bei Eintritt</h4>
+        <h4>Zeitschecks gekauft (bzw. erhalten bei Eintritt)</h4>
 
         <!-- Statistics table -->
         @if(stats == null || stats.isEmpty())
