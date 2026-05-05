@@ -59,6 +59,11 @@
                                     E-Mail: <a href="mailto:${member.getEmail()}">${member.getEmail()}</a>
                                 </p>
                             @endif
+                            @if(member.getPhoneNumber() != null)
+                                <p class="card-text">
+                                    Telefon: ${member.getPhoneNumber()}
+                                </p>
+                            @endif
                             <hr/>
                             Mitgliedsnummer: ${member.getMemberNmbr()}
                             <br/>

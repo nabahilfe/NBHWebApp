@@ -162,6 +162,7 @@ create table if not exists MEMBERS (
     last_name VARCHAR(80) not null,
     birthdate DATE not null,
     email VARCHAR(80) /* muss immer in lower-case gespeichert werden! */,
+    phone_number VARCHAR(30) /* Telefonnummer des Mitglieds */,
     password VARCHAR(250),
     joining_date DATE not null /* Eintrittsdatum in den Verein */,
     resignation_date DATE /* Austrittsdatum aus dem Verein */,

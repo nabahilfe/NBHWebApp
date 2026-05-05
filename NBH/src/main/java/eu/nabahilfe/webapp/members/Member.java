@@ -67,6 +67,9 @@ public class Member implements Serializable {
     @Email
     private String email;    // muss immer in lower-case gespeichert werden!
 
+    @Size(max = 30)
+    private String phoneNumber;    // Telefonnummer des Mitglieds
+
     @Size(max = 250)
     private String password;
 
@@ -193,6 +196,14 @@ public class Member implements Serializable {
         this.email = email;
     }
 
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public String getPassword() {
         return password;

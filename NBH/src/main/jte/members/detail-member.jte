@@ -22,6 +22,9 @@
 
 @param Integer numberOfTimecheques = null
 
+@param java.lang.String joiningDateMin = null
+@param java.lang.String resignationDateMax = null
+
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
@@ -83,6 +86,28 @@
                                 <input type="date" class="form-control" name="birthdate" id="birthdate" value="${formatISO(member.getBirthdate())}" required>
                             </div>
 
+                            <label for="joiningDate" class="col col-form-label">Beitrittsdatum</label>
+                            <div class="col">
+                                @if(member.getId() != null)
+                                    <input type="date" class="form-control" name="joiningDate" id="joiningDate"
+                                           value="${member.getJoiningDate() != null ? formatISO(member.getJoiningDate()) : ""}" readonly>
+                                @else
+                                    <input type="date" class="form-control" name="joiningDate" id="joiningDate"
+                                           value="${member.getJoiningDate() != null ? formatISO(member.getJoiningDate()) : ""}"
+                                           min="${joiningDateMin != null ? joiningDateMin : ""}"
+                                           placeholder="JJJJ-MM-01">
+                                    <div class="form-text">Muss immer der 1. eines Monats sein, max. 3 Monate in der Vergangenheit.</div>
+                                @endif
+                            </div>
+
+                            <label for="resignationDate" class="col col-form-label">Austrittsdatum</label>
+                            <div class="col">
+                                <input type="date" class="form-control" name="resignationDate" id="resignationDate"
+                                       value="${member.getResignationDate() != null ? formatISO(member.getResignationDate()) : ""}"
+                                       max="${resignationDateMax != null ? resignationDateMax : ""}">
+                                <div class="form-text">Muss immer der letzte Tag eines Monats sein, max. 3 Monate in der Zukunft.</div>
+                            </div>
+
                             <label for="role" class="col col-form-label">Rolle</label>
                             <div class="col">
                                 <select class="form-select" name="role" id="role">
@@ -115,6 +140,12 @@
                             <label for="email" class="col col-form-label">E-Mail</label>
                             <div class="col">
                                 <input type="text" class="form-control" name="email" id="email" value="${member.getEmail()}">
+                            </div>
+
+                            <label for="phoneNumber" class="col col-form-label">Telefon</label>
+                            <div class="col">
+                                <input type="tel" class="form-control" name="phoneNumber" id="phoneNumber"
+                                       value="${member.getPhoneNumber() != null ? member.getPhoneNumber() : ""}">
                             </div>
 
                             <label for="institution" class="col col-form-label">Institution</label>

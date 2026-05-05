@@ -57,6 +57,19 @@ public class MemberController {
 
 
     @PreAuthorize("hasRole('USER')")
+    @ModelAttribute("joiningDateMin")
+    public String joiningDateMin() {
+        return LocalDate.now().withDayOfMonth(1).minusMonths(3).toString();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @ModelAttribute("resignationDateMax")
+    public String resignationDateMax() {
+        LocalDate d = LocalDate.now().plusMonths(3);
+        return d.withDayOfMonth(d.lengthOfMonth()).toString();
+    }
+
+    @PreAuthorize("hasRole('USER')")
     @ModelAttribute("member")
     public Member findMember(@PathVariable(required = false) Long id) {
         return id == null ? new Member() : memberRepository.findById(id)
@@ -239,7 +252,9 @@ public class MemberController {
 
         if (member.getId() == null) {
             member.setMemberNmbr(getNextMemberNumber());
-            member.setJoiningDate(LocalDate.now());
+            if (member.getJoiningDate() == null) {
+                member.setJoiningDate(LocalDate.now().withDayOfMonth(1));
+            }
             member.setIsImportedMember(false);
 
             String error = validateOnlyOneSozialkonto(member);
@@ -314,10 +329,42 @@ public class MemberController {
     // ------------------
 
     private String validateData(Member member) {
-        // check age
         LocalDate currentDate = LocalDate.now();
+
+        // check age
         if (Period.between(member.getBirthdate(), currentDate).getYears() < NbhConst.MIN_MEMBER_AGE)
             return "Die Person ist noch nicht " + NbhConst.MIN_MEMBER_AGE + " Jahre alt!";
+
+        // joiningDate rules (only for new members — existing members have a locked joiningDate)
+        if (member.getId() == null && member.getJoiningDate() != null) {
+            LocalDate joiningDate = member.getJoiningDate();
+            // must be the 1st of a month
+            if (joiningDate.getDayOfMonth() != 1)
+                return "Das Beitrittsdatum muss immer der 1. eines Monats sein.";
+            // must not be more than 3 months in the past
+            LocalDate earliestJoining = currentDate.withDayOfMonth(1).minusMonths(3);
+            if (joiningDate.isBefore(earliestJoining))
+                return "Das Beitrittsdatum darf nicht mehr als 3 Monate in der Vergangenheit liegen (frühestens: " + earliestJoining + ").";
+        }
+
+        // resignationDate rules
+        if (member.getResignationDate() != null) {
+            LocalDate resignationDate = member.getResignationDate();
+            // must be the last day of a month
+            if (!resignationDate.equals(resignationDate.withDayOfMonth(resignationDate.lengthOfMonth())))
+                return "Das Austrittsdatum muss immer der letzte Tag eines Monats sein.";
+            // must be after joiningDate
+            if (member.getJoiningDate() != null && !resignationDate.isAfter(member.getJoiningDate()))
+                return "Das Austrittsdatum muss nach dem Beitrittsdatum liegen.";
+            // must not be more than 3 months in the future
+            LocalDate latestResignation = currentDate.withDayOfMonth(1).plusMonths(3)
+                    .plusMonths(1).minusDays(1); // last day of currentMonth+3
+            latestResignation = currentDate.plusMonths(3);
+            latestResignation = latestResignation.withDayOfMonth(latestResignation.lengthOfMonth());
+            if (resignationDate.isAfter(latestResignation))
+                return "Das Austrittsdatum darf nicht mehr als 3 Monate in der Zukunft liegen (spätestens: " + latestResignation + ").";
+        }
+
         return null;
     }
 
