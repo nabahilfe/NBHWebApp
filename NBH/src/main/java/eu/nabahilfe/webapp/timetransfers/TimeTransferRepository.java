@@ -15,8 +15,13 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
 
     List<TimeTransfer> findAllByToMember_IdOrderByDateOfServiceDesc(Long memberId);
 
+    @Query("SELECT t FROM TimeTransfer t WHERE t.toMember.id = :memberId AND YEAR(t.dateOfService) = :year ORDER BY t.dateOfService DESC")
+    List<TimeTransfer> findAllByToMember_IdAndYearOrderByDateOfServiceDesc(Long memberId, int year);
 
     List<TimeTransfer> findAllByFromMember_IdOrderByDateOfServiceDesc(Long memberId);
+
+    @Query("SELECT t FROM TimeTransfer t WHERE t.fromMember.id = :memberId AND YEAR(t.dateOfService) = :year ORDER BY t.dateOfService DESC")
+    List<TimeTransfer> findAllByFromMember_IdAndYearOrderByDateOfServiceDesc(Long memberId, int year);
 
     Optional<TimeTransfer> findByIdAndFromMember_Id(Long id, Long fromMemberId);
 

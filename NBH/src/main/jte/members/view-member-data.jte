@@ -20,7 +20,7 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@param Integer numberOfTimecheques = null
+@param int selectedYear
 
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
@@ -99,49 +99,9 @@
     </div>
 
     <br/>
-
-    <div class="row">
-        <div class="col-sm-12 mb-3 mb-sm-0">
-
-            <ul class="nav nav-tabs" id="memberDetailTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="timecheques-tab" data-bs-toggle="tab" data-bs-target="#timecheques-pane" type="button" role="tab" aria-controls="timecheques-pane" aria-selected="true">
-                        Zeitschecks gekauft
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="transfers-tab" data-bs-toggle="tab" data-bs-target="#transfers-pane" type="button" role="tab" aria-controls="transfers-pane" aria-selected="false">
-                        Zeitschecks übergeben
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="received-tab" data-bs-toggle="tab" data-bs-target="#received-pane" type="button" role="tab" aria-controls="received-pane" aria-selected="false">
-                        Zeitschecks erhalten
-                    </button>
-                </li>
-            </ul>
-
-            <div class="tab-content" id="memberDetailTabsContent">
-                <div class="tab-pane fade show active" id="timecheques-pane" role="tabpanel" aria-labelledby="timecheques-tab" tabindex="0">
-                    <div>
-                        @template.components.list-timecheques-component(member = member, timeCheques = purchasedTimeCheques)
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="transfers-pane" role="tabpanel" aria-labelledby="transfers-tab" tabindex="0">
-                    <div>
-                        @template.components.list-timetransfers-given-component(member = member, transfers = givenTimeTransfers)
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="received-pane" role="tabpanel" aria-labelledby="received-tab" tabindex="0">
-                    <div>
-                        @template.components.list-timetransfers-received-component(member = member, transfers = receivedTimeTransfers)
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
+        
+    @template.components.list-timecheque-data-component(member = member, timeCheques = purchasedTimeCheques, transfersGiven = givenTimeTransfers, 
+    		transfersReceived = receivedTimeTransfers, selectedYear = selectedYear)
 
 
 `)

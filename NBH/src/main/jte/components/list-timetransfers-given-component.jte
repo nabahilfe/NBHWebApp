@@ -1,8 +1,8 @@
 <!--
-    A reusable template to display time transfers.
+    A reusable template to display given time transfers.
 
     Usage:
-    @template.components.list-timetransfers-received-component(member = Member, transfers = List<TimeTransfer>)
+    @template.components.list-timetransfers-given-component(member = Member, transfersGiven = List<TimeTransfer>)
 
     Parameters:
     - timeTransfers: List<TimeTransfer>
@@ -19,7 +19,7 @@
 @import eu.nabahilfe.webapp.members.Member
 
 @param Member member
-@param List<TimeTransfer> transfers
+@param List<TimeTransfer> transfersGiven
 
 
 <div class="card">
@@ -37,7 +37,7 @@
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
-                    @for (TimeTransfer tt : transfers)
+                    @for (TimeTransfer tt : transfersGiven)
                         <tr>
                             <td scope="row">${dateDE(tt.getDateOfService())}</td>
                             <td scope="row">${boldMemberNameIfSameId(member.getId(), tt.getToMember())}</td>

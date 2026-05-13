@@ -157,9 +157,11 @@ public class MemberController {
     }
 
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @GetMapping("/{id}")
-    String editMember(final Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
+    String editMember(final Model model, @PathVariable Long id, RedirectAttributes redirectAttributes,
+                      @RequestParam(value = "year", required = false) Integer year,
+                      jakarta.servlet.http.HttpSession session) {
         Optional<Member> member = memberRepository.findById(id);
         if (member.isPresent() && isSystemAdmin(member.get())) {
             redirectAttributes.addFlashAttribute("errorMessage",
@@ -167,9 +169,21 @@ public class MemberController {
             return "redirect:/members";
         }
         log.debug("Editing Member: {}", id);
-        model.addAttribute("receivedTimeTransfers", timeTransferRepository.findAllByToMember_IdOrderByDateOfServiceDesc(id));
-        model.addAttribute("givenTimeTransfers", timeTransferRepository.findAllByFromMember_IdOrderByDateOfServiceDesc(id));
-        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(id));
+
+        String sessionKey = "selectedYear_" + id;
+        int resolvedYear;
+        if (year != null) {
+            resolvedYear = year;
+            session.setAttribute(sessionKey, resolvedYear);
+        } else {
+            Object stored = session.getAttribute(sessionKey);
+            resolvedYear = stored instanceof Integer ? (Integer) stored : LocalDate.now().getYear();
+        }
+
+        model.addAttribute("selectedYear", resolvedYear);
+        model.addAttribute("receivedTimeTransfers", timeTransferRepository.findAllByToMember_IdAndYearOrderByDateOfServiceDesc(id, resolvedYear));
+        model.addAttribute("givenTimeTransfers", timeTransferRepository.findAllByFromMember_IdAndYearOrderByDateOfServiceDesc(id, resolvedYear));
+        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdAndYearOrderByTransactionDateDesc(id, resolvedYear));
         return "members/detail-member";
     }
 
@@ -212,7 +226,9 @@ public class MemberController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/mydata/{id}")
-    String myData(final Model model, @PathVariable Long id) {
+    String myData(final Model model, @PathVariable Long id,
+                  @RequestParam(value = "year", required = false) Integer year,
+                  jakarta.servlet.http.HttpSession session) {
         log.debug("Showing /users/mydata/{}", id);
         // Ensure that the member has only access to his own data
         // get current authenticated user from security context
@@ -232,10 +248,23 @@ public class MemberController {
 
         // now safe to load the member record
         Member member = memberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id));
+
+        // remember selected year in session; fall back to session value, then current year
+        String sessionKey = "selectedYear_" + id;
+        int resolvedYear;
+        if (year != null) {
+            resolvedYear = year;
+            session.setAttribute(sessionKey, resolvedYear);
+        } else {
+            Object stored = session.getAttribute(sessionKey);
+            resolvedYear = stored instanceof Integer ? (Integer) stored : LocalDate.now().getYear();
+        }
+
+        model.addAttribute("selectedYear", resolvedYear);
         model.addAttribute("roleNames", member.getRole() != null ? member.getRole().getRoleName() : "Mitglied");
-        model.addAttribute("receivedTimeTransfers", timeTransferRepository.findAllByToMember_IdOrderByDateOfServiceDesc(id));
-        model.addAttribute("givenTimeTransfers", timeTransferRepository.findAllByFromMember_IdOrderByDateOfServiceDesc(id));
-        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(id));
+        model.addAttribute("receivedTimeTransfers", timeTransferRepository.findAllByToMember_IdAndYearOrderByDateOfServiceDesc(id, resolvedYear));
+        model.addAttribute("givenTimeTransfers", timeTransferRepository.findAllByFromMember_IdAndYearOrderByDateOfServiceDesc(id, resolvedYear));
+        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdAndYearOrderByTransactionDateDesc(id, resolvedYear));
         return "members/view-member-data";
      }
 

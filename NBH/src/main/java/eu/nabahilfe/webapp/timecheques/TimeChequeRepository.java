@@ -20,6 +20,9 @@ public interface TimeChequeRepository extends ListCrudRepository<TimeCheque, Lon
 
     List<TimeCheque> findAllByAssignedTo_IdOrderByTransactionDateDesc(Long assignedTo);
 
+    @Query("SELECT t FROM TimeCheque t WHERE t.assignedTo.id = :memberId AND YEAR(t.transactionDate) = :year ORDER BY t.transactionDate DESC")
+    List<TimeCheque> findAllByAssignedTo_IdAndYearOrderByTransactionDateDesc(Long memberId, int year);
+
     List<TimeCheque> findAllByAccountedBy_IdIsNullAndAmountGreaterThanOrderByTransactionDateAsc(Double amount);
 
     Integer countByAccountedBy_IdIsNullAndAmountGreaterThan(Double amount);

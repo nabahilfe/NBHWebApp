@@ -1,6 +1,6 @@
 <!--
 
-    This template displays a list of acquired time cheques.
+    This reusable template displays a list of acquired time cheques.
 
     Usage:
     @template.components.list-timecheques-component(member = member, timeCheques = List<TimeCheque>)
