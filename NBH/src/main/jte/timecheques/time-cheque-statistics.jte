@@ -1,5 +1,6 @@
 @import java.util.List
 @import java.math.BigDecimal
+@import java.time.LocalDate
 
 @param int selectedYear
 @param List<Object[]> stats
@@ -23,27 +24,37 @@
 
 
         <!-- Year selector -->
-        <form method="GET" action="/timecheques/statistics" class="row g-3 align-items-center mb-4">
+        !{int currentYear = LocalDate.now().getYear();}
+        <div class="row g-3 align-items-center mb-4">
             <div class="col-auto">
-                <label for="year" class="col-form-label">Jahr:</label>
+                <label for="yearSelect" class="col-form-label">Jahr:</label>
             </div>
             <div class="col-auto">
-                <input type="number" id="year" name="year" class="form-control"
-                       value="${selectedYear}"
-                       min="2000" max="2999"
-                       style="width: 120px;"
-                       required>
+                <select id="yearSelect" class="form-select" style="width: auto;"
+                        onchange="reloadWithYear(this.value)">
+                    <option value="${currentYear + 1}" selected="${selectedYear == currentYear + 1}">${currentYear + 1}</option>
+                    @for(int y = currentYear; y >= currentYear - 6; y--)
+                        <option value="${y}" selected="${y == selectedYear}">${y}</option>
+                    @endfor
+                    <option value="0" selected="${selectedYear == 0}">Alle Jahre</option>
+                </select>
             </div>
-            <div class="col-auto">
-                <button type="submit" class="btn btn-primary">Anzeigen</button>
-            </div>
-        </form>
+        </div>
+
+        <script>
+            function reloadWithYear(year) {
+                const url = new URL(window.location.href);
+                url.searchParams.set('year', year);
+                window.location.href = url.toString();
+            }
+        </script>
 
 
+        !{String yearLabel = selectedYear == 0 ? "alle Jahre" : String.valueOf(selectedYear);}
         <h4>Zeitschecks erhalten (für erbrachte Leistungen)</h4>
         <br/>
         @if(transferStats == null || transferStats.isEmpty())
-            <div class="alert alert-info">Keine Zeitgutschriften für das Jahr ${selectedYear} gefunden.</div>
+            <div class="alert alert-info">Keine Zeitgutschriften für ${yearLabel} gefunden.</div>
         @else
             <table class="table table-hover table-sm">
                 <thead class="table-light">
@@ -86,7 +97,7 @@
         <h4>Zeitschecks übergeben (für erhaltene Leistungen)</h4>
 
         @if(givenStats == null || givenStats.isEmpty())
-            <div class="alert alert-info">Keine übergebenen Zeitgutschriften für das Jahr ${selectedYear} gefunden.</div>
+            <div class="alert alert-info">Keine übergebenen Zeitgutschriften für ${yearLabel} gefunden.</div>
         @else
             <table class="table table-hover table-sm">
                 <thead class="table-light">
@@ -130,7 +141,7 @@
 
         <!-- Statistics table -->
         @if(stats == null || stats.isEmpty())
-            <div class="alert alert-info">Keine Zeitschecks für das Jahr ${selectedYear} gefunden.</div>
+            <div class="alert alert-info">Keine Zeitschecks für ${yearLabel} gefunden.</div>
         @else
             <table class="table table-hover table-sm">
                 <thead class="table-light">

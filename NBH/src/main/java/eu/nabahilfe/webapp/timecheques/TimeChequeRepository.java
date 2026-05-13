@@ -38,4 +38,13 @@ public interface TimeChequeRepository extends ListCrudRepository<TimeCheque, Lon
             ORDER BY SUM(t.hours) DESC
             """)
     List<Object[]> findStatsByYear(int year);
+
+    /** Returns [memberFullName, totalHours, chequeCount] per member for ALL time cheques (all years), sorted by total hours desc */
+    @Query("""
+            SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
+            FROM TimeCheque t JOIN t.assignedTo m
+            GROUP BY m.id, m.firstName, m.lastName
+            ORDER BY SUM(t.hours) DESC
+            """)
+    List<Object[]> findStatsAllYears();
 }

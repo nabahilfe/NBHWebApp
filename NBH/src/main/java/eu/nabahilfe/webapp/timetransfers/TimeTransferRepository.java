@@ -35,6 +35,15 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
             """)
     List<Object[]> findEarnedHoursStatsByYear(int year);
 
+    /** Returns [memberFullName, totalHours, transferCount] for members who received hours (all years), sorted by total hours desc */
+    @Query("""
+            SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
+            FROM TimeTransfer t JOIN t.toMember m
+            GROUP BY m.id, m.firstName, m.lastName
+            ORDER BY SUM(t.hours) DESC
+            """)
+    List<Object[]> findEarnedHoursStatsAllYears();
+
     /** Returns [memberFullName, totalHours, transferCount] for members who gave hours in the given year, sorted by total hours desc */
     @Query("""
             SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
@@ -44,6 +53,15 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
             ORDER BY SUM(t.hours) DESC
             """)
     List<Object[]> findGivenHoursStatsByYear(int year);
+
+    /** Returns [memberFullName, totalHours, transferCount] for members who gave hours (all years), sorted by total hours desc */
+    @Query("""
+            SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
+            FROM TimeTransfer t JOIN t.fromMember m
+            GROUP BY m.id, m.firstName, m.lastName
+            ORDER BY SUM(t.hours) DESC
+            """)
+    List<Object[]> findGivenHoursStatsAllYears();
 
 }
 

@@ -114,11 +114,19 @@ public class TimeChequeController {
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
     @GetMapping("/statistics")
     String statistics(final Model model, @RequestParam(required = false) Integer year) {
-        int selectedYear = (year != null) ? year : LocalDate.now().getYear();
+        // year=0 is the sentinel for "Alle Jahre" (all years)
+        boolean allYears = (year != null && year == 0);
+        int selectedYear = allYears ? 0 : (year != null ? year : LocalDate.now().getYear());
         model.addAttribute("selectedYear", selectedYear);
-        model.addAttribute("stats", timeChequeRepository.findStatsByYear(selectedYear));
-        model.addAttribute("transferStats", timeTransferRepository.findEarnedHoursStatsByYear(selectedYear));
-        model.addAttribute("givenStats", timeTransferRepository.findGivenHoursStatsByYear(selectedYear));
+        if (allYears) {
+            model.addAttribute("stats", timeChequeRepository.findStatsAllYears());
+            model.addAttribute("transferStats", timeTransferRepository.findEarnedHoursStatsAllYears());
+            model.addAttribute("givenStats", timeTransferRepository.findGivenHoursStatsAllYears());
+        } else {
+            model.addAttribute("stats", timeChequeRepository.findStatsByYear(selectedYear));
+            model.addAttribute("transferStats", timeTransferRepository.findEarnedHoursStatsByYear(selectedYear));
+            model.addAttribute("givenStats", timeTransferRepository.findGivenHoursStatsByYear(selectedYear));
+        }
         return "timecheques/time-cheque-statistics";
     }
 
