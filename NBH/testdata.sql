@@ -11,9 +11,9 @@ INSERT INTO roles (is_board_member,  is_treasurer, is_secretary, is_auditor, is_
                     (false,            true,           false,       false,      false,       false,      false,          'Kassier',             0),
                     (false,            true,           false,       false,      false,       false,      false,          'Kassier Stv.',        0),
                     (false,            false,          false,       true,       false,       false,      false,          'Rechnungsprüfer',     0),
-                    (false,            false,          false,       true,       false,       false,      false,          'Rechnungsprüfer Stv.', 0),
+                    (false,            false,          false,       true,       false,       false,      false,          'Rechnungsprüfer Stv.',0),
                     (false,            false,          true,        false,      false,       true,       false,          'Schriftührer',        0),
-                    (false,            false,          true,        false,      false,       true,       false,          'Schriftührer Stv.',     0),
+                    (false,            false,          true,        false,      false,       true,       false,          'Schriftührer Stv.',   0),
                     (false,            false,          false,       false,      false,       false,      true,           'Ehrenmitglied',       0);
 
 
@@ -29,7 +29,8 @@ insert into offers (code, description, version) values
 ('600','Leih-Oma / Leih-Opa', 0),
 ('700','Kleinere Außen- oder Reparaturarbeiten', 0),
 ('800','Hilfe beim Bedienen technischer Geräte und Computer', 0),
-('900','Spende von Stunden', 0),
+('900','Sonstiges - bitte Beschreibung angeben!', 0),
+('950','Spende von Stunden', 0),
 ('999','KORREKTURBUCHUNG', 0);
 
 

@@ -19,7 +19,7 @@
     content = @`
 
     <div class="container">
-        <h3>Zeitscheck Statistik personalisiert</h3>
+        <h3>Personalisierte Zeitscheck Statistiken</h3>
         <br/>
 
 
