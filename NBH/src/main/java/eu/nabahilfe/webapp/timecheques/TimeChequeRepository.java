@@ -22,6 +22,8 @@ public interface TimeChequeRepository extends ListCrudRepository<TimeCheque, Lon
 
     List<TimeCheque> findAllByAccountedBy_IdIsNullAndAmountGreaterThanOrderByTransactionDateAsc(Double amount);
 
+    Integer countByAccountedBy_IdIsNullAndAmountGreaterThan(Double amount);
+
     TimeCheque findTopByAssignedTo_IdOrderByTransactionDateDesc(Long assignedTo);
 
     /** Returns [memberFullName, totalHours, chequeCount] per member for all time cheques in the given year, sorted by total hours desc */

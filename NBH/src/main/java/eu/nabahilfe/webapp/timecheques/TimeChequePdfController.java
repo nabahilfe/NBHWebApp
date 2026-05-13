@@ -26,7 +26,7 @@ public class TimeChequePdfController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/download/timecheque-pdf")
-    public void downloadPdf(@RequestParam("memberId") Long memberId, HttpServletResponse response) throws IOException {
+    public void downloadPdf(@RequestParam Long memberId, HttpServletResponse response) throws IOException {
 
         // Security: only allow download for own data unless ADMIN/TIME_KEEPER
         if (!securityUtils.isAuthenticatedAndMatches(memberId) && !securityUtils.hasAnyRole("ADMIN", "TIME_KEEPER")) {

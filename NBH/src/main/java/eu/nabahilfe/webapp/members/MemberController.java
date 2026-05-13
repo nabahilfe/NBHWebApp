@@ -185,16 +185,21 @@ public class MemberController {
         java.util.TreeMap<Integer, long[]> byYear = new java.util.TreeMap<>();
         for (Object[] row : joined) {
             int year = ((Number) row[0]).intValue();
-            byYear.computeIfAbsent(year, y -> new long[2])[0] = ((Number) row[1]).longValue();
+            byYear.computeIfAbsent(year, _ -> extracted())[0] = ((Number) row[1]).longValue();
         }
         for (Object[] row : resigned) {
             int year = ((Number) row[0]).intValue();
-            byYear.computeIfAbsent(year, y -> new long[2])[1] = ((Number) row[1]).longValue();
+            byYear.computeIfAbsent(year, _ -> extracted())[1] = ((Number) row[1]).longValue();
         }
 
         model.addAttribute("memberStats", byYear);
         return "members/member-statistics";
     }
+
+
+	private long[] extracted() {
+		return new long[2];
+	}
 
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @GetMapping("/birthdays")

@@ -14,6 +14,7 @@ import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import eu.nabahilfe.webapp.members.Role;
 import eu.nabahilfe.webapp.members.RoleRepository;
+import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
 
 @Component
 public class Scheduler {
@@ -24,26 +25,28 @@ public class Scheduler {
     private final EmailService emailService;
     private final RoleRepository roleRepository;
     private final EmailComposer emailComposer;
+    private final TimeChequeRepository timeChequeRepository;
 
-    public Scheduler(MemberRepository memberRepository, EmailService emailService, RoleRepository roleRepository, EmailComposer emailComposer) {
+    public Scheduler(MemberRepository memberRepository, EmailService emailService, 
+    		RoleRepository roleRepository, EmailComposer emailComposer, 
+    		TimeChequeRepository timeChequeRepository) {
         this.memberRepository = memberRepository;
         this.emailService = emailService;
         this.roleRepository = roleRepository;
         this.emailComposer = emailComposer;
+		this.timeChequeRepository = timeChequeRepository;
     }
 
-    @Scheduled(cron = "0 0 2 * * *")
+    @Scheduled(cron = "0 0 11 * * *")
     public void sendTimeChecksToBookEmail() {
 
-        // FIXME: get this from query parameter or config
-        Integer timeChecksToBook = 5;
+        Integer timeChecksToBook = timeChequeRepository.countByAccountedBy_IdIsNullAndAmountGreaterThan(0.0);
 
         if (timeChecksToBook <= 0) {
             return;
         }
 
-        // FIXME: use findByIsTreasurer(true)
-        List<Role> treasurerRoles = roleRepository.findByIsAdmin(true);
+        List<Role> treasurerRoles = roleRepository.findByIsTreasurer(true);
         List<Member> treasurers = new java.util.ArrayList<>();
 
         for (Role treasurerRole : treasurerRoles) {

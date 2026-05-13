@@ -59,7 +59,7 @@ public class TimeTransferController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/self-timetransfer")
-    String viewSelfTimeTransfer(final Model model, @RequestParam("id") Long id) {
+    String viewSelfTimeTransfer(final Model model, @RequestParam Long id) {
 
         // For security, only allow access to time transfers where the current user is the fromMember
         TimeTransfer tt = timeTransferRepository.findByIdAndFromMember_Id(id, securityUtils.getCurrentUserId()).orElse(null);
@@ -74,7 +74,7 @@ public class TimeTransferController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
     @GetMapping("/view")
-    String viewTimeTransfer(final Model model, @RequestParam("id") Long id) {
+    String viewTimeTransfer(final Model model, @RequestParam Long id) {
         TimeTransfer tt = timeTransferRepository.findById(id).orElse(null);
         if (tt == null) {
             model.addAttribute("errorMessage", "Zeitübertragung mit ID " + id + " nicht gefunden.");
@@ -92,7 +92,7 @@ public class TimeTransferController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/fromself")
-    String addSelfTimeTransfer(final Model model, @RequestParam(name = "fromMemberId", required = false) Long fromMemberId) {
+    String addSelfTimeTransfer(final Model model, @RequestParam(required = false) Long fromMemberId) {
 
         TimeTransferForm ttf = new TimeTransferForm();
         ttf.setFromself("true");
@@ -134,7 +134,7 @@ public class TimeTransferController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
     @GetMapping("/new")
-    String addTimeTransfer(final Model model, @RequestParam(name = "fromMemberId", required = false) Long fromMemberId) {
+    String addTimeTransfer(final Model model, @RequestParam(required = false) Long fromMemberId) {
 
         TimeTransferForm ttf = new TimeTransferForm();
         ttf.setFromself("false");
