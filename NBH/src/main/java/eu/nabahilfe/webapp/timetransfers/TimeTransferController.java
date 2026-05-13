@@ -77,7 +77,9 @@ public class TimeTransferController {
     String viewTimeTransfer(final Model model, @RequestParam Long id) {
         TimeTransfer tt = timeTransferRepository.findById(id).orElse(null);
         if (tt == null) {
-            model.addAttribute("errorMessage", "Zeitübertragung mit ID " + id + " nicht gefunden.");
+            model.addAttribute("status", 404);
+            model.addAttribute("error", "Not Found");
+            model.addAttribute("message", "Zeitübertragung mit ID " + id + " nicht gefunden.");
             return "error";
         }
 
@@ -143,7 +145,9 @@ public class TimeTransferController {
         if (fromMemberId != null) {
             Member fromMember = memberRepository.findById(fromMemberId).orElse(null);
             if (fromMember == null) {
-                model.addAttribute("errorMessage", "Mitglied mit ID " + fromMemberId + " nicht gefunden.");
+            	model.addAttribute("status", 404);
+            	model.addAttribute("error", "Not Found");
+                model.addAttribute("message", "Mitglied mit ID " + fromMemberId + " nicht gefunden.");
                 return "error";
             }
             ttf.setUserFromId(fromMemberId);
