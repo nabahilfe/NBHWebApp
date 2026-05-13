@@ -25,6 +25,25 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
 
     Optional<TimeTransfer> findByIdAndFromMember_Id(Long id, Long fromMemberId);
 
+    /** Returns [offerCode, offerDescription, totalHours, transferCount] grouped by offer category for the given year, sorted by total hours desc */
+    @Query("""
+            SELECT COALESCE(o.code, '---'), COALESCE(o.description, '(keine Kategorie)'), SUM(t.hours), COUNT(t)
+            FROM TimeTransfer t LEFT JOIN t.offer o
+            WHERE YEAR(t.dateOfService) = :year
+            GROUP BY o.id, o.code, o.description
+            ORDER BY SUM(t.hours) DESC
+            """)
+    List<Object[]> findStatsByOfferAndYear(int year);
+
+    /** Returns [offerCode, offerDescription, totalHours, transferCount] grouped by offer category for all years, sorted by total hours desc */
+    @Query("""
+            SELECT COALESCE(o.code, '---'), COALESCE(o.description, '(keine Kategorie)'), SUM(t.hours), COUNT(t)
+            FROM TimeTransfer t LEFT JOIN t.offer o
+            GROUP BY o.id, o.code, o.description
+            ORDER BY SUM(t.hours) DESC
+            """)
+    List<Object[]> findStatsByOfferAllYears(org.springframework.data.domain.Pageable pageable);
+
     /** Returns [memberFullName, totalHours, transferCount] for members who received hours in the given year, sorted by total hours desc */
     @Query("""
             SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
@@ -42,7 +61,7 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
             GROUP BY m.id, m.firstName, m.lastName
             ORDER BY SUM(t.hours) DESC
             """)
-    List<Object[]> findEarnedHoursStatsAllYears();
+    List<Object[]> findEarnedHoursStatsAllYears(org.springframework.data.domain.Pageable pageable);
 
     /** Returns [memberFullName, totalHours, transferCount] for members who gave hours in the given year, sorted by total hours desc */
     @Query("""
@@ -61,7 +80,7 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
             GROUP BY m.id, m.firstName, m.lastName
             ORDER BY SUM(t.hours) DESC
             """)
-    List<Object[]> findGivenHoursStatsAllYears();
+    List<Object[]> findGivenHoursStatsAllYears(org.springframework.data.domain.Pageable pageable);
 
 }
 

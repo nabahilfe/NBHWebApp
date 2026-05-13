@@ -119,15 +119,31 @@ public class TimeChequeController {
         int selectedYear = allYears ? 0 : (year != null ? year : LocalDate.now().getYear());
         model.addAttribute("selectedYear", selectedYear);
         if (allYears) {
-            model.addAttribute("stats", timeChequeRepository.findStatsAllYears());
-            model.addAttribute("transferStats", timeTransferRepository.findEarnedHoursStatsAllYears());
-            model.addAttribute("givenStats", timeTransferRepository.findGivenHoursStatsAllYears());
+            org.springframework.data.domain.Pageable top20 = org.springframework.data.domain.PageRequest.of(0, 20);
+            model.addAttribute("stats", timeChequeRepository.findStatsAllYears(top20));
+            model.addAttribute("transferStats", timeTransferRepository.findEarnedHoursStatsAllYears(top20));
+            model.addAttribute("givenStats", timeTransferRepository.findGivenHoursStatsAllYears(top20));
         } else {
             model.addAttribute("stats", timeChequeRepository.findStatsByYear(selectedYear));
             model.addAttribute("transferStats", timeTransferRepository.findEarnedHoursStatsByYear(selectedYear));
             model.addAttribute("givenStats", timeTransferRepository.findGivenHoursStatsByYear(selectedYear));
         }
         return "timecheques/time-cheque-statistics";
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
+    @GetMapping("/category-statistics")
+    String categoryStatistics(final Model model, @RequestParam(required = false) Integer year) {
+        boolean allYears = (year != null && year == 0);
+        int selectedYear = allYears ? 0 : (year != null ? year : LocalDate.now().getYear());
+        model.addAttribute("selectedYear", selectedYear);
+        if (allYears) {
+            org.springframework.data.domain.Pageable top20 = org.springframework.data.domain.PageRequest.of(0, 20);
+            model.addAttribute("categoryStats", timeTransferRepository.findStatsByOfferAllYears(top20));
+        } else {
+            model.addAttribute("categoryStats", timeTransferRepository.findStatsByOfferAndYear(selectedYear));
+        }
+        return "timecheques/time-cheque-category-statistics";
     }
 
     

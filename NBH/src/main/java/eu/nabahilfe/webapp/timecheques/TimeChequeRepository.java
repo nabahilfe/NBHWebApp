@@ -46,5 +46,5 @@ public interface TimeChequeRepository extends ListCrudRepository<TimeCheque, Lon
             GROUP BY m.id, m.firstName, m.lastName
             ORDER BY SUM(t.hours) DESC
             """)
-    List<Object[]> findStatsAllYears();
+    List<Object[]> findStatsAllYears(org.springframework.data.domain.Pageable pageable);
 }
