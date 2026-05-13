@@ -48,9 +48,7 @@
 
 
         !{String yearLabel = selectedYear == 0 ? "alle Jahre" : String.valueOf(selectedYear);}
-        @if(selectedYear == 0)
-            <div class="alert alert-info bi-info-circle"> Es werden maximal 20 Kategorien angezeigt.</div>
-        @endif
+
 
         <h4>Erbrachte Leistungen nach Kategorie — ${yearLabel}</h4>
         <br/>
