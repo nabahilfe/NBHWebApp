@@ -12,5 +12,5 @@ public enum Salutation {
     Divers,
     Herr,
     Frau,
-    SOZIALKONTO
+    Sozialkonto  // must Match NbhConst.SOZIALKONTO_SALUTATION
 }

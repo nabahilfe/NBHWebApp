@@ -53,13 +53,13 @@ public class AdminRoleInitializer implements CommandLineRunner {
     private void ensureAdminMemberExists(Role adminRole) {
         Member existing = memberRepository.findByEmail(NbhConst.ADMIN_EMAIL);
         if (existing != null) {
-            log.debug("System-Administrator member already present with id={}", existing.getId());
+            log.debug("System Administrator member already present with id={}", existing.getId());
             return;
         }
 
         Member admin = new Member();
-        admin.setFirstName("System");
-        admin.setLastName("Administrator");
+        admin.setFirstName(NbhConst.ADMIN_ACCOUNT_FIRST_NAME);
+        admin.setLastName(NbhConst.ADMIN_ACCOUNT_LAST_NAME);
         admin.setBirthdate(LocalDate.of(2000, 1, 1));
         admin.setEmail(NbhConst.ADMIN_EMAIL);
         admin.setStreet("na");
@@ -74,7 +74,7 @@ public class AdminRoleInitializer implements CommandLineRunner {
         admin.setMemberNmbr(getNextMemberNumber());
 
         memberRepository.save(admin);
-        log.info("System-Administrator member created at startup with email={}", NbhConst.ADMIN_EMAIL);
+        log.info("System Administrator member created at startup with email={}", NbhConst.ADMIN_EMAIL);
     }
 
     private Integer getNextMemberNumber() {

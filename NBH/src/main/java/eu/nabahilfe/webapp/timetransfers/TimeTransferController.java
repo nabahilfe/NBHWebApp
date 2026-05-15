@@ -217,20 +217,20 @@ public class TimeTransferController {
             return "timetransfers/create-timetransfer";
         }
 
-        // validate category is 900 or 999 if Sozialkonto is involved
-        if ((memberFrom.getSalutation() != null && memberFrom.getSalutation().equals(NbhConst.SOZIALKONTO))
-                || (memberTo.getSalutation() != null && memberTo.getSalutation().equals(NbhConst.SOZIALKONTO))) {
+        // validate category is 950 or 999 if Sozialkonto is involved
+        if ((memberFrom.getSalutation() != null && memberFrom.getSalutation().equalsIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION))
+                || (memberTo.getSalutation() != null && memberTo.getSalutation().equalsIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION))) {
 
             Optional<Offer> offer = offerRepository.findById(offerId);
             if (offer.isPresent()) {
                 String code = offer.get().getCode();
-                if (!code.equals("900") && !code.equals("999")) {
-                    log.debug("\nTransfer involves Sozialkonto, category {} is not allowed. Must be 900 or 999", code);
+                if (!code.equals("950") && !code.equals("999")) {
+                    log.debug("\nTransfer involves Sozialkonto, category {} is not allowed. Must be 950 or 999", code);
                     ttf.setUserFromName(memberFrom.getNameAndAddress());
                     ttf.setUserToName(memberTo.getNameAndAddress());
                     log.debug("\nTransfer from Sozialkonto {}, re-displaying form with error.", memberFrom);
                     model.addAttribute("ttf", ttf);
-                    model.addAttribute("errorMessage", "Bei Sozialkonto muss Kategorie 900 (oder 999) ausgewählt werden!");
+                    model.addAttribute("errorMessage", "Bei Sozialkonto muss Kategorie 950 (oder 999) ausgewählt werden!");
 
                     if (fromself) return "timetransfers/self-timetransfer";
                     return "timetransfers/create-timetransfer";

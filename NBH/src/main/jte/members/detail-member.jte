@@ -2,6 +2,7 @@
 @import java.time.LocalDate
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
+@import eu.nabahilfe.webapp.NbhConst
 
 @import eu.nabahilfe.webapp.members.Salutation
 @import eu.nabahilfe.webapp.members.Member
@@ -25,7 +26,7 @@
 @param java.lang.String joiningDateMin = null
 @param java.lang.String resignationDateMax = null
 
-@param int selectedYear
+@param int selectedYear = LocalDate.now().getYear()
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
@@ -232,7 +233,7 @@
 
     @if(member.getId() != null)
 
-        @if(member.getSalutation() != null && member.getSalutation().equals("SOZIALKONTO"))
+        @if(member.getSalutation() != null && member.getSalutation().equalsIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION))
             <div class="alert alert-warning py-2 px-3" role="alert">
                 Sozialkonto der Nachbarschaftshilfe. Zeitschecks können nur durch Spenden von anderen Mitgliedern hinzugefügt werden, nicht durch kaufen.
             </div>
@@ -360,9 +361,9 @@
                     snapshot.directDebitAuthorization = directDebitAuthorization.checked;
 
                     title.value = '';
-                    institution.value = 'Nachbarschaftshilfe';
-                    firstName.value = 'SOZIALKONTO';
-                    lastName.value = 'NACHBARSCHAFTSHILFE';
+                    institution.value = '${NbhConst.SOZIALKONTO_FIRST_NAME}';
+                    firstName.value = '${NbhConst.SOZIALKONTO_FIRST_NAME}';
+                    lastName.value = '${NbhConst.SOZIALKONTO_LAST_NAME}';
                     role.value = '';
 
                     mirror(title, titleHidden, false);
@@ -397,22 +398,22 @@
                     return;
                 }
 
-                if (savedSalutation === 'SOZIALKONTO') {
+                if (savedSalutation === '${NbhConst.SOZIALKONTO_SALUTATION}') {
                     options.forEach(opt => {
-                        opt.disabled = opt.value !== 'SOZIALKONTO';
-                        opt.hidden = opt.value !== 'SOZIALKONTO';
+                        opt.disabled = opt.value !== '${NbhConst.SOZIALKONTO_SALUTATION}';
+                        opt.hidden = opt.value !== '${NbhConst.SOZIALKONTO_SALUTATION}';
                     });
-                    salutation.value = 'SOZIALKONTO';
+                    salutation.value = '${NbhConst.SOZIALKONTO_SALUTATION}';
                     salutation.disabled = true;
                 } else {
                     options
-                        .filter(opt => opt.value === 'SOZIALKONTO')
+                        .filter(opt => opt.value === '${NbhConst.SOZIALKONTO_SALUTATION}')
                         .forEach(opt => opt.remove());
                 }
             };
 
             const handleSalutationChange = () => {
-                const isSocial = salutation.value === 'SOZIALKONTO';
+                const isSocial = salutation.value === '${NbhConst.SOZIALKONTO_SALUTATION}';
                 applySocialLock(isSocial);
             };
 
