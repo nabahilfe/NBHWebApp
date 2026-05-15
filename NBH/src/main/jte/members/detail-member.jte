@@ -194,13 +194,7 @@
                                 </label>
                             </div>
 
-                            <!-- Hidden mirrors to submit disabled values -->
-                            <input type="hidden" id="firstName-hidden">
-                            <input type="hidden" id="lastName-hidden">
-                            <input type="hidden" id="institution-hidden">
-                            <input type="hidden" id="role-hidden">
-                            <input type="hidden" id="title-hidden">
-                            <input type="hidden" id="email-hidden">
+
                         </div>
                     </div>
                 </div>
@@ -324,81 +318,20 @@
             const zip = document.getElementById('zip');
             const city = document.getElementById('city');
 
-            const firstNameHidden = document.getElementById('firstName-hidden');
-            const lastNameHidden = document.getElementById('lastName-hidden');
-            const institutionHidden = document.getElementById('institution-hidden');
-            const roleHidden = document.getElementById('role-hidden');
-            const titleHidden = document.getElementById('title-hidden');
-            const emailHidden = document.getElementById('email-hidden');
-
             const isExisting = ${member.getId() != null};
             const savedSalutation = '${member.getSalutation() != null ? member.getSalutation() : ""}';
 
-            // Preserve user-entered values when toggling Sozialkonto on/off
-            const snapshot = {
-                title: title.value,
-                firstName: firstName.value,
-                lastName: lastName.value,
-                email: email.value,
-                institution: institution.value,
-                role: role.value,
-                directDebitAuthorization: directDebitAuthorization.checked,
-                birthdate: birthdate ? birthdate.value : '',
-                joiningDate: joiningDate ? joiningDate.value : '',
-                resignationDate: resignationDate ? resignationDate.value : '',
-                phoneNumber: phoneInput ? phoneInput.value : '',
-                street: street ? street.value : '',
-                number: numberField ? numberField.value : '',
-                zip: zip ? zip.value : '',
-                city: city ? city.value : ''
-            };
-
-            const mirror = (field, hidden, enabled) => {
-                if (enabled) {
-                    hidden.removeAttribute('name');
-                    hidden.value = '';
-                    field.disabled = false;
-                } else {
-                    hidden.name = field.name;
-                    hidden.value = field.value;
-                    field.disabled = true;
-                }
-            };
-
             const applySocialLock = (enable) => {
                 if (enable) {
-                    snapshot.title = title.value;
-                    snapshot.firstName = firstName.value;
-                    snapshot.lastName = lastName.value;
-                    snapshot.email = email.value;
-                    snapshot.institution = institution.value;
-                    snapshot.role = role.value;
-                    snapshot.directDebitAuthorization = directDebitAuthorization.checked;
-                    snapshot.birthdate = birthdate ? birthdate.value : '';
-                    snapshot.joiningDate = joiningDate ? joiningDate.value : '';
-                    snapshot.resignationDate = resignationDate ? resignationDate.value : '';
-                    snapshot.phoneNumber = phoneInput ? phoneInput.value : '';
-                    snapshot.street = street ? street.value : '';
-                    snapshot.number = numberField ? numberField.value : '';
-                    snapshot.zip = zip ? zip.value : '';
-                    snapshot.city = city ? city.value : '';
+                    // apply fixed Sozialkonto values; readOnly keeps them in the POST
+                    if (title)       { title.value = '';                                        title.readOnly = true; }
+                    if (firstName)   { firstName.value = '${NbhConst.SOZIALKONTO_FIRST_NAME}';  firstName.readOnly = true; }
+                    if (lastName)    { lastName.value  = '${NbhConst.SOZIALKONTO_LAST_NAME}';   lastName.readOnly  = true; }
+                    if (institution) { institution.value = '${NbhConst.SOZIALKONTO_LAST_NAME}'; institution.readOnly = true; }
+                    if (role)        { role.value = ''; role.disabled = true; }
 
-                    title.value = '';
-                    institution.value = '${NbhConst.SOZIALKONTO_LAST_NAME}';
-                    firstName.value = '${NbhConst.SOZIALKONTO_FIRST_NAME}';
-                    lastName.value = '${NbhConst.SOZIALKONTO_LAST_NAME}';
-                    role.value = '';
+                    if (directDebitAuthorization) { directDebitAuthorization.disabled = true; directDebitAuthorization.checked = false; }
 
-                    mirror(title, titleHidden, false);
-                    mirror(institution, institutionHidden, false);
-                    mirror(firstName, firstNameHidden, false);
-                    mirror(lastName, lastNameHidden, false);
-                    mirror(role, roleHidden, false);
-
-                    directDebitAuthorization.disabled = true;
-                    directDebitAuthorization.checked = false;
-
-                    // Sozialkonto-specific field locks
                     if (birthdate) { birthdate.value = '2000-01-01'; birthdate.readOnly = true; }
                     if (joiningDate) {
                         const now = new Date();
@@ -408,39 +341,32 @@
                         joiningDate.removeAttribute('min');
                     }
                     if (resignationDate) { resignationDate.value = ''; resignationDate.readOnly = true; }
-                    if (phoneInput)    { phoneInput.readOnly = true; }
-                    if (email)         { email.readOnly = true; }
-                    if (street)        { street.value = '-'; street.readOnly = true; }
-                    if (numberField)   { numberField.value = '-'; numberField.readOnly = true; }
-                    if (zip)           { zip.value = '-'; zip.readOnly = true; }
-                    if (city)          { city.value = '-'; city.readOnly = true; }
+                    if (phoneInput)  { phoneInput.readOnly  = true; }
+                    if (email)       { email.readOnly       = true; }
+                    if (street)      { street.value = '-';      street.readOnly      = true; }
+                    if (numberField) { numberField.value = '-'; numberField.readOnly = true; }
+                    if (zip)         { zip.value = '-';         zip.readOnly         = true; }
+                    if (city)        { city.value = '-';        city.readOnly        = true; }
 
                 } else {
-                    mirror(title, titleHidden, true);
-                    mirror(institution, institutionHidden, true);
-                    mirror(firstName, firstNameHidden, true);
-                    mirror(lastName, lastNameHidden, true);
-                    mirror(role, roleHidden, true);
+                    // unlock all fields (values will be empty — user can re-enter)
+                    if (title)       { title.value = '';  title.readOnly = false; }
+                    if (firstName)   { firstName.value = '';  firstName.readOnly = false; }
+                    if (lastName)    { lastName.value  = '';  lastName.readOnly  = false; }
+                    if (institution) { institution.value = ''; institution.readOnly = false; }
+                    if (role)        { role.value = ''; role.disabled = false; }
 
-                    title.value = snapshot.title;
-                    institution.value = snapshot.institution;
-                    firstName.value = snapshot.firstName;
-                    lastName.value = snapshot.lastName;
-                    role.value = snapshot.role;
+                    if (directDebitAuthorization) { directDebitAuthorization.disabled = false; directDebitAuthorization.checked = false; }
 
-                    directDebitAuthorization.disabled = false;
-                    directDebitAuthorization.checked = snapshot.directDebitAuthorization;
-
-                    // Restore Sozialkonto-specific field locks
-                    if (birthdate)      { birthdate.value = snapshot.birthdate; birthdate.readOnly = false; }
-                    if (joiningDate)    { joiningDate.value = snapshot.joiningDate; joiningDate.readOnly = false; }
-                    if (resignationDate){ resignationDate.value = snapshot.resignationDate; resignationDate.readOnly = false; }
-                    if (phoneInput)     { phoneInput.value = snapshot.phoneNumber; phoneInput.readOnly = false; }
-                    if (email)          { email.value = snapshot.email; email.readOnly = false; }
-                    if (street)         { street.value = snapshot.street; street.readOnly = false; }
-                    if (numberField)    { numberField.value = snapshot.number; numberField.readOnly = false; }
-                    if (zip)            { zip.value = snapshot.zip; zip.readOnly = false; }
-                    if (city)           { city.value = snapshot.city; city.readOnly = false; }
+                    if (birthdate)       { birthdate.value = '';       birthdate.readOnly      = false; }
+                    if (joiningDate)     { joiningDate.value = '';     joiningDate.readOnly    = false; }
+                    if (resignationDate) { resignationDate.value = ''; resignationDate.readOnly= false; }
+                    if (phoneInput)      { phoneInput.value = '';      phoneInput.readOnly     = false; }
+                    if (email)           { email.value = '';           email.readOnly          = false; }
+                    if (street)          { street.value = '';          street.readOnly         = false; }
+                    if (numberField)     { numberField.value = '';     numberField.readOnly    = false; }
+                    if (zip)             { zip.value = '';             zip.readOnly            = false; }
+                    if (city)            { city.value = '';            city.readOnly           = false; }
                 }
             };
 
