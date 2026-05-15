@@ -115,12 +115,17 @@ public class TimeTransferController {
         }
 
         Member fromMember = memberRepository.findById(fromMemberId).orElse(null);
+        
         if (fromMember == null) {
             model.addAttribute("status", 404);
             model.addAttribute("error", "Not Found");
             model.addAttribute("message", "Mitglied mit ID " + fromMemberId + " wurde nicht gefunden.");
             return "error";
         }
+
+		if (fromMember.isSystemAdmin()) {
+			throw new IllegalCallerException("System Administratoren können keine Zeitschecks übergeben.");
+		}
 
         ttf.setUserFromId(fromMemberId);
         ttf.setUserFromName(fromMember.getNameAndAddress());

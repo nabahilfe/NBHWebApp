@@ -61,5 +61,9 @@ public class ViewContext {
     public boolean hasRole(String role) {
         return user != null && user.hasAnyRole(role) ? true : false;
     }
-
+    
+    public boolean isSystemAdmin() {
+		return user != null && user.isSystemAdmin() ? true : false;
+	}
+    
 }

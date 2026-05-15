@@ -76,17 +76,20 @@
                             Stundenguthaben: <strong>${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + "" : "0"} h</strong>
                         </p>
 
-                        <hr/>
 
-                        <!-- download a personalized Zeitscheck.pdf -->
-                        <form action="/download/timecheque-pdf" method="get">
-                            <input type="hidden" name="memberId" value="${member.getId()}">
-                            <div class="text-center">
-                                Zeitschecks herunterladen zum Ausdrucken
-                                <br/><br/>
-                               <button type="submit" class="btn btn-primary bi-download"> Zeitschecks herunterladen</button>
-                            </div>
-                        </form>
+			  			@if(! member.isSystemMember())
+                        	<hr/>
+	                        <!-- download a personalized Zeitscheck.pdf -->
+	                        <form action="/download/timecheque-pdf" method="get">
+	                            <input type="hidden" name="memberId" value="${member.getId()}">
+	                            <div class="text-center">
+	                                Zeitschecks herunterladen zum Ausdrucken
+	                                <br/><br/>
+	                               <button type="submit" class="btn btn-primary bi-download"> Zeitschecks herunterladen</button>
+	                            </div>
+	                        </form>
+	                    @endif
+	                    
                     </div>
                 </div>
             </div>

@@ -142,5 +142,7 @@ public class CustomUserDetails implements UserDetails {
         return hasAnyRole(roleName);
     }
 
-
+    public boolean isSystemAdmin() {
+		return member != null && member.isSystemAdmin() ? true : false;
+	}
 }
