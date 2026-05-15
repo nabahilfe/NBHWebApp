@@ -163,11 +163,19 @@ public class MemberController {
                       @RequestParam(value = "year", required = false) Integer year,
                       jakarta.servlet.http.HttpSession session) {
         Optional<Member> member = memberRepository.findById(id);
+        
         if (member.isPresent() && isSystemAdmin(member.get())) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Das Mitglied 'System Administrator' kann nicht geändert werden.");
             return "redirect:/members";
         }
+        
+        if (member.isPresent() && isSozialkonto(member.get())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Das Mitglied 'Sozialkonto' kann nicht geändert werden.");
+            return "redirect:/members";
+        }
+        
         log.debug("Editing Member: {}", id);
 
         String sessionKey = "selectedYear_" + id;
@@ -299,6 +307,12 @@ public class MemberController {
                     "Die E-Mail-Adresse '" + NbhConst.ADMIN_EMAIL + "' ist für den System-Administrator reserviert.");
             return "redirect:/members";
         }
+        
+        if (member.getId() != null && isSozialkonto(member)) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Das Mitglied 'Sozialkonto' kann nicht geändert werden.");
+            return "redirect:/members";
+        }
 
         String validationError = validateData(member);
         if (validationError != null) {
@@ -373,6 +387,11 @@ public class MemberController {
                     "Das Mitglied 'System Administrator' kann nicht gelöscht werden.");
             return "redirect:/members";
         }
+        if (member.isPresent() && isSozialkonto(member.get())) {
+			redirectAttributes.addFlashAttribute("errorMessage",
+					"Das Sozialkonto kann nicht gelöscht werden.");
+			return "redirect:/members";
+		}
         memberRepository.delete(member.get());
         redirectAttributes.addFlashAttribute("successMessage", "Mitglied '" + member.get().getName() + "' wurde gelöscht.");
         log.debug("Deleted Member: {}", member.get());
@@ -380,7 +399,9 @@ public class MemberController {
     }
 
 
-    // ------------------
+
+
+	// ------------------
     // validating member data
     // ------------------
 
@@ -433,7 +454,7 @@ public class MemberController {
 
 
     // ------------------
-    // System-Administrator protection
+    // System-Konto protection
     // ------------------
 
     private boolean isSystemAdmin(Member member) {
@@ -445,5 +466,10 @@ public class MemberController {
                 .map(this::isSystemAdmin)
                 .orElse(false);
     }
+        
+    private boolean isSozialkonto(Member member) {
+		return member.isSozialkonto();
+	}
+
 
 }

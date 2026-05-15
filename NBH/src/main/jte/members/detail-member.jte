@@ -316,6 +316,13 @@
             const institution = document.getElementById('institut');
             const role = document.getElementById('role');
             const directDebitAuthorization = document.getElementById('directDebitAuthorization');
+            const birthdate = document.getElementById('birthdate');
+            const joiningDate = document.getElementById('joiningDate');
+            const resignationDate = document.getElementById('resignationDate');
+            const street = document.getElementById('street');
+            const numberField = document.getElementById('number');
+            const zip = document.getElementById('zip');
+            const city = document.getElementById('city');
 
             const firstNameHidden = document.getElementById('firstName-hidden');
             const lastNameHidden = document.getElementById('lastName-hidden');
@@ -335,7 +342,15 @@
                 email: email.value,
                 institution: institution.value,
                 role: role.value,
-                directDebitAuthorization: directDebitAuthorization.checked
+                directDebitAuthorization: directDebitAuthorization.checked,
+                birthdate: birthdate ? birthdate.value : '',
+                joiningDate: joiningDate ? joiningDate.value : '',
+                resignationDate: resignationDate ? resignationDate.value : '',
+                phoneNumber: phoneInput ? phoneInput.value : '',
+                street: street ? street.value : '',
+                number: numberField ? numberField.value : '',
+                zip: zip ? zip.value : '',
+                city: city ? city.value : ''
             };
 
             const mirror = (field, hidden, enabled) => {
@@ -359,9 +374,17 @@
                     snapshot.institution = institution.value;
                     snapshot.role = role.value;
                     snapshot.directDebitAuthorization = directDebitAuthorization.checked;
+                    snapshot.birthdate = birthdate ? birthdate.value : '';
+                    snapshot.joiningDate = joiningDate ? joiningDate.value : '';
+                    snapshot.resignationDate = resignationDate ? resignationDate.value : '';
+                    snapshot.phoneNumber = phoneInput ? phoneInput.value : '';
+                    snapshot.street = street ? street.value : '';
+                    snapshot.number = numberField ? numberField.value : '';
+                    snapshot.zip = zip ? zip.value : '';
+                    snapshot.city = city ? city.value : '';
 
                     title.value = '';
-                    institution.value = '${NbhConst.SOZIALKONTO_FIRST_NAME}';
+                    institution.value = '${NbhConst.SOZIALKONTO_LAST_NAME}';
                     firstName.value = '${NbhConst.SOZIALKONTO_FIRST_NAME}';
                     lastName.value = '${NbhConst.SOZIALKONTO_LAST_NAME}';
                     role.value = '';
@@ -374,6 +397,24 @@
 
                     directDebitAuthorization.disabled = true;
                     directDebitAuthorization.checked = false;
+
+                    // Sozialkonto-specific field locks
+                    if (birthdate) { birthdate.value = '2000-01-01'; birthdate.readOnly = true; }
+                    if (joiningDate) {
+                        const now = new Date();
+                        const mm = String(now.getMonth() + 1).padStart(2, '0');
+                        joiningDate.value = now.getFullYear() + '-' + mm + '-01';
+                        joiningDate.readOnly = true;
+                        joiningDate.removeAttribute('min');
+                    }
+                    if (resignationDate) { resignationDate.value = ''; resignationDate.readOnly = true; }
+                    if (phoneInput)    { phoneInput.readOnly = true; }
+                    if (email)         { email.readOnly = true; }
+                    if (street)        { street.value = '-'; street.readOnly = true; }
+                    if (numberField)   { numberField.value = '-'; numberField.readOnly = true; }
+                    if (zip)           { zip.value = '-'; zip.readOnly = true; }
+                    if (city)          { city.value = '-'; city.readOnly = true; }
+
                 } else {
                     mirror(title, titleHidden, true);
                     mirror(institution, institutionHidden, true);
@@ -389,6 +430,17 @@
 
                     directDebitAuthorization.disabled = false;
                     directDebitAuthorization.checked = snapshot.directDebitAuthorization;
+
+                    // Restore Sozialkonto-specific field locks
+                    if (birthdate)      { birthdate.value = snapshot.birthdate; birthdate.readOnly = false; }
+                    if (joiningDate)    { joiningDate.value = snapshot.joiningDate; joiningDate.readOnly = false; }
+                    if (resignationDate){ resignationDate.value = snapshot.resignationDate; resignationDate.readOnly = false; }
+                    if (phoneInput)     { phoneInput.value = snapshot.phoneNumber; phoneInput.readOnly = false; }
+                    if (email)          { email.value = snapshot.email; email.readOnly = false; }
+                    if (street)         { street.value = snapshot.street; street.readOnly = false; }
+                    if (numberField)    { numberField.value = snapshot.number; numberField.readOnly = false; }
+                    if (zip)            { zip.value = snapshot.zip; zip.readOnly = false; }
+                    if (city)           { city.value = snapshot.city; city.readOnly = false; }
                 }
             };
 

@@ -93,27 +93,38 @@
               <td class="text-end">
                 ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}
               </td>
-              <td class="text-center">
-                <a class="btn btn-outline-primary btn-sm bi-plus-lg" href="/timecheques/new?memberId=${member.getId()}"
-                    role="button" title="Zeitschecks kaufen"></a>
-              </td>
-
-              <td>
-                <form action="/download/timecheque-pdf" method="get">
-                    <input type="hidden" name="memberId" value="${member.getId()}">
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-outline-primary btn-sm bi-download" title="Zeitschecks herunterladen"></button>
-                    </div>
-                </form>
-              </td>
-
-              <td class="text-center">
-                  <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
-                <button type="button" class="btn btn-outline-danger btn-sm bi-x-lg"
-                    data-bs-toggle="modal"
-                    data-bs-target="#confirmModal"
-                    data-item-id="${member.getId()}"></button>
-              </td>
+              
+			  @if(member.isSystemMember()))
+	             <!-- do not show buy, download, delete buttons for system members -->
+	              <td></td>
+	              <td></td>
+	              <td></td>
+	              <td></td>
+	          @else
+	              <td class="text-center">
+	                <a class="btn btn-outline-primary btn-sm bi-plus-lg" href="/timecheques/new?memberId=${member.getId()}"
+	                    role="button" title="Zeitschecks kaufen"></a>
+	              </td>
+	
+				  			
+	              <td>
+	                <form action="/download/timecheque-pdf" method="get">
+	                    <input type="hidden" name="memberId" value="${member.getId()}">
+	                    <div class="text-center">
+	                        <button type="submit" class="btn btn-outline-primary btn-sm bi-download" title="Zeitschecks herunterladen"></button>
+	                    </div>
+	                </form>
+	              </td>
+	
+	              <td class="text-center">
+	                  <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
+	                <button type="button" class="btn btn-outline-danger btn-sm bi-x-lg"
+	                    data-bs-toggle="modal"
+	                    data-bs-target="#confirmModal"
+	                    data-item-id="${member.getId()}"></button>
+	              </td>
+	         @endif
+	         
           @endif
 
         </tr>

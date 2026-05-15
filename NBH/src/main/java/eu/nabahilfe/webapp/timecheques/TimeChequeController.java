@@ -256,7 +256,17 @@ public class TimeChequeController {
 
 
     private TimeCheque createNewTimeCheque(Member member) {
-        int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
+    	// Validate Member ist neither Administrator nor Sozialkonto
+		if (member.isSozialkonto()) {
+			throw new IllegalCallerException("Für das Sozialkonto können keine Zeitschecks erstellt werden.");
+		}
+		if (member.isSystemAdmin()) {
+			throw new IllegalCallerException("Für System Administratoren können keine Zeitschecks erstellt werden.");
+		}
+    	
+    	
+    	// Business Rule: TimeCheques can only be purchased if Member has less than 5 accumulated hours, except for the first TimeCheque, which is free of charge.
+    	int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
         if (existingTimeCheques == 0 && (!member.getIsImportedMember())) {
             log.debug("Member id={} has no existing TimeCheques, is not imported Member, using first hours of {}", member.getId(), NbhConst.FIRST_TIME_CHEQUE_HOURS);
             return createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member);

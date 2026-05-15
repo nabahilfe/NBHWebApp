@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import eu.nabahilfe.webapp.GlobalAuditListener;
+import eu.nabahilfe.webapp.NbhConst;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -413,7 +414,22 @@ public class Member implements Serializable {
         return getName() + " - " + getAddress();
     }
 
+    
+    public boolean isSystemAdmin() {
+		if (firstName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME) || lastName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_LAST_NAME)) return true;
+		return false;
+	}
+    
+    public boolean isSozialkonto() {
+		if (firstName.equalsIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME) && lastName.equalsIgnoreCase(NbhConst.SOZIALKONTO_LAST_NAME)) return true;
+		return false;
+    }
+    
+    public boolean isSystemMember() {
+		return isSystemAdmin() || isSozialkonto();
+	}
 
+    
     public String getEmailSalutation() {
         String name = "";
         if (salutation.equals(Salutation.Herr.name())) name += "Lieber ";

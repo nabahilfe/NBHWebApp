@@ -82,6 +82,6 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     @Query("SELECT YEAR(m.resignationDate), COUNT(m) FROM Member m WHERE m.resignationDate IS NOT NULL GROUP BY YEAR(m.resignationDate) ORDER BY YEAR(m.resignationDate) ASC")
     List<Object[]> findResignedCountPerYear();
 
-	List<Role> findBySalutationIgnoreCase(String sozialkontoSalutation);
+	List<Member> findBySalutationIgnoreCase(String sozialkontoSalutation);
 
 }

@@ -32,15 +32,15 @@ public final class NbhConst {
 
 
     public static final String SOZIALKONTO_SALUTATION = "Sozialkonto";
-    public static final String SOZIALKONTO_FIRST_NAME = "Nachbarschaftshilfe";
-    public static final String SOZIALKONTO_LAST_NAME = "Sozialkonto";
+    public static final String SOZIALKONTO_FIRST_NAME = "Sozialkonto";
+    public static final String SOZIALKONTO_LAST_NAME = "Nachbarschaftshilfe";
 
     
     
     public static final String ADMIN_ROLE_NAME = "System-Administrator";
     public static final String ADMIN_EMAIL = "webmaster@nabahilfe.eu";
-    public static final String ADMIN_ACCOUNT_FIRST_NAME = "System";
-    public static final String ADMIN_ACCOUNT_LAST_NAME = "Administrator";
+    public static final String ADMIN_ACCOUNT_FIRST_NAME = "Administrator";
+    public static final String ADMIN_ACCOUNT_LAST_NAME = "System";
     
 
 }
