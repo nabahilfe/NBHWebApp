@@ -34,6 +34,8 @@
 
     <h3>Unsere Vereinsmitglieder</h3>
     <br/>
+    
+    
     <!-- Display all Member records -->
     <table class="table table-hover table-sm" id="memberTable">
 
@@ -58,78 +60,80 @@
               <th scope="col" class="text-center">Delete</th>
           @endif
         </tr>
-      </thead>
+      	</thead>
 
-        <tbody class="table-group-divider">
+	  <tbody class="table-group-divider">
         @for (Member member : memberPage.getContent())
-        <tr>
-          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
-              <td><a class="text-decoration-none" href="/members/${member.getId()}"><b>${member.getLastName()}</b></a></td>
-          @else
-            <td>${member.getLastName()}</td>
-          @endif
-          <td>${member.getFirstName()}</td>
-          <td>
-              <a href="https://www.google.com/maps/search/?api=1&query=${member.getAddress().replace(" ", "+")}"
-                 target="_blank" rel="noopener noreferrer" class="text-decoration-none" title="In Google Maps öffnen">
-                  ${member.getAddress()}
-              </a>
-          </td>
-          <td>${member.getRole() != null ? member.getRole().getRoleName() : ""}</td>
-          <td>
-              @if(member.getEmail() != null && !member.getEmail().isBlank())
-                  <a href="mailto:${member.getEmail()}" class="text-decoration-none">${member.getEmail()}</a>
-              @endif
-          </td>
-          <td>
-              @if(member.getPhoneNumber() != null && !member.getPhoneNumber().isBlank())
-                  <a href="tel:${member.getPhoneNumber().replace(" ", "")}" class="text-decoration-none">
-                      ${member.getPhoneNumber()}
-                  </a>
-              @endif
-          </td>
+	        <tr>
+       		  	@if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+              		<td><a class="text-decoration-none" href="/members/${member.getId()}"><b>${member.getLastName()}</b></a></td>
+          		@else
+            		<td>${member.getLastName()}</td>
+          		@endif
+          		
+          		<td>${member.getFirstName()}</td>
+          		
+          		<td>
+              		<a href="https://www.google.com/maps/search/?api=1&query=${member.getAddress().replace(" ", "+")}" target="_blank" 
+              		 	rel="noopener noreferrer" class="text-decoration-none" title="In Google Maps öffnen"> ${member.getAddress()}
+              		</a>
+          		</td>
+          		
+          		<td>${member.getRole() != null ? member.getRole().getRoleName() : ""}</td>
+          
+          		<td>
+              		@if(member.getEmail() != null && !member.getEmail().isBlank())
+                  		<a href="mailto:${member.getEmail()}" class="text-decoration-none">${member.getEmail()}</a>
+              		@endif
+          		</td>
+          		
+          		<td>
+              		@if(member.getPhoneNumber() != null && !member.getPhoneNumber().isBlank())
+                  		<a href="tel:${member.getPhoneNumber().replace(" ", "")}" class="text-decoration-none"> ${member.getPhoneNumber()}
+                  		</a>
+              		@endif
+          		</td>
 
-          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
-              <td class="text-end">
-                ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}
-              </td>
+          		@if(ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+              		<td class="text-end">
+                		${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}
+              		</td>
               
-			  @if(member.isSystemMember()))
-	             <!-- do not show buy, download, delete buttons for system members -->
-	              <td></td>
-	              <td></td>
-	              <td></td>
-	              <td></td>
-	          @else
-	              <td class="text-center">
-	                <a class="btn btn-outline-primary btn-sm bi-plus-lg" href="/timecheques/new?memberId=${member.getId()}"
-	                    role="button" title="Zeitschecks kaufen"></a>
-	              </td>
-	
+			  		@if(member.isSystemMember())
+	             		<!-- do not show buy, download, delete buttons for system members -->
+	              		<td class="text-center"></td>
+	              		<td class="text-center"></td>
+	              		<td class="text-center"></td>
+	          		@else
+	              		<td class="text-center">
+	                		<a class="btn btn-outline-primary btn-sm bi-plus-lg" href="/timecheques/new?memberId=${member.getId()}" role="button" title="Zeitschecks kaufen"></a>
+	              		</td>
 				  			
-	              <td>
-	                <form action="/download/timecheque-pdf" method="get">
-	                    <input type="hidden" name="memberId" value="${member.getId()}">
-	                    <div class="text-center">
-	                        <button type="submit" class="btn btn-outline-primary btn-sm bi-download" title="Zeitschecks herunterladen"></button>
-	                    </div>
-	                </form>
-	              </td>
+	              		<td>
+	                		<form action="/download/timecheque-pdf" method="get">
+	                    		<input type="hidden" name="memberId" value="${member.getId()}">
+	                    		<div class="text-center">
+	                        		<button type="submit" class="btn btn-outline-primary btn-sm bi-download" title="Zeitschecks herunterladen"></button>
+	                    		</div>
+	                		</form>
+	              		</td>
 	
-	              <td class="text-center">
-	                  <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
-	                <button type="button" class="btn btn-outline-danger btn-sm bi-x-lg"
-	                    data-bs-toggle="modal"
-	                    data-bs-target="#confirmModal"
-	                    data-item-id="${member.getId()}"></button>
-	              </td>
-	         @endif
-	         
-          @endif
+	              		<td class="text-center">
+	                  		<!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
+	                		<button type="button" class="btn btn-outline-danger btn-sm bi-x-lg"
+	                    		data-bs-toggle="modal"
+	                    		data-bs-target="#confirmModal"
+	                    		data-item-id="${member.getId()}">
+	                    	</button>
+	              		</td>
+	         		@endif
+	         		
+          		@endif
 
-        </tr>
+        	</tr>
         @endfor
-      </tbody>
+  	</tbody>
+      
     </table>
 
     <!-- Modal confirm delete dialog -->
