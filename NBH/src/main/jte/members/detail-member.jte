@@ -349,24 +349,24 @@
                     if (city)        { city.value = '-';        city.readOnly        = true; }
 
                 } else {
-                    // unlock all fields (values will be empty — user can re-enter)
-                    if (title)       { title.value = '';  title.readOnly = false; }
-                    if (firstName)   { firstName.value = '';  firstName.readOnly = false; }
-                    if (lastName)    { lastName.value  = '';  lastName.readOnly  = false; }
-                    if (institution) { institution.value = ''; institution.readOnly = false; }
-                    if (role)        { role.value = ''; role.disabled = false; }
+                    // just unlock — never touch .value; the server-rendered values are already correct
+                    if (title)       title.readOnly = false;
+                    if (firstName)   firstName.readOnly = false;
+                    if (lastName)    lastName.readOnly  = false;
+                    if (institution) institution.readOnly = false;
+                    if (role)        { role.disabled = false; }
 
-                    if (directDebitAuthorization) { directDebitAuthorization.disabled = false; directDebitAuthorization.checked = false; }
+                    if (directDebitAuthorization) directDebitAuthorization.disabled = false;
 
-                    if (birthdate)       { birthdate.value = '';       birthdate.readOnly      = false; }
-                    if (joiningDate)     { joiningDate.value = '';     joiningDate.readOnly    = false; }
-                    if (resignationDate) { resignationDate.value = ''; resignationDate.readOnly= false; }
-                    if (phoneInput)      { phoneInput.value = '';      phoneInput.readOnly     = false; }
-                    if (email)           { email.value = '';           email.readOnly          = false; }
-                    if (street)          { street.value = '';          street.readOnly         = false; }
-                    if (numberField)     { numberField.value = '';     numberField.readOnly    = false; }
-                    if (zip)             { zip.value = '';             zip.readOnly            = false; }
-                    if (city)            { city.value = '';            city.readOnly           = false; }
+                    if (birthdate)       birthdate.readOnly       = false;
+                    if (joiningDate)     joiningDate.readOnly     = false;
+                    if (resignationDate) resignationDate.readOnly = false;
+                    if (phoneInput)      phoneInput.readOnly      = false;
+                    if (email)           email.readOnly           = false;
+                    if (street)          street.readOnly          = false;
+                    if (numberField)     numberField.readOnly     = false;
+                    if (zip)             zip.readOnly             = false;
+                    if (city)            city.readOnly            = false;
                 }
             };
 
