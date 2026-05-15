@@ -421,7 +421,8 @@ public class Member implements Serializable {
 	}
     
     public boolean isSozialkonto() {
-		if (firstName.equalsIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME) && lastName.equalsIgnoreCase(NbhConst.SOZIALKONTO_LAST_NAME)) return true;
+		if (firstName.equalsIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME) && lastName.equalsIgnoreCase(NbhConst.SOZIALKONTO_LAST_NAME)
+				&& salutation.equalsIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION)) return true;
 		return false;
     }
     

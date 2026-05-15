@@ -218,9 +218,7 @@ public class TimeTransferController {
         }
 
         // validate category is 950 or 999 if Sozialkonto is involved
-        if ((memberFrom.getSalutation() != null && memberFrom.getSalutation().equalsIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION))
-                || (memberTo.getSalutation() != null && memberTo.getSalutation().equalsIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION))) {
-
+        if (memberFrom.isSozialkonto() || memberTo.isSozialkonto()) {
             Optional<Offer> offer = offerRepository.findById(offerId);
             if (offer.isPresent()) {
                 String code = offer.get().getCode();

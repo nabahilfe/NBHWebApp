@@ -172,7 +172,7 @@ public class MemberController {
         
         if (member.isPresent() && isSozialkonto(member.get())) {
             redirectAttributes.addFlashAttribute("errorMessage",
-                    "Das Mitglied 'Sozialkonto' kann nicht geändert werden.");
+                    "Das Sozialkonto kann nicht geändert werden.");
             return "redirect:/members";
         }
         
@@ -310,7 +310,7 @@ public class MemberController {
         
         if (member.getId() != null && isSozialkonto(member)) {
             redirectAttributes.addFlashAttribute("errorMessage",
-                    "Das Mitglied 'Sozialkonto' kann nicht geändert werden.");
+                    "Das Sozialkonto kann nicht geändert werden.");
             return "redirect:/members";
         }
 
@@ -320,18 +320,18 @@ public class MemberController {
             return "members/detail-member";
         }
 
+        String error = validateOnlyOneSozialkonto(member);
+        if (error != null) {
+            model.addAttribute("errorMessage", error);
+            return "members/detail-member";
+        }
+
         if (member.getId() == null) {
             member.setMemberNmbr(getNextMemberNumber());
             if (member.getJoiningDate() == null) {
                 member.setJoiningDate(LocalDate.now().withDayOfMonth(1));
             }
             member.setIsImportedMember(false);
-
-            String error = validateOnlyOneSozialkonto(member);
-            if (error != null) {
-                model.addAttribute("errorMessage", error);
-                return "members/detail-member";
-            }
         }
 
         log.debug("Saving Member: {}", member);
@@ -348,9 +348,13 @@ public class MemberController {
 
 
     private String validateOnlyOneSozialkonto(@Valid Member member) {
-        if (member.getSalutation() != null && member.getSalutation().equalsIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION) && memberRepository.findBySalutationIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION).size() > 0) {
+        if (member.isSozialkonto() && memberRepository.findBySalutationIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION).size() > 0) {
             return "Es gibt bereits ein Sozialkonto, es kann kein weiteres Sozialkonto angelgt werden!";
         }
+        if (member.getFirstName() != null && member.getFirstName().equalsIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME) ||
+				member.getLastName() != null && member.getLastName().equalsIgnoreCase(NbhConst.SOZIALKONTO_LAST_NAME)) {
+			return "Der Name " + NbhConst.SOZIALKONTO_FIRST_NAME + " " + NbhConst.SOZIALKONTO_LAST_NAME + " ist für das Sozialkonto reserviert und kann nicht verwendet werden!";
+		}
 
         return null;
     }
@@ -471,5 +475,6 @@ public class MemberController {
 		return member.isSozialkonto();
 	}
 
+    
 
 }
