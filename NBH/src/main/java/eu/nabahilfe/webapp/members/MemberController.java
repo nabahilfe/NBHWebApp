@@ -171,7 +171,7 @@ public class MemberController {
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @GetMapping("/{id}")
     String editMember(final Model model, @PathVariable Long id, RedirectAttributes redirectAttributes,
-                      @RequestParam(value = "year", required = false) Integer year,
+                      @RequestParam(required = false) Integer year,
                       jakarta.servlet.http.HttpSession session) {
         Optional<Member> member = memberRepository.findById(id);
         
@@ -246,7 +246,7 @@ public class MemberController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/mydata/{id}")
     String myData(final Model model, @PathVariable Long id,
-                  @RequestParam(value = "year", required = false) Integer year,
+                  @RequestParam(required = false) Integer year,
                   jakarta.servlet.http.HttpSession session) {
         log.debug("Showing /users/mydata/{}", id);
         // Ensure that the member has only access to his own data
