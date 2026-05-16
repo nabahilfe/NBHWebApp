@@ -194,9 +194,9 @@
 
 
                     <!-- Suchformular rechts -->
-                    <form class="d-flex" role="search" action="/members/search" method="get">
+                    <form class="d-flex" role="search" id="memberSearchForm" action="/members/search" method="get">
                         <input class="form-control me-2" type="search" name="searchTerm"
-                               placeholder="Mitglieder" value="${searchTerm}" />
+                               id="memberSearchInput" placeholder="Mitglieder" value="${searchTerm != null ? searchTerm : ""}" />
                         <button class="btn btn-success" type="submit">Suchen</button>
                     </form>
 
@@ -212,6 +212,33 @@
         <!-- Bootstrap JS Bundle -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
+
+        <!-- Persist member search term across pages via sessionStorage -->
+        <script>
+            (function () {
+                const KEY = 'nbh_memberSearch';
+                const form  = document.getElementById('memberSearchForm');
+                const input = document.getElementById('memberSearchInput');
+
+                // Restore saved term if the field is empty (no server-side value was injected)
+                if (input && !input.value) {
+                    const saved = sessionStorage.getItem(KEY);
+                    if (saved) input.value = saved;
+                }
+
+                // Save the current value whenever search is submitted
+                if (form) {
+                    form.addEventListener('submit', function () {
+                        sessionStorage.setItem(KEY, input.value);
+                    });
+                }
+
+                // Also keep sessionStorage in sync with what the server rendered
+                if (input && input.value) {
+                    sessionStorage.setItem(KEY, input.value);
+                }
+            })();
+        </script>
 
         <!-- Auto-dismiss success alerts -->
         <script>
