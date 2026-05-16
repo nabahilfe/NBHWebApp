@@ -1,8 +1,8 @@
 
 
-/***********************************************************/
-/* ATTENTION! DO NOT OVERWWRITE THE SPRING_SESSION TABLES! */
-/***********************************************************/
+/**********************************************************/
+/* ATTENTION! DO NOT OVERWRITE THE SPRING_SESSION TABLES! */
+/**********************************************************/
 
 /* für die Persistierung der SPRING_SESSION Funktionalität von Spring Security */
 
@@ -30,9 +30,9 @@ CREATE TABLE SPRING_SESSION_ATTRIBUTES (
         REFERENCES SPRING_SESSION(PRIMARY_ID) ON DELETE CASCADE
 );
 
-/***********************************************************/
-/* ATTENTION! DO NOT OVERWWRITE THE SPRING_SESSION TABLES! */
-/***********************************************************/
+/**********************************************************/
+/* ATTENTION! DO NOT OVERWRITE THE SPRING_SESSION TABLES! */
+/**********************************************************/
 
 
 
