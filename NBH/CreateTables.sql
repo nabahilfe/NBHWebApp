@@ -38,7 +38,7 @@ CREATE TABLE SPRING_SESSION_ATTRIBUTES (
 
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-02-22 12:15:34
+ * Generated at 2026-05-16 20:25:01
  * ModelDescription: NBH Entity Modell
  */
 
@@ -143,6 +143,7 @@ create table if not exists REGISTRATION_CODES (
     code VARCHAR(10) not null /* Zufällige 6-stellige Zahl */,
     email VARCHAR(80) not null /* E-Mail zum Code */,
     expires_at TIMESTAMP not null /* Gültigkeitsdauer des Codes */,
+    failed_aattempts INTEGER /* Anzahl der Retries */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
@@ -162,7 +163,7 @@ create table if not exists MEMBERS (
     last_name VARCHAR(80) not null,
     birthdate DATE not null,
     email VARCHAR(80) /* muss immer in lower-case gespeichert werden! */,
-    phone_number VARCHAR(30) /* Telefonnummer des Mitglieds */,
+    phone_number VARCHAR(20) /* Telefonnummer des Mitglieds */,
     password VARCHAR(250),
     joining_date DATE not null /* Eintrittsdatum in den Verein */,
     resignation_date DATE /* Austrittsdatum aus dem Verein */,
