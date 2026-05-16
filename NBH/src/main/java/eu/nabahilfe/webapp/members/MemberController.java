@@ -133,9 +133,20 @@ public class MemberController {
         Page<Member> memberPage = null;
         if (searchTerm.length() <= 0)
             memberPage = memberRepository.findAll(pageRequest);
-        else
-            memberPage = memberRepository.findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCase(
-                    searchTerm, searchTerm, pageRequest);
+        else {
+        	Integer memberNmbr = null;
+        	if (searchTerm.matches("\\d+")) {
+        		try {
+					memberNmbr = Integer.parseInt(searchTerm);
+				} 
+        		catch (NumberFormatException e) {
+					log.warn("Failed to parse searchTerm '{}' as member number, ignoring numeric search term", searchTerm);
+				}
+        	}
+        	
+            memberPage = memberRepository.findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
+                    searchTerm, searchTerm, memberNmbr, pageRequest);
+        }
 
         model.addAttribute("memberPage", memberPage);
         model.addAttribute("searchTerm", searchTerm);

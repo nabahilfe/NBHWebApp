@@ -18,8 +18,8 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     List<Member> findByRole(Role role);
 
     @EntityGraph(attributePaths = "role")
-    Page<Member> findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCase(
-            String lastName, String firstName, Pageable pageable);
+    Page<Member> findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
+            String lastName, String firstName, Integer memberNmbr, Pageable pageable);    
 
     @EntityGraph(attributePaths = "role")
     List<Member> findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrStreetContainingIgnoreCase(
