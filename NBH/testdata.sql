@@ -31,7 +31,7 @@ insert into offers (code, description, version) values
 ('800','Hilfe beim Bedienen technischer Geräte und Computer', 0),
 ('900','Sonstiges - bitte Beschreibung angeben!', 0),
 ('950','Spende von Stunden', 0),
-('999','KORREKTURBUCHUNG', 0);
+('999','Korrekturbuchung', 0);
 
 
 
