@@ -252,12 +252,17 @@ public class TimeChequeController {
         tc.getAssignedTo().setAccumulatedHours(newHours);
         memberRepository.save(tc.getAssignedTo());
 
-        emailService.sendEmailHtml(emailComposer.composeTimeChecksBought(
- 			tc.getAssignedTo().getEmail(),
-			tc.getAssignedTo().getEmailSalutation(),
-			tc.getHours(),
-			tc.getAmount().doubleValue()
-		));
+        if (tc.getAssignedTo().getEmail() != null) {
+            emailService.sendEmailHtml(emailComposer.composeTimeChecksBought(
+         			tc.getAssignedTo().getEmail(),
+        			tc.getAssignedTo().getEmailSalutation(),
+        			tc.getHours(),
+        			tc.getAmount().doubleValue()
+        		));
+		}
+        else {
+			log.debug("Member id={} has no email address, cannot send TimeCheque purchase confirmation email", tc.getAssignedTo().getId());
+		}
         
         model.addAttribute("successMessage", "Zeitscheck mit " + tc.getHours() + "h wurde hinzugefügt.");
 
