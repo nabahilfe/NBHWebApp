@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.domaintypes.AmountDomainType;
 import eu.nabahilfe.webapp.domaintypes.AmountDomainValueRepository;
+import eu.nabahilfe.webapp.email.EmailComposer;
+import eu.nabahilfe.webapp.email.EmailService;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import eu.nabahilfe.webapp.security.SecurityUtils;
@@ -43,17 +45,22 @@ public class TimeChequeController {
     private final SecurityUtils securityUtils;
     private final AmountDomainValueRepository amountDomainValueRepository;
     private final TimeTransferRepository timeTransferRepository;
+    
+    private final EmailService emailService;
+    private final EmailComposer emailComposer;
 
     // ...existing code...
 
     public TimeChequeController(TimeChequeRepository timeChequeRepository, MemberRepository memberRepository,
-            TimeChequeRepository timeCheckRepository, SecurityUtils securityUtils,
+            TimeChequeRepository timeCheckRepository, SecurityUtils securityUtils, EmailService emailService, EmailComposer emailComposer,
             AmountDomainValueRepository amountDomainValueRepository,
             TimeTransferRepository timeTransferRepository) {
         this.timeChequeRepository = timeChequeRepository;
         this.memberRepository = memberRepository;
         this.timeCheckRepository = timeCheckRepository;
         this.securityUtils = securityUtils;
+        this.emailService = emailService;
+        this.emailComposer = emailComposer;
         this.amountDomainValueRepository = amountDomainValueRepository;
         this.timeTransferRepository = timeTransferRepository;
     }
@@ -245,6 +252,13 @@ public class TimeChequeController {
         tc.getAssignedTo().setAccumulatedHours(newHours);
         memberRepository.save(tc.getAssignedTo());
 
+        emailService.sendEmailHtml(emailComposer.composeTimeChecksBought(
+ 			tc.getAssignedTo().getEmail(),
+			tc.getAssignedTo().getEmailSalutation(),
+			tc.getHours(),
+			tc.getAmount().doubleValue()
+		));
+        
         model.addAttribute("successMessage", "Zeitscheck mit " + tc.getHours() + "h wurde hinzugefügt.");
 
         log.debug("TimeCheque saved: {}", tc);
