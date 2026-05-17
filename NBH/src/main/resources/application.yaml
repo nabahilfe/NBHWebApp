@@ -14,8 +14,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://nas.internal:5555/postgres
-    username: postgres
-    password: keines
+    username: "${POSTGRES_USERNAME}"
+    password: "${POSTGRES_PASSWORD}"
 
   jpa:
     show-sql: false
@@ -31,8 +31,8 @@ spring:
   mail:
     host: mail.your-server.de
     port: 587
-    username: "${PROD_MAIL_USERNAME:}"
-    password: "${PROD_MAIL_PASSWORD:}"
+    username: "${PROD_MAIL_USERNAME}"
+    password: "${PROD_MAIL_PASSWORD}"
     protocol: smtp
     default-encoding: "UTF-8"
     properties:
