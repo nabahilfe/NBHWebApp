@@ -1,4 +1,9 @@
 <!--
+  Copyright (c) 2025–2026 Maximilian Weißböck
+  Licensed under the MIT License (see LICENSE file).
+-->
+
+<!--
 
     This reusable template displays a list of acquired time cheques.
 
