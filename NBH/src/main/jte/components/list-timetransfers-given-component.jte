@@ -1,8 +1,13 @@
 <!--
-    A reusable template to display time transfers.
+  Copyright (c) 2025–2026 Maximilian Weißböck
+  Licensed under the MIT License (see LICENSE file).
+-->
+
+<!--
+    A reusable template to display given time transfers.
 
     Usage:
-    @template.components.list-timetransfers-received-component(member = Member, transfers = List<TimeTransfer>)
+    @template.components.list-timetransfers-given-component(member = Member, transfersGiven = List<TimeTransfer>)
 
     Parameters:
     - timeTransfers: List<TimeTransfer>
@@ -19,7 +24,7 @@
 @import eu.nabahilfe.webapp.members.Member
 
 @param Member member
-@param List<TimeTransfer> transfers
+@param List<TimeTransfer> transfersGiven
 
 
 <div class="card">
@@ -37,11 +42,11 @@
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
-                    @for (TimeTransfer tt : transfers)
+                    @for (TimeTransfer tt : transfersGiven)
                         <tr>
                             <td scope="row">${dateDE(tt.getDateOfService())}</td>
                             <td scope="row">${boldMemberNameIfSameId(member.getId(), tt.getToMember())}</td>
-                            <td scope="row">${tt.getOffer().getDescription()}@if(tt.getNote() != null && !tt.getNote().isEmpty())<div class="small text-muted">Beschreibung: ${tt.getNote()}</div>@endif</td>
+                            <td scope="row">${tt.getOffer().getDescription()}@if(tt.getNote() != null && !tt.getNote().isEmpty())<div class="small text-muted">${tt.getNote()}</div>@endif</td>
                             <td scope="row" class="text-end">${tt.getHours()}</td>
                         </tr>
                     @endfor

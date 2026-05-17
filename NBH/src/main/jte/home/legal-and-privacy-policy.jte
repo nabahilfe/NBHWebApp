@@ -1,3 +1,8 @@
+<!--
+  Copyright (c) 2025–2026 Maximilian Weißböck
+  Licensed under the MIT License (see LICENSE file).
+-->
+
 @param String privacyPolicy = ""
 @param String legalNotice = ""
 @param java.util.List<eu.nabahilfe.webapp.members.Member> boardMembers = java.util.Collections.emptyList()

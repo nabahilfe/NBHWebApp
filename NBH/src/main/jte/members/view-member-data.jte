@@ -1,3 +1,8 @@
+<!--
+  Copyright (c) 2025–2026 Maximilian Weißböck
+  Licensed under the MIT License (see LICENSE file).
+-->
+
 @import java.util.List
 @import java.time.LocalDate
 
@@ -20,7 +25,7 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@param Integer numberOfTimecheques = null
+@param int selectedYear
 
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
@@ -32,90 +37,79 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>
-        Daten von ${ctxt.getFullName()}
-    </h3>
+    <div class="container d-flex justify-content-center">
+        <div class="row">
+            <div class="col-auto">
+                <div class="card shadow" style="background-color: #ECFEFF;">
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-3">
-                <div class="card-header">
-                    <strong>${roleNames}</strong>
-                </div>
+                    <div class="card-body">
 
-                <div class="card-body">
-                    <p class="card-text mb-3">
-                        ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}
-                        ${member.getFirstName()} ${member.getLastName()} - ${dateReverseDE(member.getBirthdate())}
-                    </p>
-                    <p class="card-text mb-1">
-                        ${member.getStreet() + " " + member.getNumber()}
-                    </p>
-                    <p class="card-text mb-3">
-                        ${member.getZip() + " " + member.getCity()}
-                    </p>
+                        <h4 class="card-title text-primary">${ctxt.getFullName()}</h4>
+                        <strong>${roleNames}</strong>
+                        <hr/>
 
-                    @if(member.getEmail() != null)
-                        <p class="card-text mb-3">
-                            E-Mail: <a href="mailto:${member.getEmail()}">${member.getEmail()}</a>
+
+                        <p class="card-text">
+                            ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}
+                            <br/>
+                            <strong>${member.getFirstName()} ${member.getLastName()}</strong>
+                            <br/>
+                            ${member.getStreet() + " " + member.getNumber()}
+                            <br/>
+                            ${member.getZip() + " " + member.getCity()}
+                            <hr/>
+                            Geburtstag: ${dateReverseDE(member.getBirthdate())}
+                            @if(member.getEmail() != null)
+                                <p class="card-text">
+                                    E-Mail: <a href="mailto:${member.getEmail()}">${member.getEmail()}</a>
+                                </p>
+                            @endif
+                            @if(member.getPhoneNumber() != null)
+                                <p class="card-text">
+                                    Telefon: ${member.getPhoneNumber()}
+                                </p>
+                            @endif
+                            <hr/>
+                            Mitgliedsnummer: ${member.getMemberNmbr()}
+                            <br/>
+                            Mitglied seit: ${dateReverseDE(member.getJoiningDate())}
+                            <br/>
+                            Austritt am: ${member.getResignationDate() != null ? dateReverseDE(member.getResignationDate()) : "aktives Mitglied"}
+                            <hr/>
+                            Einziehungsauftrag:  <strong>${member.getEinziehungsauftrgJaNein()}</strong>
+                            <hr/>
+                            Stundenguthaben: <strong>${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + "" : "0"} h</strong>
                         </p>
-                    @endif
-                    <p class="card-text mb-1">
-                        Mein Stundenguthaben beträgt <strong>${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + "" : "0"}</strong> Stunden.
-                    </p>
-                    <p class="card-text mb-1">
-                        Einziehungsauftrag erteilt:  <strong>${member.getEinziehungsauftrgJaNein()}</strong>
-                    </p>
+
+
+			  			@if(! member.isSystemMember())
+                        	<hr/>
+	                        <!-- download a personalized Zeitscheck.pdf -->
+	                        <form action="/download/timecheque-pdf" method="get">
+	                            <input type="hidden" name="memberId" value="${member.getId()}">
+	                            <div class="text-center">
+	                                Zeitschecks herunterladen zum Ausdrucken
+	                                <br/><br/>
+	                               <button type="submit" class="btn btn-primary bi-download"> Zeitschecks herunterladen</button>
+	                            </div>
+	                        </form>
+	                    @endif
+	                    
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
 
     <br/>
-
-    <div class="row">
-        <div class="col-sm-12 mb-3 mb-sm-0">
-
-            <ul class="nav nav-tabs" id="memberDetailTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="timecheques-tab" data-bs-toggle="tab" data-bs-target="#timecheques-pane" type="button" role="tab" aria-controls="timecheques-pane" aria-selected="true">
-                        Zeitschecks gekauft
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="transfers-tab" data-bs-toggle="tab" data-bs-target="#transfers-pane" type="button" role="tab" aria-controls="transfers-pane" aria-selected="false">
-                        Zeitschecks übergeben
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="received-tab" data-bs-toggle="tab" data-bs-target="#received-pane" type="button" role="tab" aria-controls="received-pane" aria-selected="false">
-                        Zeitschecks erhalten
-                    </button>
-                </li>
-            </ul>
-
-            <div class="tab-content" id="memberDetailTabsContent">
-                <div class="tab-pane fade show active" id="timecheques-pane" role="tabpanel" aria-labelledby="timecheques-tab" tabindex="0">
-                    <div>
-                        @template.components.list-timecheques-component(member = member, timeCheques = purchasedTimeCheques)
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="transfers-pane" role="tabpanel" aria-labelledby="transfers-tab" tabindex="0">
-                    <div>
-                        @template.components.list-timetransfers-given-component(member = member, transfers = givenTimeTransfers)
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="received-pane" role="tabpanel" aria-labelledby="received-tab" tabindex="0">
-                    <div>
-                        @template.components.list-timetransfers-received-component(member = member, transfers = receivedTimeTransfers)
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
+    <div>
+        <i>Letztes Update: ${dateTimeDE(member.getUpdatedAt())}</i>
     </div>
+
+    <br/>
+        
+    @template.components.list-timecheque-data-component(member = member, timeCheques = purchasedTimeCheques, transfersGiven = givenTimeTransfers, 
+    		transfersReceived = receivedTimeTransfers, selectedYear = selectedYear)
 
 
 `)

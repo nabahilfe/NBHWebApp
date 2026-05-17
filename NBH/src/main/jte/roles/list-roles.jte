@@ -1,3 +1,8 @@
+<!--
+  Copyright (c) 2025–2026 Maximilian Weißböck
+  Licensed under the MIT License (see LICENSE file).
+-->
+
 @import eu.nabahilfe.webapp.members.Role
 
 @param java.util.List<Role> roles
@@ -166,5 +171,6 @@
     </script>
 
 `)
+
 
 

@@ -1,3 +1,8 @@
+<!--
+  Copyright (c) 2025–2026 Maximilian Weißböck
+  Licensed under the MIT License (see LICENSE file).
+-->
+
 @import java.util.List
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
@@ -56,7 +61,8 @@
                     <input type="text" class="form-control" disabled  value="${tt.getToMember().getNameAndAddress()}">
 
                     <br/>
-                    <form action="/timetransfers/fromself/${tt.getFromMember().getId()}"  method="get">
+                    <form action="/timetransfers/fromself" method="get">
+                        <input type="hidden" name="fromMemberId" value="${tt.getFromMember().getId()}">
                         <button type="submit" class="btn btn-outline-primary bi-play-btn"> Weiteren Zeitscheck übergeben</button>
                     </form>
                 </div>

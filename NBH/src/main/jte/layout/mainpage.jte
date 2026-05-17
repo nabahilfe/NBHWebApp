@@ -1,3 +1,8 @@
+<!--
+  Copyright (c) 2025–2026 Maximilian Weißböck
+  Licensed under the MIT License (see LICENSE file).
+-->
+
 @import eu.nabahilfe.webapp.textcontent.TextContentType
 
 
@@ -62,8 +67,10 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/members/mydata/${ctxt.getUserId()}">Meine Daten</a></li>
-                                    <li><a class="dropdown-item" href="/timetransfers/fromself/${ctxt.getUserId()}">Zeitscheck übergeben</a></li>
-                                    <li><a class="dropdown-item" href="/timecheques/new/${ctxt.getUserId()}">Zeitscheck kaufen</a></li>
+                                    @if (! ctxt.isSystemAdmin()) <!-- no timecheques for SystemAdmin -->
+                                    	<li><a class="dropdown-item" href="/timetransfers/fromself?fromMemberId=${ctxt.getUserId()}">Zeitschecks übergeben</a></li>
+                                   	 	<li><a class="dropdown-item" href="/timecheques/newfromself/${ctxt.getUserId()}">Zeitschecks kaufen</a></li>
+                                    @endif
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form action="/registration/logout" method="post">
@@ -156,13 +163,45 @@
                             </li>
                         @endif
 
+
+                        <!-- Dropdown Domain Values -->
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER", "TREASURER"))
+                            <li class="nav-item dropdown">
+                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                    Einstellungen
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/domaintypes">Gebühren-Sätze</a></li>
+                                    <li><a class="dropdown-item" href="#">Offene Mitgliedsbeiträge</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Sonstige Buchung</a></li>
+                                </ul>
+                            </li>
+                        @endif
+
+                        <!-- Dropdown Auswertung -->
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                            <li class="nav-item dropdown">
+                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                    Auswertungen
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/timecheques/statistics">Zeitschecks pro Mitglied</a></li>
+                                    <li><a class="dropdown-item" href="/timecheques/category-statistics">Zeitschecks pro Kategorie</a></li>
+                                    <li><a class="dropdown-item" href="/members/statistics">Mitgliederentwicklung</a></li>
+                                </ul>
+                            </li>
+                        @endif
+
+
+
                     </ul>
 
 
                     <!-- Suchformular rechts -->
-                    <form class="d-flex" role="search" action="/members/search" method="get">
+                    <form class="d-flex" role="search" id="memberSearchForm" action="/members/search" method="get">
                         <input class="form-control me-2" type="search" name="searchTerm"
-                               placeholder="Mitglieder" value="${searchTerm}" />
+                               id="memberSearchInput" placeholder="Mitglieder" value="${searchTerm != null ? searchTerm : ""}" />
                         <button class="btn btn-success" type="submit">Suchen</button>
                     </form>
 
@@ -178,6 +217,33 @@
         <!-- Bootstrap JS Bundle -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
+
+        <!-- Persist member search term across pages via sessionStorage -->
+        <script>
+            (function () {
+                const KEY = 'nbh_memberSearch';
+                const form  = document.getElementById('memberSearchForm');
+                const input = document.getElementById('memberSearchInput');
+
+                // Restore saved term if the field is empty (no server-side value was injected)
+                if (input && !input.value) {
+                    const saved = sessionStorage.getItem(KEY);
+                    if (saved) input.value = saved;
+                }
+
+                // Save the current value whenever search is submitted
+                if (form) {
+                    form.addEventListener('submit', function () {
+                        sessionStorage.setItem(KEY, input.value);
+                    });
+                }
+
+                // Also keep sessionStorage in sync with what the server rendered
+                if (input && input.value) {
+                    sessionStorage.setItem(KEY, input.value);
+                }
+            })();
+        </script>
 
         <!-- Auto-dismiss success alerts -->
         <script>

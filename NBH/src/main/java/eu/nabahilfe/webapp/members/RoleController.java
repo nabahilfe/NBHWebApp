@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025–2026 Maximilian Weißböck
+ * Licensed under the MIT License (see LICENSE file).
+ */
+
 package eu.nabahilfe.webapp.members;
 
 import java.util.List;
@@ -71,7 +76,7 @@ public class RoleController {
             return "redirect:/roles";
         }
         if (NbhConst.ADMIN_ROLE_NAME.equalsIgnoreCase(role.get().getRoleName())) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Die Rolle '" + NbhConst.ADMIN_ROLE_NAME+ "' kann nicht geändert werden.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Die Rolle '" + NbhConst.ADMIN_ROLE_NAME + "' kann nicht geändert werden.");
             return "redirect:/roles";
         }
         model.addAttribute("role", role.get());
@@ -211,9 +216,9 @@ public class RoleController {
         if ((role.getIsTimeKeeper()) && !(role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary()))
             return "Rollen mit Funktion 'Zeitschecks' müssen eine der Vereinsrollen Vorstand, Kassier oder Schriftführer haben!";
 
-        // Check rule 4: Admin nicht mit TimeKeeper kombinieren, da Admin alle Rechte hat und TimeKeeper nur Zeit-Schecks vergeben kann
-        if (role.getIsAdmin() && role.getIsTimeKeeper())
-            return "Rollen mit Funktion 'Administrator' nicht mit Funktion 'Zeitschecks' kombiniert, Administrator hat sowieso auf alles Zugriff.";
+        // Check rule 4: Admin muss mit mindestens einer Vereinsrolle (ausser Auditor) kombiniert werden, da Admin alle Rechte hat und dshalb im Vorstand sein muss
+        if (role.getIsAdmin() && !(role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary()))
+            return "Rollen mit Funktion 'Administrator' müssen mit mindestens einer Vereinsrolle (Vorstand, Kassier, Schriftführer) kombiniert werden!";
 
         // Check rule 5: Es können keine Rollen ohne Funktion angelegt werden! Bitte wählen Sie mindestens eine Funktion aus.
         int otherRoleCount = 0;

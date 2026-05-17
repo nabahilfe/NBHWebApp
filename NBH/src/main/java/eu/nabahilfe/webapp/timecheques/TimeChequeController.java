@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025–2026 Maximilian Weißböck
+ * Licensed under the MIT License (see LICENSE file).
+ */
+
 package eu.nabahilfe.webapp.timecheques;
 
 import java.math.BigDecimal;
@@ -6,6 +11,7 @@ import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +22,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import eu.nabahilfe.webapp.NbhConst;
+import eu.nabahilfe.webapp.domaintypes.AmountDomainType;
+import eu.nabahilfe.webapp.domaintypes.AmountDomainValueRepository;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
+import eu.nabahilfe.webapp.security.SecurityUtils;
+import eu.nabahilfe.webapp.timetransfers.TimeTransferRepository;
 import jakarta.transaction.Transactional;
 
 @Controller
@@ -25,17 +35,27 @@ import jakarta.transaction.Transactional;
 @SessionAttributes("timeCheque")
 public class TimeChequeController {
 
+    private static final Logger log = LoggerFactory.getLogger(TimeChequeController.class);
+
     private final TimeChequeRepository timeChequeRepository;
     private final MemberRepository memberRepository;
     private final TimeChequeRepository timeCheckRepository;
+    private final SecurityUtils securityUtils;
+    private final AmountDomainValueRepository amountDomainValueRepository;
+    private final TimeTransferRepository timeTransferRepository;
 
-    private static final Logger log = LoggerFactory.getLogger(TimeChequeController.class);
+    // ...existing code...
 
     public TimeChequeController(TimeChequeRepository timeChequeRepository, MemberRepository memberRepository,
-            TimeChequeRepository timeCheckRepository) {
+            TimeChequeRepository timeCheckRepository, SecurityUtils securityUtils,
+            AmountDomainValueRepository amountDomainValueRepository,
+            TimeTransferRepository timeTransferRepository) {
         this.timeChequeRepository = timeChequeRepository;
         this.memberRepository = memberRepository;
         this.timeCheckRepository = timeCheckRepository;
+        this.securityUtils = securityUtils;
+        this.amountDomainValueRepository = amountDomainValueRepository;
+        this.timeTransferRepository = timeTransferRepository;
     }
 
 
@@ -50,15 +70,29 @@ public class TimeChequeController {
     @GetMapping("/{id}")
     String viewTimeCheque(final Model model, @PathVariable Long id) {
 
+        // Check if user has ADMIN or TIME_KEEPER role
+        boolean isAdminOrTimeKeeper = SecurityContextHolder.getContext().getAuthentication()
+                .getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_TIME_KEEPER"));
+
         TimeCheque tc = timeChequeRepository.findById(id).orElse(null);
         if (tc == null) {
-            model.addAttribute("errorMessage", "Zeitscheck mit ID " + id + " nicht gefunden.");
+            model.addAttribute("status", 404);
+            model.addAttribute("error", "Not Found");
+            model.addAttribute("message", "Zeitscheck mit ID " + id + " nicht gefunden.");
             return "error";
+        }
+
+        // If user is not ADMIN or TIME_KEEPER, only allow viewing own TimeCheques
+        if (!isAdminOrTimeKeeper && !securityUtils.isAuthenticatedAndMatches(tc.getAssignedTo().getId())) {
+            return "redirect:/statuscode/403";
         }
 
         Member member = memberRepository.findById(tc.getAssignedTo().getId()).orElse(null);
         if (member == null) {
-            model.addAttribute("errorMessage", "Mitglied mit ID " + id + " nicht gefunden.");
+            model.addAttribute("status", 404);
+            model.addAttribute("error", "Not Found");
+            model.addAttribute("message", "Mitglied mit ID " + tc.getAssignedTo().getId() + " nicht gefunden.");
             return "error";
         }
 
@@ -81,6 +115,45 @@ public class TimeChequeController {
         return "timecheques/list-unaccounted-timecheques";
     }
 
+    
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
+    @GetMapping("/statistics")
+    String statistics(final Model model, @RequestParam(required = false) Integer year) {
+        // year=0 is the sentinel for "Alle Jahre" (all years)
+        boolean allYears = (year != null && year == 0);
+        int selectedYear = allYears ? 0 : (year != null ? year : LocalDate.now().getYear());
+        model.addAttribute("selectedYear", selectedYear);
+        if (allYears) {
+            org.springframework.data.domain.Pageable top20 = org.springframework.data.domain.PageRequest.of(0, 20);
+            model.addAttribute("stats", timeChequeRepository.findStatsAllYears(top20));
+            model.addAttribute("transferStats", timeTransferRepository.findEarnedHoursStatsAllYears(top20));
+            model.addAttribute("givenStats", timeTransferRepository.findGivenHoursStatsAllYears(top20));
+        } else {
+            model.addAttribute("stats", timeChequeRepository.findStatsByYear(selectedYear));
+            model.addAttribute("transferStats", timeTransferRepository.findEarnedHoursStatsByYear(selectedYear));
+            model.addAttribute("givenStats", timeTransferRepository.findGivenHoursStatsByYear(selectedYear));
+        }
+        return "timecheques/time-cheque-statistics";
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
+    @GetMapping("/category-statistics")
+    String categoryStatistics(final Model model, @RequestParam(required = false) Integer year) {
+        boolean allYears = (year != null && year == 0);
+        int selectedYear = allYears ? 0 : (year != null ? year : LocalDate.now().getYear());
+        model.addAttribute("selectedYear", selectedYear);
+        if (allYears) {
+            org.springframework.data.domain.Pageable top20 = org.springframework.data.domain.PageRequest.of(0, 20);
+            model.addAttribute("categoryStats", timeTransferRepository.findStatsByOfferAllYears(top20));
+        } else {
+            model.addAttribute("categoryStats", timeTransferRepository.findStatsByOfferAndYear(selectedYear));
+        }
+        return "timecheques/time-cheque-category-statistics";
+    }
+
+    
+    // --------------------
+    
 
     // --------------------
     // CREATE NEW
@@ -93,26 +166,19 @@ public class TimeChequeController {
 
         Member member = memberRepository.findById(memberId).orElse(null);
         if (member == null) {
-            model.addAttribute("errorMessage", "Mitglied mit ID " + memberId + " nicht gefunden.");
+        	model.addAttribute("status", 404);
+        	model.addAttribute("error", "Not Found");
+        	model.addAttribute("message", "Mitglied mit ID " + memberId + " nicht gefunden.");
             return "error";
         }
 
-        // FIXME: EXTRACT DUPLICATE CHECKING LOGIC INTO HELPER METHOD
-        // Business Logic: determine TimeCheque hours based on existing TimeCheques
-        TimeCheque tc = null;
-        int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
-        if (existingTimeCheques == 0 && (member.getIsImportedMember() != true)) {
-            log.debug("Member id={} has no existing TimeCheques, is not imported Member, using first hours of {}", memberId, NbhConst.FIRST_TIME_CHEQUE_HOURS);
-            tc = createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member);
-        } else {
-            tc = createTimeCheque(NbhConst.REGULAR_TIME_CHEQUE_HOURS, member);
-            log.debug("Member id={} has {} existing TimeCheques, using regular hours of {}", memberId, existingTimeCheques, NbhConst.REGULAR_TIME_CHEQUE_HOURS);
-        }
+        TimeCheque tc = createNewTimeCheque(member);
 
         model.addAttribute("timeCheque", tc);
         model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(memberId));
+        model.addAttribute("pricePerHour", resolveTimechequeeFeePerHour(LocalDate.now()).floatValue());
 
-        String validationError = validateData(member, tc, existingTimeCheques);
+        String validationError = validateData(member, tc, timeChequeRepository.countByAssignedTo(member), false);
         if (validationError != null) {
             model.addAttribute("errorMessage", validationError);
             log.debug("Validation error for TimeCheque for Member id={}: {}", memberId, validationError);
@@ -124,31 +190,29 @@ public class TimeChequeController {
 
     // Create TimeCheque for self Member
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/new/{memberId}")
+    @GetMapping("/newfromself/{memberId}")
     String addSelfTimeCheque(final Model model, @PathVariable Long memberId) {
+
+        // For security, only allow access to buy timecheques where the current user is the logged in user
+        if (!securityUtils.isAuthenticatedAndMatches(memberId)) {
+            return "redirect:/statuscode/403";
+        }
 
         Member member = memberRepository.findById(memberId).orElse(null);
         if (member == null) {
-            model.addAttribute("errorMessage", "Mitglied mit ID " + memberId + " nicht gefunden.");
+        	model.addAttribute("status", 404);
+        	model.addAttribute("error", "Not Found");
+        	model.addAttribute("message", "Mitglied mit ID " + memberId + " nicht gefunden.");
             return "error";
         }
 
-        // FIXME: EXTRACT DUPLICATE CHECKING LOGIC INTO HELPER METHOD
-        // Business Logic: determine TimeCheque hours based on existing TimeCheques
-        TimeCheque tc = null;
-        int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
-        if (existingTimeCheques == 0 && (member.getIsImportedMember() != true)) {
-            log.debug("Member id={} has no existing TimeCheques, is not imported Member, using first hours of {}", memberId, NbhConst.FIRST_TIME_CHEQUE_HOURS);
-            tc = createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member);
-        } else {
-            tc = createTimeCheque(NbhConst.REGULAR_TIME_CHEQUE_HOURS, member);
-            log.debug("Member id={} has {} existing TimeCheques, using regular hours of {}", memberId, existingTimeCheques, NbhConst.REGULAR_TIME_CHEQUE_HOURS);
-        }
+        TimeCheque tc = createNewTimeCheque(member);
 
         model.addAttribute("timeCheque", tc);
         model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(memberId));
+        model.addAttribute("pricePerHour", resolveTimechequeeFeePerHour(LocalDate.now()).floatValue());
 
-        String validationError = validateData(member, tc, existingTimeCheques);
+        String validationError = validateData(member, tc, timeChequeRepository.countByAssignedTo(member), true);
         if (validationError != null) {
             model.addAttribute("errorMessage", validationError);
             log.debug("Validation error for TimeCheque for Member id={}: {}", memberId, validationError);
@@ -164,10 +228,13 @@ public class TimeChequeController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping
     @Transactional
-    String saveTimeCheque(final Model model, @RequestParam LocalDate orderDate) {
+    String saveTimeCheque(final Model model, @RequestParam LocalDate orderDate, @RequestParam int hours) {
 
         TimeCheque tc = (TimeCheque) model.getAttribute("timeCheque");
         tc.setTransactionDate(orderDate);
+        tc.setHours(hours);
+        BigDecimal pricePerHour = resolveTimechequeeFeePerHour(orderDate);
+        tc.setAmount(hours <= 5 ? BigDecimal.valueOf(0) : pricePerHour.multiply(BigDecimal.valueOf(hours)));
         timeChequeRepository.save(tc);
 
         // BusinessRule: Update Member's accumulated hours
@@ -192,28 +259,57 @@ public class TimeChequeController {
     // helper methods
     // --------------------
 
+
+    private TimeCheque createNewTimeCheque(Member member) {
+    	// Validate Member ist neither Administrator nor Sozialkonto
+		if (member.isSozialkonto()) {
+			throw new IllegalCallerException("Für das Sozialkonto können keine Zeitschecks erstellt werden.");
+		}
+		if (member.isSystemAdmin()) {
+			throw new IllegalCallerException("Für System Administratoren können keine Zeitschecks erstellt werden.");
+		}
+    	
+    	
+    	// Business Rule: TimeCheques can only be purchased if Member has less than 5 accumulated hours, except for the first TimeCheque, which is free of charge.
+    	int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
+        if (existingTimeCheques == 0 && (!member.getIsImportedMember())) {
+            log.debug("Member id={} has no existing TimeCheques, is not imported Member, using first hours of {}", member.getId(), NbhConst.FIRST_TIME_CHEQUE_HOURS);
+            return createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member);
+        }
+        log.debug("Member id={} has {} existing TimeCheques, using regular hours of {}", member.getId(), existingTimeCheques, NbhConst.REGULAR_TIME_CHEQUE_HOURS);
+        return createTimeCheque(NbhConst.REGULAR_TIME_CHEQUE_HOURS, member);
+    }
+
     private TimeCheque createTimeCheque(int timeChequeHours, Member member) {
-
         TimeCheque tc = new TimeCheque();
-
         tc.setHours(timeChequeHours);
-        // FIXME: Richtigen Betrag aus TC-Kosten Tabelle holen
-        tc.setAmount(timeChequeHours <= 5 ? BigDecimal.valueOf(0) : BigDecimal.valueOf(3.60 * timeChequeHours));
+        BigDecimal pricePerHour = resolveTimechequeeFeePerHour(LocalDate.now());
+        tc.setAmount(timeChequeHours <= 5 ? BigDecimal.valueOf(0) : pricePerHour.multiply(BigDecimal.valueOf(timeChequeHours)));
         tc.setAssignedTo(member);
         tc.setTransactionDate(LocalDate.now());
-
         log.debug("\nCreated TimeCheque: {}", tc);
-
         return tc;
     }
 
 
-    private String validateData(Member member, TimeCheque timeCheque, int existingTimeCheques) {
+    private BigDecimal resolveTimechequeeFeePerHour(LocalDate date) {
+        return amountDomainValueRepository
+                .findByCodeAndDate(AmountDomainType.TIMECHEQUE_FEE.name(), date)
+                .map(adv -> adv.getAmount())
+                .orElseThrow(() -> new IllegalStateException(
+                        "Kein TIMECHEQUE_FEE Eintrag für das Datum " + date + " gefunden."));
+    }
+
+    private String validateData(Member member, TimeCheque timeCheque, int existingTimeCheques, boolean isSelfPurchase) {
         // Business Rule: TimeCheques can only be purchased if Member has less than 5 accumulated hours,
         // except for the first TimeCheque, which is free of charge.
         if (member.getAccumulatedHours() != null && member.getAccumulatedHours() >= NbhConst.MIN_HOURS_FOR_TIME_CHEQUE && existingTimeCheques > 0) {
             return "Zeitschecks können erst bei weniger als 5 Stunden Zeitguthaben erworben werden." +
                    " Aktuelles Zeitguthaben: " + member.getAccumulatedHours() + " Stunden.";
+        }
+        // Business Rule: Self-purchase of TimeCheques is only allowed if directDebitAuthorization is true.
+        if (isSelfPurchase && !member.getDirectDebitAuthorization()) {
+            return "Selbstkauf von Zeitschecks ist nur möglich wenn eine Lastschriftgenehmigung vorliegt.";
         }
         return null;
     }

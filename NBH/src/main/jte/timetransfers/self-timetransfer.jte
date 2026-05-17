@@ -1,3 +1,8 @@
+<!--
+  Copyright (c) 2025–2026 Maximilian Weißböck
+  Licensed under the MIT License (see LICENSE file).
+-->
+
 @import java.util.List
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
@@ -38,10 +43,12 @@
 
             <div class="row">
               <div class="col-auto">
-                <div class="card">
-                  <div class="card-body bg-success bg-opacity-25">
+                <div class="card shadow" style="background-color: #ECFEFF;">
+                  <div class="card-body">
 
-                    <h4 class="card-title text-primary">Zeitscheck übergeben</h4>
+                    <h4 class="card-title text-primary">Zeitschecks übergeben</h4>
+                    <hr/>
+                    Mein aktuelles Zeitguthaben: <b> ${ttf.getAccumulatedHours()} h</b>
                     <hr/>
                     <p class="card-text text-success">Ich - <strong>${ctxt.getFullName()}</strong> - übergebe einen Zeitscheck</p>
 
@@ -74,16 +81,16 @@
                     </div>
 
                     <!-- Service date: required date input (yyyy-mm-dd). Prefilled when editing. -->
-                    <label for="dateOfService" class="col-form-label">Datum</label>
+                    <label for="serviceDate" class="col-form-label">Datum</label>
                     <div class="col-sm-10">
-                          <input type="date" class="form-control" name="dateOfService" id="dateOfService"
+                          <input type="date" class="form-control" name="serviceDate" id="serviceDate"
                               value="${ttf == null ? "" : formatISO(ttf.getServiceDate())}" required>
                     </div>
 
                     <!-- Hours selector: choose 1..5 hours. Preselect when ttf provided. -->
                     <label for="stunden" class="col-form-label">Anzahl Stunden</label>
                     <div >
-                        <select class="form-select" name="hours" id="hoursSelect">
+                        <select class="form-select" name="hoursSelected" id="hoursSelect">
                             @for(int i = 1; i <= 5; i++)
                                 @if((ttf != null && ttf.getHoursSelected() != null) && ttf.getHoursSelected().equals(String.valueOf(i)))
                                     <option value="${i}" selected>@if(i == 1) 1 Stunde @else ${i} Stunden @endif</option>
@@ -187,7 +194,7 @@
 
         const userTo = document.getElementById("userToId");
         const offer = document.getElementById("offerId");
-        const dateOfService = document.getElementById("dateOfService");
+        const dateOfService = document.getElementById("serviceDate");
 
         const submitButton = document.getElementById("submitBtn");
         submitButton.disabled = true;
@@ -219,7 +226,7 @@
             list elements and do not have a value property.
         */
         function resetInputs() {
-            document.getElementById("dateOfService").value = "";
+            document.getElementById("serviceDate").value = "";
 
             document.getElementById("userToName").value = "";
             document.getElementById("userToId").value = "";
@@ -234,6 +241,7 @@
     </script>
 
 `)
+
 
 
 

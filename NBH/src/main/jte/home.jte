@@ -1,3 +1,8 @@
+<!--
+  Copyright (c) 2025–2026 Maximilian Weißböck
+  Licensed under the MIT License (see LICENSE file).
+-->
+
 @param String aboutUs = ""
 @param String contact = ""
 @param String events = ""
@@ -28,12 +33,16 @@
          <div class="col-12 col-lg-4 mb-3 ">
 
             <!-- Left column content (1/3) -->
+            <!--
             <img src="/images/nbh-logo-gelb.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
             <img src="/images/nbh-logo-neu-bg-white.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
+            -->
             <img src="/images/nbh-logo-neu.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
+            <!--
             <img src="/images/nbh-logo-neu-filled.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
+            -->
 
-            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow p-3 mb-5"
+            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-5"
             style="background-color: #ECFEFF;">
                 <h2>Kontakt</h2>
                 <p class="card-text">
@@ -52,7 +61,7 @@
         <div class="col-12 col-lg-8 mb-3">
             <!-- Right column content (2/3) -->
 
-            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow p-3 mb-5"
+            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-5"
                     style="background-color: #ECFEFF;">
                 <h2>Wer wir sind und was wir tun</h2>
                 <p class="card-text">
@@ -63,7 +72,7 @@
                 Weitere Informationen LINK-TBD
             </div>
 
-            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow p-3 mb-5"
+            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-5"
                     style="background-color: #ECFEFF;">
                 <h2>Termine und Veranstaltungen</h2>
                 <p class="card-text">

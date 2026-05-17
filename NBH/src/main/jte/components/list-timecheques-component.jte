@@ -1,6 +1,11 @@
 <!--
+  Copyright (c) 2025–2026 Maximilian Weißböck
+  Licensed under the MIT License (see LICENSE file).
+-->
 
-    This template displays a list of acquired time cheques.
+<!--
+
+    This reusable template displays a list of acquired time cheques.
 
     Usage:
     @template.components.list-timecheques-component(member = member, timeCheques = List<TimeCheque>)

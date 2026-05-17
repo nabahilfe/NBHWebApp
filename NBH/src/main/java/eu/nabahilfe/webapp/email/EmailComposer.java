@@ -1,10 +1,22 @@
+/*
+ * Copyright (c) 2025–2026 Maximilian Weißböck
+ * Licensed under the MIT License (see LICENSE file).
+ */
+
 package eu.nabahilfe.webapp.email;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 
 @Component
 public class EmailComposer {
+
+    private final String baseUrl;
+
+    public EmailComposer(@Value("${app.base-url}") String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
 
     public EmailDetails composeWelcomeEmail(String recipient, String name) {
         EmailDetails details = new EmailDetails(
@@ -27,7 +39,7 @@ public class EmailComposer {
             "<h3>Hallo " + name + "</h3>"
                     + "<p>"
                     + "Es gibt <strong>" + timeChecksToBook + "</strong> Zeitchecks zu verbuchen!<br>"
-                    + "<a href=\"https://nabahilfe.eu/\">Zeitschecks zu verbuchen</a>"
+                    + "<a href=\"" + baseUrl + "/timecheques/unaccounted\">Link zu den zu verbuchenden Zeitchecks</a>"
                     + "</p>"
         );
         return details;

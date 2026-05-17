@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025–2026 Maximilian Weißböck
+ * Licensed under the MIT License (see LICENSE file).
+ */
+
 package eu.nabahilfe.webapp.security;
 
 import org.springframework.security.core.Authentication;
@@ -21,6 +26,7 @@ public class SecurityUtils {
         return null;
     }
 
+
     public Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
@@ -28,6 +34,7 @@ public class SecurityUtils {
         }
         return null;
     }
+
 
     public Boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -39,6 +46,7 @@ public class SecurityUtils {
         return getCurrentUser() != null && getCurrentUser().getId().equals(memberId);
     }
 
+
     /**
      * Returns true if there is an authenticated current user and their id equals the provided id.
      * This centralizes the common "is authenticated and owns resource" check used in controllers.
@@ -46,6 +54,15 @@ public class SecurityUtils {
     public boolean isAuthenticatedAndMatches(Long memberId) {
         Member current = getCurrentUser();
         return current != null && current.getId() != null && current.getId().equals(memberId);
+    }
+
+
+    public boolean hasAnyRole(String... roles) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            return ((CustomUserDetails) authentication.getPrincipal()).hasAnyRole(roles);
+        }
+        return false;
     }
 
 }

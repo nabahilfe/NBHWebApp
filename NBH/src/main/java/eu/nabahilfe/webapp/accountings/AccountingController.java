@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025–2026 Maximilian Weißböck
+ * Licensed under the MIT License (see LICENSE file).
+ */
+
 package eu.nabahilfe.webapp.accountings;
 
 import java.time.LocalDate;
@@ -102,7 +107,7 @@ public class AccountingController {
     @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER')")
     @PostMapping("/save-accounting")
     @Transactional
-    public String saveAccountingEntry(final Model model,  @ModelAttribute @Valid AccountingEntry accountingEntry,
+    public String saveAccountingEntry(final Model model, @ModelAttribute @Valid AccountingEntry accountingEntry,
             BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         log.debug("Saving AccountingEntry: " + accountingEntry.toString());

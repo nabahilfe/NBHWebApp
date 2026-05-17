@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025–2026 Maximilian Weißböck
+ * Licensed under the MIT License (see LICENSE file).
+ */
+
 package eu.nabahilfe.webapp.email;
 
 import java.io.File;
@@ -21,7 +26,7 @@ public class EmailService implements IEmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
-    private EmailComposer emailComposer = new EmailComposer();
+    
 
     @Value("${spring.mail.username}") private String sender;
 

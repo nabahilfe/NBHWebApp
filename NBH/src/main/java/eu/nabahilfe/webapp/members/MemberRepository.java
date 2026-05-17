@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025–2026 Maximilian Weißböck
+ * Licensed under the MIT License (see LICENSE file).
+ */
+
 package eu.nabahilfe.webapp.members;
 
 import org.springframework.data.domain.Page;
@@ -18,8 +23,8 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     List<Member> findByRole(Role role);
 
     @EntityGraph(attributePaths = "role")
-    Page<Member> findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCase(
-            String lastName, String firstName, Pageable pageable);
+    Page<Member> findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
+            String lastName, String firstName, Integer memberNmbr, Pageable pageable);    
 
     @EntityGraph(attributePaths = "role")
     List<Member> findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrStreetContainingIgnoreCase(
@@ -73,5 +78,15 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
         "WHERE r.isBoardMember = true OR r.isTreasurer = true OR r.isSecretary = true " +
         "ORDER BY m.lastName ASC")
     List<Member> findBoardMembers();
+
+    /** Returns [year, joinedCount] grouped by joiningDate year, ordered ascending */
+    @Query("SELECT YEAR(m.joiningDate), COUNT(m) FROM Member m GROUP BY YEAR(m.joiningDate) ORDER BY YEAR(m.joiningDate) ASC")
+    List<Object[]> findJoinedCountPerYear();
+
+    /** Returns [year, resignedCount] grouped by resignationDate year, ordered ascending */
+    @Query("SELECT YEAR(m.resignationDate), COUNT(m) FROM Member m WHERE m.resignationDate IS NOT NULL GROUP BY YEAR(m.resignationDate) ORDER BY YEAR(m.resignationDate) ASC")
+    List<Object[]> findResignedCountPerYear();
+
+	List<Member> findBySalutationIgnoreCase(String sozialkontoSalutation);
 
 }

@@ -1,16 +1,21 @@
+/*
+ * Copyright (c) 2025–2026 Maximilian Weißböck
+ * Licensed under the MIT License (see LICENSE file).
+ */
+
 package eu.nabahilfe.webapp.timecheques;
 
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 
 import eu.nabahilfe.webapp.members.Member;
 
 
 public interface TimeChequeRepository extends ListCrudRepository<TimeCheque, Long> {
-
 
     Page<TimeCheque> findAll(Pageable pageable);
 
@@ -20,16 +25,31 @@ public interface TimeChequeRepository extends ListCrudRepository<TimeCheque, Lon
 
     List<TimeCheque> findAllByAssignedTo_IdOrderByTransactionDateDesc(Long assignedTo);
 
+    @Query("SELECT t FROM TimeCheque t WHERE t.assignedTo.id = :memberId AND YEAR(t.transactionDate) = :year ORDER BY t.transactionDate DESC")
+    List<TimeCheque> findAllByAssignedTo_IdAndYearOrderByTransactionDateDesc(Long memberId, int year);
+
     List<TimeCheque> findAllByAccountedBy_IdIsNullAndAmountGreaterThanOrderByTransactionDateAsc(Double amount);
+
+    Integer countByAccountedBy_IdIsNullAndAmountGreaterThan(Double amount);
 
     TimeCheque findTopByAssignedTo_IdOrderByTransactionDateDesc(Long assignedTo);
 
+    /** Returns [memberFullName, totalHours, chequeCount] per member for all time cheques in the given year, sorted by total hours desc */
+    @Query("""
+            SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
+            FROM TimeCheque t JOIN t.assignedTo m
+            WHERE YEAR(t.transactionDate) = :year
+            GROUP BY m.id, m.firstName, m.lastName
+            ORDER BY SUM(t.hours) DESC
+            """)
+    List<Object[]> findStatsByYear(int year);
+
+    /** Returns [memberFullName, totalHours, chequeCount] per member for ALL time cheques (all years), sorted by total hours desc */
+    @Query("""
+            SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
+            FROM TimeCheque t JOIN t.assignedTo m
+            GROUP BY m.id, m.firstName, m.lastName
+            ORDER BY SUM(t.hours) DESC
+            """)
+    List<Object[]> findStatsAllYears(org.springframework.data.domain.Pageable pageable);
 }
-
-
-/*
-List<TimeCheque> findAllByAccountedByIsNullOrderByOrderDateAsc():
-
-SELECT t FROM TimeCheque t WHERE t.accountedBy IS NULL ORDER BY t.orderDate ASC
-*/
-

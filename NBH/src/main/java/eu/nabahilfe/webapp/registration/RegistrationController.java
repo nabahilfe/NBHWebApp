@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025–2026 Maximilian Weißböck
+ * Licensed under the MIT License (see LICENSE file).
+ */
+
 package eu.nabahilfe.webapp.registration;
 
 import java.time.LocalDateTime;
@@ -63,13 +68,12 @@ public class RegistrationController {
 
 
     public RegistrationController(MemberRepository memberRepository, RegistrationCodeRepository registrationCodeRepository,
-            PasswordEncoder passwordEncoder, EmailService emailService) {
+            PasswordEncoder passwordEncoder, EmailService emailService, EmailComposer emailComposer) {
         this.memberRepository = memberRepository;
         this.registrationCodeRepository = registrationCodeRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
-        this.emailComposer = new EmailComposer();
-
+        this.emailComposer = emailComposer;
     }
 
 
@@ -198,7 +202,7 @@ public class RegistrationController {
 
 
     @GetMapping("/login")
-    public String showLoginForm(@RequestParam(value = "error", required = false) String error, Model model, HttpServletRequest request) {
+    public String showLoginForm(@RequestParam(required = false) String error, Model model, HttpServletRequest request) {
         if ("true".equals(error)) {
             model.addAttribute("errorMessage", "E-Mail oder Passwort falsch!");
         }

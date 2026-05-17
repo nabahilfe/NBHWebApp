@@ -1,7 +1,13 @@
+<!--
+  Copyright (c) 2025–2026 Maximilian Weißböck
+  Licensed under the MIT License (see LICENSE file).
+-->
+
 @import java.util.List
 @import java.time.LocalDate
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
+@import eu.nabahilfe.webapp.NbhConst
 
 @import eu.nabahilfe.webapp.members.Salutation
 @import eu.nabahilfe.webapp.members.Member
@@ -22,6 +28,10 @@
 
 @param Integer numberOfTimecheques = null
 
+@param java.lang.String joiningDateMin = null
+@param java.lang.String resignationDateMax = null
+
+@param int selectedYear = LocalDate.now().getYear()
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
@@ -46,8 +56,8 @@
 
             <div class="form-group row">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-body bg-success bg-opacity-10">
+                    <div class="card shadow" style="background-color: #ECFEFF;"">
+                        <div class="card-body">
 
                             <h5>Persönliche Daten</h5>
 
@@ -83,6 +93,28 @@
                                 <input type="date" class="form-control" name="birthdate" id="birthdate" value="${formatISO(member.getBirthdate())}" required>
                             </div>
 
+                            <label for="joiningDate" class="col col-form-label">Beitrittsdatum</label>
+                            <div class="col">
+                                @if(member.getId() != null)
+                                    <input type="date" class="form-control" name="joiningDate" id="joiningDate"
+                                           value="${member.getJoiningDate() != null ? formatISO(member.getJoiningDate()) : ""}" readonly>
+                                @else
+                                    <input type="date" class="form-control" name="joiningDate" id="joiningDate"
+                                           value="${member.getJoiningDate() != null ? formatISO(member.getJoiningDate()) : ""}"
+                                           min="${joiningDateMin != null ? joiningDateMin : ""}"
+                                           placeholder="JJJJ-MM-01">
+                                    <div class="form-text">Muss immer der 1. eines Monats sein, max. 3 Monate in der Vergangenheit.</div>
+                                @endif
+                            </div>
+
+                            <label for="resignationDate" class="col col-form-label">Austrittsdatum</label>
+                            <div class="col">
+                                <input type="date" class="form-control" name="resignationDate" id="resignationDate"
+                                       value="${member.getResignationDate() != null ? formatISO(member.getResignationDate()) : ""}"
+                                       max="${resignationDateMax != null ? resignationDateMax : ""}">
+                                <div class="form-text">Muss immer der letzte Tag eines Monats sein, max. 3 Monate in der Zukunft.</div>
+                            </div>
+
                             <label for="role" class="col col-form-label">Rolle</label>
                             <div class="col">
                                 <select class="form-select" name="role" id="role">
@@ -97,6 +129,7 @@
 
                             @if(member.getId() != null)
                                 <br/>
+                                <b>Mitgliedsnummer: ${member.getMemberNmbr()}</b> -
                                 <b>Zeitguthaben: ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() : 0} h</b>
                             @endif
 
@@ -106,14 +139,27 @@
                 </div>
 
                 <div class="col">
-                    <div class="card">
-                        <div class="card-body bg-success bg-opacity-10">
+                    <div class="card shadow" style="background-color: #ECFEFF;"">
+                        <div class="card-body">
 
                             <h5>Kontaktdaten & Adresse</h5>
 
                             <label for="email" class="col col-form-label">E-Mail</label>
                             <div class="col">
-                                <input type="text" class="form-control" name="email" id="email" value="${member.getEmail()}">
+                                <input type="email" class="form-control" name="email" id="email"
+                                       value="${member.getEmail() != null ? member.getEmail() : ""}"
+                                       pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                                       title="Bitte eine gültige E-Mail-Adresse eingeben (z.B. name@beispiel.de).">
+                                <div class="form-text">Format: name@domain.tld</div>
+                            </div>
+
+                            <label for="phoneNumber" class="col col-form-label">Telefon</label>
+                            <div class="col">
+                                <input type="tel" class="form-control" name="phoneNumber" id="phoneNumber"
+                                       value="${member.getPhoneNumber() != null ? member.getPhoneNumber() : ""}"
+                                       pattern="[+0][0-9 ]*"
+                                       title="Telefonnummer muss mit + oder 0 beginnen und darf nur Ziffern und einzelne Leerzeichen enthalten.">
+                                <div class="form-text">Format: beginnt mit + (dann keine 0 für die Vorwahl) oder 0, nur Ziffern und Leerzeichen erlaubt.</div>
                             </div>
 
                             <label for="institution" class="col col-form-label">Institution</label>
@@ -153,18 +199,17 @@
                                 </label>
                             </div>
 
-                            <!-- Hidden mirrors to submit disabled values -->
-                            <input type="hidden" id="firstName-hidden">
-                            <input type="hidden" id="lastName-hidden">
-                            <input type="hidden" id="institution-hidden">
-                            <input type="hidden" id="role-hidden">
-                            <input type="hidden" id="title-hidden">
-                            <input type="hidden" id="email-hidden">
+
                         </div>
                     </div>
                 </div>
 
             </div>
+
+            <br/>
+            <p>
+                <i>Letztes Update: ${dateTimeDE(member.getUpdatedAt())}</i>
+            </p>
 
             <br/>
 
@@ -187,7 +232,7 @@
 
     @if(member.getId() != null)
 
-        @if(member.getSalutation() != null && member.getSalutation().equals("SOZIALKONTO"))
+        @if(member.getSalutation() != null && member.getSalutation().equalsIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION))
             <div class="alert alert-warning py-2 px-3" role="alert">
                 Sozialkonto der Nachbarschaftshilfe. Zeitschecks können nur durch Spenden von anderen Mitgliedern hinzugefügt werden, nicht durch kaufen.
             </div>
@@ -205,53 +250,64 @@
 
         <br/>
 
-        <div class="row">
-            <div class="col-sm-12 mb-3 mb-sm-0">
 
-                <ul class="nav nav-tabs" id="memberDetailTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="timecheques-tab" data-bs-toggle="tab" data-bs-target="#timecheques-pane" type="button" role="tab" aria-controls="timecheques-pane" aria-selected="true">
-                            Zeitschecks gekauft
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="transfers-tab" data-bs-toggle="tab" data-bs-target="#transfers-pane" type="button" role="tab" aria-controls="transfers-pane" aria-selected="false">
-                            Zeitschecks übergeben
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="received-tab" data-bs-toggle="tab" data-bs-target="#received-pane" type="button" role="tab" aria-controls="received-pane" aria-selected="false">
-                            Zeitschecks erhalten
-                        </button>
-                    </li>
-                </ul>
+    	@template.components.list-timecheque-data-component(member = member, timeCheques = purchasedTimeCheques, transfersGiven = givenTimeTransfers, 
+    			transfersReceived = receivedTimeTransfers, selectedYear = selectedYear)
 
-                <div class="tab-content" id="memberDetailTabsContent">
-                    <div class="tab-pane fade show active" id="timecheques-pane" role="tabpanel" aria-labelledby="timecheques-tab" tabindex="0">
-                        <div>
-                            @template.components.list-timecheques-component(member = member, timeCheques = purchasedTimeCheques)
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="transfers-pane" role="tabpanel" aria-labelledby="transfers-tab" tabindex="0">
-                        <div>
-                            @template.components.list-timetransfers-given-component(member = member, transfers = givenTimeTransfers)
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="received-pane" role="tabpanel" aria-labelledby="received-tab" tabindex="0">
-                        <div>
-                            @template.components.list-timetransfers-received-component(member = member, transfers = receivedTimeTransfers)
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
     @endif
 
     <script>
         (function() {
-            const salutation = document.getElementById('salutation');
+            // Phone number validation: must start with + or 0, only digits and single spaces
+            const phoneInput = document.getElementById('phoneNumber');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function() {
+                    let val = this.value;
+                    // Remove any character that is not +, digit or space
+                    val = val.replace(/[^+0-9 ]/g, '');
+                    // Ensure it starts with + or 0 only
+                    if (val.length > 0 && val[0] !== '+' && val[0] !== '0') {
+                        val = val.substring(1);
+                    }
+                    // + only allowed at position 0
+                    if (val.length > 0) val = val[0] + val.substring(1).replace(/\+/g, '');
+                    // Collapse consecutive spaces into a single space
+                    val = val.replace(/ {2,}/g, ' ');
+                    this.value = val;
+                });
+
+                phoneInput.addEventListener('blur', function() {
+                    const pattern = /^[+0][0-9 ]*$/;
+                    if (this.value && !pattern.test(this.value)) {
+                        this.setCustomValidity('Telefonnummer muss mit + oder 0 beginnen und darf nur Ziffern und einzelne Leerzeichen enthalten.');
+                        this.reportValidity();
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            }
+
+            // Email validation
+            const emailInput = document.getElementById('email');
+            if (emailInput) {
+                const emailPattern = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+
+                emailInput.addEventListener('input', function() {
+                    // Strip whitespace silently as the user types
+                    this.value = this.value.replace(/\s/g, '');
+                    this.setCustomValidity('');
+                });
+
+                emailInput.addEventListener('blur', function() {
+                    if (this.value && !emailPattern.test(this.value)) {
+                        this.setCustomValidity('Bitte eine gültige E-Mail-Adresse eingeben (z.B. name@beispiel.de).');
+                        this.reportValidity();
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            }
+
             const title = document.getElementById('title');
             const firstName = document.getElementById('firstName');
             const lastName = document.getElementById('lastName');
@@ -259,79 +315,63 @@
             const institution = document.getElementById('institut');
             const role = document.getElementById('role');
             const directDebitAuthorization = document.getElementById('directDebitAuthorization');
-
-            const firstNameHidden = document.getElementById('firstName-hidden');
-            const lastNameHidden = document.getElementById('lastName-hidden');
-            const institutionHidden = document.getElementById('institution-hidden');
-            const roleHidden = document.getElementById('role-hidden');
-            const titleHidden = document.getElementById('title-hidden');
-            const emailHidden = document.getElementById('email-hidden');
+            const birthdate = document.getElementById('birthdate');
+            const joiningDate = document.getElementById('joiningDate');
+            const resignationDate = document.getElementById('resignationDate');
+            const street = document.getElementById('street');
+            const numberField = document.getElementById('number');
+            const zip = document.getElementById('zip');
+            const city = document.getElementById('city');
 
             const isExisting = ${member.getId() != null};
             const savedSalutation = '${member.getSalutation() != null ? member.getSalutation() : ""}';
 
-            // Preserve user-entered values when toggling Sozialkonto on/off
-            const snapshot = {
-                title: title.value,
-                firstName: firstName.value,
-                lastName: lastName.value,
-                email: email.value,
-                institution: institution.value,
-                role: role.value,
-                directDebitAuthorization: directDebitAuthorization.checked
-            };
-
-            const mirror = (field, hidden, enabled) => {
-                if (enabled) {
-                    hidden.removeAttribute('name');
-                    hidden.value = '';
-                    field.disabled = false;
-                } else {
-                    hidden.name = field.name;
-                    hidden.value = field.value;
-                    field.disabled = true;
-                }
-            };
-
             const applySocialLock = (enable) => {
                 if (enable) {
-                    snapshot.title = title.value;
-                    snapshot.firstName = firstName.value;
-                    snapshot.lastName = lastName.value;
-                    snapshot.email = email.value;
-                    snapshot.institution = institution.value;
-                    snapshot.role = role.value;
-                    snapshot.directDebitAuthorization = directDebitAuthorization.checked;
+                    // apply fixed Sozialkonto values; readOnly keeps them in the POST
+                    if (title)       { title.value = '';                                        title.readOnly = true; }
+                    if (firstName)   { firstName.value = '${NbhConst.SOZIALKONTO_FIRST_NAME}';  firstName.readOnly = true; }
+                    if (lastName)    { lastName.value  = '${NbhConst.SOZIALKONTO_LAST_NAME}';   lastName.readOnly  = true; }
+                    if (institution) { institution.value = '${NbhConst.SOZIALKONTO_LAST_NAME}'; institution.readOnly = true; }
+                    if (role)        { role.value = ''; role.disabled = true; }
 
-                    title.value = '';
-                    institution.value = 'Nachbarschaftshilfe';
-                    firstName.value = 'SOZIALKONTO';
-                    lastName.value = 'NACHBARSCHAFTSHILFE';
-                    role.value = '';
+                    if (directDebitAuthorization) { directDebitAuthorization.disabled = true; directDebitAuthorization.checked = false; }
 
-                    mirror(title, titleHidden, false);
-                    mirror(institution, institutionHidden, false);
-                    mirror(firstName, firstNameHidden, false);
-                    mirror(lastName, lastNameHidden, false);
-                    mirror(role, roleHidden, false);
+                    if (birthdate) { birthdate.value = '2000-01-01'; birthdate.readOnly = true; }
+                    if (joiningDate) {
+                        const now = new Date();
+                        const mm = String(now.getMonth() + 1).padStart(2, '0');
+                        joiningDate.value = now.getFullYear() + '-' + mm + '-01';
+                        joiningDate.readOnly = true;
+                        joiningDate.removeAttribute('min');
+                    }
+                    if (resignationDate) { resignationDate.value = ''; resignationDate.readOnly = true; }
+                    if (phoneInput)  { phoneInput.readOnly  = true; }
+                    if (email)       { email.readOnly       = true; }
+                    if (street)      { street.value = '-';      street.readOnly      = true; }
+                    if (numberField) { numberField.value = '-'; numberField.readOnly = true; }
+                    if (zip)         { zip.value = '-';         zip.readOnly         = true; }
+                    if (city)        { city.value = '-';        city.readOnly        = true; }
 
-                    directDebitAuthorization.disabled = true;
-                    directDebitAuthorization.checked = false;
                 } else {
-                    mirror(title, titleHidden, true);
-                    mirror(institution, institutionHidden, true);
-                    mirror(firstName, firstNameHidden, true);
-                    mirror(lastName, lastNameHidden, true);
-                    mirror(role, roleHidden, true);
+                    // just unlock — never touch .value; the server-rendered values are already correct
+                    if (title)       title.readOnly = false;
+                    if (firstName)   firstName.readOnly = false;
+                    if (lastName)    lastName.readOnly  = false;
+                    if (institution) institution.readOnly = false;
+                    if (role)        { role.disabled = false; }
 
-                    title.value = snapshot.title;
-                    institution.value = snapshot.institution;
-                    firstName.value = snapshot.firstName;
-                    lastName.value = snapshot.lastName;
-                    role.value = snapshot.role;
+                    if (directDebitAuthorization) directDebitAuthorization.disabled = false;
 
-                    directDebitAuthorization.disabled = false;
-                    directDebitAuthorization.checked = snapshot.directDebitAuthorization;
+                    if (birthdate)       birthdate.readOnly       = false;
+                    if (joiningDate)     joiningDate.readOnly     = false;
+                    if (resignationDate) resignationDate.readOnly = false;
+                    if (phoneInput)      phoneInput.readOnly      = false;
+                    if (email)           email.readOnly           = false;
+                    if (street)          street.readOnly          = false;
+                    if (numberField)     numberField.readOnly     = false;
+                    if (zip)             zip.readOnly             = false;
+                    if (city)            city.readOnly            = false;
                 }
             };
 
@@ -341,22 +381,22 @@
                     return;
                 }
 
-                if (savedSalutation === 'SOZIALKONTO') {
+                if (savedSalutation === '${NbhConst.SOZIALKONTO_SALUTATION}') {
                     options.forEach(opt => {
-                        opt.disabled = opt.value !== 'SOZIALKONTO';
-                        opt.hidden = opt.value !== 'SOZIALKONTO';
+                        opt.disabled = opt.value !== '${NbhConst.SOZIALKONTO_SALUTATION}';
+                        opt.hidden = opt.value !== '${NbhConst.SOZIALKONTO_SALUTATION}';
                     });
-                    salutation.value = 'SOZIALKONTO';
+                    salutation.value = '${NbhConst.SOZIALKONTO_SALUTATION}';
                     salutation.disabled = true;
                 } else {
                     options
-                        .filter(opt => opt.value === 'SOZIALKONTO')
+                        .filter(opt => opt.value === '${NbhConst.SOZIALKONTO_SALUTATION}')
                         .forEach(opt => opt.remove());
                 }
             };
 
             const handleSalutationChange = () => {
-                const isSocial = salutation.value === 'SOZIALKONTO';
+                const isSocial = salutation.value === '${NbhConst.SOZIALKONTO_SALUTATION}';
                 applySocialLock(isSocial);
             };
 
@@ -367,6 +407,7 @@
     </script>
 
 `)
+
 
 
 

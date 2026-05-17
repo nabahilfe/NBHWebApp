@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025–2026 Maximilian Weißböck
+ * Licensed under the MIT License (see LICENSE file).
+ */
+
 package eu.nabahilfe.webapp;
 
 import java.lang.reflect.Field;
@@ -9,7 +14,13 @@ import jakarta.persistence.PreUpdate;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.security.SecurityUtils;
 
-
+/**
+ * JPA Entity Listener to automatically set createdBy and updatedBy fields based on the currently authenticated user.
+ * It uses reflection to check if the entity has these fields and sets them if they are null (for createdBy) or always (for updatedBy).
+ * This allows us to have audit information on who created or last updated an entity without having to manually set it in each service method.
+ * 
+ * To actually activate this listener on an entity, the entity class needs to be annotated with: @EntityListeners(GlobalAuditListener.class)
+ */
 @Component
 public class GlobalAuditListener {
 

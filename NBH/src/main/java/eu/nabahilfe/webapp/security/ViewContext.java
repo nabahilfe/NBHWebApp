@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025–2026 Maximilian Weißböck
+ * Licensed under the MIT License (see LICENSE file).
+ */
+
 package eu.nabahilfe.webapp.security;
 
 public class ViewContext {
@@ -54,14 +59,16 @@ public class ViewContext {
         return user != null && user.isTimeKeeper() ? true : false;
     }
 
-
     public boolean hasAnyRole(String...roles) {
         return user != null && user.hasAnyRole(roles) ? true : false;
     }
 
-
     public boolean hasRole(String role) {
         return user != null && user.hasAnyRole(role) ? true : false;
     }
-
+    
+    public boolean isSystemAdmin() {
+		return user != null && user.isSystemAdmin() ? true : false;
+	}
+    
 }

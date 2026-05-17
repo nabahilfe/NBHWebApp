@@ -1,7 +1,13 @@
+<!--
+  Copyright (c) 2025–2026 Maximilian Weißböck
+  Licensed under the MIT License (see LICENSE file).
+-->
+
 @import java.util.List
 @import java.time.LocalDate
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
+@import static eu.nabahilfe.webapp.NumberFormatter.*
 @import static eu.nabahilfe.webapp.jte.TemplateHelpers.*
 
 @import eu.nabahilfe.webapp.NbhConst
@@ -10,6 +16,8 @@
 
 @param TimeCheque timeCheque
 @param List<TimeCheque> purchasedTimeCheques
+
+@param Float pricePerHour
 
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
@@ -27,87 +35,90 @@
 
     <div class="container d-flex justify-content-center">
 
-        <form id="tcForm" action="/timecheques" method="POST">
-            ${csrfHiddenInput}
-
             <div class="row">
                 <div class="col-auto">
-                    <div class="card">
-                        <div class="card-body bg-success bg-opacity-25">
+                    <div class="card shadow" style="background-color: #ECFEFF;"">
+                        <div class="card-body">
 
-                            <h4 class="card-title text-primary">Zeitscheck erstellen / kaufen für</h4>
-                            <hr/>
-                            <h4>${timeCheque.getAssignedTo().getName()}</h4>
-                            <h5>${timeCheque.getAssignedTo().getAddress()}</h5>
-                            <hr/>
+                            <form id="tcForm" action="/timecheques" method="POST">
+                                ${csrfHiddenInput}
 
-                            Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours() == null ? 0
-                                    : timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
-                            <br/>
-                            ${timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS ? "Kostenlos bei Eintritt" : "Kauf von Zeitschecks"}:
-                            <b>${timeCheque.getHours()} h</b>
+                                <h4 class="card-title text-primary">Zeitschecks erstellen für</h4>
+                                <hr/>
+                                <h4>${timeCheque.getAssignedTo().getName()}</h4>
+                                <h5>${timeCheque.getAssignedTo().getAddress()}</h5>
+                                <hr/>
 
-                            @if (timeCheque.getHours() != NbhConst.FIRST_TIME_CHEQUE_HOURS)
+                                Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours() == null ? 0
+                                        : timeCheque.getAssignedTo().getAccumulatedHours()} h</b>
+
                                 <br/>
-                                Kosten: <b>${timeCheque.getHours()} € FIXME - Berechnen!</b>
-                            @endif
 
-                            <div class="row g-3 align-items-center">
-                                <div class="col-auto">
-                                    <label for="orderDate" class="col-form-label">Erstellungsdatum:</label>
+                                @if(timeCheque.getHours() == NbhConst.FIRST_TIME_CHEQUE_HOURS)
+
+                                    Kostenlos bei Eintritt: <b>${timeCheque.getHours()} h</b>
+                                    <input type="hidden" name="hours" value="${timeCheque.getHours()}">
+
+                                @else
+
+                                    Kauf von Zeitschecks:
+                                    <select name="hours" id="hours" class="form-select d-inline-block w-auto" onchange="calculatePrice()">
+                                        <option value="10" selected>10 h</option>
+                                        <option value="20">20 h</option>
+                                    </select>
+
+                                    <br/>
+                                    Kosten: <b><span id="calculatedPrice"></span> €</b>
+
+                                @endif
+
+                                <div class="row g-3 align-items-center">
+                                    <div class="col-auto">
+                                        <label for="orderDate" class="col-form-label">Erstellungsdatum:</label>
+                                        <b>${dateReverseDE(timeCheque.getTransactionDate())}</b>
+                                        <input type="hidden" name="orderDate" value="${formatISO(timeCheque.getTransactionDate())}">
+                                    </div>
                                 </div>
-                                <div class="col-auto">
-                                    <input type="date" class="form-control" name="orderDate" id="orderDate" value="${formatISO(timeCheque.getTransactionDate())}" required>
-                                </div>
-                            </div>
+
+                                @if (errorMessage == null)
+                                    <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
+                                    <hr/>
+                                    <div class="text-center">
+                                        Zeitschecks für <b>${timeCheque.getAssignedTo().getName()}</b>
+                                        <br/>
+                                        <br/>
+                                        <button type="button" class="btn btn-primary bi-plus-square" data-bs-toggle="modal" data-bs-target="#confirmModal"
+                                                data-item-id="${timeCheque.getAssignedTo().getId()}">
+                                                @if (timeCheque.getHours() != NbhConst.FIRST_TIME_CHEQUE_HOURS)
+                                                    Zeitschecks kaufen
+                                                @else
+                                                    Zeitschecks zuweisen
+                                                @endif
+                                        </button>
+                                    </div>
+                                @endif
+                            </form>
 
                         </div>
                     </div>
 
                 </div>
-            </div>
 
-        </form>
+            </div>
 
     </div>
 
-
-    @if (errorMessage == null)
-        <br/>
-        <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
-            data-item-id="${timeCheque.getAssignedTo().getId()}">Erstellen️️</button>
-    @endif
 
 
     <br/>
     @template.components.display-statusmessage(successMessage, errorMessage)
 
     <br/>
+
     <div class="card">
-        <div class="card-body">
-            <h5>Erworbene Zeitschecks</h5>
 
-            <table class="table table-hover table-sm" id="memberTable">
-                <thead>
-                    <tr>
-                        <th scope="col">Datum</th>
-                        <th scope="col">erstellt von</th>
-                        <th scope="col" class="text-end">Stunden</th>
-                    </tr>
-                </thead>
-                <tbody class="table-group-divider">
-                    @for (TimeCheque tc : purchasedTimeCheques)
-                    <tr>
-                        <td>${dateDE(tc.getTransactionDate())}</td>
-                        <td>${tc.getCreatedBy().getName()}</td>
-                        <td class="text-end">${tc.getHours()}</td>
-                    </tr>
-                    @endfor
-                </tbody>
-            </table>
+       @template.components.list-timecheques-component(member = timeCheque.getAssignedTo(), timeCheques = purchasedTimeCheques)
 
-        </div>
     </div>
 
 
@@ -138,6 +149,17 @@
 
 
     <script>
+        const pricePerHour = ${pricePerHour};
+
+        function calculatePrice() {
+            const hours = parseInt(document.getElementById('hours').value);
+            const priceSpan = document.getElementById('calculatedPrice');
+            if (priceSpan) {
+                priceSpan.textContent = (hours * pricePerHour).toFixed(2);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', calculatePrice);
+
         var modalPanel = document.getElementById('confirmModal');
 
         // save the selectet id inside the modal so we have acces to upon delete confirm
@@ -172,4 +194,5 @@
     </script>
 
 `)
+
 

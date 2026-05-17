@@ -1,4 +1,9 @@
 <!--
+  Copyright (c) 2025–2026 Maximilian Weißböck
+  Licensed under the MIT License (see LICENSE file).
+-->
+
+<!--
     Displays a list of board members (Vorstand, Kassier, Schriftführer)
     with their full name and role name.
 

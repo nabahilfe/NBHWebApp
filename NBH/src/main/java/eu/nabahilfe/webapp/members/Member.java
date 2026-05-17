@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025–2026 Maximilian Weißböck
+ * Licensed under the MIT License (see LICENSE file).
+ */
+
 package eu.nabahilfe.webapp.members;
 
 import java.io.Serializable;
@@ -9,6 +14,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import eu.nabahilfe.webapp.GlobalAuditListener;
+import eu.nabahilfe.webapp.NbhConst;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -66,6 +72,9 @@ public class Member implements Serializable {
     @Size(max = 80)
     @Email
     private String email;    // muss immer in lower-case gespeichert werden!
+
+    @Size(max = 30)
+    private String phoneNumber;    // Telefonnummer des Mitglieds
 
     @Size(max = 250)
     private String password;
@@ -193,6 +202,14 @@ public class Member implements Serializable {
         this.email = email;
     }
 
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public String getPassword() {
         return password;
@@ -402,7 +419,28 @@ public class Member implements Serializable {
         return getName() + " - " + getAddress();
     }
 
+    
+    public boolean isSystemAdmin() {
+		if (firstName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME) && lastName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_LAST_NAME)
+				&& role != null && role.getIsAdmin()) return true;
+		return false;
+	}
+    
+    public boolean isAdmin() {
+    	return role != null && role.getIsAdmin();
+    }
 
+    public boolean isSozialkonto() {
+		if (firstName.equalsIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME) && lastName.equalsIgnoreCase(NbhConst.SOZIALKONTO_LAST_NAME)
+				&& salutation.equalsIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION)) return true;
+		return false;
+    }
+    
+    public boolean isSystemMember() {
+		return isSystemAdmin() || isSozialkonto();
+	}
+
+    
     public String getEmailSalutation() {
         String name = "";
         if (salutation.equals(Salutation.Herr.name())) name += "Lieber ";
