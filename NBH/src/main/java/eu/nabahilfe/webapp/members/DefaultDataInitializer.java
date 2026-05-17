@@ -17,16 +17,16 @@ import eu.nabahilfe.webapp.org.OfferRepository;
  */
 @Component
 @Order(1)
-public class AdminRoleInitializer implements CommandLineRunner {
+public class DefaultDataInitializer implements CommandLineRunner {
 
-    private static final Logger log = LoggerFactory.getLogger(AdminRoleInitializer.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultDataInitializer.class);
 
     private final RoleRepository roleRepository;
     private final MemberRepository memberRepository;
     private final OfferRepository offerRepository;
 
     
-    public AdminRoleInitializer(RoleRepository roleRepository, MemberRepository memberRepository, OfferRepository offerRepository) {
+    public DefaultDataInitializer(RoleRepository roleRepository, MemberRepository memberRepository, OfferRepository offerRepository) {
         this.roleRepository = roleRepository;
         this.memberRepository = memberRepository;	
         this.offerRepository = offerRepository;
@@ -198,7 +198,7 @@ public class AdminRoleInitializer implements CommandLineRunner {
 		
         // Obmann Stv.
 		role = new Role();
-		role.setRoleName("Obmann Stv");
+		role.setRoleName("Obmann Stv.");
 		role.setIsBoardMember(true);
 		role.setIsTreasurer(false);
 		role.setIsSecretary(false);
@@ -226,7 +226,7 @@ public class AdminRoleInitializer implements CommandLineRunner {
 		
         // Kassier Stv.
 		role = new Role();
-		role.setRoleName("Kassier Stv");
+		role.setRoleName("Kassier Stv.");
 		role.setIsBoardMember(false);
 		role.setIsTreasurer(true);
 		role.setIsSecretary(false);
@@ -254,7 +254,7 @@ public class AdminRoleInitializer implements CommandLineRunner {
 		
         // Rechnungsprüfer Stv.
 		role = new Role();
-		role.setRoleName("Rechnungsprüfer Stv");
+		role.setRoleName("Rechnungsprüfer Stv.");
 		role.setIsBoardMember(false);
 		role.setIsTreasurer(false);
 		role.setIsSecretary(false);
@@ -282,7 +282,7 @@ public class AdminRoleInitializer implements CommandLineRunner {
 		
         // Schriftführer Stv.
 		role = new Role();
-		role.setRoleName("Rechnungsprüfer Stv");
+		role.setRoleName("Schriftführer Stv.");
 		role.setIsBoardMember(false);
 		role.setIsTreasurer(false);
 		role.setIsSecretary(true);
