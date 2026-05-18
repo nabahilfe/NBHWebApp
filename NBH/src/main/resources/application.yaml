@@ -19,6 +19,8 @@ spring:
 
     jpa:
         show-sql: false
+        # optimize for development, for production consider fixing OSIV access and setting show-sql to false
+        open-in-view: true
         properties:
             hibernate:
                 format_sql: false
