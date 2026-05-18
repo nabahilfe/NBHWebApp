@@ -61,7 +61,7 @@ public class RegistrationController {
         }
         else {
             RegisterConfirmForm form = new RegisterConfirmForm();
-            form.setEmail(session.getEmail());
+            form.setUsername(session.getEmail());
             return form; // Formular mit vorausgefüllter E-Mail, da gültiger Session-Status vorhanden
         }
     }
@@ -126,7 +126,7 @@ public class RegistrationController {
         }
 
         RegisterConfirmForm form = new RegisterConfirmForm();
-        form.setEmail(session.getEmail());
+        form.setUsername(session.getEmail());
         model.addAttribute("form", form);
 
         return "registration/confirm";

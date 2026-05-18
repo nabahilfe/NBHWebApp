@@ -54,6 +54,11 @@
                    required>
             <div class="invalid-feedback">Bitte das Passwort eingeben.</div>
         </div>
+        
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
+            <label class="form-check-label" for="remember-me">Angemeldet bleiben</label>
+        </div>
 
         <button type="submit" class="btn btn-primary">Anmelden</button>
     </form>

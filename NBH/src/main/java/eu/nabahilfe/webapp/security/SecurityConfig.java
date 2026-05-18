@@ -5,6 +5,8 @@
 
 package eu.nabahilfe.webapp.security;
 
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +14,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 
 @Configuration
@@ -21,7 +25,8 @@ public class SecurityConfig {
     private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http, PersistentTokenRepository tokenRepository,
+            CustomUserDetailsService userDetailsService) throws Exception {
 
         http
             .authorizeHttpRequests(auth -> auth
@@ -39,7 +44,7 @@ public class SecurityConfig {
             .formLogin(form -> form
                 .loginPage("/registration/login")            // page
                 .loginProcessingUrl("/registration/login")     // form action
-                .successHandler((request, response, authentication) -> {
+                .successHandler((_ /* request */, response, authentication) -> {
                     log.debug("User '{}' logged in successfully. Auth authorities: {}",
                             authentication.getName(),
                             authentication.getAuthorities());
@@ -50,7 +55,7 @@ public class SecurityConfig {
                     }
                     response.sendRedirect("/");
                 })
-                .failureHandler((request, response, exception) -> {
+                .failureHandler((request, response, _ /* exception */) -> {
                     // store submitted username temporarily in the session so the login page can repopulate it
                     try {
                         var session = request.getSession();
@@ -63,11 +68,18 @@ public class SecurityConfig {
                 .permitAll()
             )
 
+            .rememberMe(remember -> remember
+                    .rememberMeParameter("remember-me")
+                    .rememberMeCookieName("remember-me")
+                    .tokenValiditySeconds(60 * 60 * 24 * 30) // 30 Tage
+                    .tokenRepository(tokenRepository)
+                    .userDetailsService(userDetailsService)
+                )
 
             .logout(logout -> logout
                 .logoutUrl("/registration/logout")
-                .invalidateHttpSession(true)             // Session vernichten (Standard)
-                .deleteCookies("JSESSIONID")             // Session-Cookie löschen
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID", "remember-me")
                 .logoutSuccessUrl("/")
                 .permitAll()
             )
@@ -81,5 +93,18 @@ public class SecurityConfig {
 
 
         return http.build();
+    }
+
+
+    @Bean
+    PersistentTokenRepository persistentTokenRepository(
+            DataSource dataSource) {
+
+        JdbcTokenRepositoryImpl repository =
+                new JdbcTokenRepositoryImpl();
+
+        repository.setDataSource(dataSource);
+
+        return repository;
     }
 }
