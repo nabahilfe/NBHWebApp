@@ -57,7 +57,9 @@ logging:
         org.eclipse.angus.mail: DEBUG
 
 server:
-    port: ${PORT_8080}
+    # for railway deployment, use the PORT environment variable, otherwise default to 8080
+    port: ${PORT:8080}
+    forward-headers-strategy: framework
     servlet:
         session:
             timeout: 30m
