@@ -1,5 +1,6 @@
 gg:
     jte:
+        # development-mode: true
         development-mode: false
         use-precompiled-templates: true
 
@@ -19,10 +20,15 @@ spring:
 
     jpa:
         show-sql: false
-        open-in-view: false
+        open-in-view: true
         properties:
             hibernate:
                 format_sql: false
+                order_by:
+                    default_null_ordering: last
+                transaction:
+                    jta:
+                        platform: enabled
 
     mail:
         host: ${MAIL_HOST}
@@ -38,19 +44,28 @@ spring:
                     starttls:
                         enable: true
                         required: true
+                    ssl:
+                        trust: mail.your-server.de
+                    # debug: true
+                    debug: false
 
 logging:
     level:
-        org.springframework.web.servlet: WARN
+        org.springframework.jdc: DEBUG
         eu.nabahilfe: INFO
+        org.springframework.web.servlet: WARN
+        org.eclipse.angus.mail: DEBUG
 
 server:
-    port: ${PORT:8080}
+    port: ${PORT_8080}
     servlet:
         session:
             timeout: 30m
             cookie:
-                secure: true
+                # for development
+                secure: false
+                # for production
+                # secure: true
                 http-only: true
                 same-site: lax
 
