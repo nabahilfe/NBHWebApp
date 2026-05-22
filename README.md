@@ -1,5 +1,8 @@
 # WebApp für die Nachbarschaftshilfe Maria Anzbach
 
+**This is in early development**
+
+
 Zur Verwaltung von Mitgliedern, Zeitschecks, Mitgliedsbeiträgen usw.
 
 Basierend auf Spring-Boot, Bootstrap und Postgres.

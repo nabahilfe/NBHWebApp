@@ -1,32 +1,31 @@
-# =========================
-# Stage 1: Build the app
-# =========================
-FROM maven:3.9.9-eclipse-temurin-25-alpine AS builder
+# Stage 1: Build the application with Maven
+FROM eclipse-temurin:25-jdk-alpine AS build
 
 WORKDIR /app
 
-# Copy Maven config first
-COPY pom.xml .
+# Copy Maven wrapper and config
+COPY .mvn/ .mvn/
+COPY mvnw pom.xml ./
 
-# Download dependencies
-RUN mvn dependency:go-offline
+# Download dependencies (cached layer)
+RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
 
-# Copy source code
-COPY src ./src
+# Copy source code and build
+COPY src/ src/
+RUN ./mvnw package -DskipTests -B
 
-# Build the Spring Boot JAR
-RUN mvn clean package -DskipTests
-
-# =========================
 # Stage 2: Runtime image
-# =========================
 FROM eclipse-temurin:25-jre-alpine
 
 WORKDIR /app
 
-# Copy built JAR from builder stage
-COPY --from=builder /app/target/*.jar app.jar
+# Copy the built JAR from the build stage
+COPY --from=build /app/target/NBH-0.0.1-SNAPSHOT.jar nbhapp.jar
 
+# Expose the port (Railway sets PORT dynamically)
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the app on Railway's assigned PORT (defaults to 8080 if not set)
+ENTRYPOINT ["java", "-jar", "nbhapp.jar", "--server.port=${PORT:-8080}"]
+
+
