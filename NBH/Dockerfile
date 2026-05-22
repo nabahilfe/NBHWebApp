@@ -1,15 +1,32 @@
-# Use Eclipse Temurin 25 JRE (JDK 25 LTS in production scenarios)
-FROM eclipse-temurin:25-jre-alpine
+# =========================
+# Stage 1: Build the app
+# =========================
+FROM maven:3.9.9-eclipse-temurin-25-alpine AS builder
 
-# Working directory for the app
 WORKDIR /app
 
-# Copy the Spring Boot fat JAR (adjust name to match your JAR)
-COPY target/NBH-0.0.1-SNAPSHOT.jar nbhapp.jar
+# Copy Maven config first
+COPY pom.xml .
 
-# Expose the default Spring Boot HTTP port
+# Download dependencies
+RUN mvn dependency:go-offline
+
+# Copy source code
+COPY src ./src
+
+# Build the Spring Boot JAR
+RUN mvn clean package -DskipTests
+
+# =========================
+# Stage 2: Runtime image
+# =========================
+FROM eclipse-temurin:25-jre-alpine
+
+WORKDIR /app
+
+# Copy built JAR from builder stage
+COPY --from=builder /app/target/*.jar app.jar
+
 EXPOSE 8080
 
-# Run the app; adjust memory if needed
-ENTRYPOINT ["java", "-jar", "nbhapp.jar"]
-
+ENTRYPOINT ["java", "-jar", "app.jar"]
