@@ -183,8 +183,8 @@
         <nav aria-label="Page navigation example">
           <ul class="pagination">
                 @for(int i = 0; i < memberPage.getTotalPages(); ++i)
-                  <li class="page-item"><a class="page-link"
-                    href="/members?page=${i}&orderBy=${orderBy}&order=${order}&size=${NbhConst.PAGINATION_PAGE_SIZE}">${i+1}</a>
+                  <li class="page-item ${i == memberPage.getNumber() ? "active" : ""}">
+                    <a class="page-link" href="/members?page=${i}&orderBy=${orderBy}&order=${order}&size=${NbhConst.PAGINATION_PAGE_SIZE}">${i+1}</a>
                   </li>
               @endfor
             </ul>

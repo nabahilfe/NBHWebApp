@@ -33,7 +33,7 @@
                    class="form-control"
                    id="username"
                    name="username"
-                   value="${form.getEmail()}"
+                   value="${form.getUsername()}"
                    required>
             <div class="invalid-feedback">Bitte eine gültige E-Mail Adresse eingeben.</div>
         </div>

@@ -26,7 +26,7 @@ public class EmailTest {
 
 		String id = UUID.randomUUID().toString();
 		EmailDetails emailDetails = new EmailDetails(recipient, id, "test email");
-		System.out.println(emailService.sendEmail(emailDetails));
+		System.out.println(emailService.sendEmailPlainText(emailDetails));
 	}
 	
 	@Test

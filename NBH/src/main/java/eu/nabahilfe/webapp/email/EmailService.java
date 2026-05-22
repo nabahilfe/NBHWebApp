@@ -32,7 +32,7 @@ public class EmailService implements IEmailService {
 
 
     @Override
-    public String sendEmail(EmailDetails details) {
+    public String sendEmailPlainText(EmailDetails details) {
         System.out.println("sender: " + sender);
 
         try {

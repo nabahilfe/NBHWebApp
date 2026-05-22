@@ -34,15 +34,7 @@ public class RegisterConfirmForm {
         this.password = password;
     }
 
-    // for registration and login, we use the email as username, so we can have getEmail and setEmail for better readability
-
-    public String getEmail() {
-        return username;
-    }
-
-    public void setEmail(String email) {
-        this.username = email;
-    }
+    // username for registration and login is the email adress, so we use the email as username
 
     public String getUsername() {
         return username;

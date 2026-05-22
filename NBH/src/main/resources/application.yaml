@@ -1,62 +1,74 @@
 gg:
-  jte:
-    "development-mode": true
-    "use-precompiled-templates": false		
+    jte:
+        "development-mode": true
+        "use-precompiled-templates": false
 
 spring:
-  application:
-    name: NBH
+    application:
+        name: NBH
 
-  mvc:
-    hiddenmethod:
-      filter:
-        enabled: true
+    mvc:
+        hiddenmethod:
+            filter:
+                enabled: true
 
-  datasource:
-    url: jdbc:postgresql://nas.internal:5555/postgres
-    username: postgres
-    password: keines
+    datasource:
+        url: jdbc:postgresql://nas.internal:5555/postgres
+        username: "${POSTGRES_USERNAME}"
+        password: "${POSTGRES_PASSWORD}"
 
-  jpa:
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: false
-        order_by:
-          default_null_ordering: last
-        transaction:
-          jta:
-            platform: enabled
+    jpa:
+        show-sql: false
+        # optimize for development, for production consider fixing OSIV access and setting show-sql to false
+        open-in-view: true
+        properties:
+            hibernate:
+                format_sql: false
+                order_by:
+                    default_null_ordering: last
+                transaction:
+                    jta:
+                        platform: enabled
 
-  mail:
-    host: mail.your-server.de
-    port: 587
-    username: "${PROD_MAIL_USERNAME:}"
-    password: "${PROD_MAIL_PASSWORD:}"
-    protocol: smtp
-    default-encoding: "UTF-8"
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          ssl:
-            trust: mail.your-server.de
-        debug: true
+    mail:
+        host: mail.your-server.de
+        port: 587
+        username: "${PROD_MAIL_USERNAME}"
+        password: "${PROD_MAIL_PASSWORD}"
+        protocol: smtp
+        default-encoding: "UTF-8"
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
+                        required: true
+                    ssl:
+                        trust: mail.your-server.de
+                debug: true
 
 logging:
-  level:
-    org.springframework.jdc: DEBUG
-    eu.nabahilfe: DEBUG
-    org.springframework.web.servlet: WARN
-    org.eclipse.angus.mail: DEBUG
+    level:
+        org.springframework.jdc: DEBUG
+        eu.nabahilfe: DEBUG
+        org.springframework.web.servlet: WARN
+        org.eclipse.angus.mail: DEBUG
 
 server:
-  port: 8080
+    port: 8080
+    servlet:
+      session:
+          timeout: 30m
+          cookie:
+              # for development
+              secure: false
+              # for production
+              #secure: true
+              #http-only: true
+              #same-site: lax
+
 
 app:
-  base-url: http://localhost:8080
+    base-url: http://localhost:8080
 
-# Note: commented properties from application.properties are intentionally not included.

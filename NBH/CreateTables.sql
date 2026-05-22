@@ -30,6 +30,13 @@ CREATE TABLE SPRING_SESSION_ATTRIBUTES (
         REFERENCES SPRING_SESSION(PRIMARY_ID) ON DELETE CASCADE
 );
 
+CREATE TABLE persistent_logins (
+    username VARCHAR(64) NOT NULL,
+    series VARCHAR(64) PRIMARY KEY,
+    token VARCHAR(64) NOT NULL,
+    last_used TIMESTAMP NOT NULL
+);
+
 /**********************************************************/
 /* ATTENTION! DO NOT OVERWRITE THE SPRING_SESSION TABLES! */
 /**********************************************************/
