@@ -45,7 +45,7 @@ CREATE TABLE persistent_logins (
 
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-05-16 20:30:13
+ * Generated at 2026-05-24 12:21:05
  * ModelDescription: NBH Entity Modell
  */
 
@@ -58,7 +58,8 @@ CREATE TABLE persistent_logins (
 create table if not exists ASSOCIATIONS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(80) not null /* Vereinsname */,
-    description VARCHAR(4000),
+    md_description TEXT,
+    html_description TEXT,
     street VARCHAR(80) not null /* Offizielle Adresse des Vereins */,
     number VARCHAR(20) not null,
     zip VARCHAR(10) not null,
@@ -134,8 +135,8 @@ create table if not exists EVENTS (
 create table if not exists TEXT_CONTENTS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     content_code VARCHAR(20) /* Aus ENUM - Für welches Element gilt der Text */,
-    md_text VARCHAR(4000) /* Text mit Markdoen formatiert */,
-    html_text VARCHAR(4000) /* Aus dem Markdown Text generierter HTML Text */,
+    md_text TEXT /* Text mit Markdoen formatiert */,
+    html_text TEXT /* Aus dem Markdown Text generierter HTML Text */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
