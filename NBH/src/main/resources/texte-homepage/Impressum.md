@@ -24,8 +24,8 @@ Zweck des Vereins ist die Förderung der Nachbarschaftshilfe durch gegenseitige 
 
 **Postanschrift:** Schubertgasse 7, 3034 Maria Anzbach  
 **E-Mail:** [kontakt@nabahilfe.eu](mailto:kontakt@nabhilfe.eu)  
-**Telefon:** [+43 ...]  
-**Website:** [www.nabahilfe.eu](https://www.nabahilfe.eu)
+**Telefonnummer:** [+43 677 61401164](tel:+4367761401164)  
+**Website:** [www.nabahilfe.eu](https://www.nabahilfe.eu)  
 
 ---
 

@@ -37,7 +37,7 @@
             <img src="/images/nbh-logo-gelb.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
             <img src="/images/nbh-logo-neu-bg-white.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
             -->
-            <img src="/images/nbh-logo-neu.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
+            <img src="/images/NBH-Helping-Hands-Logo-2.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo" title="Originalfoto von Austin Kehmeier auf Unsplash">
             <!--
             <img src="/images/nbh-logo-neu-filled.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-5 bg-transparent img-fluid" alt="NBH Logo">
             -->

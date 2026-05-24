@@ -1,3 +1,3 @@
 **Postanschrift:** Schubertgasse 7, 3034 Maria Anzbach  
-**E-Mail:** [kontakt@nabahilfe.eu](mailto:kontakt@nabhilfe.eu) 
-**Telefon:** [+43 ...]  
+**E-Mail:** [kontakt@nabahilfe.eu](mailto:kontakt@nabhilfe.eu)  
+**Telefonnummer:** [+43 677 61401164](tel:+4367761401164)  
