@@ -8,7 +8,7 @@
 **Sitz:** Schubertgasse 7, 3034 Maria Anzbach, Österreich
 **ZVR-Zahl:** 1088136660
 ###### **E-Mail:** [kontakt@nabahilfe.eu](mailto:kontakt@nabhilfe.eu)
-**Telefon:** [+43 ...]
+**Telefonnummer:** [+43 677 61401164](tel:+4367761401164)
 
 Der Verein ist Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) für die Verarbeitung Ihrer personenbezogenen Daten.
 
