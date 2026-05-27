@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>eu.nabahilfe</groupId>
-    <artifactId>NBH</artifactId>
+    <artifactId>nbh</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>NBH</name>
     <description>Nachbarschaftshilfe Web App</description>
