@@ -41,3 +41,4 @@ build/
 /copy-paste.txt
 /.env
 /.env-railway
+/.env-hetzner
