@@ -38,7 +38,6 @@ insert into offers (code, description, version) values
 /* Testdaten Mitglieder */
 
 insert into members (member_nmbr, first_name, last_name, birthdate, street, number, zip, city, version, joining_date) values
-(1000, 'Anna','Müller','1985-03-14','Bahnhofstraße','12','3034','Groß-Raßberg', 0, '2018-01-01'),
 (1001, 'Thomas','Huber','1978-11-02','Hauptstraße','7','4020','Linz', 0, '2018-03-01'),
 (1002, 'Katharina','Gruber','1992-06-21','Kirchengasse','3','8010','Graz', 0, '2018-06-01'),
 (1003, 'Markus','Pichler','1980-01-18','Schillerstraße','25','5020','Salzburg', 0, '2018-09-01'),

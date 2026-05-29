@@ -16,14 +16,16 @@
 
 #### Vereinszweck
 
-Zweck des Vereins ist die Förderung der Nachbarschaftshilfe durch gegenseitige Hilfestellung und Unterstützung der Mitglieder sowie die Förderung des gemeinschaftlichen Zusammenhalts. Der Verein verfolgt ausschließlich und unmittelbar gemeinnützige und mildtätige Zwecke im Sinne der Bundesabgabenordnung (§§ 34 ff. BAO), seine Tätigkeit ist nicht auf Gewinn gerichtet.
+Zweck des Vereins ist die Förderung der Nachbarschaftshilfe durch gegenseitige Hilfestellung und Unterstützung der Mitglieder
+sowie die Förderung des gemeinschaftlichen Zusammenhalts. Der Verein verfolgt ausschließlich und unmittelbar gemeinnützige
+und mildtätige Zwecke im Sinne der Bundesabgabenordnung (§§ 34 ff. BAO), seine Tätigkeit ist nicht auf Gewinn gerichtet.
 
 ---
 
 #### Kontakt
 
 **Postanschrift:** Schubertgasse 7, 3034 Maria Anzbach  
-**E-Mail:** [kontakt@nabahilfe.eu](mailto:kontakt@nabhilfe.eu)  
+**E-Mail:** [kontakt@nabahilfe.eu](mailto:kontakt@nabahilfe.eu)  
 **Telefonnummer:** [+43 677 61401164](tel:+4367761401164)  
 **Website:** [www.nabahilfe.eu](https://www.nabahilfe.eu)  
 
@@ -31,19 +33,22 @@ Zweck des Vereins ist die Förderung der Nachbarschaftshilfe durch gegenseitige 
 
 #### Haftungsausschluss
 
-Der Verein übernimmt keine Haftung für die Richtigkeit, Vollständigkeit und Aktualität der auf dieser Website bereitgestellten Informationen. Für externe Links zu fremden Webseiten übernimmt der Verein keine Verantwortung für deren Inhalte.
+Der Verein übernimmt keine Haftung für die Richtigkeit, Vollständigkeit und Aktualität der auf dieser Website bereitgestellten Informationen.
+Für externe Links zu fremden Webseiten übernimmt der Verein keine Verantwortung für deren Inhalte.
 
 ---
 
 #### Datenschutz
 
-Die Verarbeitung personenbezogener Daten erfolgt gemäß der Datenschutz-Grundverordnung (DSGVO) sowie dem österreichischen Datenschutzgesetz (DSG). Eine gesonderte Datenschutzerklärung ist auf der Website verfügbar.
+Die Verarbeitung personenbezogener Daten erfolgt gemäß der Datenschutz-Grundverordnung (DSGVO) sowie dem österreichischen Datenschutzgesetz (DSG).
+Eine gesonderte Datenschutzerklärung ist auf der Website verfügbar.
 
 ---
 
 #### Urheberrecht
 
-Die auf dieser Website veröffentlichten Inhalte unterliegen dem österreichischen Urheberrecht. Eine Vervielfältigung oder Verbreitung ist nur mit ausdrücklicher schriftlicher Zustimmung des Vereins gestattet.
+Die auf dieser Website veröffentlichten Inhalte unterliegen dem österreichischen Urheberrecht.
+Eine Vervielfältigung oder Verbreitung ist nur mit ausdrücklicher schriftlicher Zustimmung des Vereins gestattet.
 
 ---
 

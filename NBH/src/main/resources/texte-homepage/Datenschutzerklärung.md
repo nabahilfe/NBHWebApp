@@ -7,7 +7,7 @@
 **Name des Vereins:** Nachbarschaftshilfe Maria Anzbach
 **Sitz:** Schubertgasse 7, 3034 Maria Anzbach, Österreich
 **ZVR-Zahl:** 1088136660
-###### **E-Mail:** [kontakt@nabahilfe.eu](mailto:kontakt@nabhilfe.eu)
+###### **E-Mail:** [kontakt@nabahilfe.eu](mailto:kontakt@nabahilfe.eu)
 **Telefonnummer:** [+43 677 61401164](tel:+4367761401164)
 
 Der Verein ist Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) für die Verarbeitung Ihrer personenbezogenen Daten.
@@ -70,7 +70,9 @@ Mit Ausnahme der Mitglieder der EEG, findet **keine Übermittlung** an Auftragsv
 Ihre Daten werden nur so lange gespeichert, wie es für die genannten Zwecke erforderlich ist:
 
 - **Während aufrechter Mitgliedschaft:** für die gesamte Dauer Ihrer Vereinsmitgliedschaft
-- **Nach Beendigung der Mitgliedschaft** werden Ihre Daten innerhalb von **einem Jahr** gelöscht bzw. komplett anonymisiert, sofern keine längeren, gesetzlich vorgesehene Aufbewahrungspflichten *(z. B. steuerrechtliche Fristen von 7 Jahren für Buchhaltungsunterlagen)* dem entgegenstehen.
+- **Nach Beendigung der Mitgliedschaft** werden Ihre Daten innerhalb von **einem Jahr** gelöscht bzw. komplett anonymisiert,
+sofern keine längeren, gesetzlich vorgesehenen Aufbewahrungspflichten *(z. B. steuerrechtliche Fristen von 7 Jahren für Buchhaltungsunterlagen)*
+dem entgegenstehen.
 
 *Buchhalterisch relevante Daten (z. B. Mitgliedsbeiträge) unterliegen der gesetzlichen Aufbewahrungspflicht von 7 Jahren gemäß § 132 BAO. Die Buchhaltung erfolgt aber nicht in dieser Web Anwendung*
 
