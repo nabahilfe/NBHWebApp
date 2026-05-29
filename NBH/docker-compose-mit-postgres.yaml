@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:18
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_URL}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      BASE_URL: ${APP_BASE_URL}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    networks:
+      - nbh-net
+
+  app:
+    image: nbh-app:v0.5
+    restart: unless-stopped
+
+    ports:
+      - "8080:${APP_PORT}"
+
+    env_file:
+      - .env
+
+    depends_on:
+      - db
+
+    networks:
+      - nbh-net
+
+volumes:
+  postgres_data:
+
+networks:
+  nbh-net:
