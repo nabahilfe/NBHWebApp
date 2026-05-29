@@ -40,5 +40,9 @@ build/
 /.DS_Store
 /copy-paste.txt
 /.env
+.env*
 /.env-railway
 /.env-hetzner
+/*.tar
+/*.jar
+
