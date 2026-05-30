@@ -68,8 +68,8 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/members/mydata/${ctxt.getUserId()}">Meine Daten</a></li>
                                     @if (! ctxt.isSystemAdmin()) <!-- no timecheques for SystemAdmin -->
-                                    	<li><a class="dropdown-item" href="/timetransfers/fromself?fromMemberId=${ctxt.getUserId()}">Zeitschecks übergeben</a></li>
-                                   	 	<li><a class="dropdown-item" href="/timecheques/newfromself/${ctxt.getUserId()}">Zeitschecks kaufen</a></li>
+                                        <li><a class="dropdown-item" href="/timetransfers/fromself?fromMemberId=${ctxt.getUserId()}">Zeitschecks übergeben</a></li>
+                                            <li><a class="dropdown-item" href="/timecheques/newfromself/${ctxt.getUserId()}">Zeitschecks kaufen</a></li>
                                     @endif
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
@@ -210,7 +210,7 @@
         </nav>
 
         <!-- Haupt-Content -->
-        <div class="container-fluid justify-content-center align-items-center px-5 pb-4">
+        <div class="container-fluid justify-content-center align-items-center px-2 px-md-4 pb-4">
             ${content}
         </div>
 
