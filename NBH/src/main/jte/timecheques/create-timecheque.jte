@@ -155,7 +155,7 @@
             const hours = parseInt(document.getElementById('hours').value);
             const priceSpan = document.getElementById('calculatedPrice');
             if (priceSpan) {
-                priceSpan.textContent = (hours * pricePerHour).toFixed(2);
+                priceSpan.textContent = (hours * pricePerHour).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
         }
         document.addEventListener('DOMContentLoaded', calculatePrice);
