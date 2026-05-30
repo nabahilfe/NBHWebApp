@@ -210,7 +210,7 @@
         </nav>
 
         <!-- Haupt-Content -->
-        <div class="container-fluid justify-content-center align-items-center px-0 px-md-4 pb-4">
+        <div class="container-fluid justify-content-center align-items-center px-1 px-md-4 pb-4">
             ${content}
         </div>
 
