@@ -23,7 +23,7 @@
         <div class="col-12 col-lg-6 mb-3">
             <!-- Left column content (50%) -->
 
-            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow p-3 mb-5 bg-white">
+            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4 bg-white">
                 <h2>Datenschutzerklärung</h2>
                 <p class="card-text">
                     $unsafe{privacyPolicy}
@@ -37,7 +37,7 @@
 
             @template.components.list-board-members(boardMembers = boardMembers)
 
-            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow p-3 mb-5 bg-white">
+            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4 bg-white">
                 <h2>Impressum</h2>
                 <p class="card-text">
                     $unsafe{legalNotice}
