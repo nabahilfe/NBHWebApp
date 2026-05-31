@@ -84,6 +84,7 @@ public class TextContentController {
 
 
     /* Preview markdown without saving */
+    @PostMapping("/preview")
     @GetMapping("/preview")
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'SECRETARY')")
     public String preview(@ModelAttribute("textContentForm") TextContentForm tcf, Model model) {

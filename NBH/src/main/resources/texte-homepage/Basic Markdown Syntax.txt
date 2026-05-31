@@ -1,0 +1,18 @@
+https://www.markdownguide.org/basic-syntax/
+
+
+WICHTIG: Für Zeilenumbruch IMMER 2 Leerzeichen am Ende der Zeile setzen!
+
+
+Links:
+
+[Google](https://www.google.com)
+[Wikipedia](https://www.wikipedia.org)
+[My Blog](https://example.com/blog)
+
+
+
+E-Mail: [kontakt@nabahilfe.eu](kontakt@nabhilfe.eu)
+
+
+Telefon: [+49 30123456](tel:+4930123456)

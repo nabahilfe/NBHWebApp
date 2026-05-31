@@ -15,36 +15,32 @@ import eu.nabahilfe.webapp.email.EmailService;
 
 @SpringBootTest(classes = NbhApplication.class)
 public class EmailTest {
-	@Autowired private EmailService emailService;
-	@Value("${spring.mail.username}") private String sender;
+    @Autowired private EmailService emailService;
+    @Value("${spring.mail.username}") private String sender;
 
-	private String recipient = "test@nabahilfe.eu";
+    private String recipient = "test@nabahilfe.eu";
 
-	
-	@Test
-	void sendEmailTest() {
 
-		String id = UUID.randomUUID().toString();
-		EmailDetails emailDetails = new EmailDetails(recipient, id, "test email");
-		System.out.println(emailService.sendEmailPlainText(emailDetails));
-	}
-	
-	@Test
-	void sendEmailHtmlTest() {
+//	@Test
+    void sendEmailTest() {
 
-		String id = UUID.randomUUID().toString();
-		String htmlBody = "<h2>test email</h2><p>this is a html body</p>";
-		EmailDetails emailDetails = new EmailDetails(recipient, id, htmlBody);
-		System.out.println(emailService.sendEmailHtml(emailDetails));
-	}
-	
-	@Test
-	void sendTimeChecksToBookEmailTest() {
-		//emailService.sendTimeChecksToBookEmail();
-	}
-	
-	
-	
-	
-	
+        String id = UUID.randomUUID().toString();
+        EmailDetails emailDetails = new EmailDetails(recipient, id, "test email");
+        System.out.println(emailService.sendEmailPlainText(emailDetails));
+    }
+
+//	@Test
+    void sendEmailHtmlTest() {
+
+        String id = UUID.randomUUID().toString();
+        String htmlBody = "<h2>test email</h2><p>this is a html body</p>";
+        EmailDetails emailDetails = new EmailDetails(recipient, id, htmlBody);
+        System.out.println(emailService.sendEmailHtml(emailDetails));
+    }
+
+//    @Test
+    void sendTimeChecksToBookEmailTest() {
+        //emailService.sendTimeChecksToBookEmail();
+    }
+
 }

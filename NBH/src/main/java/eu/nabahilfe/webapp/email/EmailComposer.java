@@ -16,9 +16,8 @@ import eu.nabahilfe.webapp.NumberFormatter;
 
 @Component
 public class EmailComposer {
-	private static final String eMailFooter = 
-            "<p>Liebe Grüße,<br>Dein Nachbarschaftshilfe Team.</p>"
-            + "<p><small>Diese E-Mail wurde automatisch generiert, bitte nicht antworten!</small></p>";
+    private static final String eMailFooter =
+            "<p><small>Diese E-Mail wurde automatisch generiert, bitte nicht antworten!</small></p>";
 
     private final String baseUrl;
 
@@ -29,9 +28,9 @@ public class EmailComposer {
 
     public EmailDetails composeTimeChecksToBookEmail(String recipient, String emailSalutation, int timeChecksToBook) {
         EmailDetails details = new EmailDetails(
-	            recipient,
-	            "Es gibt neue Zeitchecks zu verbuchen!",
-	            "<strong>" + emailSalutation + "</strong><br>"
+                recipient,
+                "Es gibt neue Zeitchecks zu verbuchen!",
+                "<strong>" + emailSalutation + "</strong><br>"
                 + "<p>"
                 + "Es gibt <strong>" + timeChecksToBook + "</strong> Zeitchecks zu verbuchen!<br>"
                 + "<a href=\"" + baseUrl + "/timecheques/unaccounted\">Link zu den zu verbuchenden Zeitchecks</a>"
@@ -59,19 +58,19 @@ public class EmailComposer {
 
 
     public EmailDetails composeTimeChecksBought(String recipient, String emailSalutation, int amount, double totalPrice) {
-    	String subject = totalPrice == 0 ? "Zeitchecks erhalten" : "Zeitchecks gekauft";
-    	String message = totalPrice == 0 ? "Du hast für deine Mitgliedschaft in der Nachbarschaftshilfe <strong>" + amount + "</strong> Zeitchecks erhalten!" 
-    			: "Du hast <strong>" + amount + "</strong> Zeitchecks zum Preis von <strong>€ " + NumberFormatter.numberDE(totalPrice) + "</strong> bestellt und erhalten!";
-    	
+        String subject = totalPrice == 0 ? "Zeitchecks erhalten" : "Zeitchecks gekauft";
+        String message = totalPrice == 0 ? "Du hast für deine Mitgliedschaft in der Nachbarschaftshilfe <strong>" + amount + "</strong> Zeitchecks erhalten!"
+                : "Du hast <strong>" + amount + "</strong> Zeitchecks zum Preis von <strong>€ " + NumberFormatter.numberDE(totalPrice) + "</strong> bestellt und erhalten!";
+
         EmailDetails details = new EmailDetails(
-	            recipient,
-	            subject,
-	            "<p><strong>" + emailSalutation + "</strong></p>"
-	    		+ "<p>" + message + "</p>"
-	            + eMailFooter
+                recipient,
+                subject,
+                "<p><strong>" + emailSalutation + "</strong></p>"
+                + "<p>" + message + "</p>"
+                + eMailFooter
         );
         return details;
     }
-    
+
 
 }
