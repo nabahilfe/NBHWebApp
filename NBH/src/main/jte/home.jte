@@ -24,7 +24,7 @@
     ctxt = ctxt,
     content = @`
 
-    <h1 class="">Willkommen bei der Nachbarschaftshilfe Maria Anzbach!</h1>
+    <h1 class="">Testsystem der Nachbarschaftshilfe Maria Anzbach</h1>
 
     <br/>
 
