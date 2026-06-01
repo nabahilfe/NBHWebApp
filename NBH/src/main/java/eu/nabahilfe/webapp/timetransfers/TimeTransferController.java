@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import eu.nabahilfe.webapp.email.EmailComposer;
+import eu.nabahilfe.webapp.email.EmailService;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import eu.nabahilfe.webapp.org.Offer;
@@ -46,14 +48,20 @@ public class TimeTransferController {
     private final TimeTransferRepository timeTransferRepository;
     private final SecurityUtils securityUtils;
 
+    private final EmailService emailService;
+    private final EmailComposer emailComposer;
+
+
     private static final Logger log = LoggerFactory.getLogger(TimeTransferController.class);
 
     public TimeTransferController(MemberRepository memberRepository, OfferRepository offerRepository,
-            TimeTransferRepository timeTransferRepository, SecurityUtils securityUtils) {
+            TimeTransferRepository timeTransferRepository, SecurityUtils securityUtils, EmailComposer emailComposer, EmailService emailService) {
         this.memberRepository = memberRepository;
         this.offerRepository = offerRepository;
         this.timeTransferRepository = timeTransferRepository;
         this.securityUtils = securityUtils;
+        this.emailService = emailService;
+        this.emailComposer = emailComposer;
     }
 
 
@@ -119,7 +127,7 @@ public class TimeTransferController {
         }
 
         Member fromMember = memberRepository.findById(fromMemberId).orElse(null);
-        
+
         if (fromMember == null) {
             model.addAttribute("status", 404);
             model.addAttribute("error", "Not Found");
@@ -127,9 +135,9 @@ public class TimeTransferController {
             return "error";
         }
 
-		if (fromMember.isSystemAdmin()) {
-			throw new IllegalCallerException("System Administratoren können keine Zeitschecks übergeben.");
-		}
+        if (fromMember.isSystemAdmin()) {
+            throw new IllegalCallerException("System Administratoren können keine Zeitschecks übergeben.");
+        }
 
         ttf.setUserFromId(fromMemberId);
         ttf.setUserFromName(fromMember.getNameAndAddress());
@@ -154,8 +162,8 @@ public class TimeTransferController {
         if (fromMemberId != null) {
             Member fromMember = memberRepository.findById(fromMemberId).orElse(null);
             if (fromMember == null) {
-            	model.addAttribute("status", 404);
-            	model.addAttribute("error", "Not Found");
+                model.addAttribute("status", 404);
+                model.addAttribute("error", "Not Found");
                 model.addAttribute("message", "Mitglied mit ID " + fromMemberId + " nicht gefunden.");
                 return "error";
             }
@@ -268,12 +276,49 @@ public class TimeTransferController {
         memberTo.setAccumulatedHours(newHoursTo);
         memberRepository.save(memberTo);
 
+
+        // email notification to recipient
+        if (memberTo.getEmail() != null && !memberTo.getEmail().isBlank()) {
+            emailService.sendEmailHtml(emailComposer.composeTimeChequeTransferToEmail(
+                    memberTo.getEmail(), memberTo.getEmailSalutation(),
+                    memberFrom.getName(),
+                    hours, offerRepository.findById(offerId).get().getDescription(), note));
+        }
+
+
+
+        // email notification to sender (only if sender is not same as creator of transfer,
+        // to avoid emails when sender creates transfer for themselves)
+        if (memberFrom.getEmail() != null && !memberFrom.getEmail().isBlank() && !memberFrom.getId().equals(tt.getCreatedBy().getId())) {
+            emailService.sendEmailHtml(emailComposer.composeTimeChequeTransferFromEmail(
+                    memberFrom.getEmail(), memberFrom.getEmailSalutation(),
+                    memberTo.getName(), tt.getCreatedBy().getName(),
+                    hours, offerRepository.findById(offerId).get().getDescription(), note));
+        }
+
         redirectAttributes.addFlashAttribute("successMessage",
                 (hours == 1 ? "Eine Stunde für " : hours + " Stunden für ") + memberTo.getName() + " verbucht.");
 
         if (fromself) return "redirect:/timetransfers/self-timetransfer?id=" + tt.getId();
         return "redirect:/timetransfers/view?id=" + tt.getId();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

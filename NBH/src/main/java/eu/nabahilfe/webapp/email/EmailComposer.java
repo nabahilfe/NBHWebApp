@@ -89,4 +89,49 @@ public class EmailComposer {
     }
 
 
+    // email for the recipient of a time cheque transfer (the one who receives the time cheque)
+    public EmailDetails composeTimeChequeTransferToEmail(
+            String emailToMember, String salutationToMember,
+            String nameFromMember,
+            int hours, String offerTitle, String note) {
+
+        String subject = "Zeitcheck von " + nameFromMember + " erhalten";
+
+        String message = "Du hast einen Zeitcheck von <strong>" + nameFromMember + "</strong> erhalten!<br>"
+                + "<br>Anzahl der Stunden: <strong>" + hours + "</strong><br>"
+                + "Art der Leistung: <strong>" + offerTitle + "</strong><br>"
+                + (note != null && !note.isBlank() ? "Anmerkung: <em>" + note + "</em><br>" : "");
+
+        EmailDetails details = new EmailDetails(
+                emailToMember,
+                subject,
+                "<p><strong>" + salutationToMember + "</strong></p>"
+                + "<p>" + message + "</p>"
+                + eMailFooter
+        );
+        return details;
+    }
+
+
+    public EmailDetails composeTimeChequeTransferFromEmail(
+            String emailFromMember, String salutationFromMember,
+            String nameToMember, String nameCreatedBy,
+            int hours, String offerTitle, String note) {
+
+        String subject = "Zeitcheck an " + nameToMember + " übergeben";
+        String message = "Von <strong>" + nameCreatedBy + "</strong> wurde in deinem Auftrag ein Zeitcheck an <strong>" + nameToMember + "</strong> übergeben!<br>"
+                + "<br>Anzahl der Stunden: <strong>" + hours + "</strong><br>"
+                + "Art der Leistung: <strong>" + offerTitle + "</strong><br>"
+                + (note != null && !note.isBlank() ? "Anmerkung: <em>" + note + "</em><br>" : "");
+
+        EmailDetails details = new EmailDetails(
+                emailFromMember,
+                subject,
+                "<p><strong>" + salutationFromMember + "</strong></p>"
+                + "<p>" + message + "</p>"
+                + eMailFooter
+        );
+        return details;
+    }
+
 }

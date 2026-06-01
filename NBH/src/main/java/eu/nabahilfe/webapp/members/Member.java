@@ -419,34 +419,34 @@ public class Member implements Serializable {
         return getName() + " - " + getAddress();
     }
 
-    
+
     public boolean isSystemAdmin() {
-		if (firstName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME) && lastName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_LAST_NAME)
-				&& role != null && role.getIsAdmin()) return true;
-		return false;
-	}
-    
+        if (firstName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME) && lastName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_LAST_NAME)
+                && role != null && role.getIsAdmin()) return true;
+        return false;
+    }
+
     public boolean isAdmin() {
-    	return role != null && role.getIsAdmin();
+        return role != null && role.getIsAdmin();
     }
 
     public boolean isSozialkonto() {
-		if (firstName.equalsIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME) && lastName.equalsIgnoreCase(NbhConst.SOZIALKONTO_LAST_NAME)
-				&& salutation.equalsIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION)) return true;
-		return false;
+        if (firstName.equalsIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME) && lastName.equalsIgnoreCase(NbhConst.SOZIALKONTO_LAST_NAME)
+                && salutation.equalsIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION)) return true;
+        return false;
     }
-    
-    public boolean isSystemMember() {
-		return isSystemAdmin() || isSozialkonto();
-	}
 
-    
+    public boolean isSystemMember() {
+        return isSystemAdmin() || isSozialkonto();
+    }
+
+
     public String getEmailSalutation() {
         String name = "";
         if (salutation.equals(Salutation.Herr.name())) name += "Lieber ";
         else if (salutation.equals(Salutation.Frau.name())) name += "Liebe ";
         else name += "Hallo ";
-        name += firstName + "!";
+        name += firstName + " " + lastName + "!";
         return name;
     }
 
