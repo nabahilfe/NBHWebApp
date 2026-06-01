@@ -57,15 +57,31 @@ public class EmailComposer {
     }
 
 
-    public EmailDetails composeTimeChecksBought(String recipient, String emailSalutation, int amount, double totalPrice) {
+    public EmailDetails composeTimeChecksBought(
+            String emailRecipient, String salutationRecipient,
+            String emailCreatedBy, String nameCreatedBy,
+            int amount, double totalPrice) {
+
+        // we need some business logic here to determine the subject and message based on
+        // whether the user bought time checks or received them for free or by whome the TC was created
+
         String subject = totalPrice == 0 ? "Zeitchecks erhalten" : "Zeitchecks gekauft";
-        String message = totalPrice == 0 ? "Du hast für deine Mitgliedschaft in der Nachbarschaftshilfe <strong>" + amount + "</strong> Zeitchecks erhalten!"
-                : "Du hast <strong>" + amount + "</strong> Zeitchecks zum Preis von <strong>€ " + NumberFormatter.numberDE(totalPrice) + "</strong> bestellt und erhalten!";
+        String message = null;
+
+        if (totalPrice == 0)
+            message = "Du hast für deine Mitgliedschaft in der Nachbarschaftshilfe <strong>" + amount + "</strong> Zeitchecks erhalten!";
+
+        else if (emailCreatedBy.equals(emailRecipient))
+            message = "Du hast <strong>" + amount + "</strong> Zeitchecks zum Preis von <strong>€ " + NumberFormatter.numberDE(totalPrice) + "</strong> selbst bestellt und erhalten!";
+
+        else
+            message = "Du hast <strong>" + amount + "</strong> Zeitchecks zum Preis von <strong>€ " + NumberFormatter.numberDE(totalPrice) + "</strong> erhalten!" + "<br>"
+                    + "Diese wurden in deinem Auftrag von <strong>" + nameCreatedBy + "</strong> bestellt.";
 
         EmailDetails details = new EmailDetails(
-                recipient,
+                emailRecipient,
                 subject,
-                "<p><strong>" + emailSalutation + "</strong></p>"
+                "<p><strong>" + salutationRecipient + "</strong></p>"
                 + "<p>" + message + "</p>"
                 + eMailFooter
         );
