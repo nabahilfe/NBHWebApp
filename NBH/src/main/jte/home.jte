@@ -78,6 +78,7 @@
                 <p class="card-text">
                     $unsafe{events}
                 </p>
+                <i>WICHTIG: Termine können sich ändern, erkundigen Sie sich ob der Termin planmäßig stattfindet.</i>
             </div>
 
         </div>

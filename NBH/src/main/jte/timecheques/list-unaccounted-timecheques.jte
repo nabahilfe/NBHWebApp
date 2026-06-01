@@ -35,7 +35,7 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>Nicht verbuchte Zeitschecks</h3>
+    <h3>Gekaufte und noch nicht verbuchte Zeitschecks</h3>
 
     <br/>
 
