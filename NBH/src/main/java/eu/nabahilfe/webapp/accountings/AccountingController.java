@@ -5,8 +5,6 @@
 
 package eu.nabahilfe.webapp.accountings;
 
-import java.time.LocalDate;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
