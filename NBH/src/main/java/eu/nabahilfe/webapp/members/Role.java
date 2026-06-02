@@ -134,18 +134,6 @@ public class Role implements Serializable {
         this.version = version;
     }
 
-    // TODO BRAUCHEN WIR DAS?
-    public String adminSymbol() {
-        if (Boolean.TRUE.equals(isAdmin)) return "✔️";
-        return "";
-    }
-
-    // TODO BRAUCHEN WIR DAS?
-    public String boardMemberSymbol() {
-        if (Boolean.TRUE.equals(isBoardMember)) return "✔️";
-        return "";
-    }
-
     public Boolean getIsAuditor() {
         return isAuditor;
     }
