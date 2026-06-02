@@ -29,11 +29,11 @@ public class EmailComposer {
     public EmailDetails composeTimeChecksToBookEmail(String recipient, String emailSalutation, int timeChecksToBook) {
         EmailDetails details = new EmailDetails(
                 recipient,
-                "Es gibt neue Zeitchecks zu verbuchen!",
+                "Es gibt neue Zeitschecks zu verbuchen!",
                 "<strong>" + emailSalutation + "</strong><br>"
                 + "<p>"
-                + "Es gibt <strong>" + timeChecksToBook + "</strong> Zeitchecks zu verbuchen!<br>"
-                + "<a href=\"" + baseUrl + "/timecheques/unaccounted\">Link zu den zu verbuchenden Zeitchecks</a>"
+                + "Es gibt <strong>" + timeChecksToBook + "</strong> Zeitschecks zu verbuchen!<br>"
+                + "<a href=\"" + baseUrl + "/timecheques/unaccounted\">Link zu den zu verbuchenden Zeitschecks</a>"
                 + "</p>"
                 + eMailFooter
         );
@@ -65,17 +65,17 @@ public class EmailComposer {
         // we need some business logic here to determine the subject and message based on
         // whether the user bought time checks or received them for free or by whome the TC was created
 
-        String subject = totalPrice == 0 ? "Zeitchecks erhalten" : "Zeitchecks gekauft";
+        String subject = totalPrice == 0 ? "Zeitschecks erhalten" : "Zeitschecks gekauft";
         String message = null;
 
         if (totalPrice == 0)
-            message = "Du hast für deine Mitgliedschaft in der Nachbarschaftshilfe <strong>" + amount + "</strong> Zeitchecks erhalten!";
+            message = "Du hast für deine Mitgliedschaft in der Nachbarschaftshilfe <strong>" + amount + "</strong> Zeitschecks erhalten!";
 
         else if (emailCreatedBy.equals(emailRecipient))
-            message = "Du hast <strong>" + amount + "</strong> Zeitchecks zum Preis von <strong>€ " + NumberFormatter.numberDE(totalPrice) + "</strong> selbst bestellt und erhalten!";
+            message = "Du hast <strong>" + amount + "</strong> Zeitschecks zum Preis von <strong>€ " + NumberFormatter.numberDE(totalPrice) + "</strong> selbst bestellt und erhalten!";
 
         else
-            message = "Du hast <strong>" + amount + "</strong> Zeitchecks zum Preis von <strong>€ " + NumberFormatter.numberDE(totalPrice) + "</strong> erhalten!" + "<br>"
+            message = "Du hast <strong>" + amount + "</strong> Zeitschecks zum Preis von <strong>€ " + NumberFormatter.numberDE(totalPrice) + "</strong> erhalten!" + "<br>"
                     + "Diese wurden in deinem Auftrag von <strong>" + nameCreatedBy + "</strong> bestellt.";
 
         EmailDetails details = new EmailDetails(
@@ -95,9 +95,9 @@ public class EmailComposer {
             String nameFromMember,
             int hours, String offerTitle, String note) {
 
-        String subject = "Zeitcheck von " + nameFromMember + " erhalten";
+        String subject = "Zeitscheck von " + nameFromMember + " erhalten";
 
-        String message = "Du hast einen Zeitcheck von <strong>" + nameFromMember + "</strong> erhalten!<br>"
+        String message = "Du hast einen Zeitscheck von <strong>" + nameFromMember + "</strong> erhalten!<br>"
                 + "<br>Anzahl der Stunden: <strong>" + hours + "</strong><br>"
                 + "Art der Leistung: <strong>" + offerTitle + "</strong><br>"
                 + (note != null && !note.isBlank() ? "Anmerkung: <em>" + note + "</em><br>" : "");
@@ -118,8 +118,8 @@ public class EmailComposer {
             String nameToMember, String nameCreatedBy,
             int hours, String offerTitle, String note) {
 
-        String subject = "Zeitcheck an " + nameToMember + " übergeben";
-        String message = "Von <strong>" + nameCreatedBy + "</strong> wurde in deinem Auftrag ein Zeitcheck an <strong>" + nameToMember + "</strong> übergeben!<br>"
+        String subject = "Zeitscheck an " + nameToMember + " übergeben";
+        String message = "Von <strong>" + nameCreatedBy + "</strong> wurde in deinem Auftrag ein Zeitscheck an <strong>" + nameToMember + "</strong> übergeben!<br>"
                 + "<br>Anzahl der Stunden: <strong>" + hours + "</strong><br>"
                 + "Art der Leistung: <strong>" + offerTitle + "</strong><br>"
                 + (note != null && !note.isBlank() ? "Anmerkung: <em>" + note + "</em><br>" : "");
