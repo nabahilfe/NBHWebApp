@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import eu.nabahilfe.webapp.members.MemberRepository;
+import eu.nabahilfe.webapp.members.MembershipFee;
+import eu.nabahilfe.webapp.members.MembershipFeeRepository;
 import eu.nabahilfe.webapp.timecheques.TimeCheque;
 import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
 import jakarta.transaction.Transactional;
@@ -36,14 +38,16 @@ public class AccountingController {
     private final AccountingRepository accountingRepository;
     private final MemberRepository memberRepository;
     private final TimeChequeRepository timeChequeRepository;
+    private final MembershipFeeRepository membershipFeeRepository;
 
     private static final Logger log = LoggerFactory.getLogger(AccountingController.class);
 
     public AccountingController(AccountingRepository accountingRepository, MemberRepository memberRepository,
-            TimeChequeRepository timeChequeRepository) {
+            TimeChequeRepository timeChequeRepository, MembershipFeeRepository membershipFeeRepository) {
         this.accountingRepository = accountingRepository;
         this.memberRepository = memberRepository;
         this.timeChequeRepository = timeChequeRepository;
+        this.membershipFeeRepository = membershipFeeRepository;
     }
 
 
@@ -71,7 +75,7 @@ public class AccountingController {
         return "accountings/view-accounting";
     }
 
-    // FIXME: Add ListAccountings per year, month, accountable class, etc. as needed
+    // TODO: Add ListAccountings per year, month, accountable class, etc. as needed
 
 
     // --------------------
@@ -92,7 +96,7 @@ public class AccountingController {
         accountingEntry.setAccountableMember(formRowData.getAccountableMemberId() != null ?
                 memberRepository.findById(formRowData.getAccountableMemberId()).orElse(null) : null);
         accountingEntry.setTransactionType(formRowData.getTransactionType());
-        accountingEntry.setTransactionDate(LocalDate.parse(formRowData.getTransactionISODate()));
+        accountingEntry.setTransactionDate(formRowData.getTransactionDate());
         accountingEntry.setTransactionAmount(formRowData.getTransactionAmount());
 
 
@@ -126,8 +130,13 @@ public class AccountingController {
                     .orElseThrow(() -> new IllegalArgumentException("Invalid TimeCheque ID: " + accountingEntry.getAccountableId()));
             tc.setAccountedBy(accountingEntry);
         }
+        else if (accountingEntry.getAccountableClass().equals(MembershipFee.class.getSimpleName())) {
+            MembershipFee mf = membershipFeeRepository.findById(accountingEntry.getAccountableId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid MembershipFee ID: " + accountingEntry.getAccountableId()));
+            mf.setAccountedBy(accountingEntry);
+        }
         else if (accountingEntry.getAccountableClass().equals("SOME_OTHER_CLASS")) {
-            // FIXME: Handle other accountable classes as needed
+            // TODO: Handle other accountable classes as needed
         }
 
 

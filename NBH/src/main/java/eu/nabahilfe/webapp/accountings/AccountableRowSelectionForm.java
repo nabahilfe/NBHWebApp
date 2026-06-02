@@ -6,6 +6,7 @@
 package eu.nabahilfe.webapp.accountings;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class AccountableRowSelectionForm implements Accountable {
 
@@ -15,7 +16,7 @@ public class AccountableRowSelectionForm implements Accountable {
     private Long accountableMemberId;    	// Nur bei Zeitscheck-Kauf oder Mitgliedsgebühr relevant, sonst null
 
     private String transactionType;    		// INCOME oder EXPENSE - muss aus Enum TransactionType kommen
-    private String transactionISODate;
+    private LocalDate transactionDate;
     private BigDecimal transactionAmount;
 
 
@@ -52,12 +53,16 @@ public class AccountableRowSelectionForm implements Accountable {
         this.transactionType = transactionType;
     }
 
-    public String getTransactionISODate() {
-        return transactionISODate;
+    public LocalDate getTransactionDate() {
+        return transactionDate;
     }
 
-    public void setTransactionDate(String transactionISODate) {
-        this.transactionISODate = transactionISODate;
+    public String getTransactionISODate() {
+        return transactionDate != null ? transactionDate.toString() : null;
+    }
+
+    public void setTransactionDate(LocalDate transactionDate) {
+        this.transactionDate = transactionDate;
     }
 
     public BigDecimal getTransactionAmount() {
@@ -73,7 +78,8 @@ public class AccountableRowSelectionForm implements Accountable {
     public String toString() {
         return "AccountableForm [accountableClassName=" + accountableClassName + ", accountableId=" + accountableId
                 + ", accountableMemberId=" + accountableMemberId + ", transactionType=" + transactionType
-                + ", transactionISODate=" + transactionISODate + ", transactionAmount=" + transactionAmount + "]";
+                + ", transactionDate=" + transactionDate + ", transactionAmount=" + transactionAmount + "]";
     }
+
 
 }

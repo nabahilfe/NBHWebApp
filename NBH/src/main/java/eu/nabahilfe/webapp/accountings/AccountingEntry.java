@@ -15,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import eu.nabahilfe.webapp.GlobalAuditListener;
 import eu.nabahilfe.webapp.members.Member;
+import eu.nabahilfe.webapp.members.MembershipFee;
 import eu.nabahilfe.webapp.timecheques.TimeCheque;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -104,6 +105,7 @@ public class AccountingEntry  {
 
     public String getAccountableClassDisplayName() {
         if (accountableClass.equals(TimeCheque.class.getSimpleName())) return "Zeitscheck";
+        if (accountableClass.equals(MembershipFee.class.getSimpleName())) return "Mitgliedsbeitrag";
         // TODO: add more Accountables if any is implemented
 
         return accountableClass;
