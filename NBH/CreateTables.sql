@@ -45,7 +45,7 @@ CREATE TABLE persistent_logins (
 
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-06-02 13:14:51
+ * Generated at 2026-06-02 16:04:51
  * ModelDescription: NBH Entity Modell
  */
 
@@ -194,7 +194,7 @@ create table if not exists MEMBERS (
 /* Dokumentation des jährlichen Mitgliedsbeitrag. TransactionType ist immer INCOME */
 create table if not exists MEMBERSHIP_FEES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    for_year DATE not null,
+    for_year INTEGER not null,
     do_not_charge BOOLEAN not null /* z.B. für Ehrenmitglieder */,
     transaction_date DATE not null,
     amount NUMERIC(12,2) not null,
@@ -388,4 +388,3 @@ drop table if exists TRANSACTIONS cascade;
 
 
 /* end of generated file */
-

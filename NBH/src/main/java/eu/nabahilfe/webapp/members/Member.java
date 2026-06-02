@@ -102,7 +102,7 @@ public class Member implements Serializable {
     private Boolean directDebitAuthorization;    // Wenn Einziehungsauftrag vorhanden kann Mitglied sebständig Zeitschecks bestellen
 
     @Column(nullable = false)
-    private Boolean isImportedMember;    // Für importierte, bestehende Mitglider muss das TRUE sein, damit ihnen kein Gratis-Zeitschecks zugeteilt werden kann
+    private Boolean isImportedMember;    // Für importierte, bestehende Mitglider muss das TRUE sein, damit ihnen kein Gratis-Zeitschecks zugeteilt werden kann und keine Mitgliedsbeeträge berechnet werden.
 
     private Integer accumulatedHours;    // Gut-Stunden - kommt aus Gutschrift bei Eintritt, Stundenkauf, Stundenerwerb durch Hilfestellung, ...
 

@@ -7,6 +7,7 @@ package eu.nabahilfe.webapp.members;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,17 +48,20 @@ public class MemberController {
     private final TimeTransferRepository timeTransferRepository;
     private final TimeChequeRepository timeCheckRepository;
     private final SecurityUtils securityUtils;
+    private final MembershipFeeRepository membershipFeeRepository;
 
 
     private static final Logger log = LoggerFactory.getLogger(MemberController.class);
 
     public MemberController(MemberRepository memberRepository, RoleRepository roleRepository,
-            TimeTransferRepository timeTransferRepository, TimeChequeRepository timeCheckRepository, SecurityUtils securityUtils) {
+            TimeTransferRepository timeTransferRepository, TimeChequeRepository timeCheckRepository,
+            SecurityUtils securityUtils, MembershipFeeRepository membershipFeeRepository) {
         this.memberRepository = memberRepository;
         this.roleRepository = roleRepository;
         this.timeTransferRepository = timeTransferRepository;
         this.timeCheckRepository = timeCheckRepository;
         this.securityUtils = securityUtils;
+        this.membershipFeeRepository = membershipFeeRepository;
     }
 
 
@@ -103,6 +107,30 @@ public class MemberController {
     // SEARCH, LIST & DETAIL
     // ----------------------
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER')")
+    @GetMapping("/unaccounted-mbshipfees")
+    String listUnaccountedMembershipFees(final Model model) {
+        log.debug("Listing unaccounted MembershipFees");
+        model.addAttribute("membershipFees", membershipFeeRepository.findByAccountedByIsNullAndDoNotChargeFalse());
+        log.debug("Found {} unaccounted MembershipFees", ((java.util.List<?>) model.getAttribute("membershipFees")).size());
+        return "members/list-unaccounted-membershipfees";
+    }
+
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER')")
+    @GetMapping("/open-membership-fees")
+    String listOpenMembershipFees(final Model model, @RequestParam(required = false) Year year) {
+
+        year = (year != null) ? year : Year.now();
+
+        log.debug("Listing open MembershipFees for year {}", year);
+        List<MembershipFeeOpenForm> open = membershipFeeRepository.findMembersWithoutFeeForYear(year);
+        model.addAttribute("membershipFeesOpen", open);
+        log.debug("Found {} open MembershipFees for year {}", open.size(), year);
+        return "members/list-open-membership-fees";
+    }
+
+
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/search")
     public String searchMembers(@RequestParam String searchTerm, Model model, RedirectAttributes redirectAttributes) {
@@ -112,7 +140,10 @@ public class MemberController {
         return "redirect:/members";
     }
 
-    // FIXME: Role USER muss hier noch weg, eigene Ansicht für User
+
+
+
+
     @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'BOARD_MEMBER')")
     @GetMapping
     String listAllMembersPaginated(final Model model,
@@ -139,16 +170,16 @@ public class MemberController {
         if (searchTerm.length() <= 0)
             memberPage = memberRepository.findAll(pageRequest);
         else {
-        	Integer memberNmbr = null;
-        	if (searchTerm.matches("\\d+")) {
-        		try {
-					memberNmbr = Integer.parseInt(searchTerm);
-				} 
-        		catch (NumberFormatException e) {
-					log.warn("Failed to parse searchTerm '{}' as member number, ignoring numeric search term", searchTerm);
-				}
-        	}
-        	
+            Integer memberNmbr = null;
+            if (searchTerm.matches("\\d+")) {
+                try {
+                    memberNmbr = Integer.parseInt(searchTerm);
+                }
+                catch (NumberFormatException e) {
+                    log.warn("Failed to parse searchTerm '{}' as member number, ignoring numeric search term", searchTerm);
+                }
+            }
+
             memberPage = memberRepository.findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
                     searchTerm, searchTerm, memberNmbr, pageRequest);
         }
@@ -179,19 +210,19 @@ public class MemberController {
                       @RequestParam(required = false) Integer year,
                       jakarta.servlet.http.HttpSession session) {
         Optional<Member> member = memberRepository.findById(id);
-        
+
         if (member.isPresent() && isSystemAdmin(member.get())) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Das Mitglied 'System Administrator' kann nicht geändert werden.");
             return "redirect:/members";
         }
-        
+
         if (member.isPresent() && isSozialkonto(member.get())) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Das Sozialkonto kann nicht geändert werden.");
             return "redirect:/members";
         }
-        
+
         log.debug("Editing Member: {}", id);
 
         String sessionKey = "selectedYear_" + id;
@@ -235,9 +266,9 @@ public class MemberController {
     }
 
 
-	private long[] extracted() {
-		return new long[2];
-	}
+    private long[] extracted() {
+        return new long[2];
+    }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @GetMapping("/birthdays")
@@ -323,7 +354,7 @@ public class MemberController {
                     "Die E-Mail-Adresse '" + NbhConst.ADMIN_EMAIL + "' ist für den System-Administrator reserviert.");
             return "redirect:/members";
         }
-        
+
         if (member.getId() != null && isSozialkonto(member)) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Das Sozialkonto kann nicht geändert werden.");
@@ -368,9 +399,9 @@ public class MemberController {
             return "Es gibt bereits ein Sozialkonto, es kann kein weiteres Sozialkonto angelgt werden!";
         }
         if (member.getFirstName() != null && member.getFirstName().equalsIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME) ||
-				member.getLastName() != null && member.getLastName().equalsIgnoreCase(NbhConst.SOZIALKONTO_LAST_NAME)) {
-			return "Der Name " + NbhConst.SOZIALKONTO_FIRST_NAME + " " + NbhConst.SOZIALKONTO_LAST_NAME + " ist für das Sozialkonto reserviert und kann nicht verwendet werden!";
-		}
+                member.getLastName() != null && member.getLastName().equalsIgnoreCase(NbhConst.SOZIALKONTO_LAST_NAME)) {
+            return "Der Name " + NbhConst.SOZIALKONTO_FIRST_NAME + " " + NbhConst.SOZIALKONTO_LAST_NAME + " ist für das Sozialkonto reserviert und kann nicht verwendet werden!";
+        }
 
         return null;
     }
@@ -408,10 +439,10 @@ public class MemberController {
             return "redirect:/members";
         }
         if (member.isPresent() && isSozialkonto(member.get())) {
-			redirectAttributes.addFlashAttribute("errorMessage",
-					"Das Sozialkonto kann nicht gelöscht werden.");
-			return "redirect:/members";
-		}
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Das Sozialkonto kann nicht gelöscht werden.");
+            return "redirect:/members";
+        }
         memberRepository.delete(member.get());
         redirectAttributes.addFlashAttribute("successMessage", "Mitglied '" + member.get().getName() + "' wurde gelöscht.");
         log.debug("Deleted Member: {}", member.get());
@@ -421,7 +452,7 @@ public class MemberController {
 
 
 
-	// ------------------
+    // ------------------
     // validating member data
     // ------------------
 
@@ -486,11 +517,11 @@ public class MemberController {
                 .map(this::isSystemAdmin)
                 .orElse(false);
     }
-        
-    private boolean isSozialkonto(Member member) {
-		return member.isSozialkonto();
-	}
 
-    
+    private boolean isSozialkonto(Member member) {
+        return member.isSozialkonto();
+    }
+
+
 
 }

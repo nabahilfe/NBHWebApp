@@ -102,6 +102,8 @@
                                     <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/members/birthdays">Geburstage</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/members/open-membership-fees">Offene Mitgliedsbeiträge</a></li>
                                 </ul>
                             </li>
                         @endif
@@ -128,7 +130,7 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/timecheques/unaccounted">Offene Zeitschecks</a></li>
-                                    <li><a class="dropdown-item" href="#">Offene Mitgliedsbeiträge</a></li>
+                                    <li><a class="dropdown-item" href="/members/unaccounted-mbshipfees">Offene Mitgliedsbeiträge</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="#">Sonstige Buchung</a></li>
                                 </ul>

@@ -24,7 +24,7 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
 
     @EntityGraph(attributePaths = "role")
     Page<Member> findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
-            String lastName, String firstName, Integer memberNmbr, Pageable pageable);    
+            String lastName, String firstName, Integer memberNmbr, Pageable pageable);
 
     @EntityGraph(attributePaths = "role")
     List<Member> findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrStreetContainingIgnoreCase(
@@ -87,6 +87,8 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     @Query("SELECT YEAR(m.resignationDate), COUNT(m) FROM Member m WHERE m.resignationDate IS NOT NULL GROUP BY YEAR(m.resignationDate) ORDER BY YEAR(m.resignationDate) ASC")
     List<Object[]> findResignedCountPerYear();
 
-	List<Member> findBySalutationIgnoreCase(String sozialkontoSalutation);
+    List<Member> findBySalutationIgnoreCase(String sozialkontoSalutation);
+
+
 
 }
