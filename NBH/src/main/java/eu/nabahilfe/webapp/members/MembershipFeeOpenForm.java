@@ -3,7 +3,7 @@ package eu.nabahilfe.webapp.members;
 public class MembershipFeeOpenForm {
 
     /** Constructor for JPQL constructor expression. doNotCharge defaults to false. */
-    public MembershipFeeOpenForm(Long memberId, String firstName, String lastName,
+    public MembershipFeeOpenForm(Long memberId, String firstName, String lastName, String roleName,
             String street, String number, String zip, String city) {
         this.memberId = memberId;
         this.firstName = firstName;
@@ -12,6 +12,7 @@ public class MembershipFeeOpenForm {
         this.number = number;
         this.zip = zip;
         this.city = city;
+        this.roleName = roleName;
         this.doNotCharge = false;
     }
 
@@ -21,6 +22,9 @@ public class MembershipFeeOpenForm {
 
     private String firstName;
     private String lastName;
+
+    private String roleName;
+
 
     private String street;
     private String number;
@@ -93,6 +97,13 @@ public class MembershipFeeOpenForm {
         this.doNotCharge = doNotCharge;
     }
 
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
 
     public String getName() {
         return lastName + " " + firstName;

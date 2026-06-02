@@ -11,10 +11,10 @@ public interface MembershipFeeRepository extends ListCrudRepository<MembershipFe
 
     List<MembershipFee> findByAccountedByIsNullAndDoNotChargeFalse();
 
-    @Query("SELECT new eu.nabahilfe.webapp.members.MembershipFeeOpenForm(m.id, m.firstName, m.lastName, m.street, m.number, m.zip, m.city) " +
-           "FROM Member m " +
+    @Query("SELECT new eu.nabahilfe.webapp.members.MembershipFeeOpenForm(m.id, m.firstName, m.lastName, COALESCE(r.roleName, ''), m.street, m.number, m.zip, m.city) " +
+           "FROM Member m LEFT JOIN m.role r " +
            "WHERE NOT (m.isImportedMember = true AND YEAR(m.createdAt) = :currentYear) " +
-           "AND NOT EXISTS (SELECT r FROM Role r WHERE r = m.role AND r.roleName = 'System-Administrator') " +
+           "AND (r IS NULL OR r.roleName <> 'System-Administrator') " +
            "AND NOT EXISTS (SELECT f FROM MembershipFee f WHERE f.member = m AND f.forYear = :currentYear) " +
            "ORDER BY m.lastName ASC")
     List<MembershipFeeOpenForm> findMembersWithoutFeeForYear(@Param("currentYear") Year currentYear);
