@@ -121,7 +121,8 @@ public class MemberController {
     @GetMapping("/open-membership-fees")
     String listOpenMembershipFees(final Model model, @RequestParam(required = false) Year year) {
 
-        year = (year != null) ? year : Year.now();
+        // year = (year != null) ? year : Year.now();
+        year = Year.now();
 
         log.debug("Listing open MembershipFees for year {}", year);
         List<MembershipFeeOpenForm> open = membershipFeeRepository.findMembersWithoutFeeForYear(year);
