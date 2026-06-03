@@ -17,6 +17,7 @@ import eu.nabahilfe.webapp.email.EmailDetails;
 import eu.nabahilfe.webapp.email.EmailService;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
+import eu.nabahilfe.webapp.members.MembershipFeeRepository;
 import eu.nabahilfe.webapp.members.Role;
 import eu.nabahilfe.webapp.members.RoleRepository;
 import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
@@ -31,23 +32,28 @@ public class Scheduler {
     private final RoleRepository roleRepository;
     private final EmailComposer emailComposer;
     private final TimeChequeRepository timeChequeRepository;
+    private final MembershipFeeRepository membershipFeeRepository;
 
-    public Scheduler(MemberRepository memberRepository, EmailService emailService, 
-    		RoleRepository roleRepository, EmailComposer emailComposer, 
-    		TimeChequeRepository timeChequeRepository) {
+    public Scheduler(MemberRepository memberRepository, EmailService emailService,
+            RoleRepository roleRepository, EmailComposer emailComposer,
+            TimeChequeRepository timeChequeRepository, MembershipFeeRepository membershipFeeRepository) {
         this.memberRepository = memberRepository;
         this.emailService = emailService;
         this.roleRepository = roleRepository;
         this.emailComposer = emailComposer;
-		this.timeChequeRepository = timeChequeRepository;
+        this.timeChequeRepository = timeChequeRepository;
+        this.membershipFeeRepository = membershipFeeRepository;
     }
 
-    @Scheduled(cron = "0 0 11 * * *")
+    @Scheduled(cron = "* * 3 * * *")
     public void sendTimeChecksToBookEmail() {
 
         Integer timeChecksToBook = timeChequeRepository.countByAccountedBy_IdIsNullAndAmountGreaterThan(0.0);
+        Integer membershipFeesToBook = membershipFeeRepository.countByAccountedBy_IdIsNullAndAmountGreaterThan(0.0);
 
-        if (timeChecksToBook <= 0) {
+        log.debug("Found {} time checks and {} membership fees to book", timeChecksToBook, membershipFeesToBook);
+
+        if (timeChecksToBook <= 0 && membershipFeesToBook <= 0) {
             return;
         }
 
@@ -59,8 +65,13 @@ public class Scheduler {
         }
 
         for(Member member : treasurers) {
-            EmailDetails email = emailComposer.composeTimeChecksToBookEmail(member.getEmail(), 
-            		member.getEmailSalutation(), timeChecksToBook);
+            EmailDetails email = emailComposer.composeTimeChecksToBookEmail(member.getEmail(),
+                    member.getEmailSalutation(), timeChecksToBook);
+            emailService.sendEmailHtml(email);
+            log.debug("Sent email {} to {}", email.getSubject(), email.getRecipient());
+
+            email = emailComposer.composeMembershipFeesToBookEmail(member.getEmail(),
+                    member.getEmailSalutation(), membershipFeesToBook);
             emailService.sendEmailHtml(email);
             log.debug("Sent email {} to {}", email.getSubject(), email.getRecipient());
         }

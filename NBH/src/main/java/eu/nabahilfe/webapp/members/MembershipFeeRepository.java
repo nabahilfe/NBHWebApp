@@ -19,4 +19,7 @@ public interface MembershipFeeRepository extends ListCrudRepository<MembershipFe
            "ORDER BY m.lastName ASC")
     List<MembershipFeeOpenForm> findMembersWithoutFeeForYear(@Param("currentYear") Year currentYear);
 
+
+    Integer countByAccountedBy_IdIsNullAndAmountGreaterThan(Double amount);
+
 }

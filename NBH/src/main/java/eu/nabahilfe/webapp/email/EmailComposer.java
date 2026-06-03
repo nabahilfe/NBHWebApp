@@ -41,6 +41,20 @@ public class EmailComposer {
     }
 
 
+    public EmailDetails composeMembershipFeesToBookEmail(String recipient, String emailSalutation, int membershipFeesToBook) {
+        EmailDetails details = new EmailDetails(
+                recipient,
+                "Es gibt neue Mitgliedsbeiträge zu verbuchen!",
+                "<strong>" + emailSalutation + "</strong><br>"
+                + "<p>"
+                + "Es gibt <strong>" + membershipFeesToBook + "</strong> Mitgliedsbeiträge zu verbuchen!<br>"
+                + "<a href=\"" + baseUrl + "/members/unaccounted-mbshipfees\">Link zu den zu verbuchenden Mitgliedsbeiträgen</a>"
+                + "</p>"
+                + eMailFooter
+        );
+        return details;
+    }
+
     public EmailDetails composeConfirmationCodeEmail(String recipient, String name, String code) {
         EmailDetails details = new EmailDetails(
                 recipient,
