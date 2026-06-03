@@ -10,7 +10,7 @@ import java.util.Locale;
 
 
 /**
- * Quick and dirty hack to displa currect € format
+ * Quick and dirty hack to display correct € format
  */
 public class NumberFormatter {
 

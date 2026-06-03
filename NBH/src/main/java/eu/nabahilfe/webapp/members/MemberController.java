@@ -450,10 +450,10 @@ public class MemberController {
                 fee.setMember(memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + memberId)));
                 fee.setForYear(Year.now());
                 fee.setDoNotCharge(doNotCharge);
+                fee.setTransactionDate(LocalDate.now());
 
                 if (doNotCharge) {
                     fee.setAmount(BigDecimal.ZERO);
-                    fee.setTransactionDate(LocalDate.now());
                 }
                 else {
                     // FIXME: This is a hardcoded amount, use DomainVales instead

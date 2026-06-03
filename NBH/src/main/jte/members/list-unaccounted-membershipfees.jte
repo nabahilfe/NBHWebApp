@@ -35,7 +35,7 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>Noch nicht verbuchte Mitgliedsbeiträge</h3>
+    <h3>Offene noch nicht verbuchte Mitgliedsbeiträge</h3>
 
     <br/>
 

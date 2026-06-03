@@ -59,5 +59,14 @@ public class DateFormatter {
     }
 
 
+    /**
+     * @param dateTime
+     * @return DateTime String with ISO Format yyyy-MM-dd HH:mm:ss
+     */
+    public static String dateTimeWoTimeDE(LocalDateTime dateTime) {
+        if (dateTime == null) return "";
+        return dateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+    }
+
 }
 

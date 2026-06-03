@@ -141,7 +141,7 @@ public class AccountingController {
         log.debug("AccountingEntry saved with ID: " + accountingEntry.getId());
 
         redirectAttributes.addFlashAttribute("accountingEntry", accountingEntry);
-        redirectAttributes.addFlashAttribute("successMessage", "Buchung wurde gespeichert.");
+        redirectAttributes.addFlashAttribute("successMessage", "Buchung für " + accountingEntry.getAccountableClassDisplayName() + " wurde gespeichert.");
         return "redirect:/accountings/view-accounting/" + accountingEntry.getId();
     }
 

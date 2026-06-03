@@ -65,9 +65,15 @@
 
     <br/>
 
-    <form action="/timecheques/unaccounted" method="get">
-        <button type="submit" class="btn btn-outline-primary bi-list-check"> Offene Zeitschecks anzeigen</button>
-    </form>
+    @if(accountingEntry.getAccountableClass().equals(eu.nabahilfe.webapp.timecheques.TimeCheque.class.getSimpleName()))
+        <form action="/timecheques/unaccounted" method="get">
+            <button type="submit" class="btn btn-outline-primary bi-list-check"> Offene Zeitschecks anzeigen</button>
+        </form>
+    @elseif(accountingEntry.getAccountableClass().equals(eu.nabahilfe.webapp.members.MembershipFee.class.getSimpleName()))
+        <form action="/members/unaccounted-mbshipfees" method="get">
+            <button type="submit" class="btn btn-outline-primary bi-list-check"> Offene Mitgliedsbeiträge anzeigen</button>
+        </form>
+    @endif
 
     <br/>
 
