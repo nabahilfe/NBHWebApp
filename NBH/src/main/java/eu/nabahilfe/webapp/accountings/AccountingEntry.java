@@ -11,9 +11,11 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import eu.nabahilfe.webapp.GlobalAuditListener;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MembershipFee;
 import eu.nabahilfe.webapp.timecheques.TimeCheque;
@@ -36,7 +38,7 @@ import jakarta.validation.constraints.Size;
  * Buchungsdatensatz zu Zeitscheck-Kauf, Mitgliedschaft, Weihnachtsessen, usw.
  */
 @Entity
-@EntityListeners(GlobalAuditListener.class)
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "ACCOUNTING_ENTRIES")
 public class AccountingEntry  {
 
@@ -78,6 +80,7 @@ public class AccountingEntry  {
     // FIXME: im Generator: "@Column(nullable = false)"
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "created_by_id")
+    @CreatedBy
     private Member createdBy;
 
     @UpdateTimestamp
@@ -85,6 +88,7 @@ public class AccountingEntry  {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "updated_by_id")
+    @LastModifiedBy
     private Member updatedBy;
 
     @Version

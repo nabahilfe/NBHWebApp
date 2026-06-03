@@ -9,9 +9,13 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,6 +33,7 @@ import eu.nabahilfe.webapp.members.Member;
  * Texte für die HP. Erfassung als MarkDown, angezeigt wird daraus generiertes HTML
  */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "TEXT_CONTENTS")
 public class TextContent  {
 
@@ -50,6 +55,7 @@ public class TextContent  {
     // FIXME: im Generator: "@Column(nullable = false)"
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "created_by_id")
+    @CreatedBy
     private Member createdBy;
 
     @UpdateTimestamp
@@ -57,6 +63,7 @@ public class TextContent  {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "updated_by_id")
+    @LastModifiedBy
     private Member updatedBy;
 
     @Version

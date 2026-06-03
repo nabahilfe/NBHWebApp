@@ -7,6 +7,9 @@ import java.time.Year;
 import java.util.Objects;
 
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import eu.nabahilfe.webapp.accountings.Accountable;
@@ -14,6 +17,7 @@ import eu.nabahilfe.webapp.accountings.AccountingEntry;
 import eu.nabahilfe.webapp.accountings.TransactionType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +31,7 @@ import jakarta.persistence.Version;
  * Dokumentation des jährlichen Mitgliedsbeitrag. TransactionType ist immer INCOME
  */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "MEMBERSHIP_FEES")
 public class MembershipFee implements Accountable {
 
@@ -62,6 +67,7 @@ public class MembershipFee implements Accountable {
     // FIXME: im Generator: "@Column(nullable = false)"
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "created_by_id")
+    @CreatedBy
     private Member createdBy;
 
     @UpdateTimestamp
@@ -69,6 +75,7 @@ public class MembershipFee implements Accountable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "updated_by_id")
+    @LastModifiedBy
     private Member updatedBy;
 
     @Version

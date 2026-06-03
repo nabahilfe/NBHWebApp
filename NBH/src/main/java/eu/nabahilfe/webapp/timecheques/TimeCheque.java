@@ -10,9 +10,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import eu.nabahilfe.webapp.GlobalAuditListener;
 import eu.nabahilfe.webapp.accountings.Accountable;
 import eu.nabahilfe.webapp.accountings.AccountingEntry;
 import eu.nabahilfe.webapp.accountings.TransactionType;
@@ -34,7 +36,7 @@ import jakarta.persistence.Version;
  * Zeitscheck - zuerst angelegt und dann später verbucht vom Kassier. TransactionType ist immer INCOME
  */
 @Entity
-@EntityListeners(GlobalAuditListener.class)
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "TIME_CHEQUES")
 public class TimeCheque implements Accountable {
 
@@ -67,6 +69,7 @@ public class TimeCheque implements Accountable {
     // FIXME: im Generator: "@Column(nullable = false)"
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "created_by_id")
+    @CreatedBy
     private Member createdBy;
 
     @UpdateTimestamp
@@ -74,6 +77,7 @@ public class TimeCheque implements Accountable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "updated_by_id")
+    @LastModifiedBy
     private Member updatedBy;
 
     @Version
