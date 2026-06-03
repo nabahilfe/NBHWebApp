@@ -33,48 +33,58 @@
 
     <!-- Display all MembershipFee records -->
 
-    <table class="table table-hover table-sm" id="memberTable">
-        <thead>
-            <tr>
-                <th scope="col" data-col="0" style="cursor:pointer;">Name ↕</th>
-                <th scope="col">Adresse</th>
-                <th scope="col" data-col="2" style="cursor:pointer;">Rolle ↕</th>
-                <th scope="col" class="text-center">Beitrag erstellen</th>
-            </tr>
-        </thead>
+    <form id="feesForm" action="/members/create-fees-batch" method="POST">
+        ${csrfHiddenInput}
+        <div id="memberIdContainer"></div>
 
-        <tbody class="table-group-divider">
-            @for (MembershipFeeOpenForm mf : membershipFeesOpen)
+        <table class="table table-hover table-sm" id="memberTable">
+            <thead>
                 <tr>
-                    <td>${mf.getName()}</td>
-                    <td>${mf.getAddress()}</td>
-                    <td>${mf.getRoleName()}</td>
-                    <td class="text-center">
-                        <a class="btn btn-outline-primary btn-sm bi-plus-lg"
-                            href="/membership-fees/new?memberId=${mf.getMemberId()}" role="button"
-                            title="Mitgliedsbeitrag erstellen"></a>
-                    </td>
+                    <th scope="col" data-col="0" style="cursor:pointer;">Name ↕</th>
+                    <th scope="col">Adresse</th>
+                    <th scope="col" data-col="2" style="cursor:pointer;">Rolle ↕</th>
+                    <th scope="col" class="text-center" title="Kein Beitrag berechnen">Kein Beitrag</th>
                 </tr>
-            @endfor
-        </tbody>
-    </table>
+            </thead>
+
+            <tbody class="table-group-divider">
+                @for (MembershipFeeOpenForm mf : membershipFeesOpen)
+                    <tr>
+                        <td>${mf.getName()}</td>
+                        <td>${mf.getAddress()}</td>
+                        <td>${mf.getRoleName()}</td>
+                        <td class="text-center">
+                            <input type="checkbox" class="form-check-input doNotCharge-cb"
+                                   data-member-id="${mf.getMemberId()}">
+                        </td>
+                    </tr>
+                @endfor
+            </tbody>
+        </table>
+
+        <div class="text-end mt-2">
+            <button type="submit" class="btn btn-primary bi-plus-circle"> Beiträge erstellen</button>
+        </div>
+    </form>
+
     <br/>
 
     @template.components.display-statusmessage(successMessage, errorMessage)
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+
+            // --- Sorting ---
             const table = document.getElementById("memberTable");
             const tbody = table.querySelector("tbody");
-            const sortState = {}; // tracks current sort direction per column index
+            const sortState = {};
 
             table.querySelectorAll("th[data-col]").forEach(th => {
                 th.addEventListener("click", () => {
                     const colIndex = parseInt(th.getAttribute("data-col"));
-                    const asc = sortState[colIndex] !== true; // toggle
+                    const asc = sortState[colIndex] !== true;
                     sortState[colIndex] = asc;
 
-                    // Reset all sortable headers to ↕, then set active one
                     table.querySelectorAll("th[data-col]").forEach(h => {
                         h.textContent = h.textContent.replace(/[↕↑↓]/, "↕");
                     });
@@ -89,6 +99,30 @@
                     rows.forEach(row => tbody.appendChild(row));
                 });
             });
+
+            // --- Form submission: submit all memberIds with their doNotCharge flag ---
+            document.getElementById("feesForm").addEventListener("submit", function (e) {
+                e.preventDefault();
+                const container = document.getElementById("memberIdContainer");
+                container.innerHTML = "";
+
+                document.querySelectorAll(".doNotCharge-cb").forEach(cb => {
+                    const idInput = document.createElement("input");
+                    idInput.type = "hidden";
+                    idInput.name = "memberIds";
+                    idInput.value = cb.getAttribute("data-member-id");
+                    container.appendChild(idInput);
+
+                    const flagInput = document.createElement("input");
+                    flagInput.type = "hidden";
+                    flagInput.name = "doNotChargeFlags";
+                    flagInput.value = cb.checked;
+                    container.appendChild(flagInput);
+                });
+
+                this.submit();
+            });
+
         });
     </script>
 

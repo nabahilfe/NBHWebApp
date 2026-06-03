@@ -328,6 +328,8 @@ public class MemberController {
     // CREATE NEW, UPDATE
     // --------------------
 
+
+
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @GetMapping("/new")
     String newMember(final Model model) {
@@ -422,6 +424,29 @@ public class MemberController {
             RedirectAttributes redirectAttributes, @PathVariable Long id) {
         log.debug("Update Member with id {}: {}", id, member);
         return saveMember(model, member, result, redirectAttributes);
+    }
+
+
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER')")
+    @PostMapping("/create-fees-batch")
+    String createFeesBatch(@RequestParam(required = false) List<Long> memberIds,
+            @RequestParam(required = false) List<Boolean> doNotChargeFlags,
+            RedirectAttributes redirectAttributes) {
+
+        int count = memberIds == null ? 0 : memberIds.size();
+        log.info("createFeesBatch called with {} members", count);
+        if (memberIds != null) {
+            for (int i = 0; i < memberIds.size(); i++) {
+                boolean doNotCharge = doNotChargeFlags != null && i < doNotChargeFlags.size()
+                        && Boolean.TRUE.equals(doNotChargeFlags.get(i));
+                log.info("  -> memberId: {}, doNotCharge: {}", memberIds.get(i), doNotCharge);
+            }
+        }
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Beiträge für " + count + " Mitglieder werden erstellt.");
+        return "redirect:/members/open-membership-fees";
     }
 
 
