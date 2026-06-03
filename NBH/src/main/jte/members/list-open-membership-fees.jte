@@ -27,7 +27,7 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>Noch nicht verbuchte Mitgliedsbeiträge für das aktuelle Jahr</h3>
+    <h3>Noch nicht vorgeschriebene Mitgliedsbeiträge für das aktuelle Jahr</h3>
 
     <br/>
 
@@ -63,7 +63,7 @@
         </table>
 
         <div class="text-end mt-2">
-            <button type="submit" class="btn btn-primary bi-plus-circle"> Beiträge erstellen</button>
+            <button type="submit" class="btn btn-primary bi-plus-circle"> Beitragsvorschreibungen erstellen</button>
         </div>
     </form>
 

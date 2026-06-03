@@ -5,6 +5,7 @@
 
 package eu.nabahilfe.webapp.members;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.Year;
@@ -436,13 +437,34 @@ public class MemberController {
 
         int count = memberIds == null ? 0 : memberIds.size();
         log.info("createFeesBatch called with {} members", count);
+
         if (memberIds != null) {
+
             for (int i = 0; i < memberIds.size(); i++) {
-                boolean doNotCharge = doNotChargeFlags != null && i < doNotChargeFlags.size()
-                        && Boolean.TRUE.equals(doNotChargeFlags.get(i));
-                log.info("  -> memberId: {}, doNotCharge: {}", memberIds.get(i), doNotCharge);
+
+                Long memberId = memberIds.get(i);
+                boolean doNotCharge = Boolean.TRUE.equals(doNotChargeFlags.get(i));
+                log.info("  -> memberId: {}, doNotCharge: {}", memberId, doNotCharge);
+
+                MembershipFee fee = new MembershipFee();
+                fee.setMember(memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + memberId)));
+                fee.setForYear(Year.now());
+                fee.setDoNotCharge(doNotCharge);
+
+                if (doNotCharge) {
+                    fee.setAmount(BigDecimal.ZERO);
+                    fee.setTransactionDate(LocalDate.now());
+                }
+                else {
+                    // FIXME: This is a hardcoded amount, use DomainVales instead
+                    fee.setAmount(BigDecimal.valueOf(33));
+                }
+
+                membershipFeeRepository.save(fee);
             }
         }
+
+        log.info("Created {} MembershipFee records", count);
 
         redirectAttributes.addFlashAttribute("successMessage",
                 "Beiträge für " + count + " Mitglieder werden erstellt.");
