@@ -24,13 +24,9 @@
     ctxt = ctxt,
     content = @`
 
-    <h1 class="">Testsystem der Nachbarschaftshilfe Maria Anzbach</h1>
+    <div class="row gx-2 gx-lg-4 mt-0">
 
-    <br/>
-
-    <div class="row gx-2 gx-lg-4 mt-4">
-
-         <div class="col-12 col-lg-4 mb-3 ">
+         <div class="col-12 col-lg-4 mb-2">
 
             <!-- Left column content (1/3) -->
             <!--
