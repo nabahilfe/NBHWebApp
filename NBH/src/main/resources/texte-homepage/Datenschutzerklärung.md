@@ -70,9 +70,7 @@ Mit Ausnahme der Mitglieder der EEG, findet **keine Übermittlung** an Auftragsv
 Ihre Daten werden nur so lange gespeichert, wie es für die genannten Zwecke erforderlich ist:
 
 - **Während aufrechter Mitgliedschaft:** für die gesamte Dauer Ihrer Vereinsmitgliedschaft
-- **Nach Beendigung der Mitgliedschaft** werden Ihre Daten innerhalb von **einem Jahr** gelöscht bzw. komplett anonymisiert,
-sofern keine längeren, gesetzlich vorgesehenen Aufbewahrungspflichten *(z. B. steuerrechtliche Fristen von 7 Jahren für Buchhaltungsunterlagen)*
-dem entgegenstehen.
+- **Nach Beendigung der Mitgliedschaft** werden Ihre Daten innerhalb von **einem Jahr** gelöscht bzw. komplett anonymisiert, sofern keine längeren, gesetzlich vorgesehene Aufbewahrungspflichten *(z. B. steuerrechtliche Fristen von 7 Jahren für Buchhaltungsunterlagen)* dem entgegenstehen.
 
 *Buchhalterisch relevante Daten (z. B. Mitgliedsbeiträge) unterliegen der gesetzlichen Aufbewahrungspflicht von 7 Jahren gemäß § 132 BAO. Die Buchhaltung erfolgt aber nicht in dieser Web Anwendung*
 
@@ -95,7 +93,7 @@ Sie haben gemäß DSGVO folgende Rechte, die Sie jederzeit gegenüber uns gelten
 
 - **Auskunftsrecht** (Art. 15 DSGVO): Sie können Auskunft darüber verlangen, welche Daten wir über Sie gespeichert haben.
 - **Recht auf Berichtigung** (Art. 16 DSGVO): Sie können die Berichtigung unrichtiger oder unvollständiger Daten verlangen.
-- **Recht auf Löschung** (Art. 17 DSGVO): Sie können die Löschung Ihrer Daten verlangen, soweit keine gesetzlichen Aufbewahrungspflichten entgegenstehen.
+- **Recht auf Löschung** (Art. 17 DSGVO): Sie können die Löschung Ihrer Daten verlangen, soweit sie nicht zur Erfüllung des Vereinszwecks erforderlich sind und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.
 - **Recht auf Einschränkung der Verarbeitung** (Art. 18 DSGVO): Sie können die Einschränkung der Verarbeitung Ihrer Daten verlangen.
 - **Recht auf Datenübertragbarkeit** (Art. 20 DSGVO): Sie können Ihre Daten in einem gängigen, maschinenlesbaren Format anfordern.
 - **Widerspruchsrecht** (Art. 21 DSGVO): Sie können der Verarbeitung Ihrer Daten widersprechen, soweit diese auf einem berechtigten Interesse beruht.
