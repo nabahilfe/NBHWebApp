@@ -89,6 +89,8 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
 
     List<Member> findBySalutationIgnoreCase(String sozialkontoSalutation);
 
+    List<Member> findByFirstNameAndLastName(String adminAccountFirstName, String adminAccountLastName);
+
 
 
 }

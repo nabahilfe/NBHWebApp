@@ -45,8 +45,8 @@ public class Scheduler {
         this.membershipFeeRepository = membershipFeeRepository;
     }
 
-    @Scheduled(cron = "* * 3 * * *")
-    public void sendTimeChecksToBookEmail() {
+    @Scheduled(cron = "0 0 12 * * *")
+    public void sendOpenAccontablesToBookEmail() {
 
         Integer timeChecksToBook = timeChequeRepository.countByAccountedBy_IdIsNullAndAmountGreaterThan(0.0);
         Integer membershipFeesToBook = membershipFeeRepository.countByAccountedBy_IdIsNullAndAmountGreaterThan(0.0);
@@ -64,14 +64,19 @@ public class Scheduler {
             treasurers.addAll(memberRepository.findByRole(treasurerRole));
         }
 
-        for(Member member : treasurers) {
-            EmailDetails email = emailComposer.composeTimeChecksToBookEmail(member.getEmail(),
-                    member.getEmailSalutation(), timeChecksToBook);
+        for(Member treasurer : treasurers) {
+            if (treasurer.getEmail() == null || treasurer.getEmail().isBlank()) {
+                log.error("Treasurer {} has no email address, skipping email notification", treasurer.getName());
+                continue;
+            }
+
+            EmailDetails email = emailComposer.composeTimeChecksToBookEmail(treasurer.getEmail(),
+                    treasurer.getEmailSalutation() + " - Darf nur um 10:00 kommen!", timeChecksToBook);
             emailService.sendEmailHtml(email);
             log.debug("Sent email {} to {}", email.getSubject(), email.getRecipient());
 
-            email = emailComposer.composeMembershipFeesToBookEmail(member.getEmail(),
-                    member.getEmailSalutation(), membershipFeesToBook);
+            email = emailComposer.composeMembershipFeesToBookEmail(treasurer.getEmail(),
+                    treasurer.getEmailSalutation(), membershipFeesToBook);
             emailService.sendEmailHtml(email);
             log.debug("Sent email {} to {}", email.getSubject(), email.getRecipient());
         }

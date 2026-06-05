@@ -209,29 +209,12 @@ public class TimeTransferController {
 
         // validate transfer is not to self
         if (memberFrom.getId().equals(memberTo.getId())) {
-            ttf.setUserFromName(memberFrom.getNameAndAddress());
-            ttf.setUserToName(memberTo.getNameAndAddress());
-            log.debug("\nTransfer from {} to same member, re-displaying form with error.", ttf);
-            model.addAttribute("ttf", ttf);
-            model.addAttribute("errorMessage", "Leistungsemfänger und Leistungserbringer dürfen nicht identisch sein!");
-
-            if (fromself) return "timetransfers/self-timetransfer";
-            return "timetransfers/create-timetransfer";
+            return errorTransferToSelf(model, ttf, fromself, memberFrom, memberTo);
         }
 
         // validate sufficient hours
         if (memberFrom.getAccumulatedHours() == null || memberFrom.getAccumulatedHours() < hours) {
-            ttf.setUserFromName(memberFrom.getNameAndAddress());
-            ttf.setUserToName(memberTo.getNameAndAddress());
-            log.debug("\nInsufficient hours for member {}, re-displaying form with error.", memberFrom.getName());
-            model.addAttribute("ttf", ttf);
-            model.addAttribute("errorMessage", memberFrom.getName()
-                    + " hat nicht genügend Stunden (aktuell "
-                    + (memberFrom.getAccumulatedHours() == null ? "0" : memberFrom.getAccumulatedHours())
-                    + " h) für diese Übertragung!");
-
-            if (fromself) return "timetransfers/self-timetransfer";
-            return "timetransfers/create-timetransfer";
+            return errorNotSufficentHours(model, ttf, fromself, memberFrom, memberTo);
         }
 
         // validate category is 950 or 999 if Sozialkonto is involved
@@ -240,15 +223,7 @@ public class TimeTransferController {
             if (offer.isPresent()) {
                 String code = offer.get().getCode();
                 if (!code.equals("950") && !code.equals("999")) {
-                    log.debug("\nTransfer involves Sozialkonto, category {} is not allowed. Must be 950 or 999", code);
-                    ttf.setUserFromName(memberFrom.getNameAndAddress());
-                    ttf.setUserToName(memberTo.getNameAndAddress());
-                    log.debug("\nTransfer from Sozialkonto {}, re-displaying form with error.", memberFrom);
-                    model.addAttribute("ttf", ttf);
-                    model.addAttribute("errorMessage", "Bei Sozialkonto muss Kategorie 950 (oder 999) ausgewählt werden!");
-
-                    if (fromself) return "timetransfers/self-timetransfer";
-                    return "timetransfers/create-timetransfer";
+                    return errorWrongCategorie(model, ttf, fromself, memberFrom, memberTo, code);
                 }
             }
         }
@@ -267,7 +242,7 @@ public class TimeTransferController {
 
         // adjust hours
         Integer newHoursFrom = memberFrom.getAccumulatedHours() - hours;
-        // if hours are zero, set to null so that UI shows empty field and sorts last
+        // if hours are zero, set to null so that UI shows empty field and sorts to last positin in table
         memberFrom.setAccumulatedHours(newHoursFrom.intValue() == 0 ? null : newHoursFrom);
         memberRepository.save(memberFrom);
 
@@ -277,24 +252,7 @@ public class TimeTransferController {
         memberRepository.save(memberTo);
 
 
-        // email notification to recipient
-        if (memberTo.getEmail() != null && !memberTo.getEmail().isBlank()) {
-            emailService.sendEmailHtml(emailComposer.composeTimeChequeTransferToEmail(
-                    memberTo.getEmail(), memberTo.getEmailSalutation(),
-                    memberFrom.getName(),
-                    hours, offerRepository.findById(offerId).get().getDescription(), note));
-        }
-
-
-
-        // email notification to sender (only if sender is not same as creator of transfer,
-        // to avoid emails when sender creates transfer for themselves)
-        if (memberFrom.getEmail() != null && !memberFrom.getEmail().isBlank() && !memberFrom.getId().equals(tt.getCreatedBy().getId())) {
-            emailService.sendEmailHtml(emailComposer.composeTimeChequeTransferFromEmail(
-                    memberFrom.getEmail(), memberFrom.getEmailSalutation(),
-                    memberTo.getName(), tt.getCreatedBy().getName(),
-                    hours, offerRepository.findById(offerId).get().getDescription(), note));
-        }
+        sendEmailsToParticipants(hours, offerId, note, memberFrom, memberTo, tt);
 
         redirectAttributes.addFlashAttribute("successMessage",
                 (hours == 1 ? "Eine Stunde für " : hours + " Stunden für ") + memberTo.getName() + " verbucht.");
@@ -304,21 +262,74 @@ public class TimeTransferController {
     }
 
 
+    private String errorWrongCategorie(final Model model, TimeTransferForm ttf, boolean fromself, Member memberFrom,
+            Member memberTo, String code) {
+        log.debug("\nTransfer involves Sozialkonto, category {} is not allowed. Must be 950 or 999", code);
+        ttf.setUserFromName(memberFrom.getNameAndAddress());
+        ttf.setUserToName(memberTo.getNameAndAddress());
+        log.debug("\nTransfer from Sozialkonto {}, re-displaying form with error.", memberFrom);
+        model.addAttribute("ttf", ttf);
+        model.addAttribute("errorMessage", "Bei Sozialkonto muss Kategorie 950 (oder 999) ausgewählt werden!");
+
+        if (fromself) return "timetransfers/self-timetransfer";
+        return "timetransfers/create-timetransfer";
+    }
 
 
+    private String errorNotSufficentHours(final Model model, TimeTransferForm ttf, boolean fromself,
+            Member memberFrom, Member memberTo) {
+        ttf.setUserFromName(memberFrom.getNameAndAddress());
+        ttf.setUserToName(memberTo.getNameAndAddress());
+        log.debug("\nInsufficient hours for member {}, re-displaying form with error.", memberFrom.getName());
+        model.addAttribute("ttf", ttf);
+        model.addAttribute("errorMessage", memberFrom.getName()
+                + " hat nicht genügend Stunden (aktuell "
+                + (memberFrom.getAccumulatedHours() == null ? "0" : memberFrom.getAccumulatedHours())
+                + " h) für diese Übertragung!");
+
+        if (fromself) return "timetransfers/self-timetransfer";
+        return "timetransfers/create-timetransfer";
+    }
 
 
+    private String errorTransferToSelf(final Model model, TimeTransferForm ttf, boolean fromself, Member memberFrom, Member memberTo) {
+        ttf.setUserFromName(memberFrom.getNameAndAddress());
+        ttf.setUserToName(memberTo.getNameAndAddress());
+        log.debug("\nTransfer from {} to same member, re-displaying form with error.", ttf);
+        model.addAttribute("ttf", ttf);
+        model.addAttribute("errorMessage", "Leistungsemfänger und Leistungserbringer dürfen nicht identisch sein!");
+
+        if (fromself) return "timetransfers/self-timetransfer";
+        return "timetransfers/create-timetransfer";
+    }
 
 
+    private void sendEmailsToParticipants(Integer hours, Long offerId, String note, Member memberFrom, Member memberTo,
+            TimeTransfer tt) {
+        // email notification to recipient
+        if (memberTo.getEmail() != null && !memberTo.getEmail().isBlank()) {
+            emailService.sendEmailHtml(emailComposer.composeTimeChequeTransferToEmail(
+                    memberTo.getEmail(), memberTo.getEmailSalutation(),
+                    memberFrom.getName(),
+                    hours, offerRepository.findById(offerId).get().getDescription(), note));
+        }
+        else {
+            log.debug("No email sent for TimeTransfer ID {} because recipient {} has no email address.", tt.getId(), memberTo.getName());
+        }
 
-
-
-
-
-
-
-
-
-
+        // email notification to sender
+        if (memberFrom.getEmail() != null && !memberFrom.getEmail().isBlank()) {
+            // only if sender is not same as creator of transfer, to avoid emails to self
+            if (!memberFrom.getId().equals(tt.getCreatedBy().getId())) {
+                emailService.sendEmailHtml(emailComposer.composeTimeChequeTransferFromEmail(
+                        memberFrom.getEmail(), memberFrom.getEmailSalutation(),
+                        memberTo.getName(), tt.getCreatedBy().getName(),
+                        hours, offerRepository.findById(offerId).get().getDescription(), note));
+            }
+        }
+        else {
+            log.debug("No email sent for TimeTransfer ID {} because sender {} has no email address or is same as creator.", tt.getId(), memberFrom.getName());
+        }
+    }
 
 }

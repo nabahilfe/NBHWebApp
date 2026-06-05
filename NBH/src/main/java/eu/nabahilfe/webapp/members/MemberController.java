@@ -219,12 +219,6 @@ public class MemberController {
             return "redirect:/members";
         }
 
-        if (member.isPresent() && isSozialkonto(member.get())) {
-            redirectAttributes.addFlashAttribute("errorMessage",
-                    "Das Sozialkonto kann nicht geändert werden.");
-            return "redirect:/members";
-        }
-
         log.debug("Editing Member: {}", id);
 
         String sessionKey = "selectedYear_" + id;
@@ -353,9 +347,9 @@ public class MemberController {
                     "Das Mitglied 'System Administrator' kann nicht geändert werden.");
             return "redirect:/members";
         }
-        if (NbhConst.ADMIN_EMAIL.equalsIgnoreCase(member.getEmail())) {
+        if (member.getEmail() != null && member.getEmail().toLowerCase().startsWith(NbhConst.ADMIN_EMAIL_PREFIX)) {
             redirectAttributes.addFlashAttribute("errorMessage",
-                    "Die E-Mail-Adresse '" + NbhConst.ADMIN_EMAIL + "' ist für den System-Administrator reserviert.");
+                    "Die E-Mail-Adresse '" + NbhConst.ADMIN_EMAIL_PREFIX + "' ist für den System-Administrator reserviert.");
             return "redirect:/members";
         }
 
@@ -401,10 +395,6 @@ public class MemberController {
     private String validateOnlyOneSozialkonto(@Valid Member member) {
         if (member.isSozialkonto() && memberRepository.findBySalutationIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION).size() > 0) {
             return "Es gibt bereits ein Sozialkonto, es kann kein weiteres Sozialkonto angelgt werden!";
-        }
-        if (member.getFirstName() != null && member.getFirstName().equalsIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME) ||
-                member.getLastName() != null && member.getLastName().equalsIgnoreCase(NbhConst.SOZIALKONTO_LAST_NAME)) {
-            return "Der Name " + NbhConst.SOZIALKONTO_FIRST_NAME + " " + NbhConst.SOZIALKONTO_LAST_NAME + " ist für das Sozialkonto reserviert und kann nicht verwendet werden!";
         }
 
         return null;
@@ -548,6 +538,10 @@ public class MemberController {
                 return "Telefonnummer muss mit + (dann keine 0 vor der Vorwahl) oder 0 beginnen und darf nur Ziffern und einzelne Leerzeichen enthalten.";
         }
 
+        // do not allow sysadmin in email
+        if (member.getEmail() != null && member.getEmail().toLowerCase().startsWith(NbhConst.ADMIN_EMAIL_PREFIX))
+            return "Die E-Mail-Adresse '" + NbhConst.ADMIN_EMAIL_PREFIX + "' ist für den System-Administrator reserviert und kann nicht verwendet werden!";
+
         return null;
     }
 
@@ -557,7 +551,8 @@ public class MemberController {
     // ------------------
 
     private boolean isSystemAdmin(Member member) {
-        return NbhConst.ADMIN_EMAIL.equalsIgnoreCase(member.getEmail());
+        if (member.getEmail() == null) return false;
+        return member.getEmail().toLowerCase().startsWith(NbhConst.ADMIN_EMAIL_PREFIX);
     }
 
     private boolean isSystemAdminById(Long id) {

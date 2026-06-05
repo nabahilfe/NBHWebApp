@@ -22,7 +22,8 @@ public class EmailComposer {
     private final String baseUrl;
 
     public EmailComposer(@Value("${app.base-url}") String baseUrl) {
-        this.baseUrl = baseUrl;
+        // FIXME: Wie geht das für Multi Tenant?
+        this.baseUrl = "https://ma.nabahilfe.eu";
     }
 
 

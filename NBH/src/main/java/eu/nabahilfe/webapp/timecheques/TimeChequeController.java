@@ -251,7 +251,7 @@ public class TimeChequeController {
         tc.getAssignedTo().setAccumulatedHours(newHours);
         memberRepository.save(tc.getAssignedTo());
 
-        if (tc.getAssignedTo().getEmail() != null) {
+        if (tc.getAssignedTo().getEmail() != null && !tc.getAssignedTo().getEmail().isBlank()) {
             emailService.sendEmailHtml(emailComposer.composeTimeChecksBought(
                     tc.getAssignedTo().getEmail(), tc.getAssignedTo().getEmailSalutation(),
                     tc.getCreatedBy().getEmail(), tc.getCreatedBy().getName(),
@@ -314,7 +314,7 @@ public class TimeChequeController {
                 .findByCodeAndDate(AmountDomainType.TIMECHEQUE_FEE.name(), date)
                 .map(adv -> adv.getAmount())
                 .orElseThrow(() -> new IllegalStateException(
-                        "Kein TIMECHEQUE_FEE Eintrag für das Datum " + date + " gefunden."));
+                        "Kein TIMECHEQUE_FEE Eintrag für das Datum " + date + " gefunden. Wenden dich an den System Administrator! Einstellungen > Gebühren-Sätze da fehlen die Wert!"));
     }
 
     private String validateData(Member member, TimeCheque timeCheque, int existingTimeCheques, boolean isSelfPurchase) {

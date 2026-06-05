@@ -40,12 +40,13 @@ public final class NbhConst {
     public static final String SOZIALKONTO_FIRST_NAME = "Sozialkonto";
     public static final String SOZIALKONTO_LAST_NAME = "Nachbarschaftshilfe";
 
-    
-    
+
+
     public static final String ADMIN_ROLE_NAME = "System-Administrator";
-    public static final String ADMIN_EMAIL = "webmaster@nabahilfe.eu";
+    public static final String ADMIN_EMAIL_PREFIX = "sysadmin.";	// this is follwoed by the tenant name, e.g. "sysadmin.ma" for tenant "ma"
+    public static final String ADMIN_EMAIL_SUFFIX = "@nabahilfe.eu";
     public static final String ADMIN_ACCOUNT_FIRST_NAME = "Administrator";
     public static final String ADMIN_ACCOUNT_LAST_NAME = "System";
-    
+
 
 }
