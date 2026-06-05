@@ -77,10 +77,6 @@
                     <input type="text" class="form-control" readonly value="${tt.getToMember().getNameAndAddress()}">
 
                     <br/>
-                    <form action="/timetransfers/new" method="get">
-                        <input type="hidden" name="fromMemberId" value="${tt.getFromMember().getId()}">
-                        <button type="submit" class="btn btn-outline-primary bi-play-btn"> Weiteren Zeitscheck an dieses Mitglied - IMPLEMENT!</button>
-                    </form>
                 </div>
             </div>
         </div>

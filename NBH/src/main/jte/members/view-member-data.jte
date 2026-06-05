@@ -82,19 +82,19 @@
                         </p>
 
 
-			  			@if(! member.isSystemMember())
-                        	<hr/>
-	                        <!-- download a personalized Zeitscheck.pdf -->
-	                        <form action="/download/timecheque-pdf" method="get">
-	                            <input type="hidden" name="memberId" value="${member.getId()}">
-	                            <div class="text-center">
-	                                Zeitschecks herunterladen zum Ausdrucken
-	                                <br/><br/>
-	                               <button type="submit" class="btn btn-primary bi-download"> Zeitschecks herunterladen</button>
-	                            </div>
-	                        </form>
-	                    @endif
-	                    
+                          @if(! member.isSystemMember())
+                            <hr/>
+                            <!-- download a personalized Zeitscheck.pdf -->
+                            <form action="/download/timecheque-pdf" method="get">
+                                <input type="hidden" name="memberId" value="${member.getId()}">
+                                <div class="text-center">
+                                    Zeitschecks herunterladen zum Ausdrucken
+                                    <br/><br/>
+                                   <button type="submit" class="btn btn-primary bi-download"> Zeitschecks herunterladen</button>
+                                </div>
+                            </form>
+                        @endif
+
                     </div>
                 </div>
             </div>
@@ -106,10 +106,11 @@
         <i>Letztes Update: ${dateTimeDE(member.getUpdatedAt())}</i>
     </div>
 
-    <br/>
-        
-    @template.components.list-timecheque-data-component(member = member, timeCheques = purchasedTimeCheques, transfersGiven = givenTimeTransfers, 
-    		transfersReceived = receivedTimeTransfers, selectedYear = selectedYear)
+    <hr/>
+    <h5>Zeitscheck-Käufe und Zeitscheck-Transfers</h5>
+
+    @template.components.list-timecheque-data-component(member = member, timeCheques = purchasedTimeCheques, transfersGiven = givenTimeTransfers,
+            transfersReceived = receivedTimeTransfers, selectedYear = selectedYear)
 
 
 `)
