@@ -5,9 +5,10 @@ Documentation of the data that is generated or required for this project
 ### User
 
 #### A standard System Administrator is generated at startup with the following data
+Has to be fixt for multi tenant setup, but for now we have only one tenant, so this is ok.
 
 - Name: System Administrator
-- email: webmaster@nabahilfe.eu
+- email: sysadmin.ma@nabahilfe.eu
 
 Set your password by registering with the email address above. 
 This user has all permissions and is used for administration of the system. 
@@ -19,7 +20,7 @@ Both entities, the user and the role, are not editable nor deletable.
 
 ## E-Mail setup in Hetzner konsoleH
 
-**webmaster@nabahilfe.eu** is the email address that is used for System Administrator.
+**sysadmin.ma@nabahilfe.eu** is the email address that is used for System Administrator.
 
 - Mails are forwarded (and then deleted) as configured in the hetzner webmail app, currently this is
   - admin@weissboeck.info
@@ -30,13 +31,11 @@ Both entities, the user and the role, are not editable nor deletable.
 - This email address is used for all outgoing emails, such as registration, notifications, etc.
 - All incoming mails are silently discarded, so please do not send any emails to this address.
 
-**kontakt@nabahilfe.eu** is the email address that is published on the web page and is used for receiving emails from users.
-
+**kontakt.ma@nabahilfe.eu** is the email address that is published on the web page and is used for receiving emails from users. Has t o be fixt for multi tenant setup, but for now we have only one tenant, so this is ok.
 - incoming emails to this address are forwarded to email addresses as configured in hetzner Webmail of this account.
 - all incoming emails are deleted after forwarding to the configured accounts.
 - current forwarding configuration is as follows:
   - mweissboeck@gmail.com
 
 **test@nabhilfe.eu** only for testing
-
-
+- This email address is used for testing purposes only, such as testing email sending and receiving functionality.

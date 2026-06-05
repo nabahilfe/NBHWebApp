@@ -25,7 +25,7 @@ und mildtätige Zwecke im Sinne der Bundesabgabenordnung (§§ 34 ff. BAO), sein
 #### Kontakt
 
 **Postanschrift:** Schubertgasse 7, 3034 Maria Anzbach  
-**E-Mail:** [kontakt@nabahilfe.eu](mailto:kontakt@nabahilfe.eu)  
+**E-Mail:** [kontakt.ma@nabahilfe.eu](mailto:kontakt.ma@nabahilfe.eu)  
 **Telefonnummer:** [+43 677 61401164](tel:+4367761401164)  
 **Website:** [www.nabahilfe.eu](https://www.nabahilfe.eu)  
 
