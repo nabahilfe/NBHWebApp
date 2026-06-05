@@ -33,6 +33,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import eu.nabahilfe.webapp.NbhConst;
+import eu.nabahilfe.webapp.domaintypes.AmountDomainType;
+import eu.nabahilfe.webapp.domaintypes.AmountDomainValue;
+import eu.nabahilfe.webapp.domaintypes.AmountDomainValueRepository;
 import eu.nabahilfe.webapp.security.SecurityUtils;
 import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
 import eu.nabahilfe.webapp.timetransfers.TimeTransferRepository;
@@ -50,18 +53,21 @@ public class MemberController {
     private final TimeChequeRepository timeCheckRepository;
     private final SecurityUtils securityUtils;
     private final MembershipFeeRepository membershipFeeRepository;
+    private final AmountDomainValueRepository amountDomainValueRepository;
 
 
     private static final Logger log = LoggerFactory.getLogger(MemberController.class);
 
     public MemberController(MemberRepository memberRepository, RoleRepository roleRepository,
             TimeTransferRepository timeTransferRepository, TimeChequeRepository timeCheckRepository,
-            SecurityUtils securityUtils, MembershipFeeRepository membershipFeeRepository) {
+            SecurityUtils securityUtils, MembershipFeeRepository membershipFeeRepository,
+            AmountDomainValueRepository amountDomainValueRepository) {
         this.memberRepository = memberRepository;
         this.roleRepository = roleRepository;
         this.timeTransferRepository = timeTransferRepository;
         this.timeCheckRepository = timeCheckRepository;
         this.securityUtils = securityUtils;
+        this.amountDomainValueRepository = amountDomainValueRepository;
         this.membershipFeeRepository = membershipFeeRepository;
     }
 
@@ -430,11 +436,19 @@ public class MemberController {
 
         if (memberIds != null) {
 
+            Optional<AmountDomainValue> value = amountDomainValueRepository.findByCodeAndDate(AmountDomainType.MEMBERSHIP_FEE.name(), LocalDate.now());
+            if (value.isEmpty()) {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "Es konnte kein gültiger Mitgliedsbeitrag gefunden werden. Die Konfiguration der Mitgliedsbeiträge prüfen!");
+                return "redirect:/members/open-membership-fees";
+            }
+
+
             for (int i = 0; i < memberIds.size(); i++) {
 
                 Long memberId = memberIds.get(i);
                 boolean doNotCharge = Boolean.TRUE.equals(doNotChargeFlags.get(i));
-                log.info("  -> memberId: {}, doNotCharge: {}", memberId, doNotCharge);
+                log.info("-> memberId: {}, doNotCharge: {}", memberId, doNotCharge);
 
                 MembershipFee fee = new MembershipFee();
                 fee.setMember(memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + memberId)));
@@ -446,11 +460,11 @@ public class MemberController {
                     fee.setAmount(BigDecimal.ZERO);
                 }
                 else {
-                    // FIXME: This is a hardcoded amount, use DomainVales instead
-                    fee.setAmount(BigDecimal.valueOf(33));
+                    fee.setAmount(value.get().getAmount());
                 }
 
                 membershipFeeRepository.save(fee);
+
             }
         }
 

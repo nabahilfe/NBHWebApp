@@ -174,9 +174,9 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/domaintypes">Gebühren-Sätze</a></li>
-                                    <li><a class="dropdown-item" href="#">Offene Mitgliedsbeiträge</a></li>
+                                    <!--li><a class="dropdown-item" href="#">...</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#">Sonstige Buchung</a></li>
+                                    <li><a class="dropdown-item" href="#">...</a></li-->
                                 </ul>
                             </li>
                         @endif

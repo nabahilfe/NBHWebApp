@@ -63,9 +63,6 @@
                 <p class="card-text">
                     $unsafe{aboutUs}
                 </p>
-
-                <br/>
-                Weitere Informationen LINK-TBD
             </div>
 
             <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4"

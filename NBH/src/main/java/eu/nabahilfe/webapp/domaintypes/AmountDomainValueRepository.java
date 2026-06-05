@@ -29,6 +29,7 @@ public interface AmountDomainValueRepository extends ListCrudRepository<AmountDo
     /** Find the record valid for a specific date (validFrom <= date <= validTo) */
     @Query("SELECT a FROM AmountDomainValue a WHERE a.code = :code AND a.validFrom <= :date AND a.validTo >= :date")
     Optional<AmountDomainValue> findByCodeAndDate(String code, LocalDate date);
+
     @Query("SELECT a FROM AmountDomainValue a WHERE a.code = :code AND a.validTo = :validTo")
     Optional<AmountDomainValue> findByCodeAndValidTo(String code, LocalDate validTo);
 
