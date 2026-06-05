@@ -1,6 +1,7 @@
 /* Daten für ROLES */
-/* sollten automatisch angelegt werden */
+/* werden automatisch angelegt */
 
+/*
 INSERT INTO roles (is_board_member,  is_treasurer, is_secretary, is_auditor, is_time_keeper, is_admin, is_miscellaneous, role_name,          version) VALUES
                     (true,             false,          false,       false,      false,       true,       false,          'Obmann',              0),
                     (true,             false,          false,       false,      false,       true,       false,          'Obmann Stv.',         0),
@@ -13,12 +14,14 @@ INSERT INTO roles (is_board_member,  is_treasurer, is_secretary, is_auditor, is_
                     (false,            false,          true,        false,      false,       true,       false,          'Schriftührer',        0),
                     (false,            false,          true,        false,      false,       true,       false,          'Schriftührer Stv.',   0),
                     (false,            false,          false,       false,      false,       false,      true,           'Ehrenmitglied',       0);
+*/
 
 
 
 /* Daten für Offers / Tätigkeiten */
-/* sollten automatisch angelegt werden */
+/* werden automatisch angelegt */
 
+/*
 insert into offers (code, description, version) values
 ('100','Erfahrungsaustausch und Gespräche', 0),
 ('200','Alltägliche Hilfsdienste', 0),
@@ -31,11 +34,11 @@ insert into offers (code, description, version) values
 ('900','Sonstiges - bitte Beschreibung angeben!', 0),
 ('950','Spende von Stunden', 0),
 ('999','Korrekturbuchung', 0);
+*/
 
 
 
-
-/* Testdaten Mitglieder */
+/*  Mitglieder Testdaten */
 
 insert into members (member_nmbr, first_name, last_name, birthdate, street, number, zip, city, version, joining_date) values
 (1001, 'Thomas','Huber','1978-11-02','Hauptstraße','7','4020','Linz', 0, '2018-03-01'),
