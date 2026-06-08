@@ -263,7 +263,7 @@
 
                 <hr/>
 
-                <h5>Zeitscheck-Käufe und Zeitscheck-Transfers</h5>
+                <h5>Zeitschecks</h5>
 
                 @template.components.list-timecheque-data-component(member = member, timeCheques = purchasedTimeCheques, transfersGiven = givenTimeTransfers,
                         transfersReceived = receivedTimeTransfers, selectedYear = selectedYear)

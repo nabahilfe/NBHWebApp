@@ -97,9 +97,10 @@
         </div>
     </div>
 
-
     <hr/>
-    <h5>Zeitscheck-Käufe und Zeitscheck-Transfers</h5>
+    <div class="text-center">
+        <h5>Meine Zeitschecks</h5>
+    </div>
 
     @template.components.list-timecheque-data-component(member = member, timeCheques = purchasedTimeCheques, transfersGiven = givenTimeTransfers,
             transfersReceived = receivedTimeTransfers, selectedYear = selectedYear)
