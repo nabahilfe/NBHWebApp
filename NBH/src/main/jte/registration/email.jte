@@ -23,18 +23,20 @@
     content = @`
 
     <h3>Registrierungscode anfordern</h3>
-    <p>Gib deine E-Mail ein um einen 6-stelligen Registrierungscode zu erhalten.<br/>
-    Der Code, den du per E-Mail erhälts, ist 15 Minuten gültig und wird für die Aktivierung
-    deines Kontos benötigt.</p>
+    <p>
+        Gib deine E-Mail ein um einen 6-stelligen Registrierungscode zu erhalten.
+        Der Code ist 15 Minuten gültig und wird für die Aktivierung
+        deines Kontos benötigt.
+    </p>
 
-    <p>Hinweis: du kannst mit diesem Formular auch ein neues Passwort erstellen,
+    <p>Hinweis: du kannst damit auch ein neues Passwort erstellen,
     falls du dein Passwort vergessen hast.</p>
 
 
     <form action="/registration/email" method="post" class="needs-validation" novalidate>
         ${csrfHiddenInput}
         <div class="mb-3">
-            <label for="email" class="form-label">Meine E-Mail<span class="text-danger">*</span></label>
+            <label for="email" class="form-label">Deine E-Mail<span class="text-danger">*</span></label>
             <input type="email"
                    class="form-control"
                    id="email"
