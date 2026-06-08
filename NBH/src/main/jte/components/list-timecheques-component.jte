@@ -38,17 +38,17 @@
                 <tr>
                     <th scope="col">Datum</th>
                     <th scope="col">Erstellt von</th>
-                    <th scope="col" class="text-end">Stunden</th>
-                    <th scope="col" class="text-end">Preis</th>
+                    <th scope="col" class="text-end">h</th>
+                    <th scope="col" class="text-end">&euro;</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider">
                 @for (TimeCheque tc : timeCheques)
                     <tr>
-                        <td scope="row">${dateDE(tc.getTransactionDate())}</td>
+                        <td scope="row">${dateMMMDD(tc.getTransactionDate())}</td>
                         <td scope="row">${tc.getCreatedBy().getName()}</td>
                         <td scope="row" class="text-end">${tc.getHours()}</td>
-                        <td scope="row" class="text-end">${numberDE(tc.getAmount())}&nbsp;&euro;</td>
+                        <td scope="row" class="text-end">${numberDE(tc.getAmount())}</td>
                     </tr>
                 @endfor
             </tbody>
