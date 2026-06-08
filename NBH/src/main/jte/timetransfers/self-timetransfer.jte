@@ -47,10 +47,9 @@
                   <div class="card-body">
 
                     <h4 class="card-title text-primary">Zeitschecks übergeben</h4>
+                    Mein aktuelles Zeitguthaben: <strong> ${ttf.getAccumulatedHours()} h</strong>
                     <hr/>
-                    Mein aktuelles Zeitguthaben: <b> ${ttf.getAccumulatedHours()} h</b>
-                    <hr/>
-                    <p class="card-text text-success">Ich - <strong>${ctxt.getFullName()}</strong> - übergebe einen Zeitscheck</p>
+                    <p class="card-text">Ich - <strong>${ctxt.getFullName()}</strong> - übergebe einen Zeitscheck</p>
 
                     <!--
                       Payer input (userFrom): visible text input for autocomplete search

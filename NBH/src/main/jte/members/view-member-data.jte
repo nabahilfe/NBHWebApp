@@ -50,8 +50,10 @@
 
 
                         <p class="card-text">
-                            ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}
-                            <br/>
+                            @if((member.getSalutation() != null && !member.getSalutation().isEmpty()) || member.getTitle() != null && !member.getTitle().isEmpty())
+                                ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}
+                                <br/>
+                            @endif
                             <strong>${member.getFirstName()} ${member.getLastName()}</strong>
                             <br/>
                             ${member.getStreet() + " " + member.getNumber()}
@@ -60,24 +62,20 @@
                             <hr/>
                             Geburtstag: ${dateReverseDE(member.getBirthdate())}
                             @if(member.getEmail() != null)
-                                <p class="card-text">
-                                    E-Mail: <a href="mailto:${member.getEmail()}">${member.getEmail()}</a>
-                                </p>
+                                <br/>
+                                 E-Mail: <a href="mailto:${member.getEmail()}">${member.getEmail()}</a>
                             @endif
                             @if(member.getPhoneNumber() != null)
-                                <p class="card-text">
-                                    Telefon: ${member.getPhoneNumber()}
-                                </p>
+                                <br/>
+                                Telefon: ${member.getPhoneNumber()}
                             @endif
                             <hr/>
                             Mitgliedsnummer: ${member.getMemberNmbr()}
                             <br/>
                             Mitglied seit: ${dateReverseDE(member.getJoiningDate())}
-                            <br/>
-                            Austritt am: ${member.getResignationDate() != null ? dateReverseDE(member.getResignationDate()) : "aktives Mitglied"}
                             <hr/>
                             Einziehungsauftrag:  <strong>${member.getEinziehungsauftrgJaNein()}</strong>
-                            <hr/>
+                            <br/>
                             Stundenguthaben: <strong>${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + "" : "0"} h</strong>
                         </p>
 
@@ -101,10 +99,6 @@
         </div>
     </div>
 
-    <br/>
-    <div>
-        <i>Letztes Update: ${dateTimeDE(member.getUpdatedAt())}</i>
-    </div>
 
     <hr/>
     <h5>Zeitscheck-Käufe und Zeitscheck-Transfers</h5>

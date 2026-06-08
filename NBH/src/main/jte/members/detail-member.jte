@@ -207,10 +207,12 @@
 
                 </div>
 
+<!-- FIXME: only for Vortsnad / Sysadmin - must show LocalDate!
                 <br/>
                 <p>
                     <i>Letztes Update: ${dateTimeDE(member.getUpdatedAt())}</i>
                 </p>
+-->
 
                 <br/>
 

@@ -29,14 +29,41 @@
          <div class="col-12 col-lg-4 mb-2">
 
             <!-- Left column content (1/3) -->
-            <!--
-            <img src="/images/nbh-logo-gelb.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-4 bg-transparent img-fluid" alt="NBH Logo">
-            <img src="/images/nbh-logo-neu-bg-white.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-4 bg-transparent img-fluid" alt="NBH Logo">
-            -->
+
+
+            <!-- Mobile only content -->
+            <div class="d-block d-md-none">
+                @if(ctxt != null && ctxt.isAuthenticated() && !ctxt.isSystemMember())
+                    <div class="d-flex flex-column align-items-center gap-2">
+                        <a class="btn btn-lg btn-success bi bi-share-fill w-75" href="/timetransfers/fromself?fromMemberId=${ctxt.getUserId()}">&nbsp; Zeitschecks übergeben</a>
+                        <a class="btn btn-lg btn-success bi bi-bag-plus w-75" href="/timecheques/newfromself/${ctxt.getUserId()}">&nbsp; Zeitschecks kaufen</a>
+                        <a class="btn btn-lg btn-success bi bi-clipboard-data w-75" href="/members/mydata/${ctxt.getUserId()}">&nbsp; Meine Daten</a>
+                        <p></p>
+
+                         <form action="/registration/logout" method="post" class="d-flex flex-column align-items-center gap-2">
+                            ${csrfHiddenInput}
+                            <button class="btn btn-outline-danger bi bi-box-arrow-left"> Abmelden</button>
+                        </form>
+                        <p></p>
+                    </div>
+                @endif
+            </div>
+
             <img src="/images/NBH-Helping-Hands-Logo-2.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-4 bg-transparent img-fluid" alt="NBH Logo" title="Originalfoto von Austin Kehmeier auf Unsplash">
-            <!--
-            <img src="/images/nbh-logo-neu-filled.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-4 bg-transparent img-fluid" alt="NBH Logo">
-            -->
+
+
+            <!-- Mobile only content -->
+            <div class="d-block d-md-none">
+                @if (ctxt == null || (ctxt != null && !ctxt.isAuthenticated()))
+                    <div class="d-flex flex-column align-items-center gap-2">
+                        <a class="btn btn-lg btn-success bi-box-arrow-in-right w-75" href="/registration/login">&nbsp; Anmelden</a>
+                        <a class="btn btn-secondary bi-person-plus w-75" href="/registration/email">&nbsp; Registrieren / Passwort vergessen?</a>
+                        <p class="w-75">Nur für Mitglieder. Du kannst dich nur Registrieren wenn deine E-Mail hinterlegt ist.</p>
+                        <p></p>
+                    </div>
+                @endif
+            </div>
+
 
             <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4"
             style="background-color: #ECFEFF;">

@@ -354,7 +354,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         admin.setJoiningDate(LocalDate.now());
         admin.setDirectDebitAuthorization(false);
         admin.setIsImportedMember(false);
-        admin.setAccumulatedHours(0);
+        admin.setAccumulatedHours(null);
         admin.setMemberNmbr(getNextMemberNumber());
 
         memberRepository.save(admin);

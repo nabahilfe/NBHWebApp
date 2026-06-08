@@ -67,9 +67,9 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/members/mydata/${ctxt.getUserId()}">Meine Daten</a></li>
-                                    @if (! ctxt.isSystemAdmin()) <!-- no timecheques for SystemAdmin -->
+                                    @if (!ctxt.isSystemMember()) <!-- no timecheques for SystemMembers -->
                                         <li><a class="dropdown-item" href="/timetransfers/fromself?fromMemberId=${ctxt.getUserId()}">Zeitschecks übergeben</a></li>
-                                            <li><a class="dropdown-item" href="/timecheques/newfromself/${ctxt.getUserId()}">Zeitschecks kaufen</a></li>
+                                        <li><a class="dropdown-item" href="/timecheques/newfromself/${ctxt.getUserId()}">Zeitschecks kaufen</a></li>
                                     @endif
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
