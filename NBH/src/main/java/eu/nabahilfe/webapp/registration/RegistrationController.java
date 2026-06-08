@@ -222,7 +222,29 @@ public class RegistrationController {
 
 
     @GetMapping("/login")
-    public String showLoginForm(@RequestParam(required = false) String error, Model model, HttpServletRequest request) {
+    public String showLoginForm(@RequestParam(required = false) String error,
+            @RequestParam(required = false) String blocked,
+            Model model, HttpServletRequest request) {
+
+        if ("true".equals(blocked)) {
+            try {
+                var session = request.getSession(false);
+                if (session != null) {
+                    Object minutes = session.getAttribute("LOGIN_BLOCK_MINUTES");
+                    session.removeAttribute("LOGIN_BLOCK_MINUTES");
+                    if (minutes != null) {
+                        model.addAttribute("errorMessage",
+                                "Zu viele Fehlversuche. Bitte " + minutes + " Minute(n) warten und es erneut versuchen.");
+                    } else {
+                        model.addAttribute("errorMessage", "Zu viele Fehlversuche. Bitte kurz warten.");
+                    }
+                }
+            } catch (Exception e) {
+                log.warn("Could not read LOGIN_BLOCK_MINUTES from session: {}", e.getMessage());
+            }
+            return "registration/login";
+        }
+
         if ("true".equals(error)) {
             model.addAttribute("errorMessage", "E-Mail oder Passwort falsch!");
         }

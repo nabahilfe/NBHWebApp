@@ -68,7 +68,7 @@
                 </div>
 
                 <!-- Icon only if Desktop content -->
-                <div class="d-none d-lg-block">
+                <div class="d-none d-md-block">
                     <img src="/images/NBH-Helping-Hands-Logo-2.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-4 bg-transparent img-fluid" alt="NBH Logo" title="Originalfoto von Austin Kehmeier auf Unsplash">
                 </div>
 
@@ -78,15 +78,12 @@
             @endif
 
 
-
-
-
             <!-- Mobile only content -->
             <div class="d-block d-md-none">
                 @if (ctxt == null || (ctxt != null && !ctxt.isAuthenticated()))
                     <div class="d-flex flex-column align-items-center gap-2">
                         <a class="btn btn-lg btn-success bi-box-arrow-in-right w-75" href="/registration/login">&nbsp; Anmelden</a>
-                        <a class="btn btn-success bi-person-plus w-75" href="/registration/email">&nbsp; Registrieren / Passwort vergessen?</a>
+                        <a class="btn btn-success bi-person-plus w-75" href="/registration/email">&nbsp; Registrieren</a>
                         <p class="w-75 text-center">Nur für Mitglieder. Du kannst dich nur registrieren, wenn deine E-Mail hinterlegt ist.</p>
                         <p></p>
                     </div>
