@@ -45,7 +45,7 @@ public class Scheduler {
         this.membershipFeeRepository = membershipFeeRepository;
     }
 
-    @Scheduled(cron = "0 0 17 * * *")
+    @Scheduled(cron = "0 0 3 * * *")
     public void sendOpenAccontablesToBookEmail() {
 
         Integer timeChecksToBook = timeChequeRepository.countByAccountedBy_IdIsNullAndAmountGreaterThan(0.0);

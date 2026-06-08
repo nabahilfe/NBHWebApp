@@ -31,25 +31,54 @@
             <!-- Left column content (1/3) -->
 
 
-            <!-- Mobile only content -->
-            <div class="d-block d-md-none">
-                @if(ctxt != null && ctxt.isAuthenticated() && !ctxt.isSystemMember())
+            @if(ctxt != null && ctxt.isAuthenticated() && !ctxt.isSystemMember())
+                <!-- Mobile only content -->
+                <div class="d-block d-md-none">
                     <div class="d-flex flex-column align-items-center gap-2">
                         <a class="btn btn-lg btn-success bi bi-share-fill w-75" href="/timetransfers/fromself?fromMemberId=${ctxt.getUserId()}">&nbsp; Zeitschecks übergeben</a>
                         <a class="btn btn-lg btn-success bi bi-bag-plus w-75" href="/timecheques/newfromself/${ctxt.getUserId()}">&nbsp; Zeitschecks kaufen</a>
                         <a class="btn btn-lg btn-success bi bi-clipboard-data w-75" href="/members/mydata/${ctxt.getUserId()}">&nbsp; Meine Daten</a>
                         <p></p>
 
-                         <form action="/registration/logout" method="post" class="d-flex flex-column align-items-center gap-2">
-                            ${csrfHiddenInput}
-                            <button class="btn btn-outline-danger bi bi-box-arrow-left"> Abmelden</button>
-                        </form>
+                        <button type="button" class="btn btn-outline-danger bi bi-box-arrow-left w-75" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">&nbsp; Abmelden</button>
+
+                        <!-- Logout Confirm Modal -->
+                        <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-labelledby="logoutConfirmModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="logoutConfirmModalLabel">Abmelden</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Möchtest du dich wirklich abmelden?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                                        <form action="/registration/logout" method="post">
+                                            ${csrfHiddenInput}
+                                            <button type="submit" class="btn btn-danger bi bi-box-arrow-left"> Abmelden</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <p></p>
                     </div>
-                @endif
-            </div>
+                </div>
 
-            <img src="/images/NBH-Helping-Hands-Logo-2.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-4 bg-transparent img-fluid" alt="NBH Logo" title="Originalfoto von Austin Kehmeier auf Unsplash">
+                <!-- Icon only if Desktop content -->
+                <div class="d-none d-lg-block">
+                    <img src="/images/NBH-Helping-Hands-Logo-2.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-4 bg-transparent img-fluid" alt="NBH Logo" title="Originalfoto von Austin Kehmeier auf Unsplash">
+                </div>
+
+            @else
+                <!-- if not authenticated, always show Logo -->
+                <img src="/images/NBH-Helping-Hands-Logo-2.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-4 bg-transparent img-fluid" alt="NBH Logo" title="Originalfoto von Austin Kehmeier auf Unsplash">
+            @endif
+
+
+
 
 
             <!-- Mobile only content -->
