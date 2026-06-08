@@ -99,7 +99,7 @@ public class RegistrationController {
         if (emailRateLimiter.isBlocked(clientIp)) {
             long minutes = emailRateLimiter.blockedMinutesRemaining(clientIp);
             model.addAttribute("errorMessage",
-                    "Zu viele Fehlversuche. Bitte " + minutes + " Minute(n) warten und es erneut versuchen.");
+                    "Zu viele Fehlversuche. Bitte " + minutes + " Minute(n) warten und dann erneut versuchen.");
             return "registration/email";
         }
 
@@ -234,7 +234,7 @@ public class RegistrationController {
                     session.removeAttribute("LOGIN_BLOCK_MINUTES");
                     if (minutes != null) {
                         model.addAttribute("errorMessage",
-                                "Zu viele Fehlversuche. Bitte " + minutes + " Minute(n) warten und es erneut versuchen.");
+                            "Zu viele Fehlversuche. Bitte " + minutes + " Minute(n) warten und dann erneut versuchen.");
                     } else {
                         model.addAttribute("errorMessage", "Zu viele Fehlversuche. Bitte kurz warten.");
                     }

@@ -31,7 +31,7 @@
             <!-- Left column content (1/3) -->
 
 
-            @if(ctxt != null && ctxt.isAuthenticated() && !ctxt.isSystemMember())
+            @if(ctxt != null && ctxt.isAuthenticated())
                 <!-- Mobile only content -->
                 <div class="d-block d-md-none">
                     <div class="d-flex flex-column align-items-center gap-2">
@@ -90,19 +90,19 @@
                 @endif
             </div>
 
+            <!-- Contact info at this position only if Desktop mode -->
+            <div class="d-none d-md-block">
+                <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4"
+                style="background-color: #ECFEFF;">
+                    <h2>Kontakt</h2>
+                    <p class="card-text">
+                        $unsafe{contact}
+                    </p>
 
-            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4"
-            style="background-color: #ECFEFF;">
-                <h2>Kontakt</h2>
-                <p class="card-text">
-                    $unsafe{contact}
-                </p>
-
-                <br/>
-                <a href="/home/legal-and-privacy-policy">Datenschutzerklärung und Impressum</a>
-
+                    <br/>
+                    <a href="/home/legal-and-privacy-policy">Datenschutzerklärung und Impressum</a>
+                </div>
             </div>
-
 
         </div>
 
@@ -126,6 +126,22 @@
                 </p>
                 <i>WICHTIG: Termine können sich ändern, erkundigen Sie sich ob der Termin planmäßig stattfindet.</i>
             </div>
+
+
+            <!-- Contact info at this position only if Mobile mode -->
+            <div class="d-block d-md-none">
+                <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4"
+                style="background-color: #ECFEFF;">
+                    <h2>Kontakt</h2>
+                    <p class="card-text">
+                        $unsafe{contact}
+                    </p>
+
+                    <br/>
+                    <a href="/home/legal-and-privacy-policy">Datenschutzerklärung und Impressum</a>
+                </div>
+            </div>
+
 
         </div>
 
