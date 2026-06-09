@@ -283,7 +283,7 @@
             // Phone number validation on blur/submit only
             const phoneInput = document.getElementById('phoneNumber');
             if (phoneInput) {
-                const phonePattern = /^(\+[1-9][0-9]*( [1-9][0-9]*( [0-9]+)*)?|0[0-9 ]*)$/;
+                const phonePattern = /^(\+\d{1,3}|0\d{1,5})(\s\d+)*$/;
 
                 phoneInput.addEventListener('blur', function() {
                     const val = this.value.trim();
