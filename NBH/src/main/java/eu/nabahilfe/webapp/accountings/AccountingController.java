@@ -5,6 +5,10 @@
 
 package eu.nabahilfe.webapp.accountings;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -74,6 +79,51 @@ public class AccountingController {
     }
 
     // TODO: Add ListAccountings per year, month, accountable class, etc. as needed
+
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER', 'BOARD_MEMBER', 'AUDITOR')")
+    @GetMapping("/show-accountings")
+    public String showAccountings(
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) String accountableClass,
+            @RequestParam(required = false) String transactionType,
+            final Model model) {
+
+        int selectedYear = (year != null) ? year : LocalDate.now().getYear();
+        String selectedTransactionType = (transactionType != null && !transactionType.isBlank())
+                ? transactionType : TransactionType.INCOME.name();
+        String selectedAccountableClass = (accountableClass != null && !accountableClass.isBlank())
+                ? accountableClass : "";
+
+        List<AccountingEntry> entries;
+        if (selectedAccountableClass.isEmpty()) {
+            entries = accountingRepository.findByYearAndTransactionType(selectedYear, selectedTransactionType);
+        } else {
+            entries = accountingRepository.findByYearAndTransactionTypeAndAccountableClass(
+                    selectedYear, selectedTransactionType, selectedAccountableClass);
+        }
+
+        BigDecimal total = entries.stream()
+                .map(AccountingEntry::getTransactionAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        List<String> distinctClasses = accountingRepository.findDistinctAccountableClasses();
+
+        // Year range: current year down 7 years
+        int currentYear = LocalDate.now().getYear();
+        List<Integer> years = new java.util.ArrayList<>();
+        for (int y = currentYear; y >= currentYear - 7; y--) years.add(y);
+
+        model.addAttribute("entries", entries);
+        model.addAttribute("total", total);
+        model.addAttribute("distinctAccountableClasses", distinctClasses);
+        model.addAttribute("years", years);
+        model.addAttribute("selectedYear", selectedYear);
+        model.addAttribute("selectedTransactionType", selectedTransactionType);
+        model.addAttribute("selectedAccountableClass", selectedAccountableClass);
+
+        return "accountings/list-accountingentries";
+    }
 
 
     // --------------------
