@@ -84,7 +84,7 @@
                     <div class="d-flex flex-column align-items-center gap-2">
                         <a class="btn btn-lg btn-success bi-box-arrow-in-right w-75" href="/registration/login">&nbsp; Anmelden</a>
                         <a class="btn btn-success bi-person-plus w-75" href="/registration/email">&nbsp; Registrieren</a>
-                        <p class="w-75 text-center">Nur für Mitglieder. Du kannst dich nur registrieren, wenn deine E-Mail hinterlegt ist.</p>
+                        <p class="w-75 text-center">Nur für Mitglieder. Du kannst dich nur registrieren wenn deine E-Mail hinterlegt ist.</p>
                         <p></p>
                     </div>
                 @endif
