@@ -46,8 +46,8 @@ public class SecurityConfig {
             )
 
             .formLogin(form -> form
-                .loginPage("/registration/login")            // page
-                .loginProcessingUrl("/registration/login")     // form action
+                .loginPage("/registration/login")            	// page
+                .loginProcessingUrl("/registration/login")     	// form action
                 .successHandler((_ /* request */, response, authentication) -> {
                     log.debug("User '{}' logged in successfully. Auth authorities: {}",
                             authentication.getName(),

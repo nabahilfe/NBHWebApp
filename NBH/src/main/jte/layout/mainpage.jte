@@ -103,7 +103,7 @@
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/members/birthdays">Geburstage</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/members/open-membership-fees">Offene Mitgliedsbeiträge</a></li>
+                                    <li><a class="dropdown-item" href="/members/open-membership-fees">Mitgliedsbeiträge vorschreiben</a></li>
                                 </ul>
                             </li>
                         @endif
@@ -123,7 +123,7 @@
                         @endif
 
                         <!-- Dropdown Buchungen -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER", "TREASURER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "TREASURER", "AUDITOR"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Buchungen
@@ -168,7 +168,7 @@
 
 
                         <!-- Dropdown Domain Values -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER", "TREASURER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TREASURER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Einstellungen

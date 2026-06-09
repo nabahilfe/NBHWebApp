@@ -84,14 +84,17 @@ public class EmailComposer {
         String message = null;
 
         if (totalPrice == 0)
-            message = "Du hast für deine Mitgliedschaft in der Nachbarschaftshilfe <strong>" + amount + "</strong> Zeitschecks erhalten!";
+            message = "Du hast für deine neue Mitgliedschaft in der Nachbarschaftshilfe <strong>" + amount + "</strong> Zeitschecks erhalten!";
 
         else if (emailCreatedBy.equals(emailRecipient))
-            message = "Du hast <strong>" + amount + "</strong> Zeitschecks zum Preis von <strong>€ " + NumberFormatter.numberDE(totalPrice) + "</strong> selbst bestellt und erhalten!";
+            message = "Du hast <strong>" + amount + "</strong> Zeitschecks zum Preis von <strong>€ " + NumberFormatter.numberDE(totalPrice) + "</strong> selbst bestellt und erhalten!"
+                    + "<br>Der Betrag wird von deinem Konto eingezogen.";
 
         else
-            message = "Du hast <strong>" + amount + "</strong> Zeitschecks zum Preis von <strong>€ " + NumberFormatter.numberDE(totalPrice) + "</strong> erhalten!" + "<br>"
-                    + "Diese wurden in deinem Auftrag von <strong>" + nameCreatedBy + "</strong> bestellt.";
+            message = "Du hast <strong>" + amount + "</strong> Zeitschecks zum Preis von <strong>€ " + NumberFormatter.numberDE(totalPrice) + "</strong> bestellt und erhalten!"
+                    + "<br>Diese wurden in deinem Auftrag von " + nameCreatedBy + " bestellt."
+                    + "<br>Der Betrag wird von deinem Konto eingezogen, wenn du uns die Einzugsermächtigung erteilt hast."
+                    + "<br>Ansonsten ist der Betrag in Bar zu begleichen, wenn das noch nicht erfolgt ist.";
 
         EmailDetails details = new EmailDetails(
                 emailRecipient,

@@ -424,6 +424,7 @@ public class Member implements Serializable {
     }
 
 
+    // default system admin that may not be modified or deleted, is identified by firstName and lastName and role.isAdmin = true
     public boolean isSystemAdmin() {
         if (firstName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME) && lastName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_LAST_NAME)
                 && role != null && role.getIsAdmin()) return true;
