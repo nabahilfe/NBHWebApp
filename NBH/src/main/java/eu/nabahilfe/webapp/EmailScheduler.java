@@ -23,9 +23,9 @@ import eu.nabahilfe.webapp.members.RoleRepository;
 import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
 
 @Component
-public class Scheduler {
+public class EmailScheduler {
 
-    private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
+    private static final Logger log = LoggerFactory.getLogger(EmailScheduler.class);
 
     private final MemberRepository memberRepository;
     private final EmailService emailService;
@@ -34,7 +34,7 @@ public class Scheduler {
     private final TimeChequeRepository timeChequeRepository;
     private final MembershipFeeRepository membershipFeeRepository;
 
-    public Scheduler(MemberRepository memberRepository, EmailService emailService,
+    public EmailScheduler(MemberRepository memberRepository, EmailService emailService,
             RoleRepository roleRepository, EmailComposer emailComposer,
             TimeChequeRepository timeChequeRepository, MembershipFeeRepository membershipFeeRepository) {
         this.memberRepository = memberRepository;
@@ -71,7 +71,7 @@ public class Scheduler {
             }
 
             EmailDetails email = emailComposer.composeTimeChecksToBookEmail(treasurer.getEmail(),
-                    treasurer.getEmailSalutation() + " - Darf nur um 10:00 kommen!", timeChecksToBook);
+                    treasurer.getEmailSalutation(), timeChecksToBook);
             emailService.sendEmailHtml(email);
             log.debug("Sent email {} to {}", email.getSubject(), email.getRecipient());
 

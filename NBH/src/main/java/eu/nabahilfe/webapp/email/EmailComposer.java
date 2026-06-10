@@ -33,7 +33,7 @@ public class EmailComposer {
                 "Es gibt neue Zeitschecks zu verbuchen!",
                 "<strong>" + emailSalutation + "</strong><br>"
                 + "<p>"
-                + "Es gibt <strong>" + timeChecksToBook + "</strong> Zeitschecks zu verbuchen!<br>"
+                + "Es gibt <strong>" + timeChecksToBook + "</strong> Zeitscheck(s) zu verbuchen!<br>"
                 + "<a href=\"" + baseUrl + "/timecheques/unaccounted\">Link zu den zu verbuchenden Zeitschecks</a>"
                 + "</p>"
                 + eMailFooter
@@ -48,7 +48,7 @@ public class EmailComposer {
                 "Es gibt neue Mitgliedsbeiträge zu verbuchen!",
                 "<strong>" + emailSalutation + "</strong><br>"
                 + "<p>"
-                + "Es gibt <strong>" + membershipFeesToBook + "</strong> Mitgliedsbeiträge zu verbuchen!<br>"
+                + "Es gibt <strong>" + membershipFeesToBook + "</strong> " + (membershipFeesToBook == 1 ? "Mitgliedsbeitrag" : "Mitgliedsbeiträge") + " zu verbuchen!<br>"
                 + "<a href=\"" + baseUrl + "/members/unaccounted-mbshipfees\">Link zu den zu verbuchenden Mitgliedsbeiträgen</a>"
                 + "</p>"
                 + eMailFooter
