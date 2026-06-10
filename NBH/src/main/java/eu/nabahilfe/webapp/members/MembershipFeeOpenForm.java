@@ -1,10 +1,12 @@
 package eu.nabahilfe.webapp.members;
 
+import java.time.LocalDate;
+
 public class MembershipFeeOpenForm {
 
     /** Constructor for JPQL constructor expression. doNotCharge defaults to false. */
     public MembershipFeeOpenForm(Long memberId, String firstName, String lastName, String roleName,
-            String street, String number, String zip, String city) {
+            String street, String number, String zip, String city, LocalDate resignationDate) {
         this.memberId = memberId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -13,6 +15,7 @@ public class MembershipFeeOpenForm {
         this.zip = zip;
         this.city = city;
         this.roleName = roleName;
+        this.resignationDate = resignationDate;
         this.doNotCharge = false;
     }
 
@@ -25,11 +28,12 @@ public class MembershipFeeOpenForm {
 
     private String roleName;
 
-
     private String street;
     private String number;
     private String zip;
     private String city;
+
+    private LocalDate resignationDate;
 
     private boolean doNotCharge;
 
@@ -111,6 +115,10 @@ public class MembershipFeeOpenForm {
 
     public String getAddress() {
         return street + " " + number + ", " + zip + " " + city;
+    }
+
+    public LocalDate getResignationDate() {
+        return resignationDate;
     }
 
 }

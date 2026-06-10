@@ -6,6 +6,7 @@
 @import java.util.List
 
 @import eu.nabahilfe.webapp.members.MembershipFeeOpenForm
+@import static eu.nabahilfe.webapp.DateFormatter.*
 
 @param MembershipFeeOpenForm formRowData
 @param List<MembershipFeeOpenForm> membershipFeesOpen
@@ -43,6 +44,7 @@
                     <th scope="col" data-col="0" style="cursor:pointer;">Name ↕</th>
                     <th scope="col">Adresse</th>
                     <th scope="col" data-col="2" style="cursor:pointer;">Rolle ↕</th>
+                    <th scope="col" data-col="3" style="cursor:pointer;">Austrittsdatum ↕</th>
                     <th scope="col" class="text-center" title="Kein Beitrag berechnen">Kein Beitrag</th>
                 </tr>
             </thead>
@@ -53,6 +55,7 @@
                         <td>${mf.getName()}</td>
                         <td>${mf.getAddress()}</td>
                         <td>${mf.getRoleName()}</td>
+                        <td>@if(mf.getResignationDate() != null) ${dateReverseDE(mf.getResignationDate())} @else @endif</td>
                         <td class="text-center">
                             <input type="checkbox" class="form-check-input doNotCharge-cb"
                                    data-member-id="${mf.getMemberId()}">

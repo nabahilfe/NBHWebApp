@@ -78,8 +78,6 @@ public class AccountingController {
         return "accountings/view-accounting";
     }
 
-    // TODO: Add ListAccountings per year, month, accountable class, etc. as needed
-
 
     @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER', 'BOARD_MEMBER', 'AUDITOR')")
     @GetMapping("/show-accountings")

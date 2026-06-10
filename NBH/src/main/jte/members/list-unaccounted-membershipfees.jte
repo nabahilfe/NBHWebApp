@@ -46,6 +46,7 @@
             <tr>
                 <th scope="col">Erstellungsdatum</th>
                 <th scope="col" id="sortByMember" style="cursor:pointer;">für Mitglied ↕</th>
+                <th scope="col">Austrittsdatum</th>
                 <th scope="col">erstellt von</th>
                 <th scope="col" class="text-end">Betrag</th>
                 <th scope="col" class="text-center">Buchen</th>
@@ -59,6 +60,7 @@
                     <tr>
                         <td scope="row">${dateDE(mf.getTransactionDate())}</td>
                         <td scope="row">${mf.getMember().getNameAndAddress()}</td>
+                        <td scope="row">@if(mf.getMember().getResignationDate() != null) ${dateReverseDE(mf.getMember().getResignationDate())} @else @endif</td>
                         <td scope="row">${mf.getCreatedBy().getName()}</td>
                         <td scope="row" class="text-end">€ ${numberDE(mf.getAmount())}</td>
                         <td>
