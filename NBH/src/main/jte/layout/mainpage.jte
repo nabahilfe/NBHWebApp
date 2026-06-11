@@ -196,7 +196,17 @@
                             </li>
                         @endif
 
-
+                        <!-- Dropdown Prüfungen Kassier / AUDITOR -->
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "AUDITOR", "BOARD_MEMBER", "TREASURER"))
+                            <li class="nav-item dropdown">
+                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                    Umsätze
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/accountings/show-accountings">Umsätze</a></li>
+                                </ul>
+                            </li>
+                        @endif
 
                     </ul>
 
