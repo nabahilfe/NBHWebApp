@@ -70,9 +70,13 @@
                             <input type="hidden" name="transactionType" value="${mf.getTransactionType()}">
                             <input type="hidden" name="transactionDate" value="${mf.getTransactionISODate()}">
                             <input type="hidden" name="transactionAmount" value="${mf.getTransactionAmount()}">
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-outline-primary btn-sm bi-plus-lg"></button>
-                            </div>
+                            @if(ctxt.isTreasurer() || ctxt.isAdmin())
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm bi-plus-lg"></button>
+                                </div>
+                            @else
+                                <div></div>
+                            @endif
                         </td>
                     </tr>
                 </form>

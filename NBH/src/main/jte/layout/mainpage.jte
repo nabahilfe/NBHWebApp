@@ -131,7 +131,7 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/timecheques/unaccounted">Offene Zeitschecks</a></li>
                                     <li><a class="dropdown-item" href="/members/unaccounted-mbshipfees">Offene Mitgliedsbeiträge</a></li>
-                                    <li><a class="dropdown-item" href="#">Sonstige Buchung</a></li>
+                                    <li><a class="dropdown-item" href="#">Sonstige offene Buchung</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/accountings/show-accountings">Umsätze</a></li>
                                 </ul>
@@ -192,18 +192,6 @@
                                     <li><a class="dropdown-item" href="/timecheques/statistics">Zeitschecks pro Mitglied</a></li>
                                     <li><a class="dropdown-item" href="/timecheques/category-statistics">Zeitschecks pro Kategorie</a></li>
                                     <li><a class="dropdown-item" href="/members/statistics">Mitgliederentwicklung</a></li>
-                                </ul>
-                            </li>
-                        @endif
-
-                        <!-- Dropdown Prüfungen Kassier / AUDITOR -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "AUDITOR", "BOARD_MEMBER", "TREASURER"))
-                            <li class="nav-item dropdown">
-                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
-                                    Umsätze
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/accountings/show-accountings">Umsätze</a></li>
                                 </ul>
                             </li>
                         @endif
