@@ -127,10 +127,10 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="confirmModalLabel">Zeitschek zuweisen?</h1>
+                    <h1 class="modal-title fs-5" id="confirmModalLabel">Zeitscheck zuweisen?</h1>
                 </div>
                 <div class="modal-body">
-                    Zeitschek mit <b>${timeCheque.getHours()} h </b>wird an <b>${timeCheque.getAssignedTo().getName()}</b> zugewiesen.<br/>
+                    Zeitscheck mit <b>${timeCheque.getHours()} h </b>wird an <b>${timeCheque.getAssignedTo().getName()}</b> zugewiesen.<br/>
                     Das kann nicht mehr rückgängig gemacht werden.
                     <input type="hidden" id="data-item-id">
                 </div>
