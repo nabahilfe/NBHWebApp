@@ -149,6 +149,13 @@ public class MemberController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @GetMapping("/resigned")
+    public String listResignedMembers(Model model, RedirectAttributes redirectAttributes) {
+        // save current value of searchTerm
+        model.addAttribute("searchTerm", null);
+        redirectAttributes.addFlashAttribute("resignedOnly", Boolean.TRUE);
+        return "redirect:/members";    }
 
 
 
@@ -156,7 +163,7 @@ public class MemberController {
     @GetMapping
     String listAllMembersPaginated(final Model model,
             @RequestParam(required = false, defaultValue = "lastName") String orderBy,
-                @RequestParam(required = false, defaultValue = "asc") String order,
+            @RequestParam(required = false, defaultValue = "asc") String order,
             @RequestParam Optional<Integer> page, @RequestParam Optional<Integer> size,
             RedirectAttributes redirectAttributes) {
 
@@ -174,10 +181,16 @@ public class MemberController {
 
         PageRequest pageRequest = PageRequest.of(currentPage, pageSize, sort);
 
+        Boolean resignedOnly = (model.getAttribute("resignedOnly") != null && (Boolean) model.getAttribute("resignedOnly") ? Boolean.TRUE : Boolean.FALSE);
+
         Page<Member> memberPage = null;
-        if (searchTerm.length() <= 0)
-            memberPage = memberRepository.findAll(pageRequest);
-        else {
+        if (searchTerm.length() <= 0) {
+            if (resignedOnly) {
+                memberPage = memberRepository.findAllInactive(pageRequest);
+            } else {
+                memberPage = memberRepository.findAllActive(pageRequest);
+            }
+        } else {
             Integer memberNmbr = null;
             if (searchTerm.matches("\\d+")) {
                 try {
@@ -187,9 +200,13 @@ public class MemberController {
                     log.warn("Failed to parse searchTerm '{}' as member number, ignoring numeric search term", searchTerm);
                 }
             }
-
-            memberPage = memberRepository.findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
-                    searchTerm, searchTerm, memberNmbr, pageRequest);
+            if (resignedOnly) {
+                memberPage = memberRepository.findAllInactiveByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
+                        searchTerm, searchTerm, memberNmbr, pageRequest);
+            } else {
+                memberPage = memberRepository.findAllActiveByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
+                        searchTerm, searchTerm, memberNmbr, pageRequest);
+            }
         }
 
         model.addAttribute("memberPage", memberPage);
@@ -208,7 +225,10 @@ public class MemberController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
-        return "members/list-members";
+        if (resignedOnly)
+            return "members/list-resigned-members";
+        else
+            return "members/list-members";
     }
 
 

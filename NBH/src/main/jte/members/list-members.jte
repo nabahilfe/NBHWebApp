@@ -62,7 +62,6 @@
                     Guthaben ${orderBy.equals("accumulatedHours") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
               <th scope="col" class="text-center" title="Zeitschecks kaufen">Zeitscheck</th>
               <th scope="col" class="text-center" title="Zeitschecks herunterladen">Download</th>
-              <th scope="col" class="text-center">Delete</th>
           @endif
         </tr>
           </thead>
@@ -70,7 +69,7 @@
       <tbody class="table-group-divider">
         @for (Member member : memberPage.getContent())
             <tr>
-                     @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                  @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
                       <td><a class="text-decoration-none" href="/members/${member.getId()}"><b>${member.getLastName()}</b></a></td>
                   @else
                     <td>${member.getLastName()}</td>
@@ -80,7 +79,7 @@
 
                   <td>
                       <a href="https://www.google.com/maps/search/?api=1&query=${member.getAddress().replace(" ", "+")}" target="_blank"
-                           rel="noopener noreferrer" class="text-decoration-none" title="In Google Maps öffnen"> ${member.getAddress()}
+                               rel="noopener noreferrer" class="text-decoration-none" title="In Google Maps öffnen"> ${member.getAddress()}
                       </a>
                   </td>
 
@@ -110,41 +109,20 @@
                           <td class="text-center"></td>
                           <td class="text-center"></td>
                       @else
-                          @if(member.isActive())
-                              <!-- show action buttons only for inactive members -->
-                              <td class="text-center">
-                                <a class="btn btn-outline-primary btn-sm bi-plus-lg" href="/timecheques/new?memberId=${member.getId()}" role="button" title="Zeitschecks kaufen"></a>
-                              </td>
+                          <!-- show action buttons only for inactive members -->
+                          <td class="text-center">
+                            <a class="btn btn-outline-primary btn-sm bi-plus-lg" href="/timecheques/new?memberId=${member.getId()}" role="button" title="Zeitschecks kaufen"></a>
+                          </td>
 
-                              <td>
-                                <form action="/download/timecheque-pdf" method="get">
-                                    <input type="hidden" name="memberId" value="${member.getId()}">
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-outline-primary btn-sm bi-download" title="Zeitschecks herunterladen"></button>
-                                    </div>
-                                </form>
-                              </td>
-                          @else
-                              <td class="text-center"></td>
-                              <td class="text-center"></td>
-                          @endif
-
-                          @if(!member.isActive())
-                              <!-- show delete button only for inactive members -->
-                              <td class="text-center">
-                                <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
-                                <button type="button" class="btn btn-outline-danger btn-sm bi-x-lg"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#confirmModal"
-                                    data-item-id="${member.getId()}">
-                                </button>
-                              </td>
-                          @else
-                              <!-- do not show delete button for active members -->
-                              <td class="text-center">
-                              </td>
-                          @endif
-                     @endif
+                          <td>
+                            <form action="/download/timecheque-pdf" method="get">
+                                <input type="hidden" name="memberId" value="${member.getId()}">
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm bi-download" title="Zeitschecks herunterladen"></button>
+                                </div>
+                            </form>
+                          </td>
+                      @endif
 
                   @endif
 
@@ -154,35 +132,6 @@
 
     </table>
 
-    <!-- Modal confirm delete dialog -->
-    <div class="modal fade" id="confirmModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="confirmModalLabel">Daten wirklich löschen?</h1>
-          </div>
-          <div class="modal-body">
-            Die Daten werden komplett anonymisiert und können nicht wieder hergestellt werden. Noch vorhandene Zeitschecks werden auf das Sozialkonto übertragen.
-            Bitte bestätige, dass du den Datensatz wirklich löschen möchtest.
-            <input type="hidden" id="data-item-id-to-delet">
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-              Abbrechen
-            </button>
-            <button type="button" id="delete-btn" class="btn btn-danger" onclick="confirmAction()" data-bs-dismiss="modal">
-              Löschen
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Hidden form so we can submit the delete -->
-    <form id="hiddenForm" method="post" style="display: none;">
-        ${csrfHiddenInput}
-        <input type="hidden" name="memberId" id="memberIdInput">
-    </form>
 
     @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
         <!-- add button to creeate new member -->
@@ -206,31 +155,6 @@
     @endif
 
     @template.components.display-statusmessage(successMessage, errorMessage)
-
-
-  <!-- Script to handle the delete confirmation modal and action -->
-    <script>
-        var editModal = document.getElementById('confirmModal');
-
-        // save the selectet id inside the modal so we have acces to upon delete confirm
-        editModal.addEventListener('show.bs.modal', function (event) {
-              var button = event.relatedTarget; // Button that triggered the modal
-              var itemId = button.getAttribute('data-item-id');
-
-              console.log("Item clicked:", itemId);
-
-              // put ID into a hidden field so wec can later on have access to it
-              editModal.querySelector('.modal-body #data-item-id-to-delet').value = itemId;
-        });
-
-
-        <!-- submit a post action to controller to delete the item -->
-        async function confirmAction() {
-            const itemId = document.getElementById('data-item-id-to-delet').value;
-            document.getElementById('hiddenForm').action = '/members/delete/' + itemId;
-            document.getElementById('hiddenForm').submit();
-        }
-    </script>
 
 
     <script>

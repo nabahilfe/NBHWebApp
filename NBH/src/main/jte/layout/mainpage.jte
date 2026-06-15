@@ -99,6 +99,7 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/members">Mitglieder verwalten</a></li>
+                                    <li><a class="dropdown-item" href="/members/resigned">Ausgetretene Mitglieder</a></li>
                                     <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/members/birthdays">Geburstage</a></li>
