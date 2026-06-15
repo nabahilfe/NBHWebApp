@@ -61,7 +61,7 @@ public class EmailComposer {
                 recipient,
                 "Registrierungscode für die Nachbarschaftshilfe",
                 "<p><strong>Hallo " + name + "!</strong></p>"
-                + "Vielen Dank für Deine Registrierung bei der Nachbarschaftshilfe!<br>"
+                + "Vielen Dank für deine Registrierung bei der Nachbarschaftshilfe!<br>"
                 + "Hier ist dein Registrierungscode:<br>"
                 + "<h3>&nbsp;&nbsp;&nbsp;" + code + "</h3>"
                 + "<p>Bitte gib diesen Code auf der Registrierungsseite ein, um deine Registrierung abzuschließen.</p>"
