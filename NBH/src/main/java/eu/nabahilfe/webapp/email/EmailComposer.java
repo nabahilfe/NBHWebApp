@@ -94,7 +94,7 @@ public class EmailComposer {
             message = "Du hast <strong>" + amount + "</strong> Zeitschecks zum Preis von <strong>€ " + NumberFormatter.numberDE(totalPrice) + "</strong> bestellt und erhalten!"
                     + "<br>Diese wurden in deinem Auftrag von " + nameCreatedBy + " bestellt."
                     + "<br>Der Betrag wird von deinem Konto eingezogen, wenn du uns die Einzugsermächtigung erteilt hast."
-                    + "<br>Ansonsten ist der Betrag in Bar zu begleichen, wenn das noch nicht erfolgt ist.";
+                    + "<br>Ansonsten ist der Betrag in Bar zu begleichen oder zu überweisen, wenn das noch nicht erfolgt ist.";
 
         EmailDetails details = new EmailDetails(
                 emailRecipient,
