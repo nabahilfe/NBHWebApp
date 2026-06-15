@@ -110,22 +110,29 @@
                           <td class="text-center"></td>
                           <td class="text-center"></td>
                       @else
-                          <td class="text-center">
-                            <a class="btn btn-outline-primary btn-sm bi-plus-lg" href="/timecheques/new?memberId=${member.getId()}" role="button" title="Zeitschecks kaufen"></a>
-                          </td>
+                          @if(member.isActive())
+                              <!-- show action buttons only for inactive members -->
+                              <td class="text-center">
+                                <a class="btn btn-outline-primary btn-sm bi-plus-lg" href="/timecheques/new?memberId=${member.getId()}" role="button" title="Zeitschecks kaufen"></a>
+                              </td>
 
-                          <td>
-                            <form action="/download/timecheque-pdf" method="get">
-                                <input type="hidden" name="memberId" value="${member.getId()}">
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-outline-primary btn-sm bi-download" title="Zeitschecks herunterladen"></button>
-                                </div>
-                            </form>
-                          </td>
+                              <td>
+                                <form action="/download/timecheque-pdf" method="get">
+                                    <input type="hidden" name="memberId" value="${member.getId()}">
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-outline-primary btn-sm bi-download" title="Zeitschecks herunterladen"></button>
+                                    </div>
+                                </form>
+                              </td>
+                          @else
+                              <td class="text-center"></td>
+                              <td class="text-center"></td>
+                          @endif
 
                           @if(!member.isActive())
+                              <!-- show delete button only for inactive members -->
                               <td class="text-center">
-                                  <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
+                                <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
                                 <button type="button" class="btn btn-outline-danger btn-sm bi-x-lg"
                                     data-bs-toggle="modal"
                                     data-bs-target="#confirmModal"
@@ -133,8 +140,8 @@
                                 </button>
                               </td>
                           @else
+                              <!-- do not show delete button for active members -->
                               <td class="text-center">
-                                  <!-- show delete button only for inactive members -->
                               </td>
                           @endif
                      @endif
