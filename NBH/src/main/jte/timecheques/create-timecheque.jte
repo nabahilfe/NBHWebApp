@@ -62,7 +62,7 @@
                                 @else
 
                                     Kauf von Zeitschecks:
-                                    <select name="hours" id="hours" class="form-select d-inline-block w-auto" onchange="calculatePrice()">
+                                    <select name="hours" id="hoursSelected" class="form-select d-inline-block w-auto" onchange="calculatePrice()">
                                         <option value="10" selected>10 h</option>
                                         <option value="20">20 h</option>
                                     </select>
@@ -130,7 +130,7 @@
                     <h1 class="modal-title fs-5" id="confirmModalLabel">Zeitscheck zuweisen?</h1>
                 </div>
                 <div class="modal-body">
-                    Zeitscheck mit <b>${timeCheque.getHours()} h </b>wird an <b>${timeCheque.getAssignedTo().getName()}</b> zugewiesen.<br/>
+                    Zeitscheck mit <b><span id="modalHours"></span> h </b>wird an <b>${timeCheque.getAssignedTo().getName()}</b> zugewiesen.<br/>
                     Das kann nicht mehr rückgängig gemacht werden.
                     <input type="hidden" id="data-item-id">
                 </div>
@@ -150,9 +150,10 @@
 
     <script>
         const pricePerHour = ${pricePerHour};
+        const selectedHours = document.getElementById('hoursSelected');
 
         function calculatePrice() {
-            const hours = parseInt(document.getElementById('hours').value);
+            const hours = parseInt(document.getElementById('hoursSelected').value);
             const priceSpan = document.getElementById('calculatedPrice');
             if (priceSpan) {
                 priceSpan.textContent = (hours * pricePerHour).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -168,6 +169,7 @@
             var itemId = button.getAttribute('data-item-id');
             // put ID into a hidden field so wec can later on have access to it
             modalPanel.querySelector('.modal-body #data-item-id').value = itemId;
+            modalPanel.querySelector('.modal-body #modalHours').textContent = selectedHours.value;
         });
 
 
