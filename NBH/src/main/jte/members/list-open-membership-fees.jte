@@ -32,6 +32,11 @@
 
     <br/>
 
+    <!-- Info panel: fees can only be created from March 1st onwards -->
+    <div class="alert alert-info text-center" role="alert">
+        Beitragsvorschreibungen können erst ab dem 1. März des aktuellen Jahres erstellt werden.<br>Bitte vor diesem Termin unbedingt den Mitgliedsbeitrag anpassen, falls dieser sich für das aktuelle Jahr ändern soll!
+    </div>
+
     <!-- Display all MembershipFee records -->
 
     <form id="feesForm" action="/members/create-fees-batch" method="POST">
@@ -44,7 +49,8 @@
                     <th scope="col" data-col="0" style="cursor:pointer;">Name ↕</th>
                     <th scope="col">Adresse</th>
                     <th scope="col" data-col="2" style="cursor:pointer;">Rolle ↕</th>
-                    <th scope="col" data-col="3" style="cursor:pointer;">Austrittsdatum ↕</th>
+                    <th scope="col" data-col="3" style="cursor:pointer;">Eintrittsdatum ↕</th>
+                    <th scope="col" data-col="4" style="cursor:pointer;">Austrittsdatum ↕</th>
                     <th scope="col" class="text-center" title="Kein Beitrag berechnen">Kein Beitrag</th>
                 </tr>
             </thead>
@@ -55,6 +61,7 @@
                         <td>${mf.getName()}</td>
                         <td>${mf.getAddress()}</td>
                         <td>${mf.getRoleName()}</td>
+                        <td>${dateReverseDE(mf.getJoiningDate())}</td>
                         <td>@if(mf.getResignationDate() != null) ${dateReverseDE(mf.getResignationDate())} @else @endif</td>
                         <td class="text-center">
                             <input type="checkbox" class="form-check-input doNotCharge-cb"
@@ -66,7 +73,7 @@
         </table>
 
         <div class="text-end mt-2">
-            <button type="submit" class="btn btn-primary bi-plus-circle"> Beitragsvorschreibungen erstellen</button>
+            <button type="submit" id="createFeesBtn" class="btn btn-primary bi-plus-circle"> Beitragsvorschreibungen erstellen</button>
         </div>
     </form>
 
@@ -76,6 +83,14 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+
+            // --- Disable submit button before March 1st of the current year ---
+            const createFeesBtn = document.getElementById("createFeesBtn");
+            const now = new Date();
+            const marchFirst = new Date(now.getFullYear(), 2, 1); // month is 0-based: 2 = March
+            if (now < marchFirst) {
+                createFeesBtn.disabled = true;
+            }
 
             // --- Sorting ---
             const table = document.getElementById("memberTable");

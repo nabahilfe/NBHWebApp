@@ -13,7 +13,7 @@ public interface MembershipFeeRepository extends ListCrudRepository<MembershipFe
 
     @Query("SELECT new eu.nabahilfe.webapp.members.MembershipFeeOpenForm(" +
                "m.id, m.firstName, m.lastName, COALESCE(r.roleName, ''), " +
-               "m.street, m.number, m.zip, m.city, m.resignationDate) " +
+               "m.street, m.number, m.zip, m.city, m.joiningDate, m.resignationDate) " +
            "FROM Member m LEFT JOIN m.role r " +
                "WHERE NOT (m.isImportedMember = true AND YEAR(m.createdAt) = :currentYear) " +
                "AND (r IS NULL OR r.roleName <> 'System-Administrator') " +

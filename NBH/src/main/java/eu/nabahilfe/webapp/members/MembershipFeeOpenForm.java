@@ -6,7 +6,7 @@ public class MembershipFeeOpenForm {
 
     /** Constructor for JPQL constructor expression. doNotCharge defaults to false. */
     public MembershipFeeOpenForm(Long memberId, String firstName, String lastName, String roleName,
-            String street, String number, String zip, String city, LocalDate resignationDate) {
+            String street, String number, String zip, String city, LocalDate joiningDate, LocalDate resignationDate) {
         this.memberId = memberId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -15,6 +15,7 @@ public class MembershipFeeOpenForm {
         this.zip = zip;
         this.city = city;
         this.roleName = roleName;
+        this.joiningDate = joiningDate;
         this.resignationDate = resignationDate;
         this.doNotCharge = false;
     }
@@ -33,6 +34,7 @@ public class MembershipFeeOpenForm {
     private String zip;
     private String city;
 
+    private LocalDate joiningDate;
     private LocalDate resignationDate;
 
     private boolean doNotCharge;
@@ -115,6 +117,10 @@ public class MembershipFeeOpenForm {
 
     public String getAddress() {
         return street + " " + number + ", " + zip + " " + city;
+    }
+
+    public LocalDate getJoiningDate() {
+        return joiningDate;
     }
 
     public LocalDate getResignationDate() {
