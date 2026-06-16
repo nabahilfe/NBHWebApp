@@ -155,7 +155,8 @@ public class MemberController {
         // save current value of searchTerm
         model.addAttribute("searchTerm", null);
         redirectAttributes.addFlashAttribute("resignedOnly", Boolean.TRUE);
-        return "redirect:/members";    }
+        return "redirect:/members";
+    }
 
 
 
@@ -506,21 +507,22 @@ public class MemberController {
     String deletMember(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
         Optional<Member> member = memberRepository.findById(id);
         if (member.isPresent() && isSystemAdmin(member.get())) {
-            redirectAttributes.addFlashAttribute("errorMessage",
-                    "Das Mitglied 'System Administrator' kann nicht gelöscht werden.");
+            redirectAttributes.addFlashAttribute("resignedOnly", Boolean.TRUE);
+            redirectAttributes.addFlashAttribute("errorMessage", "Das Mitglied 'System Administrator' kann nicht gelöscht werden.");
             return "redirect:/members";
         }
         if (member.isPresent() && isSozialkonto(member.get())) {
-            redirectAttributes.addFlashAttribute("errorMessage",
-                    "Das Sozialkonto kann nicht gelöscht werden.");
+            redirectAttributes.addFlashAttribute("resignedOnly", Boolean.TRUE);
+            redirectAttributes.addFlashAttribute("errorMessage", "Das Sozialkonto kann nicht gelöscht werden.");
             return "redirect:/members";
         }
-        memberRepository.delete(member.get());
-        redirectAttributes.addFlashAttribute("successMessage", "Mitglied '" + member.get().getName() + "' wurde gelöscht.");
-        log.debug("Deleted Member: {}", member.get());
+        // TODO: implement complete anonymization of member data instead of hard delete, to preserve referential integrity and historical data
+        // Also transfer all TimeCheches of Member to "Sozialkonto"
+        log.warn("Member deletion/anonymization is not implemented yet.");
+        redirectAttributes.addFlashAttribute("resignedOnly", Boolean.TRUE);
+        redirectAttributes.addFlashAttribute("errorMessage", "Anonymisierung ist noch nicht implementiert.");
         return "redirect:/members";
     }
-
 
 
 

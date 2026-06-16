@@ -31,12 +31,6 @@
     ctxt = ctxt,
     content = @`
 
-    <!-- Hidden form to handle sorting -->
-    <form id="sortForm" method="get" action="/members">
-        <input type="hidden" name="orderBy" id="orderBy">
-        <input type="hidden" name="order" id="order">
-    </form>
-
     <h3>Ausgetretene Vereinsmitglieder</h3>
     <br/>
 
