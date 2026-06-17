@@ -70,15 +70,19 @@ public class EmailScheduler {
                 continue;
             }
 
-            EmailDetails email = emailComposer.composeTimeChecksToBookEmail(treasurer.getEmail(),
-                    treasurer.getEmailSalutation(), timeChecksToBook);
-            emailService.sendEmailHtml(email);
-            log.debug("Sent email {} to {}", email.getSubject(), email.getRecipient());
+            if (timeChecksToBook > 0) {
+                EmailDetails email = emailComposer.composeTimeChecksToBookEmail(treasurer.getEmail(),
+                        treasurer.getEmailSalutation(), timeChecksToBook);
+                emailService.sendEmailHtml(email);
+                log.debug("Sent email {} to {}", email.getSubject(), email.getRecipient());
+            }
 
-            email = emailComposer.composeMembershipFeesToBookEmail(treasurer.getEmail(),
-                    treasurer.getEmailSalutation(), membershipFeesToBook);
-            emailService.sendEmailHtml(email);
-            log.debug("Sent email {} to {}", email.getSubject(), email.getRecipient());
+            if (membershipFeesToBook > 0) {
+                EmailDetails email = emailComposer.composeMembershipFeesToBookEmail(treasurer.getEmail(),
+                        treasurer.getEmailSalutation(), membershipFeesToBook);
+                emailService.sendEmailHtml(email);
+                log.debug("Sent email {} to {}", email.getSubject(), email.getRecipient());
+            }
         }
 
     }
