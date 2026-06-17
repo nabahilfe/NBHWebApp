@@ -61,8 +61,8 @@
                         <td>${mf.getName()}</td>
                         <td>${mf.getAddress()}</td>
                         <td>${mf.getRoleName()}</td>
-                        <td>${dateReverseDE(mf.getJoiningDate())}</td>
-                        <td>@if(mf.getResignationDate() != null) ${dateReverseDE(mf.getResignationDate())} @else @endif</td>
+                        <td>${dateDE(mf.getJoiningDate())}</td>
+                        <td>@if(mf.getResignationDate() != null) ${dateDE(mf.getResignationDate())} @else @endif</td>
                         <td class="text-center">
                             <input type="checkbox" class="form-check-input doNotCharge-cb"
                                    data-member-id="${mf.getMemberId()}">
