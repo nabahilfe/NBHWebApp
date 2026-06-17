@@ -89,7 +89,7 @@
                                     <input type="text" class="form-control" name="lastName" id="lastName" value="${member.getLastName()}" required>
                                 </div>
 
-                                <label for="birthdate" class="col col-form-label">Gebutsdatum<span class="text-danger">*</span></label>
+                                <label for="birthdate" class="col col-form-label">Geburtsdatum<span class="text-danger">*</span></label>
                                 <div class="col">
                                     <input type="date" class="form-control" name="birthdate" id="birthdate" value="${formatISO(member.getBirthdate())}" required>
                                 </div>

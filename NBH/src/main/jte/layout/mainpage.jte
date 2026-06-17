@@ -102,7 +102,7 @@
                                     <li><a class="dropdown-item" href="/members/resigned">Ausgetretene Mitglieder</a></li>
                                     <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/members/birthdays">Geburstage</a></li>
+                                    <li><a class="dropdown-item" href="/members/birthdays">Geburtstage</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/members/open-membership-fees">Mitgliedsbeiträge vorschreiben</a></li>
                                 </ul>
