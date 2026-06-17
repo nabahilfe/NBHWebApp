@@ -35,8 +35,10 @@
                 <!-- Mobile only content -->
                 <div class="d-block d-md-none">
                     <div class="d-flex flex-column align-items-center gap-2">
-                        <a class="btn btn-lg btn-success bi bi-share-fill w-75" href="/timetransfers/fromself?fromMemberId=${ctxt.getUserId()}">&nbsp; Zeitschecks übergeben</a>
-                        <a class="btn btn-lg btn-success bi bi-bag-plus w-75" href="/timecheques/newfromself/${ctxt.getUserId()}">&nbsp; Zeitschecks kaufen</a>
+                        @if(!ctxt.isSystemAdmin())
+                            <a class="btn btn-lg btn-success bi bi-share-fill w-75" href="/timetransfers/fromself?fromMemberId=${ctxt.getUserId()}">&nbsp; Zeitschecks übergeben</a>
+                            <a class="btn btn-lg btn-success bi bi-bag-plus w-75" href="/timecheques/newfromself/${ctxt.getUserId()}">&nbsp; Zeitschecks kaufen</a>
+                        @endif
                         <a class="btn btn-lg btn-success bi bi-clipboard-data w-75" href="/members/mydata/${ctxt.getUserId()}">&nbsp; Meine Daten</a>
                         <p></p>
 
