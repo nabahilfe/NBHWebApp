@@ -37,7 +37,7 @@
 
             <div class="row">
                 <div class="col-auto">
-                    <div class="card shadow" style="background-color: #ECFEFF;"">
+                    <div class="card shadow" style="background-color: #ECFEFF;">
                         <div class="card-body">
 
                             <form id="tcForm" action="/timecheques" method="POST">
@@ -111,13 +111,15 @@
 
 
     <br/>
+
     @template.components.display-statusmessage(successMessage, errorMessage)
 
     <br/>
 
     <div class="card">
 
-       @template.components.list-timecheques-component(member = timeCheque.getAssignedTo(), timeCheques = purchasedTimeCheques)
+       @template.components.list-timecheques-component(member = timeCheque.getAssignedTo(),
+               timeCheques = purchasedTimeCheques, fullDate = Boolean.TRUE)
 
     </div>
 
