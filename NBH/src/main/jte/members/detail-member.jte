@@ -33,6 +33,9 @@
 
 @param int selectedYear = LocalDate.now().getYear()
 
+@param String joiningDateMinCalculated = formatISO(LocalDate.now().minusMonths(2).withDayOfMonth(1))
+@param String resignationDateMaxCalculated = formatISO(LocalDate.now().plusMonths(2).with(java.time.temporal.TemporalAdjusters.lastDayOfMonth()))
+
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
@@ -102,9 +105,8 @@
                                     @else
                                         <input type="date" class="form-control" name="joiningDate" id="joiningDate"
                                                value="${member.getJoiningDate() != null ? formatISO(member.getJoiningDate()) : ""}"
-                                               min="${joiningDateMin != null ? joiningDateMin : ""}"
-                                               placeholder="JJJJ-MM-01">
-                                        <div class="form-text">Muss immer der 1. eines Monats sein, max. 3 Monate in der Vergangenheit.</div>
+                                               min="${joiningDateMinCalculated}">
+                                        <div class="form-text">Maximal 2 Monate in der Vergangenheit (bis zum 1. des Monats).</div>
                                     @endif
                                 </div>
 
@@ -112,8 +114,8 @@
                                 <div class="col">
                                     <input type="date" class="form-control" name="resignationDate" id="resignationDate"
                                            value="${member.getResignationDate() != null ? formatISO(member.getResignationDate()) : ""}"
-                                           max="${resignationDateMax != null ? resignationDateMax : ""}">
-                                    <div class="form-text">Muss immer der letzte Tag eines Monats sein, max. 3 Monate in der Zukunft.</div>
+                                           max="${resignationDateMaxCalculated}">
+                                    <div class="form-text">Maximal 2 Monate in der Zukunft (bis zum Monatsende).</div>
                                 </div>
 
                                 <label for="role" class="col col-form-label">Rolle</label>

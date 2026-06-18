@@ -75,13 +75,13 @@ public class MemberController {
     @PreAuthorize("hasRole('USER')")
     @ModelAttribute("joiningDateMin")
     public String joiningDateMin() {
-        return LocalDate.now().withDayOfMonth(1).minusMonths(3).toString();
+        return LocalDate.now().minusMonths(2).withDayOfMonth(1).toString();
     }
 
     @PreAuthorize("hasRole('USER')")
     @ModelAttribute("resignationDateMax")
     public String resignationDateMax() {
-        LocalDate d = LocalDate.now().plusMonths(3);
+        LocalDate d = LocalDate.now().plusMonths(2);
         return d.withDayOfMonth(d.lengthOfMonth()).toString();
     }
 
@@ -540,38 +540,30 @@ public class MemberController {
         // joiningDate rules (only for new members — existing members have a locked joiningDate)
         if (member.getId() == null && member.getJoiningDate() != null) {
             LocalDate joiningDate = member.getJoiningDate();
-            // must be the 1st of a month
-            if (joiningDate.getDayOfMonth() != 1)
-                return "Das Beitrittsdatum muss immer der 1. eines Monats sein.";
-            // must not be more than 3 months in the past
-            LocalDate earliestJoining = currentDate.withDayOfMonth(1).minusMonths(3);
+            // must not be more than 2 months in the past (starting from the 1st of that month)
+            LocalDate earliestJoining = currentDate.minusMonths(2).withDayOfMonth(1);
             if (joiningDate.isBefore(earliestJoining))
-                return "Das Beitrittsdatum darf nicht mehr als 3 Monate in der Vergangenheit liegen (frühestens: " + earliestJoining + ").";
+                return "Das Beitrittsdatum darf nicht mehr als 2 Monate in der Vergangenheit liegen (frühestens: " + earliestJoining + ").";
         }
 
         // resignationDate rules
         if (member.getResignationDate() != null) {
             LocalDate resignationDate = member.getResignationDate();
-            // must be the last day of a month
-            if (!resignationDate.equals(resignationDate.withDayOfMonth(resignationDate.lengthOfMonth())))
-                return "Das Austrittsdatum muss immer der letzte Tag eines Monats sein.";
             // must be after joiningDate
             if (member.getJoiningDate() != null && !resignationDate.isAfter(member.getJoiningDate()))
                 return "Das Austrittsdatum muss nach dem Beitrittsdatum liegen.";
-            // must not be more than 3 months in the future
-            LocalDate latestResignation = currentDate.withDayOfMonth(1).plusMonths(3)
-                    .plusMonths(1).minusDays(1); // last day of currentMonth+3
-            latestResignation = currentDate.plusMonths(3);
+            // must not be more than 2 months in the future
+            LocalDate latestResignation = currentDate.plusMonths(2);
             latestResignation = latestResignation.withDayOfMonth(latestResignation.lengthOfMonth());
             if (resignationDate.isAfter(latestResignation))
-                return "Das Austrittsdatum darf nicht mehr als 3 Monate in der Zukunft liegen (spätestens: " + latestResignation + ").";
+                return "Das Austrittsdatum darf nicht mehr als 2 Monate in der Zukunft liegen (spätestens: " + latestResignation + ").";
         }
 
         // phoneNumber rules
         if (member.getPhoneNumber() != null && !member.getPhoneNumber().isBlank()) {
             String phone = member.getPhoneNumber();
-            if (!phone.matches("[+0][0-9 ]*") || phone.contains("  "))
-                return "Telefonnummer muss mit + (dann keine 0 vor der Vorwahl) oder 0 beginnen und darf nur Ziffern und einzelne Leerzeichen enthalten.";
+            if (!phone.matches("(\\+[1-9][0-9 ]*|0[0-9 ]*)"))
+                return "Telefonnummer muss mit + (dann keine 0 vor der Vorwahl) oder 0 beginnen und darf nur Ziffern und Leerzeichen enthalten.";
         }
 
         // do not allow sysadmin in email
