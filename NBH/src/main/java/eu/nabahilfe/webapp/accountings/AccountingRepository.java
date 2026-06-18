@@ -19,11 +19,11 @@ public interface AccountingRepository extends ListCrudRepository<AccountingEntry
     @Query("SELECT a FROM AccountingEntry a WHERE YEAR(a.accountingDate) = :year AND a.transactionType = :transactionType ORDER BY a.accountingDate DESC")
     List<AccountingEntry> findByYearAndTransactionType(@Param("year") int year, @Param("transactionType") String transactionType);
 
-    /** Filtered additionally by accountableClass. */
-    @Query("SELECT a FROM AccountingEntry a WHERE YEAR(a.accountingDate) = :year AND a.transactionType = :transactionType AND a.accountableClass = :accountableClass ORDER BY a.accountingDate DESC")
-    List<AccountingEntry> findByYearAndTransactionTypeAndAccountableClass(@Param("year") int year, @Param("transactionType") String transactionType, @Param("accountableClass") String accountableClass);
+    /** Filtered additionally by accountableName. */
+    @Query("SELECT a FROM AccountingEntry a WHERE YEAR(a.accountingDate) = :year AND a.transactionType = :transactionType AND a.accountableName = :accountableName ORDER BY a.accountingDate DESC")
+    List<AccountingEntry> findByYearAndTransactionTypeAndAccountableClass(@Param("year") int year, @Param("transactionType") String transactionType, @Param("accountableName") String accountableName);
 
-    /** All distinct accountableClass values (for the filter drop-down). */
-    @Query("SELECT DISTINCT a.accountableClass FROM AccountingEntry a WHERE a.accountableClass IS NOT NULL ORDER BY a.accountableClass")
+    /** All distinct accountableName values (for the filter drop-down). */
+    @Query("SELECT DISTINCT a.accountableName FROM AccountingEntry a WHERE a.accountableName IS NOT NULL ORDER BY a.accountableName")
     List<String> findDistinctAccountableClasses();
 }

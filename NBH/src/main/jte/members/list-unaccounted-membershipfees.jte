@@ -64,7 +64,7 @@
                         <td scope="row">${mf.getCreatedBy().getName()}</td>
                         <td scope="row" class="text-end">€ ${numberDE(mf.getAmount())}</td>
                         <td>
-                            <input type="hidden" name="accountableClassName" value="${mf.getAccountableClassName()}">
+                            <input type="hidden" name="accountableName" value="${mf.getAccountableName()}">
                             <input type="hidden" name="accountableId" value="${mf.getAccountableId()}">
                             <input type="hidden" name="accountableMemberId" value="${mf.getAccountableMemberId()}">
                             <input type="hidden" name="transactionType" value="${mf.getTransactionType()}">

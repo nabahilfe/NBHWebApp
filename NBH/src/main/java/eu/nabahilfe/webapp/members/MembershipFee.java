@@ -12,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.accountings.Accountable;
 import eu.nabahilfe.webapp.accountings.AccountingEntry;
 import eu.nabahilfe.webapp.accountings.TransactionType;
@@ -83,8 +84,8 @@ public class MembershipFee implements Accountable {
     private Integer version;
 
     @Override
-    public String getAccountableClassName() {
-        return this.getClass().getSimpleName();
+    public String getAccountableName() {
+        return NbhConst.MEMBERSHIPFEE_ACCOUNTING_NAME;
     }
 
     @Override
@@ -227,8 +228,13 @@ public class MembershipFee implements Accountable {
         return Objects.equals(id, other.id);
     }
 
-
-
+    @Override
+    public String toString() {
+        return "MembershipFee [id=" + id + ", forYear=" + forYear + ", doNotCharge=" + doNotCharge
+                + ", transactionDate=" + transactionDate + ", amount=" + amount + ", member=" + member
+                + ", accountedBy=" + accountedBy + ", createdAt=" + createdAt + ", createdBy=" + createdBy
+                + ", updatedAt=" + updatedAt + ", updatedBy=" + updatedBy + ", version=" + version + "]";
+    }
 
 
     // -----------------------------------------------

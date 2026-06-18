@@ -49,4 +49,8 @@ public final class NbhConst {
     public static final String ADMIN_ACCOUNT_LAST_NAME = "System";
 
 
+    // this names may not be longer than 80 characters, because they are used in the accounting table as "accountableName"
+    public static final String TIMECHEQUE_ACCOUNTING_NAME = "Zeitscheck";
+    public static final String MEMBERSHIPFEE_ACCOUNTING_NAME = "Mitgliedsbeitrag";
+    public static final String MISC_ACCOUNTING_NAME = "Sonstiges";
 }

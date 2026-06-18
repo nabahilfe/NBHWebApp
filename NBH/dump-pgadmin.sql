@@ -32,7 +32,7 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.accounting_entries (
     id bigint NOT NULL,
-    accountable_class character varying(80),
+    accountable_name character varying(80),
     accountable_id bigint,
     accountable_member_id bigint,
     transaction_type character varying(10) NOT NULL,
@@ -735,7 +735,7 @@ ALTER TABLE ONLY public.transactions
 --
 
 ALTER TABLE ONLY public.accounting_entries
-    ADD CONSTRAINT uc_class_id_accounting_entries UNIQUE (accountable_class, accountable_id);
+    ADD CONSTRAINT uc_class_id_accounting_entries UNIQUE (accountable_name, accountable_id);
 
 
 --

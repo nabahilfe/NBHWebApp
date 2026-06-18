@@ -38,9 +38,9 @@
         <form action="${accountingEntry.getId() == null ? "/accountings/save-accounting" : "/accountings/view-accounting/" + accountingEntry.getId()}" method="post">
             ${csrfHiddenInput}
             <div class="form-group row">
-                <label for="accountableClass" class="col-sm-2 col-form-label">Buchung für</label>
+                <label for="accountableName" class="col-sm-2 col-form-label">Buchung für</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="accountableClass" id="accountableClass" value="${accountingEntry.getAccountableClassDisplayName()}" disabled readonly>
+                    <input type="text" class="form-control" name="accountableName" id="accountableName" value="${accountingEntry.getAccountableName()}" disabled readonly>
                 </div>
 
                 <label for="transactionType" class="col-sm-2 col-form-label">Buchungsart</label>

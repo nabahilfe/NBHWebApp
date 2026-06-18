@@ -17,8 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import eu.nabahilfe.webapp.members.Member;
-import eu.nabahilfe.webapp.members.MembershipFee;
-import eu.nabahilfe.webapp.timecheques.TimeCheque;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -47,7 +46,7 @@ public class AccountingEntry  {
     private Long id;
 
     @Size(max = 80)
-    private String accountableClass;    // MemberFee, TimeCheque, Transaction, ...
+    private String accountableName;    // MemberFee, TimeCheque, Transaction, ...
 
     private Long accountableId;    // id zur Klasse bzw. Tabelle
 
@@ -71,7 +70,7 @@ public class AccountingEntry  {
     private LocalDate accountingDate;    // Buchungsdatum
 
     @Size(max = 250)
-    private String description;    // Verpflichtend wenn keine accountableClass / accountableId eingetragen ist
+    private String description;    // Verpflichtend wenn kein fix definierter Name wie 'Zeitscheck', 'Mitgliedsgebühr' verwendet wird, sondern 'Sonstiges'
 
     // Creation timestamp, value is set by Postgres (see Table definition)
     @Column(insertable = false, updatable = false)
@@ -95,6 +94,8 @@ public class AccountingEntry  {
     @Column(nullable = false)
     private Integer version;
 
+
+
     public Long getId() {
         return id;
     }
@@ -103,20 +104,12 @@ public class AccountingEntry  {
         this.id = id;
     }
 
-    public String getAccountableClass() {
-        return accountableClass;
+    public String getAccountableName() {
+        return accountableName;
     }
 
-    public String getAccountableClassDisplayName() {
-        if (accountableClass.equals(TimeCheque.class.getSimpleName())) return "Zeitscheck";
-        if (accountableClass.equals(MembershipFee.class.getSimpleName())) return "Mitgliedsbeitrag";
-        // TODO: add more Accountables if any is implemented
-
-        return accountableClass;
-    }
-
-    public void setAccountableClass(String accountableClass) {
-        this.accountableClass = accountableClass;
+    public void setAccountableName(String accountableName) {
+        this.accountableName = accountableName;
     }
 
     public Long getAccountableId() {
@@ -244,7 +237,7 @@ public class AccountingEntry  {
 
     @Override
     public String toString() {
-        return "AccountingEntry [id=" + id + ", accountableClass=" + accountableClass + ", accountableId="
+        return "AccountingEntry [id=" + id + ", accountableName=" + accountableName + ", accountableId="
                 + accountableId + ", accountableMember=" + accountableMember + ", transactionType=" + transactionType
                 + ", transactionDate=" + transactionDate + ", transactionAmount=" + transactionAmount
                 + ", accountingDate=" + accountingDate + ", description=" + description + ", createdAt=" + createdAt

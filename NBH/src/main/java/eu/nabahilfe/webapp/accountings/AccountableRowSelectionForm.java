@@ -10,8 +10,8 @@ import java.time.LocalDate;
 
 public class AccountableRowSelectionForm implements Accountable {
 
-    private String accountableClassName;    // MemberFee, TimeCheque, Transaction, ...
-    private Long accountableId;				// ID der konkreten Accountable Entity, also der accountableClass
+    private String accountableName;    		// see NbhConst for possible values
+    private Long accountableId;				// ID der konkreten Accountable Entity, also der accountableName
 
     private Long accountableMemberId;    	// Nur bei Zeitscheck-Kauf oder Mitgliedsgebühr relevant, sonst null
 
@@ -21,12 +21,12 @@ public class AccountableRowSelectionForm implements Accountable {
 
 
 
-    public String getAccountableClassName() {
-        return accountableClassName;
+    public String getAccountableName() {
+        return accountableName;
     }
 
-    public void setAccountableClassName(String accountableClassName) {
-        this.accountableClassName = accountableClassName;
+    public void setAccountableName(String accountableName) {
+        this.accountableName = accountableName;
     }
 
     public Long getAccountableId() {
@@ -76,7 +76,7 @@ public class AccountableRowSelectionForm implements Accountable {
 
     @Override
     public String toString() {
-        return "AccountableForm [accountableClassName=" + accountableClassName + ", accountableId=" + accountableId
+        return "AccountableForm [accountableName=" + accountableName + ", accountableId=" + accountableId
                 + ", accountableMemberId=" + accountableMemberId + ", transactionType=" + transactionType
                 + ", transactionDate=" + transactionDate + ", transactionAmount=" + transactionAmount + "]";
     }

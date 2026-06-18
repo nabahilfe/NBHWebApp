@@ -46,8 +46,8 @@
         </div>
 
         <div class="col-auto">
-            <label for="accountableClass" class="form-label mb-1">Umsatz Art</label>
-            <select id="accountableClass" name="accountableClass" class="form-select form-select-sm">
+            <label for="accountableName" class="form-label mb-1">Umsatz Art</label>
+            <select id="accountableName" name="accountableName" class="form-select form-select-sm">
                 <option value="" selected="${selectedAccountableClass.isEmpty()}">-- ALLE --</option>
                 @for(String cls : distinctAccountableClasses)
                     <option value="${cls}" selected="${cls.equals(selectedAccountableClass)}">${cls}</option>
@@ -91,7 +91,7 @@
                     @for(AccountingEntry e : entries)
                         <tr>
                             <td>${dateReverseDE(e.getAccountingDate())}</td>
-                            <td>${e.getAccountableClassDisplayName()}</td>
+                            <td>${e.getAccountableName()}</td>
                             <td>${e.getAccountableMember() != null ? e.getAccountableMember().getName() : "-"}</td>
                             <td>${e.getDescription() != null ? e.getDescription() : "-"}</td>
                             <td>${dateReverseDE(e.getTransactionDate())}</td>

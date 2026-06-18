@@ -13,8 +13,8 @@ import java.time.LocalDate;
  */
 public interface Accountable {
 
-    public abstract String getAccountableClassName();   // MemberFee, TimeCheque, Transaction, ...
-    public abstract Long getAccountableId();    		// ID der konkreten Accountable Entity, also der accountableClass
+    public abstract String getAccountableName();   		// Mitgliedsbeitrag, Zeitscheck, Sonstiges, ...
+    public abstract Long getAccountableId();    		// ID der konkreten Accountable Entity, also der accountableName
 
     public abstract Long getAccountableMemberId();    	// Nur bei Zeitscheck-Kauf oder Mitgliedsgebühr relevant, sonst null
 

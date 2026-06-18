@@ -8,6 +8,7 @@
 @import static eu.nabahilfe.webapp.DateFormatter.*
 @import static eu.nabahilfe.webapp.NumberFormatter.*
 @import eu.nabahilfe.webapp.accountings.AccountingEntry
+@import eu.nabahilfe.webapp.NbhConst
 
 @param AccountingEntry accountingEntry
 
@@ -37,7 +38,7 @@
                 <div class="card-body">
                     <dl class="row mb-0">
                         <dt class="col-sm-4">Buchung f&uuml;r</dt>
-                        <dd class="col-sm-8">${accountingEntry.getAccountableClassDisplayName()}</dd>
+                        <dd class="col-sm-8">${accountingEntry.getAccountableName()}</dd>
 
                         <dt class="col-sm-4">Mitglied</dt>
                         <dd class="col-sm-8">${accountingEntry.getAccountableMember() != null ? accountingEntry.getAccountableMember().getNameAndAddress() : "-"}</dd>
@@ -65,11 +66,11 @@
 
     <br/>
 
-    @if(accountingEntry.getAccountableClass().equals(eu.nabahilfe.webapp.timecheques.TimeCheque.class.getSimpleName()))
+    @if(accountingEntry.getAccountableName().equals(NbhConst.TIMECHEQUE_ACCOUNTING_NAME))
         <form action="/timecheques/unaccounted" method="get">
             <button type="submit" class="btn btn-outline-primary bi-list-check"> Offene Zeitschecks anzeigen</button>
         </form>
-    @elseif(accountingEntry.getAccountableClass().equals(eu.nabahilfe.webapp.members.MembershipFee.class.getSimpleName()))
+    @elseif(accountingEntry.getAccountableName().equals(NbhConst.MEMBERSHIPFEE_ACCOUNTING_NAME))
         <form action="/members/unaccounted-mbshipfees" method="get">
             <button type="submit" class="btn btn-outline-primary bi-list-check"> Offene Mitgliedsbeiträge anzeigen</button>
         </form>

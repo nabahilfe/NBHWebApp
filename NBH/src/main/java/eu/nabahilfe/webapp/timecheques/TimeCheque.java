@@ -15,6 +15,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.accountings.Accountable;
 import eu.nabahilfe.webapp.accountings.AccountingEntry;
 import eu.nabahilfe.webapp.accountings.TransactionType;
@@ -85,8 +86,8 @@ public class TimeCheque implements Accountable {
     private Integer version;
 
     @Override
-    public String getAccountableClassName() {
-        return this.getClass().getSimpleName();
+    public String getAccountableName() {
+        return NbhConst.TIMECHEQUE_ACCOUNTING_NAME;
     }
 
     @Override
@@ -211,7 +212,7 @@ public class TimeCheque implements Accountable {
 
     @Override
     public String toString() {
-        return "TimeCheque [getAccountableClass()=" + getAccountableClassName() + ", getAccountableId()="
+        return "TimeCheque [getAccountableName()=" + getAccountableName() + ", getAccountableId()="
                 + getAccountableId() + ", getTransactionType()=" + getTransactionType() + ", getTransactionDate()="
                 + getTransactionDate() + ", getTransactionAmount()=" + getTransactionAmount() + ", getId()=" + getId()
                 + ", getHours()=" + getHours() + ", getAmount()=" + getAmount() + ", getAssignedTo()=" + getAssignedTo()

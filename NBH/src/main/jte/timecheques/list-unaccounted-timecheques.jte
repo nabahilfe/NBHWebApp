@@ -64,7 +64,7 @@
                         <td scope="row" class="text-end">${tc.getHours()}</td>
                         <td scope="row" class="text-end">€ ${numberDE(tc.getAmount())}</td>
                         <td>
-                            <input type="hidden" name="accountableClassName" value="${tc.getAccountableClassName()}">
+                            <input type="hidden" name="accountableName" value="${tc.getAccountableName()}">
                             <input type="hidden" name="accountableId" value="${tc.getAccountableId()}">
                             <input type="hidden" name="accountableMemberId" value="${tc.getAccountableMemberId()}">
                             <input type="hidden" name="transactionType" value="${tc.getTransactionType()}">

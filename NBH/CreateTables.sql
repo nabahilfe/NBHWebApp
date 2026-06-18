@@ -45,7 +45,7 @@ CREATE TABLE persistent_logins (
 
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-06-02 16:04:51
+ * Generated at 2026-06-18 16:00:28
  * ModelDescription: NBH Entity Modell
  */
 
@@ -244,14 +244,14 @@ create table if not exists TIME_CHEQUES (
 /* Buchungsdatensatz zu Zeitscheck-Kauf, Mitgliedschaft, Weihnachtsessen, usw. */
 create table if not exists ACCOUNTING_ENTRIES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    accountable_class VARCHAR(80) /* MemberFee, TimeCheque, Transaction, ... */,
+    accountable_name VARCHAR(80) /* MemberFee, TimeCheque, Transaction, ... */,
     accountable_id BIGINT /* id zur Klasse bzw. Tabelle */,
     accountable_member_id BIGINT /* FK id from MEMBERS(id) */,
     transaction_type VARCHAR(10) not null /* INCOME oder EXPENSE - muss aus Enum TransactionType kommen */,
     transaction_date DATE not null /* Buchungsdatum */,
     transaction_amount NUMERIC(12,2) not null /* Betrag */,
-    accounting_date DATE not null /* Buchungsdatum */,
-    description VARCHAR(250) /* Verpflichtend wenn keine accountableClass / accountableId eingetragen ist */,
+    accounting_date DATE not null /* Verrechnungsdatum */,
+    description VARCHAR(250) /* Verpflichtend wenn kein fix definierter Name wie 'Zeitscheck', 'Mitgliedsgebühr' verwendet wird, sondern 'Sonstiges' */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
@@ -343,7 +343,7 @@ alter table MEMBERSHIP_FEES
 
 
 alter table ACCOUNTING_ENTRIES
-    add constraint uc_class_id_accounting_entries unique (accountable_class, accountable_id)
+    add constraint uc_name_id_accounting_entries unique (accountable_name, accountable_id)
 ;
 
 

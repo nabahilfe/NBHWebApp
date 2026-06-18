@@ -492,7 +492,7 @@ public class MemberController {
         log.info("Created {} MembershipFee records", count);
 
         redirectAttributes.addFlashAttribute("successMessage",
-                "Beiträge für " + count + " Mitglieder werden erstellt.");
+                "Beitragsvorschreibungen für " + count + " Mitglied(er) wurden erstellt.");
         return "redirect:/members/open-membership-fees";
     }
 

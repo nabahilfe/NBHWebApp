@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import eu.nabahilfe.webapp.members.MembershipFee;
 import eu.nabahilfe.webapp.members.MembershipFeeRepository;
@@ -83,15 +84,15 @@ public class AccountingController {
     @GetMapping("/show-accountings")
     public String showAccountings(
             @RequestParam(required = false) Integer year,
-            @RequestParam(required = false) String accountableClass,
+            @RequestParam(required = false) String accountableName,
             @RequestParam(required = false) String transactionType,
             final Model model) {
 
         int selectedYear = (year != null) ? year : LocalDate.now().getYear();
         String selectedTransactionType = (transactionType != null && !transactionType.isBlank())
                 ? transactionType : TransactionType.INCOME.name();
-        String selectedAccountableClass = (accountableClass != null && !accountableClass.isBlank())
-                ? accountableClass : "";
+        String selectedAccountableClass = (accountableName != null && !accountableName.isBlank())
+                ? accountableName : "";
 
         List<AccountingEntry> entries;
         if (selectedAccountableClass.isEmpty()) {
@@ -137,7 +138,7 @@ public class AccountingController {
 
         AccountingEntry accountingEntry = new AccountingEntry();
 
-        accountingEntry.setAccountableClass(formRowData.getAccountableClassName());
+        accountingEntry.setAccountableName(formRowData.getAccountableName());
         accountingEntry.setAccountableId(formRowData.getAccountableId());
         accountingEntry.setAccountableMember(formRowData.getAccountableMemberId() != null ?
                 memberRepository.findById(formRowData.getAccountableMemberId()).orElse(null) : null);
@@ -171,17 +172,17 @@ public class AccountingController {
 
         accountingRepository.save(accountingEntry);
 
-        if (accountingEntry.getAccountableClass().equals(TimeCheque.class.getSimpleName())) {
+        if (accountingEntry.getAccountableName().equals(NbhConst.TIMECHEQUE_ACCOUNTING_NAME)) {
             TimeCheque tc = timeChequeRepository.findById(accountingEntry.getAccountableId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid TimeCheque ID: " + accountingEntry.getAccountableId()));
             tc.setAccountedBy(accountingEntry);
         }
-        else if (accountingEntry.getAccountableClass().equals(MembershipFee.class.getSimpleName())) {
+        else if (accountingEntry.getAccountableName().equals(NbhConst.MEMBERSHIPFEE_ACCOUNTING_NAME)) {
             MembershipFee mf = membershipFeeRepository.findById(accountingEntry.getAccountableId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid MembershipFee ID: " + accountingEntry.getAccountableId()));
             mf.setAccountedBy(accountingEntry);
         }
-        else if (accountingEntry.getAccountableClass().equals("SOME_OTHER_CLASS")) {
+        else if (accountingEntry.getAccountableName().equals("SOME_OTHER_CLASS")) {
             // TODO: Handle other accountable classes as needed
         }
 
@@ -189,7 +190,7 @@ public class AccountingController {
         log.debug("AccountingEntry saved with ID: " + accountingEntry.getId());
 
         redirectAttributes.addFlashAttribute("accountingEntry", accountingEntry);
-        redirectAttributes.addFlashAttribute("successMessage", "Buchung für " + accountingEntry.getAccountableClassDisplayName() + " wurde gespeichert.");
+        redirectAttributes.addFlashAttribute("successMessage", "Buchung für " + accountingEntry.getAccountableName() + " wurde gespeichert.");
         return "redirect:/accountings/view-accounting/" + accountingEntry.getId();
     }
 
