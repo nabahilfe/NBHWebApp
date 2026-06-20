@@ -33,7 +33,6 @@ import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
-
 @Controller
 @RequestMapping("/accountings")
 @SessionAttributes("accountingEntry")
@@ -43,21 +42,120 @@ public class AccountingController {
     private final MemberRepository memberRepository;
     private final TimeChequeRepository timeChequeRepository;
     private final MembershipFeeRepository membershipFeeRepository;
+    private final TransactionRepository transactionRepository;
 
     private static final Logger log = LoggerFactory.getLogger(AccountingController.class);
 
     public AccountingController(AccountingRepository accountingRepository, MemberRepository memberRepository,
-            TimeChequeRepository timeChequeRepository, MembershipFeeRepository membershipFeeRepository) {
+            TimeChequeRepository timeChequeRepository, MembershipFeeRepository membershipFeeRepository,
+            TransactionRepository transactionRepository) {
         this.accountingRepository = accountingRepository;
         this.memberRepository = memberRepository;
         this.timeChequeRepository = timeChequeRepository;
         this.membershipFeeRepository = membershipFeeRepository;
+        this.transactionRepository = transactionRepository;
     }
 
 
     @ModelAttribute("formRowData")
     public AccountableRowSelectionForm formRowData() {
         return new AccountableRowSelectionForm();
+    }
+
+
+    // --------------------
+    // INCOME FORM
+    // --------------------
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @GetMapping("/income")
+    public String showIncomeForm(final Model model) {
+        log.debug("Showing income entry form");
+        return "accountings/detail-income";
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PostMapping("/save-income")
+    @Transactional
+    public String saveIncome(
+            @RequestParam String transactionDate,
+            @RequestParam BigDecimal transactionAmount,
+            @RequestParam(required = false) String description,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+
+        log.debug("Saving manual income Transaction: amount={}", transactionAmount);
+
+        if (description == null || description.isBlank()) {
+            model.addAttribute("errorMessage", "Eine Beschreibung ist erforderlich.");
+            return "accountings/detail-income";
+        }
+
+        if (transactionAmount == null || transactionAmount.compareTo(new BigDecimal("0.01")) < 0) {
+            model.addAttribute("errorMessage", "Der Betrag muss mindestens 0,01 € betragen.");
+            return "accountings/detail-income";
+        }
+
+        Transaction tx = new Transaction();
+        tx.setTransactionType(TransactionType.INCOME.name());
+        tx.setTransactionDate(LocalDate.parse(transactionDate));
+        tx.setAmount(transactionAmount);
+        tx.setDescription(description.trim());
+
+        transactionRepository.save(tx);
+
+        log.debug("Income Transaction saved with ID: {}", tx.getId());
+
+        redirectAttributes.addFlashAttribute("successMessage", "Einnahme wurde gespeichert.");
+        return "redirect:/accountings/view-transaction/" + tx.getId();
+    }
+
+
+    // --------------------
+    // EXPENSE FORM
+    // --------------------
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @GetMapping("/expense")
+    public String showExpenseForm(final Model model) {
+        log.debug("Showing expense entry form");
+        return "accountings/detail-expense";
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PostMapping("/save-expense")
+    @Transactional
+    public String saveExpense(
+            @RequestParam String transactionDate,
+            @RequestParam BigDecimal transactionAmount,
+            @RequestParam(required = false) String description,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+
+        log.debug("Saving manual expense Transaction: amount={}", transactionAmount);
+
+        if (description == null || description.isBlank()) {
+            model.addAttribute("errorMessage", "Eine Beschreibung ist erforderlich.");
+            return "accountings/detail-expense";
+        }
+
+        if (transactionAmount == null || transactionAmount.compareTo(new BigDecimal("0.01")) < 0) {
+            model.addAttribute("errorMessage", "Der Betrag muss mindestens 0,01 € betragen.");
+            return "accountings/detail-expense";
+        }
+
+        Transaction tx = new Transaction();
+        tx.setTransactionType(TransactionType.EXPENSE.name());
+        tx.setTransactionDate(LocalDate.parse(transactionDate));
+        tx.setAmount(transactionAmount);
+        tx.setDescription(description.trim());
+
+        transactionRepository.save(tx);
+
+        log.debug("Expense Transaction saved with ID: {}", tx.getId());
+
+        redirectAttributes.addFlashAttribute("successMessage", "Ausgabe wurde gespeichert.");
+        return "redirect:/accountings/view-transaction/" + tx.getId();
     }
 
 
@@ -77,6 +175,20 @@ public class AccountingController {
 
         model.addAttribute("accountingEntry", accountingEntry);
         return "accountings/view-accounting";
+    }
+
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER', 'BOARD_MEMBER', 'AUDITOR')")
+    @GetMapping("/view-transaction/{id}")
+    public String viewTransaction(final Model model, @PathVariable Long id) {
+
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Transaction not found with id: " + id));
+
+        log.debug("Viewing Transaction: {}", transaction);
+
+        model.addAttribute("transaction", transaction);
+        return "accountings/view-transaction";
     }
 
 

@@ -123,6 +123,19 @@
                             </li>
                         @endif
 
+                        <!-- Dropdown Einnahmen / Ausgaben -->
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                            <li class="nav-item dropdown">
+                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                    Einnahmen / Ausgaben
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/accountings/income">Einnahme erfassen</a></li>
+                                    <li><a class="dropdown-item" href="/accountings/expense">Ausgabe erfassen</a></li>
+                                </ul>
+                            </li>
+                        @endif
+
                         <!-- Dropdown Buchungen -->
                         @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "TREASURER", "AUDITOR"))
                             <li class="nav-item dropdown">

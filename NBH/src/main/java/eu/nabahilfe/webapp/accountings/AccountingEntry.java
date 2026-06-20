@@ -60,14 +60,14 @@ public class AccountingEntry  {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
-    private LocalDate transactionDate;    // Buchungsdatum
+    private LocalDate transactionDate;    // Transaktionsdatum, z.B. Kaufdatum, Datum der Mitgliedschaftsverlängerung, ...
 
     @Column(nullable = false)
     private BigDecimal transactionAmount;    // Betrag
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
-    private LocalDate accountingDate;    // Buchungsdatum
+    private LocalDate accountingDate;    // Buchungsdatum, wann wurde es im Konto vom Kassier verbucht
 
     @Size(max = 250)
     private String description;    // Verpflichtend wenn kein fix definierter Name wie 'Zeitscheck', 'Mitgliedsgebühr' verwendet wird, sondern 'Sonstiges'
