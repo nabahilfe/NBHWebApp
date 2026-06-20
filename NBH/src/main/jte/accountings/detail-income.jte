@@ -38,7 +38,7 @@
                         <label for="transactionDate" class="col-form-label">Transaktionsdatum<span class="text-danger">*</span></label>
                         <div class="mb-3">
                             <input type="date" class="form-control" name="transactionDate" id="transactionDate"
-                                   value="${java.time.LocalDate.now().toString()}" required>
+                                   max="${java.time.LocalDate.now().toString()}" required>
                             <div class="form-text">Datum der tatsächlichen Zahlung.</div>
                         </div>
 

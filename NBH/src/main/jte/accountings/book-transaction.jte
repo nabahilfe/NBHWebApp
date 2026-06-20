@@ -65,7 +65,7 @@
                         <label for="accountingDate" class="col-form-label">Buchungsdatum<span class="text-danger">*</span></label>
                         <div class="mb-3">
                             <input type="date" class="form-control" name="accountingDate" id="accountingDate"
-                                   value="${java.time.LocalDate.now().toString()}" required>
+                                   max="${java.time.LocalDate.now().toString()}" required>
                             <div class="form-text">Datum, an dem die Transaktion im Konto verbucht wurde.</div>
                         </div>
 

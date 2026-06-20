@@ -96,9 +96,15 @@ public class AccountingController {
             return "accountings/detail-income";
         }
 
+        LocalDate parsedTransactionDateIncome = LocalDate.parse(transactionDate);
+        if (parsedTransactionDateIncome.isAfter(LocalDate.now())) {
+            model.addAttribute("errorMessage", "Das Transaktionsdatum darf nicht in der Zukunft liegen.");
+            return "accountings/detail-income";
+        }
+
         Transaction tx = new Transaction();
         tx.setTransactionType(TransactionType.INCOME.name());
-        tx.setTransactionDate(LocalDate.parse(transactionDate));
+        tx.setTransactionDate(parsedTransactionDateIncome);
         tx.setAmount(transactionAmount);
         tx.setDescription(description.trim());
 
@@ -144,9 +150,15 @@ public class AccountingController {
             return "accountings/detail-expense";
         }
 
+        LocalDate parsedTransactionDateExpense = LocalDate.parse(transactionDate);
+        if (parsedTransactionDateExpense.isAfter(LocalDate.now())) {
+            model.addAttribute("errorMessage", "Das Transaktionsdatum darf nicht in der Zukunft liegen.");
+            return "accountings/detail-expense";
+        }
+
         Transaction tx = new Transaction();
         tx.setTransactionType(TransactionType.EXPENSE.name());
-        tx.setTransactionDate(LocalDate.parse(transactionDate));
+        tx.setTransactionDate(parsedTransactionDateExpense);
         tx.setAmount(transactionAmount);
         tx.setDescription(description.trim());
 
@@ -210,13 +222,20 @@ public class AccountingController {
             return "accountings/book-transaction";
         }
 
+        LocalDate parsedAccountingDate = LocalDate.parse(accountingDate);
+        if (parsedAccountingDate.isAfter(LocalDate.now())) {
+            model.addAttribute("errorMessage", "Das Buchungsdatum darf nicht in der Zukunft liegen.");
+            model.addAttribute("transaction", tx);
+            return "accountings/book-transaction";
+        }
+
         AccountingEntry entry = new AccountingEntry();
         entry.setAccountableName(tx.getAccountableName());
         entry.setAccountableId(tx.getAccountableId());
         entry.setTransactionType(tx.getTransactionType());
         entry.setTransactionDate(tx.getTransactionDate());
         entry.setTransactionAmount(tx.getTransactionAmount());
-        entry.setAccountingDate(LocalDate.parse(accountingDate));
+        entry.setAccountingDate(parsedAccountingDate);
         entry.setDescription(tx.getDescription());
 
         accountingRepository.save(entry);

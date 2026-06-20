@@ -50,7 +50,7 @@
                         <dd class="col-sm-8">${dateReverseDE(accountingEntry.getTransactionDate())}</dd>
 
                         <dt class="col-sm-4">Betrag</dt>
-                        <dd class="col-sm-8">${numberDE(accountingEntry.getTransactionAmount())}&nbsp;&euro;</dd>
+                        <dd class="col-sm-8">€ ${numberDE(accountingEntry.getTransactionAmount())}</dd>
 
                         <dt class="col-sm-4">Buchungsdatum</dt>
                         <dd class="col-sm-8">${dateReverseDE(accountingEntry.getAccountingDate())}</dd>
