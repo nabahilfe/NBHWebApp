@@ -160,6 +160,77 @@ public class AccountingController {
 
 
     // --------------------
+    // MISC UNACCOUNTED TRANSACTIONS
+    // --------------------
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER', 'BOARD_MEMBER', 'AUDITOR')")
+    @GetMapping("/misc-unaccounted")
+    public String listMiscUnaccounted(
+            @RequestParam(required = false) String type,
+            final Model model) {
+
+        List<Transaction> transactions;
+        if (type != null && !type.isBlank()) {
+            transactions = transactionRepository.findUnaccountedByType(type);
+        } else {
+            transactions = transactionRepository.findAllUnaccounted();
+        }
+
+        model.addAttribute("transactions", transactions);
+        model.addAttribute("selectedType", type != null ? type : "");
+        log.debug("Listing {} unaccounted misc transactions (type filter={})", transactions.size(), type);
+        return "accountings/list-unaccounted-transactions";
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER')")
+    @GetMapping("/book-transaction/{id}")
+    public String showBookTransactionForm(final Model model, @PathVariable Long id) {
+        Transaction tx = transactionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Transaction not found with id: " + id));
+        model.addAttribute("transaction", tx);
+        log.debug("Showing booking form for Transaction: {}", id);
+        return "accountings/book-transaction";
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER')")
+    @PostMapping("/save-transaction-booking")
+    @Transactional
+    public String saveTransactionBooking(
+            @RequestParam Long transactionId,
+            @RequestParam String accountingDate,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+
+        Transaction tx = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new IllegalArgumentException("Transaction not found with id: " + transactionId));
+
+        if (accountingDate == null || accountingDate.isBlank()) {
+            model.addAttribute("errorMessage", "Das Buchungsdatum ist erforderlich.");
+            model.addAttribute("transaction", tx);
+            return "accountings/book-transaction";
+        }
+
+        AccountingEntry entry = new AccountingEntry();
+        entry.setAccountableName(tx.getAccountableName());
+        entry.setAccountableId(tx.getAccountableId());
+        entry.setTransactionType(tx.getTransactionType());
+        entry.setTransactionDate(tx.getTransactionDate());
+        entry.setTransactionAmount(tx.getTransactionAmount());
+        entry.setAccountingDate(LocalDate.parse(accountingDate));
+        entry.setDescription(tx.getDescription());
+
+        accountingRepository.save(entry);
+        tx.setAccountedBy(entry);
+
+        log.debug("Transaction {} booked as AccountingEntry {}", tx.getId(), entry.getId());
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Buchung für '" + tx.getDescription() + "' wurde gespeichert.");
+        return "redirect:/accountings/view-accounting/" + entry.getId();
+    }
+
+
+    // --------------------
     // VIEW
     // --------------------
 

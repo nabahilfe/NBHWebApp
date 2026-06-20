@@ -74,6 +74,10 @@
         <form action="/members/unaccounted-mbshipfees" method="get">
             <button type="submit" class="btn btn-outline-primary bi-list-check"> Offene Mitgliedsbeiträge anzeigen</button>
         </form>
+    @elseif(accountingEntry.getAccountableName().equals(NbhConst.MISC_ACCOUNTING_NAME))
+        <form action="/accountings/misc-unaccounted" method="get">
+            <button type="submit" class="btn btn-outline-primary bi-list-check"> Sonstige offene Buchungen anzeigen</button>
+        </form>
     @endif
 
     <br/>

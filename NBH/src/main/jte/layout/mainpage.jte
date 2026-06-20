@@ -145,7 +145,7 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/timecheques/unaccounted">Offene Zeitschecks</a></li>
                                     <li><a class="dropdown-item" href="/members/unaccounted-mbshipfees">Offene Mitgliedsbeiträge</a></li>
-                                    <li><a class="dropdown-item" href="#">Sonstige offene Buchung</a></li>
+                                    <li><a class="dropdown-item" href="/accountings/misc-unaccounted">Sonstige offene Buchung</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/accountings/show-accountings">Umsätze</a></li>
                                 </ul>

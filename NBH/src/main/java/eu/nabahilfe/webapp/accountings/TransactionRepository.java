@@ -17,6 +17,10 @@ public interface TransactionRepository extends ListCrudRepository<Transaction, L
     @Query("SELECT t FROM Transaction t WHERE t.accountedBy IS NULL AND t.transactionType = :transactionType ORDER BY t.transactionDate DESC")
     List<Transaction> findUnaccountedByType(@Param("transactionType") String transactionType);
 
+    /** All unaccounted transactions regardless of type, ordered by transactionDate desc. */
+    @Query("SELECT t FROM Transaction t WHERE t.accountedBy IS NULL ORDER BY t.transactionDate DESC")
+    List<Transaction> findAllUnaccounted();
+
     /** All transactions of a given type, ordered by transactionDate desc. */
     @Query("SELECT t FROM Transaction t WHERE t.transactionType = :transactionType ORDER BY t.transactionDate DESC")
     List<Transaction> findByTransactionType(@Param("transactionType") String transactionType);
