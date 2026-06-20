@@ -31,16 +31,9 @@ public final class NbhConst {
 
     public static final Integer MIN_HOURS_FOR_TIME_CHEQUE = 5;
 
-
-    public static final String ACCOUNTING_INCOMING = "INCOMING";
-    public static final String ACCOUNTING_OUTGOING = "OUTGOING";
-
-
     public static final String SOZIALKONTO_SALUTATION = "Sozialkonto";
     public static final String SOZIALKONTO_FIRST_NAME = "Sozialkonto";
     public static final String SOZIALKONTO_LAST_NAME = "Nachbarschaftshilfe";
-
-
 
     public static final String ADMIN_ROLE_NAME = "System-Administrator";
     public static final String ADMIN_EMAIL_PREFIX = "sysadmin.";	// this is follwoed by the tenant name, e.g. "sysadmin.ma" for tenant "ma"

@@ -33,6 +33,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import eu.nabahilfe.webapp.NbhConst;
+import eu.nabahilfe.webapp.accountings.AccountingEntry;
+import eu.nabahilfe.webapp.accountings.AccountingRepository;
+import eu.nabahilfe.webapp.accountings.TransactionType;
 import eu.nabahilfe.webapp.domaintypes.AmountDomainType;
 import eu.nabahilfe.webapp.domaintypes.AmountDomainValue;
 import eu.nabahilfe.webapp.domaintypes.AmountDomainValueRepository;
@@ -54,14 +57,14 @@ public class MemberController {
     private final SecurityUtils securityUtils;
     private final MembershipFeeRepository membershipFeeRepository;
     private final AmountDomainValueRepository amountDomainValueRepository;
-
+    private final AccountingRepository accountingRepository;
 
     private static final Logger log = LoggerFactory.getLogger(MemberController.class);
 
     public MemberController(MemberRepository memberRepository, RoleRepository roleRepository,
             TimeTransferRepository timeTransferRepository, TimeChequeRepository timeCheckRepository,
             SecurityUtils securityUtils, MembershipFeeRepository membershipFeeRepository,
-            AmountDomainValueRepository amountDomainValueRepository) {
+            AmountDomainValueRepository amountDomainValueRepository, AccountingRepository accountingRepository) {
         this.memberRepository = memberRepository;
         this.roleRepository = roleRepository;
         this.timeTransferRepository = timeTransferRepository;
@@ -69,6 +72,7 @@ public class MemberController {
         this.securityUtils = securityUtils;
         this.amountDomainValueRepository = amountDomainValueRepository;
         this.membershipFeeRepository = membershipFeeRepository;
+        this.accountingRepository = accountingRepository;
     }
 
 
@@ -421,7 +425,7 @@ public class MemberController {
 
     private String validateOnlyOneSozialkonto(@Valid Member member) {
         if (member.isSozialkonto() && memberRepository.findBySalutationIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION).size() > 0) {
-            return "Es gibt bereits ein Sozialkonto, es kann kein weiteres Sozialkonto angelgt werden!";
+            return "Es gibt bereits ein Sozialkonto, es kann kein weiteres Sozialkonto angelegt werden!";
         }
 
         return null;
@@ -445,8 +449,8 @@ public class MemberController {
     }
 
 
-
     @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER')")
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping("/create-fees-batch")
     String createFeesBatch(@RequestParam(required = false) List<Long> memberIds,
             @RequestParam(required = false) List<Boolean> doNotChargeFlags,
@@ -479,13 +483,24 @@ public class MemberController {
 
                 if (doNotCharge) {
                     fee.setAmount(BigDecimal.ZERO);
+                    membershipFeeRepository.save(fee);
+
+                    // create dummy accounting entry to mark this fee as accounted without actual financial transaction
+                    AccountingEntry entry = new AccountingEntry();
+                    entry.setAccountingDate(LocalDate.now());
+                    entry.setAccountableName(fee.getAccountableName());
+                    entry.setTransactionDate(LocalDate.now());
+                    entry.setTransactionAmount(BigDecimal.ZERO);
+                    entry.setTransactionType(TransactionType.INCOME.name());
+                    entry.setAccountableName(entry.getAccountableName());
+                    entry.setAccountableMember(fee.getMember());
+                    entry.setDescription("Keinen Beitrag einheben für " + fee.getForYear());
+                    accountingRepository.save(entry);
                 }
                 else {
                     fee.setAmount(value.get().getAmount());
+                    membershipFeeRepository.save(fee);
                 }
-
-                membershipFeeRepository.save(fee);
-
             }
         }
 

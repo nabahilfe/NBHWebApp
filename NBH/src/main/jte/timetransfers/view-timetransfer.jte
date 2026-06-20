@@ -29,7 +29,7 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>Zeitscheck angelgt</h3>
+    <h3>Zeitscheck angelegt</h3>
 
     <br/>
 
