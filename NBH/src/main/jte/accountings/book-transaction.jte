@@ -66,7 +66,7 @@
                         <div class="mb-3">
                             <input type="date" class="form-control" name="accountingDate" id="accountingDate"
                                    max="${java.time.LocalDate.now().toString()}" required>
-                            <div class="form-text">Datum, an dem die Transaktion im Konto verbucht wurde.</div>
+                            <div class="form-text">Datum, an dem die Transaktion am Konto verbucht wurde.</div>
                         </div>
 
                         <div class="form-group row">
