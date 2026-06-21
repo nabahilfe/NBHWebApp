@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -26,9 +27,12 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, PersistentTokenRepository tokenRepository,
-            CustomUserDetailsService userDetailsService) throws Exception {
+            CustomUserDetailsService userDetailsService,
+            LoginRateLimiter loginRateLimiter,
+            LoginRateLimitFilter loginRateLimitFilter) throws Exception {
 
         http
+            .addFilterBefore(loginRateLimitFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(auth -> auth
 
                 .requestMatchers("/").permitAll()
@@ -42,8 +46,8 @@ public class SecurityConfig {
             )
 
             .formLogin(form -> form
-                .loginPage("/registration/login")            // page
-                .loginProcessingUrl("/registration/login")     // form action
+                .loginPage("/registration/login")            	// page
+                .loginProcessingUrl("/registration/login")     	// form action
                 .successHandler((_ /* request */, response, authentication) -> {
                     log.debug("User '{}' logged in successfully. Auth authorities: {}",
                             authentication.getName(),
@@ -56,10 +60,16 @@ public class SecurityConfig {
                     response.sendRedirect("/");
                 })
                 .failureHandler((request, response, _ /* exception */) -> {
-                    // store submitted username temporarily in the session so the login page can repopulate it
+                    String ip = getClientIp(request);
+                    loginRateLimiter.recordFailure(ip);
                     try {
                         var session = request.getSession();
                         session.setAttribute("LAST_USERNAME", request.getParameter("username"));
+                        if (loginRateLimiter.isBlocked(ip)) {
+                            session.setAttribute("LOGIN_BLOCK_MINUTES", loginRateLimiter.blockedMinutesRemaining(ip));
+                            response.sendRedirect("/registration/login?blocked=true");
+                            return;
+                        }
                     } catch (Exception e) {
                         log.warn("Could not save last username in session: {}", e.getMessage());
                     }
@@ -106,5 +116,17 @@ public class SecurityConfig {
         repository.setDataSource(dataSource);
 
         return repository;
+    }
+
+    private static String getClientIp(jakarta.servlet.http.HttpServletRequest request) {
+        String forwarded = request.getHeader("X-Forwarded-For");
+        if (forwarded != null && !forwarded.isBlank()) {
+            return forwarded.split(",")[0].trim();
+        }
+        String realIp = request.getHeader("X-Real-IP");
+        if (realIp != null && !realIp.isBlank()) {
+            return realIp.trim();
+        }
+        return request.getRemoteAddr();
     }
 }

@@ -54,10 +54,7 @@
         }
     </script>
 
-    <div class="row">
-        <div class="col-sm-12 mb-3 mb-sm-0">
-        
-        
+        <div class="mb-3 mb-sm-0">
 
             <ul class="nav nav-tabs" id="memberDetailTabs" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -95,6 +92,5 @@
                 </div>
             </div>
 
-        </div>
 
     </div>

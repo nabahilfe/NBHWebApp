@@ -97,8 +97,9 @@ public class RoleController {
     }
 
 
-    @Transactional
+
     @PreAuthorize("hasRole('ADMIN')")
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping
     String saveRole(Model model, @ModelAttribute @Valid Role role,
             RedirectAttributes redirectAttributes, BindingResult result, HttpServletRequest request) {
@@ -137,7 +138,8 @@ public class RoleController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/delete/{id}")
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
+
     String deleteRole(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
         Optional<Role> role = roleRepository.findById(id);

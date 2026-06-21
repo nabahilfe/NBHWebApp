@@ -35,7 +35,7 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>Nicht verbuchte Zeitschecks</h3>
+    <h3>Gekaufte und noch nicht verbuchte Zeitschecks</h3>
 
     <br/>
 
@@ -44,8 +44,8 @@
     <table class="table table-hover table-sm" id="memberTable">
         <thead>
             <tr>
-                <th scope="col">Bestelldatum</th>
-                <th scope="col">für Mitglied</th>
+                <th scope="col">Erstellungsdatum</th>
+                <th scope="col" id="sortByMember" style="cursor:pointer;">für Mitglied ↕</th>
                 <th scope="col">erstellt von</th>
                 <th scope="col" class="text-end">Stunden</th>
                 <th scope="col" class="text-end">Betrag</th>
@@ -64,15 +64,19 @@
                         <td scope="row" class="text-end">${tc.getHours()}</td>
                         <td scope="row" class="text-end">€ ${numberDE(tc.getAmount())}</td>
                         <td>
-                            <input type="hidden" name="accountableClassName" value="${tc.getAccountableClassName()}">
+                            <input type="hidden" name="accountableName" value="${tc.getAccountableName()}">
                             <input type="hidden" name="accountableId" value="${tc.getAccountableId()}">
                             <input type="hidden" name="accountableMemberId" value="${tc.getAccountableMemberId()}">
                             <input type="hidden" name="transactionType" value="${tc.getTransactionType()}">
                             <input type="hidden" name="transactionDate" value="${tc.getTransactionISODate()}">
                             <input type="hidden" name="transactionAmount" value="${tc.getTransactionAmount()}">
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-outline-primary btn-sm bi-plus-lg"></button>
-                            </div>
+                            @if(ctxt.isTreasurer() || ctxt.isAdmin())
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm bi-plus-lg"></button>
+                                </div>
+                            @else
+                                <div></div>
+                            @endif
                         </td>
                     </tr>
                 </form>
@@ -82,5 +86,25 @@
     <br/>
 
     @template.components.display-statusmessage(successMessage, errorMessage)
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const th = document.getElementById("sortByMember");
+            const tbody = document.querySelector("#memberTable tbody");
+            let asc = true;
+
+            th.addEventListener("click", () => {
+                const rows = Array.from(tbody.querySelectorAll("tr"));
+                rows.sort((a, b) => {
+                    const aText = a.cells[1].textContent.trim().toLowerCase();
+                    const bText = b.cells[1].textContent.trim().toLowerCase();
+                    return asc ? aText.localeCompare(bText, "de") : bText.localeCompare(aText, "de");
+                });
+                rows.forEach(row => tbody.appendChild(row));
+                th.textContent = "für Mitglied " + (asc ? "↑" : "↓");
+                asc = !asc;
+            });
+        });
+    </script>
 
 `)

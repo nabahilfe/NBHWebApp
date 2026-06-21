@@ -14,6 +14,3 @@ Für Ihr leibliches Wohl ist natürlich auch gesorgt!
 
 Jeden letzten Freitag im Monat findet um 16:00 ein Spielenachmittag in der [Anzbacher Mühle](https://anzbachermuehle.at/) statt.
 Auch hier können Sie spontan vorbeikommen und mitspielen!
-
-
-*WICHTIG: Termine können sich ändern, erkundigen Sie sich ob der Termin planmäßig stattfindet.*

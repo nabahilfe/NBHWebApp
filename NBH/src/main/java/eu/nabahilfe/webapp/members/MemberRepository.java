@@ -7,7 +7,6 @@ package eu.nabahilfe.webapp.members;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
@@ -23,8 +22,13 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     List<Member> findByRole(Role role);
 
     @EntityGraph(attributePaths = "role")
-    Page<Member> findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
-            String lastName, String firstName, Integer memberNmbr, Pageable pageable);    
+    @Query("SELECT m FROM Member m " +
+           "WHERE (lower(m.lastName) LIKE lower(CONCAT('%', :lastName, '%')) " +
+           "   OR lower(m.firstName) LIKE lower(CONCAT('%', :firstName, '%')) " +
+           "   OR m.memberNmbr = :memberNmbr) " +
+           "AND (m.resignationDate IS NULL OR m.resignationDate > CURRENT_DATE)")
+    Page<Member> findAllActiveByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
+            String lastName, String firstName, Integer memberNmbr, Pageable pageable);
 
     @EntityGraph(attributePaths = "role")
     List<Member> findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrStreetContainingIgnoreCase(
@@ -35,10 +39,16 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
             String lastName, String firstName);
 
     @EntityGraph(attributePaths = "role")
-    List<Member> findAllBy(Sort sort);
+    @Query("SELECT m FROM Member m " +
+            "WHERE (m.resignationDate IS NULL OR m.resignationDate > CURRENT_DATE)")
+    Page<Member> findAllActive(Pageable pageable);
+
 
     @EntityGraph(attributePaths = "role")
-    Page<Member> findAll(Pageable pageable);
+    @Query("SELECT m FROM Member m " +
+            "WHERE (m.resignationDate IS NOT NULL AND m.resignationDate <= CURRENT_DATE) " +
+            "AND NOT (m.firstName = '*' AND m.lastName = '*')")
+    Page<Member> findAllInactive(Pageable pageable);
 
     @EntityGraph(attributePaths = "role")
     Optional<Member> findTopByOrderByMemberNmbrDesc();
@@ -87,6 +97,10 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     @Query("SELECT YEAR(m.resignationDate), COUNT(m) FROM Member m WHERE m.resignationDate IS NOT NULL GROUP BY YEAR(m.resignationDate) ORDER BY YEAR(m.resignationDate) ASC")
     List<Object[]> findResignedCountPerYear();
 
-	List<Member> findBySalutationIgnoreCase(String sozialkontoSalutation);
+    List<Member> findBySalutationIgnoreCase(String sozialkontoSalutation);
+
+    List<Member> findByFirstNameAndLastName(String adminAccountFirstName, String adminAccountLastName);
+
+
 
 }

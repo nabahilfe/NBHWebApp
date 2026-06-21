@@ -135,7 +135,8 @@ public class AmountDomainValueController {
 
 
     /* Save (create or update) */
-    @Transactional
+    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER')")
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping("/save")
     public String save(@Valid @ModelAttribute AmountDomainValue amountDomainValue, RedirectAttributes redirectAttributes, Model model) {
         boolean isNew = (amountDomainValue.getId() == null);
@@ -192,7 +193,7 @@ public class AmountDomainValueController {
 
 
     /* Delete */
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Optional<AmountDomainValue> adv = repo.findById(id);

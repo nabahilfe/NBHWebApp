@@ -40,6 +40,20 @@
                                 Gebühren-Satz bearbeiten
                             @endif
                         </h4>
+                        <p class="card-text text-secondary">
+                            Gebühren-Satz für eine bestimmte Kategorie festlegen. Typ (Code) wählen und den Betrag eingeben.<br/>
+                            Der Gebühren-Satz wird ab dem angegebenen Datum gültig sein.
+                            <ul>
+                                <li>Der eingebene Wert ist für das aktuelle Jahr nicht mehr änderbar!</li>
+                                <li>Das Gültig-ab-Datum wird automatisch basierend auf bestehenden Sätzen berechnet.</li>
+                            </ul>
+
+                            <strong>Wichtiger Hinweis</strong>
+                            <ul>
+                                <li>Der Betrag für Zeitschecks ist <strong>pro Stunde</strong> anzugeben!</li>
+                                <li>Der Betrag für den Mitgliedsbeitrag ist <strong>pro Jahr</strong> anzugeben!</li>
+                            </ul>
+                        </p>
                         <hr/>
 
                         <form method="POST" action="/domaintypes/save">

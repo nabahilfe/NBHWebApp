@@ -9,8 +9,10 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import eu.nabahilfe.webapp.GlobalAuditListener;
 import eu.nabahilfe.webapp.members.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,7 +31,7 @@ import jakarta.validation.constraints.Size;
  * Angebote der Mitglieder, wird bei der Verbuchung von Zeitschecks verwendet
  */
 @Entity
-@EntityListeners(GlobalAuditListener.class)
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "OFFERS")
 public class Offer  {
     @Id
@@ -48,6 +50,7 @@ public class Offer  {
     // FIXME in Generator: "@Column(nullable = false)"
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "created_by_id")
+    @CreatedBy
     private Member createdBy;
 
     @UpdateTimestamp
@@ -55,6 +58,7 @@ public class Offer  {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "updated_by_id")
+    @LastModifiedBy
     private Member updatedBy;
 
     @Version

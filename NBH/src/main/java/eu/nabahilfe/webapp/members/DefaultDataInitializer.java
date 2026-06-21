@@ -6,6 +6,7 @@
 package eu.nabahilfe.webapp.members;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.org.Offer;
 import eu.nabahilfe.webapp.org.OfferRepository;
+import jakarta.transaction.Transactional;
 
 /**
  * Ensures the built-in System-Administrator role and member exist at application startup.
@@ -30,292 +32,299 @@ public class DefaultDataInitializer implements CommandLineRunner {
     private final MemberRepository memberRepository;
     private final OfferRepository offerRepository;
 
-    
+
     public DefaultDataInitializer(RoleRepository roleRepository, MemberRepository memberRepository, OfferRepository offerRepository) {
         this.roleRepository = roleRepository;
-        this.memberRepository = memberRepository;	
+        this.memberRepository = memberRepository;
         this.offerRepository = offerRepository;
     }
 
-    
+
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public void run(String... args) {
-        Role adminRole = ensureAdminRoleExists();
-        ensureAdminMemberExists(adminRole);
-        ensureDefaultRolesExists();
-        ensureOffersExist();
+        log.info("Running DefaultDataInitializer to ensure default roles, admin member and offers exist");
+        try {
+            Role adminRole = ensureAdminRoleExists();
+            ensureAdminMemberExists(adminRole);
+            ensureDefaultRolesExists();
+            ensureOffersExist();
+        } catch (Exception e) {
+            log.error("Failed to initialize default data", e);
+            throw new IllegalStateException("Application startup failed, initial Data not created!", e);
+        }
     }
 
     private void ensureOffersExist() {
-		if (offerRepository.count() > 0) {
-			log.debug("Offers already exist, skipping default offer creation");
-			return;
-		}
+        if (offerRepository.count() > 0) {
+            log.debug("Offers already exist, skipping default offer creation");
+            return;
+        }
 
-		Offer offer = null;
-		Offer saved = null;
-		
-		// '100','Erfahrungsaustausch und Gespräche'	
-		offer = new Offer();
-		offer.setCode("100");
-		offer.setDescription("Erfahrungsaustausch und Gespräche");
-		saved = offerRepository.save(offer);
-		log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());		
-		
-		
-		// '200','Alltägliche Hilfsdienste'
-		offer = new Offer();
-		offer.setCode("200");
-		offer.setDescription("Alltägliche Hilfsdienste");
-		saved = offerRepository.save(offer);
-		log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());		
-		
-		
-		
-		// '300','Initiieren und Organisieren von Freizeitaktivitäten'
-		offer = new Offer();
-		offer.setCode("300");
-		offer.setDescription("Initiieren und Organisieren von Freizeitaktivitäten");
-		saved = offerRepository.save(offer);
-		log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());		
-		
-		
-		
-		// '400','Unterstützung bei Formularen sowie Behördenkontakten'
-		offer = new Offer();
-		offer.setCode("400");
-		offer.setDescription("Unterstützung bei Formularen sowie Behördenkontakten");
-		saved = offerRepository.save(offer);
-		log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());		
-		
-		
-		
-		// '500','Transport und Fahrtendienste'
-		offer = new Offer();
-		offer.setCode("500");
-		offer.setDescription("Transport und Fahrtendienste");
-		saved = offerRepository.save(offer);
-		log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());		
-		
-		
-		
-		// '600','Leih-Oma / Leih-Opa'
-		offer = new Offer();
-		offer.setCode("600");
-		offer.setDescription("Leih-Oma / Leih-Opa");
-		saved = offerRepository.save(offer);
-		log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());		
-		
-		
-		
-		// '700','Kleinere Außen- oder Reparaturarbeiten'
-		offer = new Offer();
-		offer.setCode("700");
-		offer.setDescription("Kleinere Außen- oder Reparaturarbeiten");
-		saved = offerRepository.save(offer);
-		log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());		
-		
-		
-		
-		// '800','Hilfe beim Bedienen technischer Geräte und Computer'
-		offer = new Offer();
-		offer.setCode("800");
-		offer.setDescription("Hilfe beim Bedienen technischer Geräte und Computer");
-		saved = offerRepository.save(offer);
-		log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());		
+        Offer offer = null;
+        Offer saved = null;
 
-		
-		// '900','Sonstiges - bitte Beschreibung angeben!'
-		offer = new Offer();
-		offer.setCode("900");
-		offer.setDescription("Sonstiges - bitte Beschreibung angeben!");
-		saved = offerRepository.save(offer);
-		log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());		
-		
-		
-		// '950','Spende von Stunden'
-		offer = new Offer();
-		offer.setCode("950");
-		offer.setDescription("Spende von Stunden");
-		saved = offerRepository.save(offer);
-		log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());		
-		
-		
-		// '999','Korrekturbuchung'
-		offer = new Offer();
-		offer.setCode("999");
-		offer.setDescription("Korrekturbuchung");
-		saved = offerRepository.save(offer);
-		log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());		
-	}
+        // '100','Erfahrungsaustausch und Gespräche'
+        offer = new Offer();
+        offer.setCode("100");
+        offer.setDescription("Erfahrungsaustausch und Gespräche");
+        saved = offerRepository.save(offer);
+        log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
 
-    
-	private void ensureDefaultRolesExists() {
+
+        // '200','Alltägliche Hilfsdienste'
+        offer = new Offer();
+        offer.setCode("200");
+        offer.setDescription("Alltägliche Hilfsdienste");
+        saved = offerRepository.save(offer);
+        log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
+
+
+
+        // '300','Initiieren und Organisieren von Freizeitaktivitäten'
+        offer = new Offer();
+        offer.setCode("300");
+        offer.setDescription("Initiieren und Organisieren von Freizeitaktivitäten");
+        saved = offerRepository.save(offer);
+        log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
+
+
+
+        // '400','Unterstützung bei Formularen sowie Behördenkontakten'
+        offer = new Offer();
+        offer.setCode("400");
+        offer.setDescription("Unterstützung bei Formularen sowie Behördenkontakten");
+        saved = offerRepository.save(offer);
+        log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
+
+
+
+        // '500','Transport und Fahrtendienste'
+        offer = new Offer();
+        offer.setCode("500");
+        offer.setDescription("Transport und Fahrtendienste");
+        saved = offerRepository.save(offer);
+        log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
+
+
+
+        // '600','Leih-Oma / Leih-Opa'
+        offer = new Offer();
+        offer.setCode("600");
+        offer.setDescription("Leih-Oma / Leih-Opa");
+        saved = offerRepository.save(offer);
+        log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
+
+
+
+        // '700','Kleinere Außen- oder Reparaturarbeiten'
+        offer = new Offer();
+        offer.setCode("700");
+        offer.setDescription("Kleinere Außen- oder Reparaturarbeiten");
+        saved = offerRepository.save(offer);
+        log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
+
+
+
+        // '800','Hilfe beim Bedienen technischer Geräte und Computer'
+        offer = new Offer();
+        offer.setCode("800");
+        offer.setDescription("Hilfe beim Bedienen technischer Geräte und Computer");
+        saved = offerRepository.save(offer);
+        log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
+
+
+        // '900','Sonstiges - bitte Beschreibung angeben!'
+        offer = new Offer();
+        offer.setCode("900");
+        offer.setDescription("Sonstiges - bitte Beschreibung angeben!");
+        saved = offerRepository.save(offer);
+        log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
+
+
+        // '950','Spende von Stunden'
+        offer = new Offer();
+        offer.setCode("950");
+        offer.setDescription("Spende von Stunden");
+        saved = offerRepository.save(offer);
+        log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
+
+
+        // '999','Korrekturbuchung'
+        offer = new Offer();
+        offer.setCode("999");
+        offer.setDescription("Korrekturbuchung");
+        saved = offerRepository.save(offer);
+        log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
+    }
+
+
+    private void ensureDefaultRolesExists() {
         Role existing = roleRepository.findByRoleNameIgnoreCase("Obmann").orElse(null);
         if (existing != null) {
             log.debug("RoleNames already exist, skipping default role creation");
             return;
         }
 
-		Role role = null;
-		Role saved = null;
+        Role role = null;
+        Role saved = null;
 
         // Obfrau
-		role = new Role();
-		role.setRoleName("Obfrau");
-		role.setIsBoardMember(true);
-		role.setIsTreasurer(false);
-		role.setIsSecretary(false);
-		role.setIsAuditor(false);
-		role.setIsTimeKeeper(true);
-		role.setIsAdmin(false);
-		role.setIsMiscellaneous(false);
-		saved = roleRepository.save(role);
-		log.info("role {} created at startup", saved.getRoleName());
-		
+        role = new Role();
+        role.setRoleName("Obfrau");
+        role.setIsBoardMember(true);
+        role.setIsTreasurer(false);
+        role.setIsSecretary(false);
+        role.setIsAuditor(false);
+        role.setIsTimeKeeper(true);
+        role.setIsAdmin(false);
+        role.setIsMiscellaneous(false);
+        saved = roleRepository.save(role);
+        log.info("role {} created at startup", saved.getRoleName());
+
         // Obfrau Stv.
-		role = new Role();
-		role.setRoleName("Obfrau Stv.");
-		role.setIsBoardMember(true);
-		role.setIsTreasurer(false);
-		role.setIsSecretary(false);
-		role.setIsAuditor(false);
-		role.setIsTimeKeeper(true);
-		role.setIsAdmin(true);
-		role.setIsMiscellaneous(false);
-		saved = roleRepository.save(role);
-		log.info("role {} created at startup", saved.getRoleName());
-		
-		
+        role = new Role();
+        role.setRoleName("Obfrau Stv.");
+        role.setIsBoardMember(true);
+        role.setIsTreasurer(false);
+        role.setIsSecretary(false);
+        role.setIsAuditor(false);
+        role.setIsTimeKeeper(true);
+        role.setIsAdmin(true);
+        role.setIsMiscellaneous(false);
+        saved = roleRepository.save(role);
+        log.info("role {} created at startup", saved.getRoleName());
+
+
 
         // Obmann
-		role = new Role();
-		role.setRoleName("Obmann");
-		role.setIsBoardMember(true);
-		role.setIsTreasurer(false);
-		role.setIsSecretary(false);
-		role.setIsAuditor(false);
-		role.setIsTimeKeeper(true);
-		role.setIsAdmin(false);
-		role.setIsMiscellaneous(false);
-		saved = roleRepository.save(role);
-		log.info("role {} created at startup", saved.getRoleName());
-		
+        role = new Role();
+        role.setRoleName("Obmann");
+        role.setIsBoardMember(true);
+        role.setIsTreasurer(false);
+        role.setIsSecretary(false);
+        role.setIsAuditor(false);
+        role.setIsTimeKeeper(true);
+        role.setIsAdmin(false);
+        role.setIsMiscellaneous(false);
+        saved = roleRepository.save(role);
+        log.info("role {} created at startup", saved.getRoleName());
+
         // Obmann Stv.
-		role = new Role();
-		role.setRoleName("Obmann Stv.");
-		role.setIsBoardMember(true);
-		role.setIsTreasurer(false);
-		role.setIsSecretary(false);
-		role.setIsAuditor(false);
-		role.setIsTimeKeeper(true);
-		role.setIsAdmin(true);
-		role.setIsMiscellaneous(false);
-		saved = roleRepository.save(role);
-		log.info("role {} created at startup", saved.getRoleName());
-		
-		
-				
-        // Kassier	
-		role = new Role();
-		role.setRoleName("Kassier");
-		role.setIsBoardMember(false);
-		role.setIsTreasurer(true);
-		role.setIsSecretary(false);
-		role.setIsAuditor(false);
-		role.setIsTimeKeeper(false);
-		role.setIsAdmin(false);
-		role.setIsMiscellaneous(false);
-		saved = roleRepository.save(role);
-		log.info("role {} created at startup", saved.getRoleName());
-		
+        role = new Role();
+        role.setRoleName("Obmann Stv.");
+        role.setIsBoardMember(true);
+        role.setIsTreasurer(false);
+        role.setIsSecretary(false);
+        role.setIsAuditor(false);
+        role.setIsTimeKeeper(true);
+        role.setIsAdmin(true);
+        role.setIsMiscellaneous(false);
+        saved = roleRepository.save(role);
+        log.info("role {} created at startup", saved.getRoleName());
+
+
+
+        // Kassier
+        role = new Role();
+        role.setRoleName("Kassier");
+        role.setIsBoardMember(false);
+        role.setIsTreasurer(true);
+        role.setIsSecretary(false);
+        role.setIsAuditor(false);
+        role.setIsTimeKeeper(false);
+        role.setIsAdmin(false);
+        role.setIsMiscellaneous(false);
+        saved = roleRepository.save(role);
+        log.info("role {} created at startup", saved.getRoleName());
+
         // Kassier Stv.
-		role = new Role();
-		role.setRoleName("Kassier Stv.");
-		role.setIsBoardMember(false);
-		role.setIsTreasurer(true);
-		role.setIsSecretary(false);
-		role.setIsAuditor(false);
-		role.setIsTimeKeeper(false);
-		role.setIsAdmin(false);
-		role.setIsMiscellaneous(false);
-		saved = roleRepository.save(role);
-		log.info("role {} created at startup", saved.getRoleName());
+        role = new Role();
+        role.setRoleName("Kassier Stv.");
+        role.setIsBoardMember(false);
+        role.setIsTreasurer(true);
+        role.setIsSecretary(false);
+        role.setIsAuditor(false);
+        role.setIsTimeKeeper(false);
+        role.setIsAdmin(false);
+        role.setIsMiscellaneous(false);
+        saved = roleRepository.save(role);
+        log.info("role {} created at startup", saved.getRoleName());
 
-		
 
-        // Rechnungsprüfer	
-		role = new Role();
-		role.setRoleName("Rechnungsprüfer");
-		role.setIsBoardMember(false);
-		role.setIsTreasurer(false);
-		role.setIsSecretary(false);
-		role.setIsAuditor(true);
-		role.setIsTimeKeeper(false);
-		role.setIsAdmin(false);
-		role.setIsMiscellaneous(false);
-		saved = roleRepository.save(role);
-		log.info("role {} created at startup", saved.getRoleName());
-		
+
+        // Rechnungsprüfer
+        role = new Role();
+        role.setRoleName("Rechnungsprüfer");
+        role.setIsBoardMember(false);
+        role.setIsTreasurer(false);
+        role.setIsSecretary(false);
+        role.setIsAuditor(true);
+        role.setIsTimeKeeper(false);
+        role.setIsAdmin(false);
+        role.setIsMiscellaneous(false);
+        saved = roleRepository.save(role);
+        log.info("role {} created at startup", saved.getRoleName());
+
         // Rechnungsprüfer Stv.
-		role = new Role();
-		role.setRoleName("Rechnungsprüfer Stv.");
-		role.setIsBoardMember(false);
-		role.setIsTreasurer(false);
-		role.setIsSecretary(false);
-		role.setIsAuditor(true);
-		role.setIsTimeKeeper(false);
-		role.setIsAdmin(false);
-		role.setIsMiscellaneous(false);
-		saved = roleRepository.save(role);
-		log.info("role {} created at startup", saved.getRoleName());
-		
-		
-		
-        // Schriftführer	
-		role = new Role();
-		role.setRoleName("Schriftführer");
-		role.setIsBoardMember(false);
-		role.setIsTreasurer(false);
-		role.setIsSecretary(true);
-		role.setIsAuditor(false);
-		role.setIsTimeKeeper(false);
-		role.setIsAdmin(false);
-		role.setIsMiscellaneous(false);
-		saved = roleRepository.save(role);
-		log.info("role {} created at startup", saved.getRoleName());
-		
+        role = new Role();
+        role.setRoleName("Rechnungsprüfer Stv.");
+        role.setIsBoardMember(false);
+        role.setIsTreasurer(false);
+        role.setIsSecretary(false);
+        role.setIsAuditor(true);
+        role.setIsTimeKeeper(false);
+        role.setIsAdmin(false);
+        role.setIsMiscellaneous(false);
+        saved = roleRepository.save(role);
+        log.info("role {} created at startup", saved.getRoleName());
+
+
+
+        // Schriftführer
+        role = new Role();
+        role.setRoleName("Schriftführer");
+        role.setIsBoardMember(false);
+        role.setIsTreasurer(false);
+        role.setIsSecretary(true);
+        role.setIsAuditor(false);
+        role.setIsTimeKeeper(false);
+        role.setIsAdmin(false);
+        role.setIsMiscellaneous(false);
+        saved = roleRepository.save(role);
+        log.info("role {} created at startup", saved.getRoleName());
+
         // Schriftführer Stv.
-		role = new Role();
-		role.setRoleName("Schriftführer Stv.");
-		role.setIsBoardMember(false);
-		role.setIsTreasurer(false);
-		role.setIsSecretary(true);
-		role.setIsAuditor(false);
-		role.setIsTimeKeeper(false);
-		role.setIsAdmin(false);
-		role.setIsMiscellaneous(false);
-		saved = roleRepository.save(role);
-		log.info("role {} created at startup", saved.getRoleName());
-		
-		
-        // Ehrenmitglied	
-		role = new Role();
-		role.setRoleName("Ehrenmitglied");
-		role.setIsBoardMember(false);
-		role.setIsTreasurer(false);
-		role.setIsSecretary(false);
-		role.setIsAuditor(false);
-		role.setIsTimeKeeper(false);
-		role.setIsAdmin(false);
-		role.setIsMiscellaneous(true);
-		saved = roleRepository.save(role);
-		log.info("role {} created at startup", saved.getRoleName());
-		
-		
+        role = new Role();
+        role.setRoleName("Schriftführer Stv.");
+        role.setIsBoardMember(false);
+        role.setIsTreasurer(false);
+        role.setIsSecretary(true);
+        role.setIsAuditor(false);
+        role.setIsTimeKeeper(false);
+        role.setIsAdmin(false);
+        role.setIsMiscellaneous(false);
+        saved = roleRepository.save(role);
+        log.info("role {} created at startup", saved.getRoleName());
+
+
+        // Ehrenmitglied
+        role = new Role();
+        role.setRoleName("Ehrenmitglied");
+        role.setIsBoardMember(false);
+        role.setIsTreasurer(false);
+        role.setIsSecretary(false);
+        role.setIsAuditor(false);
+        role.setIsTimeKeeper(false);
+        role.setIsAdmin(false);
+        role.setIsMiscellaneous(true);
+        saved = roleRepository.save(role);
+        log.info("role {} created at startup", saved.getRoleName());
+
+
     }
 
-	private Role ensureAdminRoleExists() {
+    private Role ensureAdminRoleExists() {
         return roleRepository.findByRoleNameIgnoreCase(NbhConst.ADMIN_ROLE_NAME).orElseGet(() -> {
             Role admin = new Role();
             admin.setRoleName(NbhConst.ADMIN_ROLE_NAME);
@@ -333,9 +342,9 @@ public class DefaultDataInitializer implements CommandLineRunner {
     }
 
     private void ensureAdminMemberExists(Role adminRole) {
-        Member existing = memberRepository.findByEmail(NbhConst.ADMIN_EMAIL);
-        if (existing != null) {
-            log.debug("System Administrator member already present with id={}", existing.getId());
+        List<Member> existing = memberRepository.findByFirstNameAndLastName(NbhConst.ADMIN_ACCOUNT_FIRST_NAME, NbhConst.ADMIN_ACCOUNT_LAST_NAME);
+        if (!existing.isEmpty()) {
+            log.info("System Administrator member already present with id={}", existing.get(0).getId());
             return;
         }
 
@@ -343,7 +352,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         admin.setFirstName(NbhConst.ADMIN_ACCOUNT_FIRST_NAME);
         admin.setLastName(NbhConst.ADMIN_ACCOUNT_LAST_NAME);
         admin.setBirthdate(LocalDate.of(2000, 1, 1));
-        admin.setEmail(NbhConst.ADMIN_EMAIL);
+        admin.setEmail(NbhConst.ADMIN_EMAIL_PREFIX + getTenantName() + NbhConst.ADMIN_EMAIL_SUFFIX);
         admin.setStreet("na");
         admin.setNumber("na");
         admin.setZip("na");
@@ -351,13 +360,19 @@ public class DefaultDataInitializer implements CommandLineRunner {
         admin.setRole(adminRole);
         admin.setJoiningDate(LocalDate.now());
         admin.setDirectDebitAuthorization(false);
-        admin.setIsImportedMember(false);
-        admin.setAccumulatedHours(0);
+        admin.setIsImportedMember(true);
+        admin.setAccumulatedHours(null);
         admin.setMemberNmbr(getNextMemberNumber());
 
         memberRepository.save(admin);
-        log.info("System Administrator member created at startup with email={}", NbhConst.ADMIN_EMAIL);
+        log.info("System Administrator member created at startup with email={}", admin.getEmail());
     }
+
+    private String getTenantName() {
+        // FIXME: for now we just return "ma" as tenant name, but in the future we should determine this dynamically based on the url subdomain
+        return "ma";
+    }
+
 
     private Integer getNextMemberNumber() {
         return memberRepository.findTopByOrderByMemberNmbrDesc()

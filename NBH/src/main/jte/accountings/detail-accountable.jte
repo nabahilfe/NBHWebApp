@@ -9,6 +9,7 @@
 @import static eu.nabahilfe.webapp.NumberFormatter.*
 
 @import eu.nabahilfe.webapp.accountings.AccountingEntry
+@import eu.nabahilfe.webapp.accountings.TransactionType
 
 @param AccountingEntry accountingEntry
 
@@ -30,59 +31,72 @@
     content = @`
 
     <h3>Buchungsdatensatz anlegen</h3>
-    <p>Damit wird dokumentiert, dass die Buchung durchgeführt wurde.</p>
     <br/>
 
     <div class="row">
-        <!-- first action is for create, second action is for update -->
-        <form action="${accountingEntry.getId() == null ? "/accountings/save-accounting" : "/accountings/view-accounting/" + accountingEntry.getId()}" method="post">
-            ${csrfHiddenInput}
-            <div class="form-group row">
-                <label for="accountableClass" class="col-sm-2 col-form-label">Buchung für</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" name="accountableClass" id="accountableClass" value="${accountingEntry.getAccountableClassDisplayName()}" disabled readonly>
-                </div>
+        <div class="col-lg-7">
 
-                <label for="transactionType" class="col-sm-2 col-form-label">Buchungsart</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" name="transactionType" id="transactionType" value="${accountingEntry.getTransactionDisplayType()}" disabled readonly>
-                </div>
+            <!-- Read-only details -->
+            <div class="card shadow mb-3" style="background-color: #ECFEFF;">
+                <div class="card-header fw-bold">Buchungsdetails</div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Buchung für</dt>
+                        <dd class="col-sm-8">${accountingEntry.getAccountableName()}</dd>
 
-                <label for="transactionDate" class="col-sm-2 col-form-label">Transaktionsdatum</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" name="transactionDate" id="transactionDate" value="${dateReverseDE(accountingEntry.getTransactionDate())}" disabled readonly>
-                </div>
+                        <dt class="col-sm-4">Buchungsart</dt>
+                        <dd class="col-sm-8">
+                            @if(accountingEntry.getTransactionDisplayType().equals(TransactionType.INCOME.getCode()))
+                                <span class="badge bg-success">Einnahme</span>
+                            @else
+                                <span class="badge bg-danger">Ausgabe</span>
+                            @endif
+                        </dd>
 
-                <label for="transactionAmount" class="col-sm-2 col-form-label">Betrag in €</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" name="transactionAmount" id="transactionAmount" value="${numberDE(accountingEntry.getTransactionAmount())}" disabled readonly>
-                </div>
 
-                <label for="fromMember" class="col-sm-2 col-form-label">Von Mitglied</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" name="fromMember" id="fromMember" value="${accountingEntry.getAccountableMember().getNameAndAddress()}" disabled readonly>
-                </div>
 
-                <p></p>
 
-                <label for="accountingDate" class="col-sm-2 col-form-label">Buchungsdatum<span class="text-danger">*</span></label>
-                <div class="col-sm-10">
-                    <input type="date" class="form-control" name="accountingDate" id="accountingDate" value="${formatISO(accountingEntry.getAccountingDate())}" required>
+
+                        <dt class="col-sm-4">Transaktionsdatum</dt>
+                        <dd class="col-sm-8">${dateReverseDE(accountingEntry.getTransactionDate())}</dd>
+
+                        <dt class="col-sm-4">Betrag</dt>
+                        <dd class="col-sm-8">€ ${numberDE(accountingEntry.getTransactionAmount())}</dd>
+
+                        <dt class="col-sm-4">Von Mitglied</dt>
+                        <dd class="col-sm-8">${accountingEntry.getAccountableMember().getNameAndAddress()}</dd>
+                    </dl>
                 </div>
             </div>
 
-            <br/>
+            <!-- Booking form -->
+            <div class="card shadow" style="background-color: #ECFEFF;">
+                <div class="card-header fw-bold">Buchung</div>
+                <div class="card-body">
+                    <form action="${accountingEntry.getId() == null ? "/accountings/save-accounting" : "/accountings/view-accounting/" + accountingEntry.getId()}" method="post">
+                        ${csrfHiddenInput}
 
-            <div class="form-group row">
-                <div class="col-sm-10">
-                    <button type="submit" class="btn btn-primary bi-floppy"> Speichern</button>
+                        <label for="accountingDate" class="col-form-label">Buchungsdatum<span class="text-danger">*</span></label>
+                        <div class="mb-3">
+                            <input type="date" class="form-control" name="accountingDate" id="accountingDate"
+                                   max="${java.time.LocalDate.now().toString()}" required>
+                            <div class="form-text">Datum, an dem die Transaktion am Konto verbucht wurde.</div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary bi-floppy"> Speichern</button>
+                            </div>
+                        </div>
+
+                    </form>
                 </div>
             </div>
 
-            <br/>
-            @template.components.display-statusmessage(successMessage, errorMessage)
-        </form>
+        </div>
     </div>
+
+    <br/>
+    @template.components.display-statusmessage(successMessage, errorMessage)
+
 `)
-
-

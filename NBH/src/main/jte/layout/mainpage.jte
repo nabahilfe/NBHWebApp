@@ -67,9 +67,9 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/members/mydata/${ctxt.getUserId()}">Meine Daten</a></li>
-                                    @if (! ctxt.isSystemAdmin()) <!-- no timecheques for SystemAdmin -->
+                                    @if (!ctxt.isSystemMember()) <!-- no timecheques for SystemMembers -->
                                         <li><a class="dropdown-item" href="/timetransfers/fromself?fromMemberId=${ctxt.getUserId()}">Zeitschecks übergeben</a></li>
-                                            <li><a class="dropdown-item" href="/timecheques/newfromself/${ctxt.getUserId()}">Zeitschecks kaufen</a></li>
+                                        <li><a class="dropdown-item" href="/timecheques/newfromself/${ctxt.getUserId()}">Zeitschecks kaufen</a></li>
                                     @endif
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
@@ -99,9 +99,12 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/members">Mitglieder verwalten</a></li>
+                                    <li><a class="dropdown-item" href="/members/resigned">Ausgetretene Mitglieder</a></li>
                                     <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/members/birthdays">Geburstage</a></li>
+                                    <li><a class="dropdown-item" href="/members/birthdays">Geburtstage</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/members/open-membership-fees">Mitgliedsbeiträge vorschreiben</a></li>
                                 </ul>
                             </li>
                         @endif
@@ -120,17 +123,31 @@
                             </li>
                         @endif
 
+                        <!-- Dropdown Einnahmen / Ausgaben -->
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "TREASURER"))
+                            <li class="nav-item dropdown">
+                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                    Einnahmen / Ausgaben
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/accountings/income">Einnahme erfassen</a></li>
+                                    <li><a class="dropdown-item" href="/accountings/expense">Ausgabe erfassen</a></li>
+                                </ul>
+                            </li>
+                        @endif
+
                         <!-- Dropdown Buchungen -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER", "TREASURER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "TREASURER", "AUDITOR"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Buchungen
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/timecheques/unaccounted">Offene Zeitschecks</a></li>
-                                    <li><a class="dropdown-item" href="#">Offene Mitgliedsbeiträge</a></li>
+                                    <li><a class="dropdown-item" href="/members/unaccounted-mbshipfees">Offene Mitgliedsbeiträge</a></li>
+                                    <li><a class="dropdown-item" href="/accountings/misc-unaccounted">Sonstige offene Buchung</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#">Sonstige Buchung</a></li>
+                                    <li><a class="dropdown-item" href="/accountings/show-accountings">Umsätze</a></li>
                                 </ul>
                             </li>
                         @endif
@@ -165,16 +182,16 @@
 
 
                         <!-- Dropdown Domain Values -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER", "TREASURER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TREASURER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Einstellungen
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/domaintypes">Gebühren-Sätze</a></li>
-                                    <li><a class="dropdown-item" href="#">Offene Mitgliedsbeiträge</a></li>
+                                    <!--li><a class="dropdown-item" href="#">...</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#">Sonstige Buchung</a></li>
+                                    <li><a class="dropdown-item" href="#">...</a></li-->
                                 </ul>
                             </li>
                         @endif
@@ -193,8 +210,6 @@
                             </li>
                         @endif
 
-
-
                     </ul>
 
 
@@ -210,7 +225,7 @@
         </nav>
 
         <!-- Haupt-Content -->
-        <div class="container-fluid justify-content-center align-items-center px-1 px-md-4 pb-4">
+        <div class="container-fluid px-2 px-sm-3 px-lg-5 pb-4">
             ${content}
         </div>
 

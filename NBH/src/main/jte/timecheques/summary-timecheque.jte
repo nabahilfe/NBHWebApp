@@ -41,7 +41,7 @@
 
             <div class="col-auto">
 
-                <div class="card shadow" style="background-color: #ECFEFF;"">
+                <div class="card shadow" style="background-color: #ECFEFF;">
                     <div class="card-body">
 
                         <h4 class="card-title text-primary">Aktuelles Zeitguthaben</h4>
@@ -80,10 +80,6 @@
     </div>
 
 
-
-
-
-
     <br/>
 
     @template.components.display-statusmessage(successMessage, errorMessage)
@@ -91,7 +87,7 @@
 
     <div class="card">
 
-       @template.components.list-timecheques-component(member = member, timeCheques = purchasedTimeCheques)
+       @template.components.list-timecheques-component(member = member, timeCheques = purchasedTimeCheques, fullDate = Boolean.TRUE)
 
     </div>
 

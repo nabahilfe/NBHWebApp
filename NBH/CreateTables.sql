@@ -45,7 +45,7 @@ CREATE TABLE persistent_logins (
 
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-05-24 12:21:05
+ * Generated at 2026-06-18 16:00:28
  * ModelDescription: NBH Entity Modell
  */
 
@@ -107,7 +107,7 @@ create table if not exists ROLES (
 /* Fachliche konfigurierbare Parameter für Kosten Mitgliedsbeitrag oder Zeitschecks. Der Code wird in einem ENUM definiert */
 create table if not exists AMOUNT_DOMAIN_VALUES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    code VARCHAR(20) not null /* aus Enum, z.B TIMECHEQUE MEMBER_FEE, ... */,
+    code VARCHAR(20) not null /* aus Enum, z.B TIMECHEQUE, MEMBER_FEE, ... */,
     amount NUMERIC(12,2) not null /* Kosten der jeweiligen Leistung im Gültigkeitszeitraum */,
     valid_from DATE not null,
     valid_to DATE not null /* letzter Eintrag hat immer 9999-12-31 */,
@@ -191,28 +191,15 @@ create table if not exists MEMBERS (
 );
 
 
-/* Dokumentation des jährlicher Mitgliedsbeitrag. TransactionType ist immer INCOME */
+/* Dokumentation des jährlichen Mitgliedsbeitrag. TransactionType ist immer INCOME */
 create table if not exists MEMBERSHIP_FEES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    for_year DATE not null,
+    for_year INTEGER not null,
+    do_not_charge BOOLEAN not null /* z.B. für Ehrenmitglieder */,
     transaction_date DATE not null,
     amount NUMERIC(12,2) not null,
     member_id BIGINT /* FK id from MEMBERS(id) */,
     accounted_by_id BIGINT /* FK id from ACCOUNTING_ENTRIES(id) */,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
-    updated_at TIMESTAMPTZ,
-    updated_by_id BIGINT,
-    version INTEGER NOT NULL
-);
-
-
-/* Angebote des Mitglieds. Klären, brauchen wir das überhaupt? */
-create table if not exists MEMBER_OFFERS (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    is_activ BOOLEAN not null /* Akuell aktiv? */,
-    offer_id BIGINT /* FK id from OFFERS(id) */,
-    member_id BIGINT /* FK id from MEMBERS(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
@@ -257,14 +244,14 @@ create table if not exists TIME_CHEQUES (
 /* Buchungsdatensatz zu Zeitscheck-Kauf, Mitgliedschaft, Weihnachtsessen, usw. */
 create table if not exists ACCOUNTING_ENTRIES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    accountable_class VARCHAR(80) /* MemberFee, TimeCheque, Transaction, ... */,
+    accountable_name VARCHAR(80) /* MemberFee, TimeCheque, Transaction, ... */,
     accountable_id BIGINT /* id zur Klasse bzw. Tabelle */,
     accountable_member_id BIGINT /* FK id from MEMBERS(id) */,
     transaction_type VARCHAR(10) not null /* INCOME oder EXPENSE - muss aus Enum TransactionType kommen */,
     transaction_date DATE not null /* Buchungsdatum */,
     transaction_amount NUMERIC(12,2) not null /* Betrag */,
-    accounting_date DATE not null /* Buchungsdatum */,
-    description VARCHAR(250) /* Verpflichtend wenn keine accountableClass / accountableId eingetragen ist */,
+    accounting_date DATE not null /* Verrechnungsdatum */,
+    description VARCHAR(250) /* Verpflichtend wenn kein fix definierter Name wie 'Zeitscheck', 'Mitgliedsgebühr' verwendet wird, sondern 'Sonstiges' */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,
     updated_at TIMESTAMPTZ,
@@ -302,12 +289,6 @@ alter table MEMBERS
 alter table MEMBERSHIP_FEES
     add constraint fk_MEMBERSHIP_FEES_member_id foreign key (member_id) references MEMBERS(id),
     add constraint fk_MEMBERSHIP_FEES_accounted_by_id foreign key (accounted_by_id) references ACCOUNTING_ENTRIES(id)
-;
-
-
-alter table MEMBER_OFFERS
-    add constraint fk_MEMBER_OFFERS_offer_id foreign key (offer_id) references OFFERS(id),
-    add constraint fk_MEMBER_OFFERS_member_id foreign key (member_id) references MEMBERS(id)
 ;
 
 
@@ -361,13 +342,8 @@ alter table MEMBERSHIP_FEES
 ;
 
 
-alter table MEMBER_OFFERS
-    add constraint uc_offer_member_member_offers unique (offer_id, member_id)
-;
-
-
 alter table ACCOUNTING_ENTRIES
-    add constraint uc_class_id_accounting_entries unique (accountable_class, accountable_id)
+    add constraint uc_name_id_accounting_entries unique (accountable_name, accountable_id)
 ;
 
 
@@ -402,8 +378,6 @@ drop table if exists MEMBERS cascade;
 
 drop table if exists MEMBERSHIP_FEES cascade;
 
-drop table if exists MEMBER_OFFERS cascade;
-
 drop table if exists TIME_TRANSFERS cascade;
 
 drop table if exists TIME_CHEQUES cascade;
@@ -414,4 +388,3 @@ drop table if exists TRANSACTIONS cascade;
 
 
 /* end of generated file */
-

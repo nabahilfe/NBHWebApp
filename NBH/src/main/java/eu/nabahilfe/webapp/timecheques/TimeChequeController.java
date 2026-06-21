@@ -45,7 +45,7 @@ public class TimeChequeController {
     private final SecurityUtils securityUtils;
     private final AmountDomainValueRepository amountDomainValueRepository;
     private final TimeTransferRepository timeTransferRepository;
-    
+
     private final EmailService emailService;
     private final EmailComposer emailComposer;
 
@@ -72,7 +72,6 @@ public class TimeChequeController {
     // LIST & DETAIL
     // --------------------
 
-    // FIXME: Allow only display of own TimeCheques for USER role, all TimeCheques for ADMIN and TIME_KEEPER roles
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{id}")
     String viewTimeCheque(final Model model, @PathVariable Long id) {
@@ -122,7 +121,7 @@ public class TimeChequeController {
         return "timecheques/list-unaccounted-timecheques";
     }
 
-    
+
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
     @GetMapping("/statistics")
     String statistics(final Model model, @RequestParam(required = false) Integer year) {
@@ -158,9 +157,9 @@ public class TimeChequeController {
         return "timecheques/time-cheque-category-statistics";
     }
 
-    
+
     // --------------------
-    
+
 
     // --------------------
     // CREATE NEW
@@ -173,9 +172,9 @@ public class TimeChequeController {
 
         Member member = memberRepository.findById(memberId).orElse(null);
         if (member == null) {
-        	model.addAttribute("status", 404);
-        	model.addAttribute("error", "Not Found");
-        	model.addAttribute("message", "Mitglied mit ID " + memberId + " nicht gefunden.");
+            model.addAttribute("status", 404);
+            model.addAttribute("error", "Not Found");
+            model.addAttribute("message", "Mitglied mit ID " + memberId + " nicht gefunden.");
             return "error";
         }
 
@@ -207,9 +206,9 @@ public class TimeChequeController {
 
         Member member = memberRepository.findById(memberId).orElse(null);
         if (member == null) {
-        	model.addAttribute("status", 404);
-        	model.addAttribute("error", "Not Found");
-        	model.addAttribute("message", "Mitglied mit ID " + memberId + " nicht gefunden.");
+            model.addAttribute("status", 404);
+            model.addAttribute("error", "Not Found");
+            model.addAttribute("message", "Mitglied mit ID " + memberId + " nicht gefunden.");
             return "error";
         }
 
@@ -233,8 +232,8 @@ public class TimeChequeController {
     // Save the new TimeCheque and update Member's accumulated hours
 
     @PreAuthorize("hasRole('USER')")
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping
-    @Transactional
     String saveTimeCheque(final Model model, @RequestParam LocalDate orderDate, @RequestParam int hours) {
 
         TimeCheque tc = (TimeCheque) model.getAttribute("timeCheque");
@@ -252,18 +251,17 @@ public class TimeChequeController {
         tc.getAssignedTo().setAccumulatedHours(newHours);
         memberRepository.save(tc.getAssignedTo());
 
-        if (tc.getAssignedTo().getEmail() != null) {
+        if (tc.getAssignedTo().getEmail() != null && !tc.getAssignedTo().getEmail().isBlank()) {
             emailService.sendEmailHtml(emailComposer.composeTimeChecksBought(
-         			tc.getAssignedTo().getEmail(),
-        			tc.getAssignedTo().getEmailSalutation(),
-        			tc.getHours(),
-        			tc.getAmount().doubleValue()
-        		));
-		}
+                    tc.getAssignedTo().getEmail(), tc.getAssignedTo().getEmailSalutation(),
+                    tc.getCreatedBy().getEmail(), tc.getCreatedBy().getName(),
+                    tc.getHours(), tc.getAmount().doubleValue()
+                ));
+        }
         else {
-			log.debug("Member id={} has no email address, cannot send TimeCheque purchase confirmation email", tc.getAssignedTo().getId());
-		}
-        
+            log.debug("Member id={} has no email address, cannot send TimeCheque purchase confirmation email", tc.getAssignedTo().getId());
+        }
+
         model.addAttribute("successMessage", "Zeitscheck mit " + tc.getHours() + "h wurde hinzugefügt.");
 
         log.debug("TimeCheque saved: {}", tc);
@@ -280,17 +278,17 @@ public class TimeChequeController {
 
 
     private TimeCheque createNewTimeCheque(Member member) {
-    	// Validate Member ist neither Administrator nor Sozialkonto
-		if (member.isSozialkonto()) {
-			throw new IllegalCallerException("Für das Sozialkonto können keine Zeitschecks erstellt werden.");
-		}
-		if (member.isSystemAdmin()) {
-			throw new IllegalCallerException("Für System Administratoren können keine Zeitschecks erstellt werden.");
-		}
-    	
-    	
-    	// Business Rule: TimeCheques can only be purchased if Member has less than 5 accumulated hours, except for the first TimeCheque, which is free of charge.
-    	int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
+        // Validate Member ist neither Administrator nor Sozialkonto
+        if (member.isSozialkonto()) {
+            throw new IllegalCallerException("Für das Sozialkonto können keine Zeitschecks erstellt werden.");
+        }
+        if (member.isSystemAdmin()) {
+            throw new IllegalCallerException("Für System Administratoren können keine Zeitschecks erstellt werden.");
+        }
+
+
+        // Business Rule: TimeCheques can only be purchased if Member has less than 5 accumulated hours, except for the first TimeCheque, which is free of charge.
+        int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
         if (existingTimeCheques == 0 && (!member.getIsImportedMember())) {
             log.debug("Member id={} has no existing TimeCheques, is not imported Member, using first hours of {}", member.getId(), NbhConst.FIRST_TIME_CHEQUE_HOURS);
             return createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member);
@@ -316,7 +314,7 @@ public class TimeChequeController {
                 .findByCodeAndDate(AmountDomainType.TIMECHEQUE_FEE.name(), date)
                 .map(adv -> adv.getAmount())
                 .orElseThrow(() -> new IllegalStateException(
-                        "Kein TIMECHEQUE_FEE Eintrag für das Datum " + date + " gefunden."));
+                        "Kein TIMECHEQUE_FEE Eintrag für das Datum " + date + " gefunden. Wenden dich an den System Administrator! Einstellungen > Gebühren-Sätze da fehlen die Wert!"));
     }
 
     private String validateData(Member member, TimeCheque timeCheque, int existingTimeCheques, boolean isSelfPurchase) {

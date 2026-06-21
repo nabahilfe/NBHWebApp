@@ -8,6 +8,7 @@
 @import static eu.nabahilfe.webapp.DateFormatter.*
 @import static eu.nabahilfe.webapp.NumberFormatter.*
 @import eu.nabahilfe.webapp.accountings.AccountingEntry
+@import eu.nabahilfe.webapp.NbhConst
 
 @param AccountingEntry accountingEntry
 
@@ -37,7 +38,7 @@
                 <div class="card-body">
                     <dl class="row mb-0">
                         <dt class="col-sm-4">Buchung f&uuml;r</dt>
-                        <dd class="col-sm-8">${accountingEntry.getAccountableClassDisplayName()}</dd>
+                        <dd class="col-sm-8">${accountingEntry.getAccountableName()}</dd>
 
                         <dt class="col-sm-4">Mitglied</dt>
                         <dd class="col-sm-8">${accountingEntry.getAccountableMember() != null ? accountingEntry.getAccountableMember().getNameAndAddress() : "-"}</dd>
@@ -49,7 +50,7 @@
                         <dd class="col-sm-8">${dateReverseDE(accountingEntry.getTransactionDate())}</dd>
 
                         <dt class="col-sm-4">Betrag</dt>
-                        <dd class="col-sm-8">${numberDE(accountingEntry.getTransactionAmount())}&nbsp;&euro;</dd>
+                        <dd class="col-sm-8">€ ${numberDE(accountingEntry.getTransactionAmount())}</dd>
 
                         <dt class="col-sm-4">Buchungsdatum</dt>
                         <dd class="col-sm-8">${dateReverseDE(accountingEntry.getAccountingDate())}</dd>
@@ -65,9 +66,19 @@
 
     <br/>
 
-    <form action="/timecheques/unaccounted" method="get">
-        <button type="submit" class="btn btn-outline-primary bi-list-check"> Offene Zeitschecks anzeigen</button>
-    </form>
+    @if(accountingEntry.getAccountableName().equals(NbhConst.TIMECHEQUE_ACCOUNTING_NAME))
+        <form action="/timecheques/unaccounted" method="get">
+            <button type="submit" class="btn btn-outline-primary bi-list-check"> Offene Zeitschecks anzeigen</button>
+        </form>
+    @elseif(accountingEntry.getAccountableName().equals(NbhConst.MEMBERSHIPFEE_ACCOUNTING_NAME))
+        <form action="/members/unaccounted-mbshipfees" method="get">
+            <button type="submit" class="btn btn-outline-primary bi-list-check"> Offene Mitgliedsbeiträge anzeigen</button>
+        </form>
+    @elseif(accountingEntry.getAccountableName().equals(NbhConst.MISC_ACCOUNTING_NAME))
+        <form action="/accountings/misc-unaccounted" method="get">
+            <button type="submit" class="btn btn-outline-primary bi-list-check"> Sonstige offene Buchungen anzeigen</button>
+        </form>
+    @endif
 
     <br/>
 

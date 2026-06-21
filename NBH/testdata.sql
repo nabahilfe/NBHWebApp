@@ -1,6 +1,7 @@
 /* Daten für ROLES */
-/* sollten automatisch angelegt werden */
+/* werden automatisch angelegt */
 
+/*
 INSERT INTO roles (is_board_member,  is_treasurer, is_secretary, is_auditor, is_time_keeper, is_admin, is_miscellaneous, role_name,          version) VALUES
                     (true,             false,          false,       false,      false,       true,       false,          'Obmann',              0),
                     (true,             false,          false,       false,      false,       true,       false,          'Obmann Stv.',         0),
@@ -13,12 +14,14 @@ INSERT INTO roles (is_board_member,  is_treasurer, is_secretary, is_auditor, is_
                     (false,            false,          true,        false,      false,       true,       false,          'Schriftührer',        0),
                     (false,            false,          true,        false,      false,       true,       false,          'Schriftührer Stv.',   0),
                     (false,            false,          false,       false,      false,       false,      true,           'Ehrenmitglied',       0);
+*/
 
 
 
 /* Daten für Offers / Tätigkeiten */
-/* sollten automatisch angelegt werden */
+/* werden automatisch angelegt */
 
+/*
 insert into offers (code, description, version) values
 ('100','Erfahrungsaustausch und Gespräche', 0),
 ('200','Alltägliche Hilfsdienste', 0),
@@ -31,11 +34,44 @@ insert into offers (code, description, version) values
 ('900','Sonstiges - bitte Beschreibung angeben!', 0),
 ('950','Spende von Stunden', 0),
 ('999','Korrekturbuchung', 0);
+*/
+
+
+
+/*  Echt - Mitglieder Import */
+
+/*
+
+  Optionale Felder sind: title, institution, email, phone_number.
+
+  Alle Felder müssen einen gültigen Wert haben, das gilt vor allem für:
+
+  - member_nmbr: darf nicht kleiner als 1000 sein
+  - salutation: 'Herr' oder 'Frau' oder 'Divers' oder '' (unbekannt)
+  - joining_date: ISO Format, also 'YYYY-MM-DD'
+  - phone_number (wenn vorhanden):
+    '+43699123456' oder
+    '0699123456'
+  - direct_debit_authorization:
+    'TRUE' wenn ein Einziehungsauftrag vorhanden ist 'FALSE' wenn keiner vorhanden ist
+  - version muss immer '0' sein
+
+  WICHTIG: email Adressen müssen eindeutig sein! Also jedes Mitglied muss (so vorhanden) einen individuelle E-Mail Adresse haben!
+
+  WICHTIG: Die Datei Zeichensatz-Codierung muss UTF-8 sein, und nicht irgendein Windows Code!
+
+*/
+
+
+insert into members (member_nmbr,  salutation, title, first_name, last_name, institution, birthdate, street, number, zip, city, email, phone_number, direct_debit_authorization, accumulated_hours, joining_date, version) values
+(3001, 'Herr', '',    'Thomas',    'Huber',  '',                       '1978-11-02', 'Hauptstraße',  '7', '4020', 'Linz',          'test@test.com',  '0699 19998080', 'TRUE',  '3', '2018-03-01', '0'),
+(3002, 'Frau', 'Dr.', 'Katharina', 'Gruber', 'Gemeinde Maria Anzbach', '1992-06-21', 'Kirchengasse', '3', '3034', 'Maria Anzbach', '',               '072818993',     'FALSE', '0', '2018-06-01', '0');
 
 
 
 
-/* Testdaten Mitglieder */
+
+/*  Mitglieder Testdaten */
 
 insert into members (member_nmbr, first_name, last_name, birthdate, street, number, zip, city, version, joining_date) values
 (1001, 'Thomas','Huber','1978-11-02','Hauptstraße','7','4020','Linz', 0, '2018-03-01'),

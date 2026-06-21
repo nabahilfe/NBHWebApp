@@ -11,9 +11,11 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import eu.nabahilfe.webapp.GlobalAuditListener;
 import eu.nabahilfe.webapp.NbhConst;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,8 +37,8 @@ import jakarta.validation.constraints.Size;
  * Die Mitglieder des Vereins. Eine Mitgliedsnummer muss bei Neuanlage automatisch vergeben werden.
  */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "MEMBERS")
-@EntityListeners(GlobalAuditListener.class)
 public class Member implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -102,7 +104,7 @@ public class Member implements Serializable {
     private Boolean directDebitAuthorization;    // Wenn Einziehungsauftrag vorhanden kann Mitglied sebständig Zeitschecks bestellen
 
     @Column(nullable = false)
-    private Boolean isImportedMember;    // Für importierte, bestehende Mitglider muss das TRUE sein, damit ihnen kein Gratis-Zeitschecks zugeteilt werden kann
+    private Boolean isImportedMember;    // Für importierte, bestehende Mitglider muss das TRUE sein, damit ihnen kein Gratis-Zeitschecks zugeteilt werden kann und keine Mitgliedsbeeträge berechnet werden.
 
     private Integer accumulatedHours;    // Gut-Stunden - kommt aus Gutschrift bei Eintritt, Stundenkauf, Stundenerwerb durch Hilfestellung, ...
 
@@ -117,6 +119,7 @@ public class Member implements Serializable {
     // FIXME: im Generator: "@Column(nullable = false)"
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "created_by_id")
+    @CreatedBy
     private Member createdBy;
 
     @UpdateTimestamp
@@ -124,6 +127,7 @@ public class Member implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "updated_by_id")
+    @LastModifiedBy
     private Member updatedBy;
 
     @Version
@@ -419,34 +423,37 @@ public class Member implements Serializable {
         return getName() + " - " + getAddress();
     }
 
-    
+
+    // default system admin that may not be modified or deleted, is identified by firstName and lastName and role.isAdmin = true
     public boolean isSystemAdmin() {
-		if (firstName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME) && lastName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_LAST_NAME)
-				&& role != null && role.getIsAdmin()) return true;
-		return false;
-	}
-    
+        if (firstName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME) && lastName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_LAST_NAME)
+                && role != null && role.getIsAdmin()) return true;
+        return false;
+    }
+
     public boolean isAdmin() {
-    	return role != null && role.getIsAdmin();
+        return role != null && role.getIsAdmin();
     }
 
     public boolean isSozialkonto() {
-		if (firstName.equalsIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME) && lastName.equalsIgnoreCase(NbhConst.SOZIALKONTO_LAST_NAME)
-				&& salutation.equalsIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION)) return true;
-		return false;
+        if (firstName != null && firstName.equalsIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME)
+                && lastName != null && lastName.equalsIgnoreCase(NbhConst.SOZIALKONTO_LAST_NAME)
+                && salutation != null && salutation.equalsIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION))
+            return true;
+        return false;
     }
-    
-    public boolean isSystemMember() {
-		return isSystemAdmin() || isSozialkonto();
-	}
 
-    
+    public boolean isSystemMember() {
+        return isSystemAdmin() || isSozialkonto();
+    }
+
+
     public String getEmailSalutation() {
         String name = "";
         if (salutation.equals(Salutation.Herr.name())) name += "Lieber ";
         else if (salutation.equals(Salutation.Frau.name())) name += "Liebe ";
         else name += "Hallo ";
-        name += firstName + "!";
+        name += firstName + " " + lastName + "!";
         return name;
     }
 

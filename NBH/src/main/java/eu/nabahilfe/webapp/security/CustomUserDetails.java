@@ -80,7 +80,7 @@ public class CustomUserDetails implements UserDetails {
     }
 
 
-    public Member getUser() {
+    public Member getMember() {
         return member;
     }
 
@@ -148,6 +148,11 @@ public class CustomUserDetails implements UserDetails {
     }
 
     public boolean isSystemAdmin() {
-		return member != null && member.isSystemAdmin() ? true : false;
-	}
+        return member != null && member.isSystemAdmin() ? true : false;
+    }
+
+    public boolean isSystemMember() {
+        return member != null && member.isSystemMember() ? true : false;
+    }
+
 }

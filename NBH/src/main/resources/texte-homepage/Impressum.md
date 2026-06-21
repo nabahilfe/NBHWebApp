@@ -10,7 +10,7 @@
 
 **Rechtsform:** Verein   
 **ZVR-Zahl (Zentrales Vereinsregister):** 1088136660  
-**Zuständige Behörde:** Bezirkshauptmannschaft St. Pölten]
+**Zuständige Behörde:** Bezirkshauptmannschaft St. Pölten
 
 ---
 
@@ -19,15 +19,6 @@
 Zweck des Vereins ist die Förderung der Nachbarschaftshilfe durch gegenseitige Hilfestellung und Unterstützung der Mitglieder
 sowie die Förderung des gemeinschaftlichen Zusammenhalts. Der Verein verfolgt ausschließlich und unmittelbar gemeinnützige
 und mildtätige Zwecke im Sinne der Bundesabgabenordnung (§§ 34 ff. BAO), seine Tätigkeit ist nicht auf Gewinn gerichtet.
-
----
-
-#### Kontakt
-
-**Postanschrift:** Schubertgasse 7, 3034 Maria Anzbach  
-**E-Mail:** [kontakt@nabahilfe.eu](mailto:kontakt@nabahilfe.eu)  
-**Telefonnummer:** [+43 677 61401164](tel:+4367761401164)  
-**Website:** [www.nabahilfe.eu](https://www.nabahilfe.eu)  
 
 ---
 

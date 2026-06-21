@@ -6,7 +6,6 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@param String fullUsername = null
 @param String username = null
 @param Boolean isAuthenticated = false
 
@@ -39,7 +38,6 @@
                    name="username"
                    placeholder="name@example.com"
                    autocomplete="username"
-                   value="${username != null ? username : (fullUsername != null ? fullUsername : "") }"
                    required>
             <div class="invalid-feedback">Bitte eine gültige E-Mail eingeben.</div>
         </div>
@@ -54,7 +52,7 @@
                    required>
             <div class="invalid-feedback">Bitte das Passwort eingeben.</div>
         </div>
-        
+
         <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
             <label class="form-check-label" for="remember-me">Angemeldet bleiben</label>

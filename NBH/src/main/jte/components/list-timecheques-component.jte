@@ -8,7 +8,7 @@
     This reusable template displays a list of acquired time cheques.
 
     Usage:
-    @template.components.list-timecheques-component(member = member, timeCheques = List<TimeCheque>)
+    @template.components.list-timecheques-component(member = member, timeCheques = List<TimeCheque>, fullDate = Boolean.FALSE)
 
     Parameters:
     - timeCheques: List<TimeCheque>
@@ -27,6 +27,7 @@
 
 @param Member member
 @param List<TimeCheque> timeCheques
+@param Boolean fullDate = Boolean.FALSE
 
 
 <div class="card">
@@ -38,17 +39,21 @@
                 <tr>
                     <th scope="col">Datum</th>
                     <th scope="col">Erstellt von</th>
-                    <th scope="col" class="text-end">Stunden</th>
-                    <th scope="col" class="text-end">Preis</th>
+                    <th scope="col" class="text-end">h</th>
+                    <th scope="col" class="text-end">&euro;</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider">
                 @for (TimeCheque tc : timeCheques)
                     <tr>
-                        <td scope="row">${dateDE(tc.getTransactionDate())}</td>
+                        @if(fullDate.equals(Boolean.TRUE))
+                            <td scope="row">${dateDE(tc.getTransactionDate())}</td>
+                        @else
+                            <td scope="row">${dateMMMDD(tc.getTransactionDate())}</td>
+                        @endif
                         <td scope="row">${tc.getCreatedBy().getName()}</td>
                         <td scope="row" class="text-end">${tc.getHours()}</td>
-                        <td scope="row" class="text-end">${numberDE(tc.getAmount())}&nbsp;&euro;</td>
+                        <td scope="row" class="text-end">${numberDE(tc.getAmount())}</td>
                     </tr>
                 @endfor
             </tbody>

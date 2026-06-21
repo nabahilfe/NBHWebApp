@@ -42,7 +42,7 @@
         </div>
         <div class="col-auto">
             <select name="type" id="typeFilter" class="form-select" onchange="this.form.submit()">
-                <option value="">-- Alle --</option>
+                <option value="">-- ALLE --</option>
                 @for(AmountDomainType t : amountDomainTypes)
                     @if(t.name().equals(selectedType))
                         <option value="${t.name()}" selected>${t.getDescription()}</option>

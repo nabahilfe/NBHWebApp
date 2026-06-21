@@ -42,6 +42,7 @@ public class RegistrationController {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final EmailComposer emailComposer;
+    private final EmailRateLimiter emailRateLimiter;
 
     private static final Logger log = LoggerFactory.getLogger(RegistrationController.class);
 
@@ -68,12 +69,14 @@ public class RegistrationController {
 
 
     public RegistrationController(MemberRepository memberRepository, RegistrationCodeRepository registrationCodeRepository,
-            PasswordEncoder passwordEncoder, EmailService emailService, EmailComposer emailComposer) {
+            PasswordEncoder passwordEncoder, EmailService emailService, EmailComposer emailComposer,
+            EmailRateLimiter emailRateLimiter) {
         this.memberRepository = memberRepository;
         this.registrationCodeRepository = registrationCodeRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
         this.emailComposer = emailComposer;
+        this.emailRateLimiter = emailRateLimiter;
     }
 
 
@@ -86,15 +89,33 @@ public class RegistrationController {
 
 
 
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping("/email")
     public String processEmail(Model model, @Valid @RequestParam String email,
             @ModelAttribute("registrationSession") RegistrationSession session, HttpServletRequest request) {
+
+        String clientIp = getClientIp(request);
+
+        // Check rate limit before doing anything else
+        if (emailRateLimiter.isBlocked(clientIp)) {
+            long minutes = emailRateLimiter.blockedMinutesRemaining(clientIp);
+            model.addAttribute("errorMessage",
+                    "Zu viele Fehlversuche. Bitte " + minutes + " Minute(n) warten und dann erneut versuchen.");
+            return "registration/email";
+        }
 
         email = email.trim().toLowerCase();
 
         Member existing = memberRepository.findByEmail(email);
         if (existing == null) {
-            model.addAttribute("errorMessage", "E-Mail '" + email + "' ist nicht bekannt");
+            emailRateLimiter.recordFailure(clientIp);
+            if (emailRateLimiter.isBlocked(clientIp)) {
+                model.addAttribute("errorMessage",
+                        "E-Mail '" + email + "' ist nicht bekannt. Zu viele Fehlversuche – bitte "
+                        + emailRateLimiter.blockedMinutesRemaining(clientIp) + " Minute(n) warten.");
+            } else {
+                model.addAttribute("errorMessage", "E-Mail '" + email + "' ist nicht bekannt");
+            }
             return "registration/email";
         }
 
@@ -133,8 +154,8 @@ public class RegistrationController {
     }
 
 
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping("/confirm")
-    @Transactional
     public String processConfirm(Model model, @Valid @ModelAttribute RegisterConfirmForm form, BindingResult binding,
             @ModelAttribute("registrationSession") RegistrationSession session, SessionStatus sessionStatus ) {
 
@@ -202,7 +223,29 @@ public class RegistrationController {
 
 
     @GetMapping("/login")
-    public String showLoginForm(@RequestParam(required = false) String error, Model model, HttpServletRequest request) {
+    public String showLoginForm(@RequestParam(required = false) String error,
+            @RequestParam(required = false) String blocked,
+            Model model, HttpServletRequest request) {
+
+        if ("true".equals(blocked)) {
+            try {
+                var session = request.getSession(false);
+                if (session != null) {
+                    Object minutes = session.getAttribute("LOGIN_BLOCK_MINUTES");
+                    session.removeAttribute("LOGIN_BLOCK_MINUTES");
+                    if (minutes != null) {
+                        model.addAttribute("errorMessage",
+                            "Zu viele Fehlversuche. Bitte " + minutes + " Minute(n) warten und dann erneut versuchen.");
+                    } else {
+                        model.addAttribute("errorMessage", "Zu viele Fehlversuche. Bitte kurz warten.");
+                    }
+                }
+            } catch (Exception e) {
+                log.warn("Could not read LOGIN_BLOCK_MINUTES from session: {}", e.getMessage());
+            }
+            return "registration/login";
+        }
+
         if ("true".equals(error)) {
             model.addAttribute("errorMessage", "E-Mail oder Passwort falsch!");
         }
@@ -270,6 +313,19 @@ public class RegistrationController {
     private String randomCode() {
         Random r = new Random();
         return String.valueOf(r.nextInt(range) + min);
+    }
+
+    /** Resolves the real client IP, respecting common reverse-proxy headers. */
+    private String getClientIp(HttpServletRequest request) {
+        String forwarded = request.getHeader("X-Forwarded-For");
+        if (forwarded != null && !forwarded.isBlank()) {
+            return forwarded.split(",")[0].trim();
+        }
+        String realIp = request.getHeader("X-Real-IP");
+        if (realIp != null && !realIp.isBlank()) {
+            return realIp.trim();
+        }
+        return request.getRemoteAddr();
     }
 
 }

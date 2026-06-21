@@ -36,15 +36,15 @@
                 <thead>
                     <tr>
                         <th scope="col">Datum</th>
-                        <th scope="col">erhalten von</th>
+                        <th scope="col">von</th>
                         <th scope="col">Kategorie</th>
-                        <th scope="col" class="text-end">Stunden</th>
+                        <th scope="col" class="text-end">h</th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
                     @for (TimeTransfer tt : transfersReceived)
                         <tr>
-                            <td scope="row">${dateDE(tt.getDateOfService())}</td>
+                            <td scope="row">${dateMMMDD(tt.getDateOfService())}</td>
                             <td scope="row">${boldMemberNameIfSameId(member.getId(), tt.getFromMember())}</td>
                             <td scope="row">${tt.getOffer().getDescription()}@if(tt.getNote() != null && !tt.getNote().isEmpty())<div class="small text-muted">${tt.getNote()}</div>@endif</td>
                             <td scope="row" class="text-end">${tt.getHours()}</td>

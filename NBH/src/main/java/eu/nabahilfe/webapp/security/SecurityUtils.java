@@ -21,7 +21,7 @@ public class SecurityUtils {
     public Member getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
-            return ((CustomUserDetails) authentication.getPrincipal()).getUser();
+            return ((CustomUserDetails) authentication.getPrincipal()).getMember();
         }
         return null;
     }

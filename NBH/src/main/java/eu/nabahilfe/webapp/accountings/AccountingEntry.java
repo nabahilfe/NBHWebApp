@@ -11,11 +11,13 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import eu.nabahilfe.webapp.GlobalAuditListener;
 import eu.nabahilfe.webapp.members.Member;
-import eu.nabahilfe.webapp.timecheques.TimeCheque;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -35,7 +37,7 @@ import jakarta.validation.constraints.Size;
  * Buchungsdatensatz zu Zeitscheck-Kauf, Mitgliedschaft, Weihnachtsessen, usw.
  */
 @Entity
-@EntityListeners(GlobalAuditListener.class)
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "ACCOUNTING_ENTRIES")
 public class AccountingEntry  {
 
@@ -44,7 +46,7 @@ public class AccountingEntry  {
     private Long id;
 
     @Size(max = 80)
-    private String accountableClass;    // MemberFee, TimeCheque, Transaction, ...
+    private String accountableName;    // MemberFee, TimeCheque, Transaction, ...
 
     private Long accountableId;    // id zur Klasse bzw. Tabelle
 
@@ -58,17 +60,17 @@ public class AccountingEntry  {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
-    private LocalDate transactionDate;    // Buchungsdatum
+    private LocalDate transactionDate;    // Transaktionsdatum, z.B. Kaufdatum, Datum der Mitgliedschaftsverlängerung, ...
 
     @Column(nullable = false)
     private BigDecimal transactionAmount;    // Betrag
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
-    private LocalDate accountingDate;    // Buchungsdatum
+    private LocalDate accountingDate;    // Buchungsdatum, wann wurde es im Konto vom Kassier verbucht
 
     @Size(max = 250)
-    private String description;    // Verpflichtend wenn keine accountableClass / accountableId eingetragen ist
+    private String description;    // Verpflichtend wenn kein fix definierter Name wie 'Zeitscheck', 'Mitgliedsgebühr' verwendet wird, sondern 'Sonstiges'
 
     // Creation timestamp, value is set by Postgres (see Table definition)
     @Column(insertable = false, updatable = false)
@@ -77,6 +79,7 @@ public class AccountingEntry  {
     // FIXME: im Generator: "@Column(nullable = false)"
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "created_by_id")
+    @CreatedBy
     private Member createdBy;
 
     @UpdateTimestamp
@@ -84,11 +87,14 @@ public class AccountingEntry  {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "updated_by_id")
+    @LastModifiedBy
     private Member updatedBy;
 
     @Version
     @Column(nullable = false)
     private Integer version;
+
+
 
     public Long getId() {
         return id;
@@ -98,19 +104,12 @@ public class AccountingEntry  {
         this.id = id;
     }
 
-    public String getAccountableClass() {
-        return accountableClass;
+    public String getAccountableName() {
+        return accountableName;
     }
 
-    public String getAccountableClassDisplayName() {
-        if (accountableClass.equals(TimeCheque.class.getSimpleName())) return "Zeitscheck";
-        // TODO: add more Accountables if any is implemented
-
-        return accountableClass;
-    }
-
-    public void setAccountableClass(String accountableClass) {
-        this.accountableClass = accountableClass;
+    public void setAccountableName(String accountableName) {
+        this.accountableName = accountableName;
     }
 
     public Long getAccountableId() {
@@ -238,7 +237,7 @@ public class AccountingEntry  {
 
     @Override
     public String toString() {
-        return "AccountingEntry [id=" + id + ", accountableClass=" + accountableClass + ", accountableId="
+        return "AccountingEntry [id=" + id + ", accountableName=" + accountableName + ", accountableId="
                 + accountableId + ", accountableMember=" + accountableMember + ", transactionType=" + transactionType
                 + ", transactionDate=" + transactionDate + ", transactionAmount=" + transactionAmount
                 + ", accountingDate=" + accountingDate + ", description=" + description + ", createdAt=" + createdAt
