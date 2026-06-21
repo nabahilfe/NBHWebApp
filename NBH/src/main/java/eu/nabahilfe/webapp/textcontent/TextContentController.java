@@ -84,9 +84,9 @@ public class TextContentController {
 
 
     /* Preview markdown without saving */
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'SECRETARY')")
     @PostMapping("/preview")
     @GetMapping("/preview")
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'SECRETARY')")
     public String preview(@ModelAttribute("textContentForm") TextContentForm tcf, Model model) {
 
         String html = markdown.toHtml(tcf.getMdText());
@@ -100,9 +100,9 @@ public class TextContentController {
 
 
     /* Save after preview */
-    @Transactional
-    @PostMapping("/save")
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'SECRETARY')")
+    @Transactional(rollbackOn = Exception.class)
+    @PostMapping("/save")
     public String save(@ModelAttribute("textContentForm") TextContentForm tcf, Model model) {
 
         TextContent content = repo.findByContentCode(tcf.getContentCode()).orElseGet(TextContent::new);

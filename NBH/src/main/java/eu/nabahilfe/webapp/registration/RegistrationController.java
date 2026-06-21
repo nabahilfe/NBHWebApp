@@ -89,6 +89,7 @@ public class RegistrationController {
 
 
 
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping("/email")
     public String processEmail(Model model, @Valid @RequestParam String email,
             @ModelAttribute("registrationSession") RegistrationSession session, HttpServletRequest request) {
@@ -153,8 +154,8 @@ public class RegistrationController {
     }
 
 
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping("/confirm")
-    @Transactional
     public String processConfirm(Model model, @Valid @ModelAttribute RegisterConfirmForm form, BindingResult binding,
             @ModelAttribute("registrationSession") RegistrationSession session, SessionStatus sessionStatus ) {
 

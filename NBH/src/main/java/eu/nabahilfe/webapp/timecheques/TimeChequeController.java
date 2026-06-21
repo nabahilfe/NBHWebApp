@@ -232,8 +232,8 @@ public class TimeChequeController {
     // Save the new TimeCheque and update Member's accumulated hours
 
     @PreAuthorize("hasRole('USER')")
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping
-    @Transactional
     String saveTimeCheque(final Model model, @RequestParam LocalDate orderDate, @RequestParam int hours) {
 
         TimeCheque tc = (TimeCheque) model.getAttribute("timeCheque");

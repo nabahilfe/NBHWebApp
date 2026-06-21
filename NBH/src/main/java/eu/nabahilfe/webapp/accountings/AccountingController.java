@@ -75,8 +75,8 @@ public class AccountingController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping("/save-income")
-    @Transactional
     public String saveIncome(
             @RequestParam String transactionDate,
             @RequestParam BigDecimal transactionAmount,
@@ -129,8 +129,8 @@ public class AccountingController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping("/save-expense")
-    @Transactional
     public String saveExpense(
             @RequestParam String transactionDate,
             @RequestParam BigDecimal transactionAmount,
@@ -205,8 +205,8 @@ public class AccountingController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER')")
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping("/save-transaction-booking")
-    @Transactional
     public String saveTransactionBooking(
             @RequestParam Long transactionId,
             @RequestParam String accountingDate,
@@ -358,8 +358,8 @@ public class AccountingController {
 
 
     @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER')")
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping("/save-accounting")
-    @Transactional
     public String saveAccountingEntry(final Model model, @ModelAttribute @Valid AccountingEntry accountingEntry,
             BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 

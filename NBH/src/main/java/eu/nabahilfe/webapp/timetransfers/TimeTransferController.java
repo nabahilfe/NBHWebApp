@@ -185,8 +185,8 @@ public class TimeTransferController {
 
     // FIXME: Prüfe ob das ein Security Problem sein kann, sollte wegen CSRF Token eigentlich nicht sein
     @PreAuthorize("hasRole('USER')")
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping
-    @Transactional
     String saveTimeTransfer(final Model model, @ModelAttribute TimeTransferForm ttf,
             RedirectAttributes redirectAttributes) {
 

@@ -365,7 +365,7 @@ public class MemberController {
 
 
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping
     public String saveMember(Model model, @ModelAttribute @Valid Member member,
                 BindingResult result, RedirectAttributes redirectAttributes) {
@@ -517,8 +517,8 @@ public class MemberController {
     // --------------------
 
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping("/delete/{id}")
-    @Transactional
     String deletMember(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
         Optional<Member> member = memberRepository.findById(id);
         if (member.isPresent() && isSystemAdmin(member.get())) {

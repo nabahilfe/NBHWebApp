@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.org.Offer;
 import eu.nabahilfe.webapp.org.OfferRepository;
+import jakarta.transaction.Transactional;
 
 /**
  * Ensures the built-in System-Administrator role and member exist at application startup.
@@ -40,12 +41,18 @@ public class DefaultDataInitializer implements CommandLineRunner {
 
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public void run(String... args) {
         log.info("Running DefaultDataInitializer to ensure default roles, admin member and offers exist");
-        Role adminRole = ensureAdminRoleExists();
-        ensureAdminMemberExists(adminRole);
-        ensureDefaultRolesExists();
-        ensureOffersExist();
+        try {
+            Role adminRole = ensureAdminRoleExists();
+            ensureAdminMemberExists(adminRole);
+            ensureDefaultRolesExists();
+            ensureOffersExist();
+        } catch (Exception e) {
+            log.error("Failed to initialize default data", e);
+            throw new IllegalStateException("Application startup failed, initial Data not created!", e);
+        }
     }
 
     private void ensureOffersExist() {
