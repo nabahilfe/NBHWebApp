@@ -30,17 +30,6 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     Page<Member> findAllActiveByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
             String lastName, String firstName, Integer memberNmbr, Pageable pageable);
 
-
-    @EntityGraph(attributePaths = "role")
-    @Query("SELECT m FROM Member m " +
-           "WHERE (lower(m.lastName) LIKE lower(CONCAT('%', :lastName, '%')) " +
-           "   OR lower(m.firstName) LIKE lower(CONCAT('%', :firstName, '%')) " +
-           "   OR m.memberNmbr = :memberNmbr) " +
-           "AND (m.resignationDate IS NOT NULL AND m.resignationDate <= CURRENT_DATE)")
-    Page<Member> findAllInactiveByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
-            String lastName, String firstName, Integer memberNmbr, Pageable pageable);
-
-
     @EntityGraph(attributePaths = "role")
     List<Member> findAllByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrStreetContainingIgnoreCase(
             String lastName, String firstName, String street);
@@ -57,7 +46,8 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
 
     @EntityGraph(attributePaths = "role")
     @Query("SELECT m FROM Member m " +
-            "WHERE (m.resignationDate IS NOT NULL AND m.resignationDate <= CURRENT_DATE)")
+            "WHERE (m.resignationDate IS NOT NULL AND m.resignationDate <= CURRENT_DATE) " +
+            "AND NOT (m.firstName = '*' AND m.lastName = '*')")
     Page<Member> findAllInactive(Pageable pageable);
 
     @EntityGraph(attributePaths = "role")

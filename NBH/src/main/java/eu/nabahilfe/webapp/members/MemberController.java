@@ -155,9 +155,11 @@ public class MemberController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @GetMapping("/resigned")
-    public String listResignedMembers(Model model, RedirectAttributes redirectAttributes) {
-        // save current value of searchTerm
-        model.addAttribute("searchTerm", null);
+    public String listResignedMembers(Model model, RedirectAttributes redirectAttributes,
+                                      jakarta.servlet.http.HttpSession session) {
+        // remove searchTerm from session so all resigned members are shown unfiltered
+        session.removeAttribute("searchTerm");
+        model.addAttribute("searchTerm", "");
         redirectAttributes.addFlashAttribute("resignedOnly", Boolean.TRUE);
         return "redirect:/members";
     }
@@ -206,8 +208,7 @@ public class MemberController {
                 }
             }
             if (resignedOnly) {
-                memberPage = memberRepository.findAllInactiveByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
-                        searchTerm, searchTerm, memberNmbr, pageRequest);
+                memberPage = memberRepository.findAllInactive(pageRequest);
             } else {
                 memberPage = memberRepository.findAllActiveByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
                         searchTerm, searchTerm, memberNmbr, pageRequest);
@@ -531,14 +532,71 @@ public class MemberController {
             redirectAttributes.addFlashAttribute("errorMessage", "Das Sozialkonto kann nicht gelöscht werden.");
             return "redirect:/members";
         }
-        // TODO: implement complete anonymization of member data instead of hard delete, to preserve referential integrity and historical data
-        // Also transfer all TimeCheches of Member to "Sozialkonto"
-        log.warn("Member deletion/anonymization is not implemented yet.");
+
+        Member m = member.orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id));
+        Integer tcHours = m.getAccumulatedHours() != null ? m.getAccumulatedHours() : 0;
+
+        String error = transferTimeChequesToSozialkonto(m);
+        if (error != null) {
+            redirectAttributes.addFlashAttribute("resignedOnly", Boolean.TRUE);
+            redirectAttributes.addFlashAttribute("errorMessage", error);
+            return "redirect:/members";
+        }
+
+        anonymizeMemberData(member.get());
+
         redirectAttributes.addFlashAttribute("resignedOnly", Boolean.TRUE);
-        redirectAttributes.addFlashAttribute("errorMessage", "Anonymisierung ist noch nicht implementiert.");
+        redirectAttributes.addFlashAttribute("successMessage", "Mitgliedsdaten wurden anonymisiert und gelöscht, "
+                + tcHours + " vorhandene Stunde(n) wurden zum Sozialkonto übertragen.");
+
         return "redirect:/members";
     }
 
+
+    private void anonymizeMemberData(Member member) {
+        member.setSalutation(null);
+        member.setTitle(null);
+        member.setInstitution(null);
+        member.setBirthdate(LocalDate.parse("1900-01-01"));
+        member.setFirstName("*");
+        member.setLastName("*");
+        member.setEmail(null);
+        member.setPhoneNumber(null);
+        member.setRole(null);
+        member.setStreet("*");
+        member.setNumber("*");
+        member.setZip("*");
+        member.setCity("*");
+        member.setAccumulatedHours(null);
+        member.setDirectDebitAuthorization(false);
+        // do not overwrite memberNmbr, joiningDate and resignationDate to preserve historical data and referential integrity
+        memberRepository.save(member);
+        return;
+    }
+
+
+    private String transferTimeChequesToSozialkonto(Member member) {
+        if (member.getAccumulatedHours() == null || member.getAccumulatedHours().intValue() <= 0) {
+            return null; // No time cheques to transfer
+        }
+
+        Member sozialkonto = memberRepository.findBySalutationIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION).stream().findFirst().orElse(null);
+        if (sozialkonto == null) {
+            log.error("Sozialkonto not found. Cannot transfer time cheques.");
+            return "Kein Sozialkonto gefunden. Zeitgutscheine konnten nicht übertragen werden, löschen abgebrochen.";
+        }
+
+        if (sozialkonto.getAccumulatedHours() == null) {
+            sozialkonto.setAccumulatedHours(0);
+        }
+        sozialkonto.setAccumulatedHours(sozialkonto.getAccumulatedHours() + member.getAccumulatedHours());
+        member.setAccumulatedHours(0);
+
+        memberRepository.save(sozialkonto);
+        memberRepository.save(member);
+
+        return null;
+    }
 
 
     // ------------------

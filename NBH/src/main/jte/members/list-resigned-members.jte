@@ -32,7 +32,12 @@
     content = @`
 
     <h3>Ausgetretene Vereinsmitglieder</h3>
-    <br/>
+    <p>
+        <strong>Hinweis</strong>
+        <br>Es werden nur ausgetreten Mitglieder angezeigt, die noch nicht anonymisiert wurden.
+        <br>Mitglieder, die bereits anonymisiert wurden, werden nicht mehr angezeigt.
+        <p><strong>Um der DSGVO zu entsprechen, sollte die Anonymisierung zeitnah, spätestens innerhalb eines Jahres nach Austritt, erfolgen.</strong></p>
+    </p>
 
 
     <!-- Display all Member records -->
