@@ -67,7 +67,7 @@ public class AccountingController {
     // INCOME FORM
     // --------------------
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
     @GetMapping("/income")
     public String showIncomeForm(final Model model) {
         log.debug("Showing income entry form");
@@ -121,7 +121,7 @@ public class AccountingController {
     // EXPENSE FORM
     // --------------------
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
     @GetMapping("/expense")
     public String showExpenseForm(final Model model) {
         log.debug("Showing expense entry form");

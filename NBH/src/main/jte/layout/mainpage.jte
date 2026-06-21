@@ -124,7 +124,7 @@
                         @endif
 
                         <!-- Dropdown Einnahmen / Ausgaben -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "TREASURER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Einnahmen / Ausgaben
