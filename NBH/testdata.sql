@@ -38,6 +38,36 @@ insert into offers (code, description, version) values
 
 
 
+/*  Echt - Mitglieder Import */
+
+/*
+
+  Optionale Felder sind: title, institution, email, phone_number.
+
+  Alle Felder müssen einen gültigen Wert haben, das gilt vor allem für:
+
+  - salutation: 'Herr' oder 'Frau' oder 'Divers' oder '' (unbekannt)
+  - joining_date: ISO Format, also 'YYYY-MM-DD'
+  - phone_number (wenn vorhanden):
+    '+43699123456' oder
+    '0699123456'
+  - direct_debit_authorization:
+    'TRUE' wenn ein Einziehungsauftrag vorhanden ist 'FALSE' wenn keiner vorhanden ist
+  - version muss immer '0' sein
+
+*/
+
+
+insert into members (member_nmbr,  salutation, title, first_name, last_name, institution, birthdate, street, number, zip, city, email, phone_number, direct_debit_authorization, accumulated_hours, joining_date, version) values
+(2001, 'Herr', '',    'Thomas',    'Huber',  '',                       '1978-11-02', 'Hauptstraße',  '7', '4020', 'Linz',          'test@test.com',  '0699 19998080', 'TRUE',  '3', '2018-03-01', '0'),
+(2002, 'Frau', 'Dr.', 'Katharina', 'Gruber', 'Gemeinde Maria Anzbach', '1992-06-21', 'Kirchengasse', '3', '3034', 'Maria Anzbach', '',               '072818993',     'FALSE', '0', '2018-06-01', '0');
+
+
+insert into members (member_nmbr, salutation, title, institution, first_name, last_name, birthdate, email, phone_number, street, number, zip, city, direct_debit_authorization, accumulated_hours, joining_date, version) values
+
+
+
+
 /*  Mitglieder Testdaten */
 
 insert into members (member_nmbr, first_name, last_name, birthdate, street, number, zip, city, version, joining_date) values
