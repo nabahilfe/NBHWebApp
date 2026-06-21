@@ -46,6 +46,7 @@ insert into offers (code, description, version) values
 
   Alle Felder müssen einen gültigen Wert haben, das gilt vor allem für:
 
+  - member_nmbr: darf nicht kleiner als 1000 sein
   - salutation: 'Herr' oder 'Frau' oder 'Divers' oder '' (unbekannt)
   - joining_date: ISO Format, also 'YYYY-MM-DD'
   - phone_number (wenn vorhanden):
@@ -55,15 +56,17 @@ insert into offers (code, description, version) values
     'TRUE' wenn ein Einziehungsauftrag vorhanden ist 'FALSE' wenn keiner vorhanden ist
   - version muss immer '0' sein
 
+  WICHTIG: email Adressen müssen eindeutig sein! Also jedes Mitglied muss (so vorhanden) einen individuelle E-Mail Adresse haben!
+
+  WICHTIG: Die Datei Zeichensatz-Codierung muss UTF-8 sein, und nicht irgendein Windows Code!
+
 */
 
 
 insert into members (member_nmbr,  salutation, title, first_name, last_name, institution, birthdate, street, number, zip, city, email, phone_number, direct_debit_authorization, accumulated_hours, joining_date, version) values
-(2001, 'Herr', '',    'Thomas',    'Huber',  '',                       '1978-11-02', 'Hauptstraße',  '7', '4020', 'Linz',          'test@test.com',  '0699 19998080', 'TRUE',  '3', '2018-03-01', '0'),
-(2002, 'Frau', 'Dr.', 'Katharina', 'Gruber', 'Gemeinde Maria Anzbach', '1992-06-21', 'Kirchengasse', '3', '3034', 'Maria Anzbach', '',               '072818993',     'FALSE', '0', '2018-06-01', '0');
+(3001, 'Herr', '',    'Thomas',    'Huber',  '',                       '1978-11-02', 'Hauptstraße',  '7', '4020', 'Linz',          'test@test.com',  '0699 19998080', 'TRUE',  '3', '2018-03-01', '0'),
+(3002, 'Frau', 'Dr.', 'Katharina', 'Gruber', 'Gemeinde Maria Anzbach', '1992-06-21', 'Kirchengasse', '3', '3034', 'Maria Anzbach', '',               '072818993',     'FALSE', '0', '2018-06-01', '0');
 
-
-insert into members (member_nmbr, salutation, title, institution, first_name, last_name, birthdate, email, phone_number, street, number, zip, city, direct_debit_authorization, accumulated_hours, joining_date, version) values
 
 
 
