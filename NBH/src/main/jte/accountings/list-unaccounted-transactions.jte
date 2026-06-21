@@ -34,7 +34,7 @@
         </div>
         <div class="col-auto">
             <select class="form-select" id="typeFilter" name="type" onchange="this.form.submit()">
-                <option value="" selected="${selectedType.isEmpty()}">-- Alle --</option>
+                <option value="" selected="${selectedType.isEmpty()}">-- ALLE --</option>
                 <option value="${TransactionType.INCOME.name()}" selected="${selectedType.equals(TransactionType.INCOME.name())}">Einnahmen</option>
                 <option value="${TransactionType.EXPENSE.name()}" selected="${selectedType.equals(TransactionType.EXPENSE.name())}">Ausgaben</option>
             </select>

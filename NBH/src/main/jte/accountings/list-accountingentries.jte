@@ -38,7 +38,7 @@
 
         <div class="col-auto">
             <label for="year" class="form-label mb-1">Jahr</label>
-            <select id="year" name="year" class="form-select form-select-sm">
+            <select id="year" name="year" class="form-select form-select-sm" onchange="this.form.submit()">
                 @for(int y : years)
                     <option value="${y}" selected="${y == selectedYear}">${y}</option>
                 @endfor
@@ -47,7 +47,7 @@
 
         <div class="col-auto">
             <label for="accountableName" class="form-label mb-1">Umsatz Art</label>
-            <select id="accountableName" name="accountableName" class="form-select form-select-sm">
+            <select id="accountableName" name="accountableName" class="form-select form-select-sm" onchange="this.form.submit()">
                 <option value="" selected="${selectedAccountableClass.isEmpty()}">-- ALLE --</option>
                 @for(String cls : distinctAccountableClasses)
                     <option value="${cls}" selected="${cls.equals(selectedAccountableClass)}">${cls}</option>
@@ -57,14 +57,10 @@
 
         <div class="col-auto">
             <label for="transactionType" class="form-label mb-1">Buchungsart</label>
-            <select id="transactionType" name="transactionType" class="form-select form-select-sm">
+            <select id="transactionType" name="transactionType" class="form-select form-select-sm" onchange="this.form.submit()">
                 <option value="${TransactionType.INCOME.name()}" selected="${TransactionType.INCOME.name().equals(selectedTransactionType)}">Einnahmen</option>
                 <option value="${TransactionType.EXPENSE.name()}" selected="${TransactionType.EXPENSE.name().equals(selectedTransactionType)}">Ausgaben</option>
             </select>
-        </div>
-
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary btn-sm bi-funnel"> Filtern</button>
         </div>
 
     </form>
@@ -79,7 +75,7 @@
                     <th>Mitglied</th>
                     <th>Beschreibung</th>
                     <th>Transaktionsdatum</th>
-                    <th class="text-end">Betrag&nbsp;&euro;</th>
+                    <th class="text-end">Betrag</th>
                 </tr>
             </thead>
             <tbody>
@@ -95,7 +91,7 @@
                             <td>${e.getAccountableMember() != null ? e.getAccountableMember().getName() : "-"}</td>
                             <td>${e.getDescription() != null ? e.getDescription() : "-"}</td>
                             <td>${dateReverseDE(e.getTransactionDate())}</td>
-                            <td class="text-end">${numberDE(e.getTransactionAmount())}</td>
+                            <td class="text-end">&euro; ${numberDE(e.getTransactionAmount())}</td>
                         </tr>
                     @endfor
                 @endif
@@ -103,7 +99,7 @@
             <tfoot class="table-success fw-bold">
                 <tr>
                     <td colspan="5" class="text-end">Summe:</td>
-                    <td class="text-end">${numberDE(total)}&nbsp;&euro;</td>
+                    <td class="text-end">&euro; ${numberDE(total)}</td>
                 </tr>
             </tfoot>
         </table>
