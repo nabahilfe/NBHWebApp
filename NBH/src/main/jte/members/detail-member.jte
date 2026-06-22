@@ -242,7 +242,7 @@
                 @if(member.isSozialkonto())
                     <div class="alert alert-warning py-2 px-3" role="alert">
                         <p>
-                            <h3>Sozialkonto der Nachbarschaftshilfe.</h3>
+                            <h3>Sozialkonto der Nachbarschaftshilfe</h3>
                             <br>Zeitschecks können nur durch Spenden von anderen Mitgliedern hinzugefügt werden, nicht durch kaufen.
                             <br>Guthaben von ausgetreten Mitgliedern werden automatisch auf das Sozialkonto übertragen, durch direkte Zuweisung.
                             <br>Damit bleibt die Anonymität bei Austritt entsprechend DSGVO Vorgaben gewahrt.
