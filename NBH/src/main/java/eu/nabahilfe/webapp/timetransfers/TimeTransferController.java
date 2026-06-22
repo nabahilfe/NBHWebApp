@@ -297,7 +297,7 @@ public class TimeTransferController {
         ttf.setUserToName(memberTo.getNameAndAddress());
         log.debug("\nTransfer from {} to same member, re-displaying form with error.", ttf);
         model.addAttribute("ttf", ttf);
-        model.addAttribute("errorMessage", "Leistungsemfänger und Leistungserbringer dürfen nicht identisch sein!");
+        model.addAttribute("errorMessage", "Leistungsempfänger und Leistungserbringer dürfen nicht identisch sein!");
 
         if (fromself) return "timetransfers/self-timetransfer";
         return "timetransfers/create-timetransfer";
