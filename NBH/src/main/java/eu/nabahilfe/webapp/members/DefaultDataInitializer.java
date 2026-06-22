@@ -49,6 +49,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
             ensureAdminMemberExists(adminRole);
             ensureDefaultRolesExists();
             ensureOffersExist();
+            ensureSozialkontoExists();
         } catch (Exception e) {
             log.error("Failed to initialize default data", e);
             throw new IllegalStateException("Application startup failed, initial Data not created!", e);
@@ -342,7 +343,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
     }
 
     private void ensureAdminMemberExists(Role adminRole) {
-        List<Member> existing = memberRepository.findByFirstNameAndLastName(NbhConst.ADMIN_ACCOUNT_FIRST_NAME, NbhConst.ADMIN_ACCOUNT_LAST_NAME);
+        List<Member> existing = memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME, NbhConst.ADMIN_ACCOUNT_LAST_NAME);
         if (!existing.isEmpty()) {
             log.info("System Administrator member already present with id={}", existing.get(0).getId());
             return;
@@ -353,20 +354,49 @@ public class DefaultDataInitializer implements CommandLineRunner {
         admin.setLastName(NbhConst.ADMIN_ACCOUNT_LAST_NAME);
         admin.setBirthdate(LocalDate.of(2000, 1, 1));
         admin.setEmail(NbhConst.ADMIN_EMAIL_PREFIX + getTenantName() + NbhConst.ADMIN_EMAIL_SUFFIX);
-        admin.setStreet("na");
-        admin.setNumber("na");
-        admin.setZip("na");
-        admin.setCity("na");
+        admin.setStreet("-");
+        admin.setNumber("-");
+        admin.setZip("-");
+        admin.setCity("-");
         admin.setRole(adminRole);
         admin.setJoiningDate(LocalDate.now());
         admin.setDirectDebitAuthorization(false);
         admin.setIsImportedMember(true);
         admin.setAccumulatedHours(null);
-        admin.setMemberNmbr(getNextMemberNumber());
+        admin.setMemberNmbr(1); // Assuming 1 is the first member number for the admin
 
         memberRepository.save(admin);
-        log.info("System Administrator member created at startup with email={}", admin.getEmail());
+        log.info("System Administrator member created at startup with email={} and memberNmbr={}", admin.getEmail(), admin.getMemberNmbr());
     }
+
+
+
+    private void ensureSozialkontoExists() {
+        List<Member> existing = memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME, NbhConst.SOZIALKONTO_LAST_NAME);
+        if (!existing.isEmpty()) {
+            log.info("Sozialkonto already present with id={}", existing.get(0).getId());
+            return;
+        }
+
+        Member sozialkonto = new Member();
+        sozialkonto.setFirstName(NbhConst.SOZIALKONTO_FIRST_NAME);
+        sozialkonto.setLastName(NbhConst.SOZIALKONTO_LAST_NAME);
+        sozialkonto.setBirthdate(LocalDate.of(2000, 1, 1));
+        sozialkonto.setStreet("-");
+        sozialkonto.setNumber("-");
+        sozialkonto.setZip("-");
+        sozialkonto.setCity("-");
+        sozialkonto.setJoiningDate(LocalDate.now());
+        sozialkonto.setDirectDebitAuthorization(false);
+        sozialkonto.setIsImportedMember(true);
+        sozialkonto.setAccumulatedHours(null);
+        sozialkonto.setMemberNmbr(2); // Assuming 1 is for the admin member, we set 2 for the sozialkonto
+
+        memberRepository.save(sozialkonto);
+        log.info("Sozialkonto created at startup with memberNmbr={}", sozialkonto.getMemberNmbr());
+    }
+
+
 
     private String getTenantName() {
         // FIXME: for now we just return "ma" as tenant name, but in the future we should determine this dynamically based on the url subdomain

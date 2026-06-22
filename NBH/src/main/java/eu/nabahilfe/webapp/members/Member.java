@@ -426,8 +426,10 @@ public class Member implements Serializable {
 
     // default system admin that may not be modified or deleted, is identified by firstName and lastName and role.isAdmin = true
     public boolean isSystemAdmin() {
-        if (firstName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME) && lastName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_LAST_NAME)
-                && role != null && role.getIsAdmin()) return true;
+        if (firstName != null && firstName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME)
+                && lastName != null && lastName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_LAST_NAME)) {
+            return true;
+        }
         return false;
     }
 
@@ -437,9 +439,9 @@ public class Member implements Serializable {
 
     public boolean isSozialkonto() {
         if (firstName != null && firstName.equalsIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME)
-                && lastName != null && lastName.equalsIgnoreCase(NbhConst.SOZIALKONTO_LAST_NAME)
-                && salutation != null && salutation.equalsIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION))
+                && lastName != null && lastName.equalsIgnoreCase(NbhConst.SOZIALKONTO_LAST_NAME)) {
             return true;
+        }
         return false;
     }
 

@@ -21,7 +21,7 @@
 @if(successMessage != null)
     <div id="successAlert" class="alert alert-success py-2 px-3 alert-dismissible fade show" role="alert">
          ${successMessage}
-      </div>
+    </div>
 @endif
 
 @if(errorMessage != null)
