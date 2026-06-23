@@ -182,7 +182,7 @@
 
 
                         <!-- Dropdown Domain Values -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TREASURER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "TREASURER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Einstellungen

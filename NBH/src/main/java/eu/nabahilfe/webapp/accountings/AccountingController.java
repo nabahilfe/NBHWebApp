@@ -74,7 +74,7 @@ public class AccountingController {
         return "accountings/detail-income";
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/save-income")
     public String saveIncome(
@@ -128,7 +128,7 @@ public class AccountingController {
         return "accountings/detail-expense";
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/save-expense")
     public String saveExpense(
