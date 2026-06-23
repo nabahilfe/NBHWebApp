@@ -223,7 +223,7 @@ public class MemberController {
         redirectAttributes.addFlashAttribute("orderBy", orderBy);
         redirectAttributes.addFlashAttribute("order", order);
 
-        log.debug("\nFound {} members matching filter '{}'", memberPage.getTotalElements(), searchTerm);
+        log.debug("\nFound {} members matching serchTerm='{}' and sort='{}'", memberPage.getTotalElements(), searchTerm, sort);
 
         int totalPages = memberPage.getTotalPages();
         if (totalPages > 0) {
@@ -403,6 +403,13 @@ public class MemberController {
             return "members/detail-member";
         }
 
+        error = validateOnlyOneSysAdmin(member);
+        if (error != null) {
+            model.addAttribute("errorMessage", error);
+            return "members/detail-member";
+        }
+
+
         if (member.getId() == null) {
             member.setMemberNmbr(getNextMemberNumber());
             if (member.getJoiningDate() == null) {
@@ -425,7 +432,7 @@ public class MemberController {
 
 
     private String validateOnlyOneSozialkonto(@Valid Member member) {
-        if (member.isSozialkonto() && memberRepository.findBySalutationIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION).size() > 0) {
+        if (member.isSozialkonto() && memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME, NbhConst.SOZIALKONTO_LAST_NAME).size() > 0) {
             return "Es gibt bereits ein Sozialkonto, es kann kein weiteres Sozialkonto angelegt werden!";
         }
 
@@ -433,10 +440,24 @@ public class MemberController {
     }
 
 
+    private String validateOnlyOneSysAdmin(@Valid Member member) {
+        if (member.isSystemAdmin() && memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME, NbhConst.ADMIN_ACCOUNT_LAST_NAME).size() > 0) {
+            return "Es gibt bereits einen System-Administrator, es kann kein weiterer System-Administrator angelegt werden!";
+        }
+
+        return null;
+    }
+
     private Integer getNextMemberNumber() {
-        return memberRepository.findTopByOrderByMemberNmbrDesc()
+        Integer nmbr =  memberRepository.findTopByOrderByMemberNmbrDesc()
                 .map(m -> m.getMemberNmbr() + 1)
                 .orElse(NbhConst.START_MEMBER_NUMBER);
+
+        if (nmbr < NbhConst.START_MEMBER_NUMBER) {
+            nmbr = NbhConst.START_MEMBER_NUMBER;
+        }
+
+        return nmbr;
     }
 
 
@@ -580,7 +601,7 @@ public class MemberController {
             return null; // No time cheques to transfer
         }
 
-        Member sozialkonto = memberRepository.findBySalutationIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION).stream().findFirst().orElse(null);
+        Member sozialkonto = memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME, NbhConst.SOZIALKONTO_LAST_NAME).stream().findFirst().orElse(null);
         if (sozialkonto == null) {
             log.error("Sozialkonto not found. Cannot transfer time cheques.");
             return "Kein Sozialkonto gefunden. Zeitgutscheine konnten nicht übertragen werden, löschen abgebrochen.";

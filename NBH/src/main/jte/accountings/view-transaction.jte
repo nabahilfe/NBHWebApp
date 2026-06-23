@@ -22,19 +22,19 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>${transaction.getTransactionType().equals(TransactionType.INCOME.name()) ? "Einnahme" : "Ausgabe"}</h3>
+    <h3>${TransactionType.INCOME.name().equals(transaction.getTransactionType()) ? "Einnahme" : "Ausgabe"}</h3>
 
     <div class="row g-4">
         <div class="col-lg-7">
             <div class="card">
-                <div class="card-header ${transaction.getTransactionType().equals(TransactionType.INCOME.name()) ? "bg-primary" : "bg-primary"} text-white">
+                <div class="card-header ${TransactionType.INCOME.name().equals(transaction.getTransactionType()) ? "bg-primary" : "bg-primary"} text-white">
                     Details
                 </div>
                 <div class="card-body">
                     <dl class="row mb-0">
                         <dt class="col-sm-4">Art</dt>
                         <dd class="col-sm-8">
-                            ${transaction.getTransactionType().equals(TransactionType.INCOME.name()) ? "Einnahme" : "Ausgabe"}
+                            ${TransactionType.INCOME.name().equals(transaction.getTransactionType()) ? "Einnahme" : "Ausgabe"}
                         </dd>
 
                         <dt class="col-sm-4">Beschreibung</dt>

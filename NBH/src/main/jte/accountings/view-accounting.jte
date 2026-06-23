@@ -66,15 +66,15 @@
 
     <br/>
 
-    @if(accountingEntry.getAccountableName().equals(NbhConst.TIMECHEQUE_ACCOUNTING_NAME))
+    @if(NbhConst.TIMECHEQUE_ACCOUNTING_NAME.equals(accountingEntry.getAccountableName()))
         <form action="/timecheques/unaccounted" method="get">
             <button type="submit" class="btn btn-outline-primary bi-list-check"> Offene Zeitschecks anzeigen</button>
         </form>
-    @elseif(accountingEntry.getAccountableName().equals(NbhConst.MEMBERSHIPFEE_ACCOUNTING_NAME))
+    @elseif(NbhConst.MEMBERSHIPFEE_ACCOUNTING_NAME.equals(accountingEntry.getAccountableName()))
         <form action="/members/unaccounted-mbshipfees" method="get">
             <button type="submit" class="btn btn-outline-primary bi-list-check"> Offene Mitgliedsbeiträge anzeigen</button>
         </form>
-    @elseif(accountingEntry.getAccountableName().equals(NbhConst.MISC_ACCOUNTING_NAME))
+    @elseif(NbhConst.MISC_ACCOUNTING_NAME.equals(accountingEntry.getAccountableName()))
         <form action="/accountings/misc-unaccounted" method="get">
             <button type="submit" class="btn btn-outline-primary bi-list-check"> Sonstige offene Buchungen anzeigen</button>
         </form>

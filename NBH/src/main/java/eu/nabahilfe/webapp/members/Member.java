@@ -426,8 +426,9 @@ public class Member implements Serializable {
 
     // default system admin that may not be modified or deleted, is identified by firstName and lastName and role.isAdmin = true
     public boolean isSystemAdmin() {
-        if (firstName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME) && lastName.equalsIgnoreCase(NbhConst.ADMIN_ACCOUNT_LAST_NAME)
-                && role != null && role.getIsAdmin()) return true;
+        if (NbhConst.ADMIN_ACCOUNT_FIRST_NAME.equalsIgnoreCase(firstName) && NbhConst.ADMIN_ACCOUNT_LAST_NAME.equalsIgnoreCase(lastName)) {
+            return true;
+        }
         return false;
     }
 
@@ -436,10 +437,9 @@ public class Member implements Serializable {
     }
 
     public boolean isSozialkonto() {
-        if (firstName != null && firstName.equalsIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME)
-                && lastName != null && lastName.equalsIgnoreCase(NbhConst.SOZIALKONTO_LAST_NAME)
-                && salutation != null && salutation.equalsIgnoreCase(NbhConst.SOZIALKONTO_SALUTATION))
+        if (NbhConst.SOZIALKONTO_FIRST_NAME.equalsIgnoreCase(firstName) && NbhConst.SOZIALKONTO_LAST_NAME.equalsIgnoreCase(lastName)) {
             return true;
+        }
         return false;
     }
 
@@ -450,8 +450,8 @@ public class Member implements Serializable {
 
     public String getEmailSalutation() {
         String name = "";
-        if (salutation.equals(Salutation.Herr.name())) name += "Lieber ";
-        else if (salutation.equals(Salutation.Frau.name())) name += "Liebe ";
+        if (Salutation.Herr.name().equals(salutation)) name += "Lieber ";
+        else if (Salutation.Frau.name().equals(salutation)) name += "Liebe ";
         else name += "Hallo ";
         name += firstName + " " + lastName + "!";
         return name;

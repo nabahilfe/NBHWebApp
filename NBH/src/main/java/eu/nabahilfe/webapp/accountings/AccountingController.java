@@ -374,17 +374,17 @@ public class AccountingController {
 
         accountingRepository.save(accountingEntry);
 
-        if (accountingEntry.getAccountableName().equals(NbhConst.TIMECHEQUE_ACCOUNTING_NAME)) {
+        if (NbhConst.TIMECHEQUE_ACCOUNTING_NAME.equals(accountingEntry.getAccountableName())) {
             TimeCheque tc = timeChequeRepository.findById(accountingEntry.getAccountableId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid TimeCheque ID: " + accountingEntry.getAccountableId()));
             tc.setAccountedBy(accountingEntry);
         }
-        else if (accountingEntry.getAccountableName().equals(NbhConst.MEMBERSHIPFEE_ACCOUNTING_NAME)) {
+        else if (NbhConst.MEMBERSHIPFEE_ACCOUNTING_NAME.equals(accountingEntry.getAccountableName())) {
             MembershipFee mf = membershipFeeRepository.findById(accountingEntry.getAccountableId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid MembershipFee ID: " + accountingEntry.getAccountableId()));
             mf.setAccountedBy(accountingEntry);
         }
-        else if (accountingEntry.getAccountableName().equals("SOME_OTHER_CLASS")) {
+        else if ("SOME_OTHER_CLASS".equals(accountingEntry.getAccountableName())) {
             // TODO: Handle other accountable classes as needed
         }
 

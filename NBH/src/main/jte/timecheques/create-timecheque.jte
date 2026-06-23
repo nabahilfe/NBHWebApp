@@ -171,7 +171,7 @@
             var itemId = button.getAttribute('data-item-id');
             // put ID into a hidden field so wec can later on have access to it
             modalPanel.querySelector('.modal-body #data-item-id').value = itemId;
-            modalPanel.querySelector('.modal-body #modalHours').textContent = selectedHours.value;
+            modalPanel.querySelector('.modal-body #modalHours').textContent = (selectedHours && parseInt(selectedHours.value)) || ${NbhConst.FIRST_TIME_CHEQUE_HOURS};
         });
 
 

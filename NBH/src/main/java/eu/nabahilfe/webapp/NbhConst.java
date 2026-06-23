@@ -27,11 +27,10 @@ public final class NbhConst {
 
     public static final int REGISTRATION_CODE_TTL = 15; // in minutes
 
-    public static final Integer START_MEMBER_NUMBER = 1000;
+    public static final Integer START_MEMBER_NUMBER = 1001;
 
     public static final Integer MIN_HOURS_FOR_TIME_CHEQUE = 5;
 
-    public static final String SOZIALKONTO_SALUTATION = "Sozialkonto";
     public static final String SOZIALKONTO_FIRST_NAME = "Sozialkonto";
     public static final String SOZIALKONTO_LAST_NAME = "Nachbarschaftshilfe";
 
