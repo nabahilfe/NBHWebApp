@@ -34,7 +34,10 @@
 
     <!-- Info panel: fees can only be created from March 1st onwards -->
     <div class="alert alert-info text-center" role="alert">
-        Beitragsvorschreibungen können erst ab dem 1. März des aktuellen Jahres erstellt werden.<br>Bitte vor diesem Termin unbedingt den Mitgliedsbeitrag anpassen, falls dieser sich für das aktuelle Jahr ändern soll!
+        <strong>Beitragsvorschreibungen können erst ab dem 1. März des aktuellen Jahres erstellt werden!</strong>
+        <br>Bitte vor diesem Termin unbedingt den Mitgliedsbeitrag anpassen, falls dieser sich für das aktuelle Jahr ändern soll!
+        <br>Die Vorschreibung wird automatisch auf Basis des aktuellen Mitgliedsbeitrags erstellt.
+        <br>Wird <strong>Keine Vorschreibung</strong> ausgewählt, so wird für dieses Mitglied für das aktuelle Jahr keine Vorschreibung erstellt.
     </div>
 
     <!-- Display all MembershipFee records -->
@@ -51,7 +54,7 @@
                     <th scope="col" data-col="2" style="cursor:pointer;">Rolle ↕</th>
                     <th scope="col" data-col="3" style="cursor:pointer;">Eintrittsdatum ↕</th>
                     <th scope="col" data-col="4" style="cursor:pointer;">Austrittsdatum ↕</th>
-                    <th scope="col" class="text-center" title="Kein Beitrag berechnen">Kein Beitrag</th>
+                    <th scope="col" class="text-center" title="Keine Vorschreibung erstellen">Keine Vorschreibung</th>
                 </tr>
             </thead>
 
