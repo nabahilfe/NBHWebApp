@@ -104,8 +104,7 @@
                       </td>
 
                       @if(member.isSystemMember())
-                         <!-- do not show buy, download, delete buttons for system members -->
-                          <td class="text-center"></td>
+                          <!-- do not show buy, download buttons for system members -->
                           <td class="text-center"></td>
                           <td class="text-center"></td>
                       @else

@@ -222,7 +222,7 @@ public class TimeTransferController {
             Optional<Offer> offer = offerRepository.findById(offerId);
             if (offer.isPresent()) {
                 String code = offer.get().getCode();
-                if (!code.equals("950") && !code.equals("999")) {
+                if (!"950".equals(code) && !"999".equals(code)) {
                     return errorWrongCategorie(model, ttf, fromself, memberFrom, memberTo, code);
                 }
             }
