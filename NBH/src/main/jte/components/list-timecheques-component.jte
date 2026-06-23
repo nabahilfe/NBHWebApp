@@ -46,7 +46,7 @@
             <tbody class="table-group-divider">
                 @for (TimeCheque tc : timeCheques)
                     <tr>
-                        @if(fullDate.equals(Boolean.TRUE))
+                        @if(Boolean.TRUE.equals(fullDate))
                             <td scope="row">${dateDE(tc.getTransactionDate())}</td>
                         @else
                             <td scope="row">${dateMMMDD(tc.getTransactionDate())}</td>

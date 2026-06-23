@@ -403,10 +403,4 @@ public class DefaultDataInitializer implements CommandLineRunner {
         return "ma";
     }
 
-
-    private Integer getNextMemberNumber() {
-        return memberRepository.findTopByOrderByMemberNmbrDesc()
-                .map(m -> m.getMemberNmbr() + 1)
-                .orElse(NbhConst.START_MEMBER_NUMBER);
-    }
 }
