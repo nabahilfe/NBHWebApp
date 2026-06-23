@@ -25,4 +25,8 @@ public interface TransactionRepository extends ListCrudRepository<Transaction, L
     @Query("SELECT t FROM Transaction t WHERE t.transactionType = :transactionType ORDER BY t.transactionDate DESC")
     List<Transaction> findByTransactionType(@Param("transactionType") String transactionType);
 
+    /** Count of all transactions where accountedBy is not set. */
+    @Query("SELECT COUNT(t) FROM Transaction t WHERE t.accountedBy IS NULL")
+    long countUnaccounted();
+
 }
