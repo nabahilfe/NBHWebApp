@@ -12,16 +12,18 @@
 
     Parameters:
     - boardMembers: List<Member> – result of MemberRepository.findBoardMembers()
+    - auditorMembers: List<Member> – result of MemberRepository.findauditorMembers()
 -->
 
 @import java.util.List
 @import eu.nabahilfe.webapp.members.Member
 
 @param List<Member> boardMembers
+@param List<Member> auditorMembers
 
 <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4 bg-white">
 
-    <h2>Vertretungsbefugte Organe</h2>
+    <h2>Vorstand</h2>
 
     <div class="card-text">
 
@@ -49,6 +51,38 @@
             </div>
         @endif
 
+    </div>
+
+    <p>
+        <br>
+    </p>
+
+    <h2>Rechnungsprüfer</h2>
+
+    <div class="card-text">
+        @if(auditorMembers == null || auditorMembers.isEmpty())
+            <div class="p-3 text-muted">Keine Rechnungsprüfer vorhanden.</div>
+        @else
+            <div class="table-responsive">
+                <table class="table table-hover table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Funktion</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="table-group-divider" style="background-color: #ECFEFF;">
+                        @for(Member m : auditorMembers)
+                            <tr>
+                                <td>${m.getName()}</td>
+                                <td>${m.getRole() != null ? m.getRole().getRoleName() : ""}</td>
+                            </tr>
+                        @endfor
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </div>
 
 </div>

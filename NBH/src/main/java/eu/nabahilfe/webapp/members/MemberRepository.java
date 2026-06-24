@@ -89,6 +89,14 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
         "ORDER BY m.lastName ASC")
     List<Member> findBoardMembers();
 
+
+    @EntityGraph(attributePaths = "role")
+    @Query(
+        "SELECT m FROM Member m JOIN m.role r " +
+        "WHERE r.isAuditor = true " +
+        "ORDER BY m.lastName ASC")
+    List<Member> findAuditorMembers();
+
     /** Returns [year, joinedCount] grouped by joiningDate year, ordered ascending */
     @Query("SELECT YEAR(m.joiningDate), COUNT(m) FROM Member m GROUP BY YEAR(m.joiningDate) ORDER BY YEAR(m.joiningDate) ASC")
     List<Object[]> findJoinedCountPerYear();
