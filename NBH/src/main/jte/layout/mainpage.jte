@@ -18,10 +18,23 @@
 <html lang="en" data-bs-theme="auto">
     <head>
 
-        <meta charset="utf-8">
+        <meta name="description" content="Startseite der Nachbarschaftshilfe Maria Anzbach.">
+
+           <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>NBH</title>
+        <title>Nachbarschaftshilfe Maria Anzbach gegenseitige Hilfe auf Stundentauschbasis</title>
+
+        <!-- Verbindung zum CDN früh aufbauen -->
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+        <link rel="preload"
+              href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+              as="style">
+
+        <link rel="preload"
+              href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+              as="style">
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet"
