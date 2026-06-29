@@ -14,7 +14,6 @@
 @param java.util.List<eu.nabahilfe.webapp.members.Member> boardMembers = java.util.Collections.emptyList()
 
 
-
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 
@@ -71,12 +70,16 @@
 
                 <!-- Icon only if Desktop content -->
                 <div class="d-none d-md-block">
-                    <img src="/images/NBH-Helping-Hands-Logo-2.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-4 bg-transparent img-fluid" alt="NBH Logo" title="Originalfoto von Austin Kehmeier auf Unsplash">
+                    <img src="/images/NBH-MA-Logo-720.webp"
+                            class="border border-success-subtle rounded mx-auto d-block shadow mb-4 bg-transparent img-fluid"
+                            alt="Logo Nachbarschaftshilfe Maria Anzbach helfende Hände" title="Originalfoto von Austin Kehmeier auf Unsplash">
                 </div>
 
             @else
                 <!-- if not authenticated, always show Logo -->
-                <img src="/images/NBH-Helping-Hands-Logo-2.png" class="border border-success-subtle rounded mx-auto d-block shadow mb-4 bg-transparent img-fluid" alt="NBH Logo" title="Originalfoto von Austin Kehmeier auf Unsplash">
+                <img src="/images/NBH-MA-Logo-720.webp"
+                        class="border border-success-subtle rounded mx-auto d-block shadow mb-4 bg-transparent img-fluid"
+                        alt="Logo Nachbarschaftshilfe Maria Anzbach helfende Hände" title="Originalfoto von Austin Kehmeier auf Unsplash">
             @endif
 
 

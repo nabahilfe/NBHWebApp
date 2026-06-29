@@ -117,4 +117,4 @@ Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf anzupassen, insbeso
 
 ---
 
-*Stand: März 2026*
+*Stand: Juni 2026*

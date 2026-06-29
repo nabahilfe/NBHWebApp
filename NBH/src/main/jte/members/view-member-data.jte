@@ -48,14 +48,16 @@
                         <h6>${roleNames}</h6>
                         <hr/>
 
-                        <p class="card-text">
-                            @if((member.getSalutation() != null && !member.getSalutation().isEmpty()) || member.getTitle() != null && !member.getTitle().isEmpty())
-                                ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}
-                                <br/>
-                            @endif
-                            <strong>${member.getFirstName()} ${member.getLastName()}</strong><br/>
-                            ${member.getStreet() + " " + member.getNumber()}<br/>
-                            ${member.getZip() + " " + member.getCity()}
+                        <div class="card-text">
+                            <p>
+                                @if((member.getSalutation() != null && !member.getSalutation().isEmpty()) || member.getTitle() != null && !member.getTitle().isEmpty())
+                                    ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}
+                                    <br/>
+                                @endif
+                                <strong>${member.getFirstName()} ${member.getLastName()}</strong><br/>
+                                ${member.getStreet() + " " + member.getNumber()}<br/>
+                                ${member.getZip() + " " + member.getCity()}
+                            </p>
                             <p>
                                 Geburtstag: ${dateReverseDE(member.getBirthdate())}
                                 @if(member.getEmail() != null)
@@ -67,30 +69,32 @@
                                     Telefon: ${member.getPhoneNumber()}
                                 @endif
                             </p>
-                            <p>
-                            Mitgliedsnummer: ${member.getMemberNmbr()}
-                            <br/>
-                            Mitglied seit: ${dateReverseDE(member.getJoiningDate())}
-                            <br/>
-                            Einziehungsauftrag: ${member.getEinziehungsauftrgJaNein()}
-                            <br/>
-                            Stundenguthaben: <strong>${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + "" : "0"} h</strong>
-                            </p>
-                        </p>
+                            <div>
+                                Mitgliedsnummer: ${member.getMemberNmbr()}
+                                <br/>
+                                Mitglied seit: ${dateReverseDE(member.getJoiningDate())}
+                                <br/>
+                                Einziehungsauftrag: <strong>${member.getEinziehungsauftrgJaNein()}</strong>
+                                <br/>
+                                Stundenguthaben: <strong>${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + "" : "0"} h</strong>
+                            </div>
+                            @if(! member.isSystemMember())
+                                <!-- Desktop only content -->
+                                <div class="d-none d-md-block">
 
-
-                          @if(! member.isSystemMember())
-                            <hr/>
-                            <!-- download a personalized Zeitscheck.pdf -->
-                            <form action="/download/timecheque-pdf" method="get">
-                                <input type="hidden" name="memberId" value="${member.getId()}">
-                                <div class="text-center">
-                                    <h6>Zeitschecks zum Ausdrucken</h6>
-                                   <button type="submit" class="btn btn-primary bi-download"> Zeitschecks herunterladen</button>
+                                    <hr/>
+                                    <!-- download a personalized Zeitscheck.pdf -->
+                                    <form action="/download/timecheque-pdf" method="get">
+                                        <input type="hidden" name="memberId" value="${member.getId()}">
+                                        <div class="text-center">
+                                            <h6>Zeitschecks zum Ausdrucken</h6>
+                                           <button type="submit" class="btn btn-primary bi-download"> Zeitschecks herunterladen</button>
+                                        </div>
+                                    </form>
                                 </div>
-                            </form>
-                        @endif
-
+                            @endif
+                        </div>
+                        
                     </div>
                 </div>
             </div>

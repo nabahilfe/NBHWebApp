@@ -41,7 +41,6 @@ public class TimeChequeController {
 
     private final TimeChequeRepository timeChequeRepository;
     private final MemberRepository memberRepository;
-    private final TimeChequeRepository timeCheckRepository;
     private final SecurityUtils securityUtils;
     private final AmountDomainValueRepository amountDomainValueRepository;
     private final TimeTransferRepository timeTransferRepository;
@@ -57,7 +56,6 @@ public class TimeChequeController {
             TimeTransferRepository timeTransferRepository) {
         this.timeChequeRepository = timeChequeRepository;
         this.memberRepository = memberRepository;
-        this.timeCheckRepository = timeCheckRepository;
         this.securityUtils = securityUtils;
         this.emailService = emailService;
         this.emailComposer = emailComposer;
@@ -104,7 +102,7 @@ public class TimeChequeController {
 
         model.addAttribute("timeCheque", tc);
         model.addAttribute("member", member);
-        model.addAttribute("purchasedTimeCheques", timeCheckRepository.
+        model.addAttribute("purchasedTimeCheques", timeChequeRepository.
                 findAllByAssignedTo_IdOrderByTransactionDateDesc(member.getId()));
 
         return "timecheques/summary-timecheque";
@@ -181,10 +179,10 @@ public class TimeChequeController {
         TimeCheque tc = createNewTimeCheque(member);
 
         model.addAttribute("timeCheque", tc);
-        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(memberId));
+        model.addAttribute("purchasedTimeCheques", timeChequeRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(memberId));
         model.addAttribute("pricePerHour", resolveTimechequeeFeePerHour(LocalDate.now()).floatValue());
 
-        String validationError = validateData(member, tc, timeChequeRepository.countByAssignedTo(member), false);
+        String validationError = validateTimeChequeBuying(member, tc, false);
         if (validationError != null) {
             model.addAttribute("errorMessage", validationError);
             log.debug("Validation error for TimeCheque for Member id={}: {}", memberId, validationError);
@@ -215,10 +213,10 @@ public class TimeChequeController {
         TimeCheque tc = createNewTimeCheque(member);
 
         model.addAttribute("timeCheque", tc);
-        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(memberId));
+        model.addAttribute("purchasedTimeCheques", timeChequeRepository.findAllByAssignedTo_IdOrderByTransactionDateDesc(memberId));
         model.addAttribute("pricePerHour", resolveTimechequeeFeePerHour(LocalDate.now()).floatValue());
 
-        String validationError = validateData(member, tc, timeChequeRepository.countByAssignedTo(member), true);
+        String validationError = validateTimeChequeBuying(member, tc, true);
         if (validationError != null) {
             model.addAttribute("errorMessage", validationError);
             log.debug("Validation error for TimeCheque for Member id={}: {}", memberId, validationError);
@@ -317,10 +315,9 @@ public class TimeChequeController {
                         "Kein TIMECHEQUE_FEE Eintrag für das Datum " + date + " gefunden. Wenden dich an den System Administrator! Einstellungen > Gebühren-Sätze da fehlen die Wert!"));
     }
 
-    private String validateData(Member member, TimeCheque timeCheque, int existingTimeCheques, boolean isSelfPurchase) {
+    private String validateTimeChequeBuying(Member member, TimeCheque timeCheque, boolean isSelfPurchase) {
         // Business Rule: TimeCheques can only be purchased if Member has less than 5 accumulated hours,
-        // except for the first TimeCheque, which is free of charge.
-        if (member.getAccumulatedHours() != null && member.getAccumulatedHours() >= NbhConst.MIN_HOURS_FOR_TIME_CHEQUE && existingTimeCheques > 0) {
+        if (member.getAccumulatedHours() != null && member.getAccumulatedHours() >= NbhConst.MIN_HOURS_FOR_TIME_CHEQUE) {
             return "Zeitschecks können erst bei weniger als 5 Stunden Zeitguthaben erworben werden." +
                    " Aktuelles Zeitguthaben: " + member.getAccumulatedHours() + " Stunden.";
         }

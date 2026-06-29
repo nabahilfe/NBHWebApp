@@ -71,7 +71,7 @@
             </table>
 
             <div class="alert alert-warning" role="alert">
-              Hinweis: Es werden immer 2 Mitglieder zu viel angezeigt, da das Sozialkonto und der System-Administrator ebenfalls in den Statistiken enthalten sind.
+              Hinweis: Es werden immer 2 Mitglieder zu viel angezeigt, da das Sozialkonto und der System-Administrator ebenfalls in der Statistik enthalten sind.
             </div>
         @endif
     </div>

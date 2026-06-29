@@ -15,4 +15,3 @@ Wir haben aber auch Angebote für junge Familien, wie z.B. Leih-Oma und Leih-Opa
 - Leih-Oma / Leih-Opa
 - Kleinere Außen- oder Reparaturarbeiten
 - Hilfe beim Bedienen technischer Geräte und Computer
-

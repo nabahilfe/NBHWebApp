@@ -46,3 +46,4 @@ build/
 /*.tar
 /*.jar
 
+/*.dump

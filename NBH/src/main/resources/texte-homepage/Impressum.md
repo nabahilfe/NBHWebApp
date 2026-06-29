@@ -43,4 +43,4 @@ Eine Vervielfältigung oder Verbreitung ist nur mit ausdrücklicher schriftliche
 
 ---
 
-*Stand: März 2026*
+*Stand: Juni 2026*

@@ -41,6 +41,16 @@ CREATE TABLE persistent_logins (
 /* ATTENTION! DO NOT OVERWRITE THE SPRING_SESSION TABLES! */
 /**********************************************************/
 
+/* Invalidate all Sessions and Logons */
+
+TRUNCATE TABLE persistent_logins;
+
+TRUNCATE TABLE SPRING_SESSION_ATTRIBUTES;
+
+TRUNCATE TABLE SPRING_SESSION;
+
+/**************************************/
+
 
 
 /*

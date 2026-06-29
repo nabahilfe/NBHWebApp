@@ -22,13 +22,13 @@ import eu.nabahilfe.webapp.textcontent.TextContentType;
 
 
 @Controller
-public class LegealAndPrivacyController {
+public class LegalAndPrivacyController {
 
     private final TextContentRepository textRepo;
     private final MemberRepository memberRepository;
 
 
-    public LegealAndPrivacyController(TextContentRepository textRepo, MemberRepository memberRepository) {
+    public LegalAndPrivacyController(TextContentRepository textRepo, MemberRepository memberRepository) {
         this.textRepo = textRepo;
         this.memberRepository = memberRepository;
     }
@@ -47,6 +47,9 @@ public class LegealAndPrivacyController {
 
         List<Member> boardMembers = memberRepository.findBoardMembers();
         model.addAttribute("boardMembers", boardMembers);
+
+        List<Member> auditorMembers = memberRepository.findAuditorMembers();
+        model.addAttribute("auditorMembers", auditorMembers);
 
         return "home/legal-and-privacy-policy";
     }

@@ -23,7 +23,7 @@ public class EmailComposer {
 
     public EmailComposer(@Value("${app.base-url}") String baseUrl) {
         // FIXME: Wie geht das für Multi Tenant?
-        this.baseUrl = "https://ma.nabahilfe.eu";
+        this.baseUrl = baseUrl;
     }
 
 
@@ -55,6 +55,24 @@ public class EmailComposer {
         );
         return details;
     }
+
+
+    public EmailDetails composeMiscBookingsToBookEmail(String recipient, String emailSalutation, long miscBookings) {
+
+        EmailDetails details = new EmailDetails(
+                recipient,
+                "Es gibt neue Einnahmen oder Ausgaben zu verbuchen!",
+                "<strong>" + emailSalutation + "</strong><br>"
+                + "<p>"
+                + "Es gibt <strong>" + miscBookings + "</strong> " + (miscBookings == 1 ? "Einnahme/Ausgabe" : "Einnahmen/Ausgaben") + " zu verbuchen!<br>"
+                + "<a href=\"" + baseUrl + "/accountings/misc-unaccounted\">Link zu den zu verbuchenden Einnahmen/Ausgaben</a>"
+                + "</p>"
+                + eMailFooter
+        );
+        return details;
+    }
+
+
 
     public EmailDetails composeConfirmationCodeEmail(String recipient, String name, String code) {
         EmailDetails details = new EmailDetails(
@@ -151,5 +169,8 @@ public class EmailComposer {
         );
         return details;
     }
+
+
+
 
 }
