@@ -23,7 +23,11 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Nachbarschaftshilfe Maria Anzbach gegenseitige Hilfe auf Stundentauschbasis</title>
+        <title>Nachbarschaftshilfe Maria Anzbach - gegenseitige Hilfe auf Stundentauschbasis</title>
+
+        <link rel="manifest" href="/manifest.webmanifest">
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+        <meta name="apple-mobile-web-app-title" content="NBH">
 
         <!-- Verbindung zum CDN früh aufbauen -->
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
