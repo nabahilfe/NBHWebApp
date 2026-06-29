@@ -18,9 +18,9 @@
 <html lang="en" data-bs-theme="auto">
     <head>
 
-        <meta name="description" content="Startseite der Nachbarschaftshilfe Maria Anzbach.">
+        <meta name="description" content="NBH - Startseite der Nachbarschaftshilfe Maria Anzbach.">
 
-           <meta charset="utf-8">
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>Nachbarschaftshilfe Maria Anzbach gegenseitige Hilfe auf Stundentauschbasis</title>
@@ -72,37 +72,40 @@
                     <!-- Links links -->
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                        <!-- Dropdown User -->
-                        <li class="nav-item dropdown">
-                            @if (ctxt != null && ctxt.isAuthenticated())
-                                <button class="nav-link dropdown-toggle bi-person-square" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
-                                    ${ctxt.getFirstNameLastName()}
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/members/mydata/${ctxt.getUserId()}">Meine Daten</a></li>
-                                    @if (!ctxt.isSystemMember()) <!-- no timecheques for SystemMembers -->
-                                        <li><a class="dropdown-item" href="/timetransfers/fromself?fromMemberId=${ctxt.getUserId()}">Zeitschecks übergeben</a></li>
-                                        <li><a class="dropdown-item" href="/timecheques/newfromself/${ctxt.getUserId()}">Zeitschecks kaufen</a></li>
-                                    @endif
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <form action="/registration/logout" method="post">
-                                            ${csrfHiddenInput}
-                                            <button type="submit" class="dropdown-item btn btn-primary bi-box-arrow-left"> Abmelden</button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            @else
-                                <button class="nav-link dropdown-toggle bi-person" type="button" data-bs-toggle="dropdown" data-bs-display="static">
-                                    Anmelden / Registrieren
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item bi-box-arrow-in-right" href="/registration/login"> Anmelden</a></li>
-                                    <li><a class="dropdown-item" href="/registration/email">Registrieren / Passwort ändern</a></li>
-                                </ul>
-                            @endif
-                        </li>
-
+                        <!-- Desktop only content -->
+                        <!-- Look for mobile only content in home.jte, there are alternative button navigations for mobile -->
+                        <div class="d-none d-md-block">
+                            <!-- Dropdown User -->
+                            <li class="nav-item dropdown">
+                                @if (ctxt != null && ctxt.isAuthenticated())
+                                    <button class="nav-link dropdown-toggle bi-person-square" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                        ${ctxt.getFirstNameLastName()}
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="/members/mydata/${ctxt.getUserId()}">Meine Daten</a></li>
+                                        @if (!ctxt.isSystemMember()) <!-- no timecheques for SystemMembers -->
+                                            <li><a class="dropdown-item" href="/timetransfers/fromself?fromMemberId=${ctxt.getUserId()}">Zeitschecks übergeben</a></li>
+                                            <li><a class="dropdown-item" href="/timecheques/newfromself/${ctxt.getUserId()}">Zeitschecks kaufen</a></li>
+                                        @endif
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <form action="/registration/logout" method="post">
+                                                ${csrfHiddenInput}
+                                                <button type="submit" class="dropdown-item btn btn-primary bi-box-arrow-left"> Abmelden</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                @else
+                                    <button class="nav-link dropdown-toggle bi-person" type="button" data-bs-toggle="dropdown" data-bs-display="static">
+                                        Anmelden / Registrieren
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item bi-box-arrow-in-right" href="/registration/login"> Anmelden</a></li>
+                                        <li><a class="dropdown-item" href="/registration/email">Registrieren / Passwort ändern</a></li>
+                                    </ul>
+                                @endif
+                            </li>
+                        </div>
 
                         <!-- Dropdown Mitglied -->
                         @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
