@@ -12,7 +12,9 @@
 @param String privacyPolicy = ""
 @param String legalNotice = ""
 @param java.util.List<eu.nabahilfe.webapp.members.Member> boardMembers = java.util.Collections.emptyList()
-
+@param String version = ""
+@param String buildTime = ""
+@param String releaseNotesHtml = ""
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
@@ -151,6 +153,34 @@
         </div>
 
 
+    </div>
+
+    <footer class="text-center text-muted small py-3 mt-2 border-top">
+        Version ${version} &mdash; Build: ${buildTime}
+        &nbsp;|&nbsp;
+        <a href="#" class="text-muted text-decoration-none" data-bs-toggle="modal" data-bs-target="#releaseNotesModal">
+            <i class="bi bi-journal-text"></i> Release Notes
+        </a>
+    </footer>
+
+    <!-- Release Notes Modal -->
+    <div class="modal fade" id="releaseNotesModal" tabindex="-1" aria-labelledby="releaseNotesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content border-success-subtle">
+                <div class="modal-header" style="background-color: #77DD77;">
+                    <h5 class="modal-title fw-semibold" id="releaseNotesModalLabel">
+                        <i class="bi bi-journal-text me-2"></i>Release Notes
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                </div>
+                <div class="modal-body px-4 py-3">
+                    $unsafe{releaseNotesHtml}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Schließen</button>
+                </div>
+            </div>
+        </div>
     </div>
 
 `)
