@@ -284,7 +284,6 @@ public class TimeChequeController {
             throw new IllegalCallerException("Für System Administratoren können keine Zeitschecks erstellt werden.");
         }
 
-
         // Business Rule: TimeCheques can only be purchased if Member has less than 5 accumulated hours, except for the first TimeCheque, which is free of charge.
         int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
         if (existingTimeCheques == 0 && (!member.isImportedMember())) {

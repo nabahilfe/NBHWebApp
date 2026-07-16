@@ -199,7 +199,7 @@ public class TimeTransferController {
         String note = ttf.getNote();
         boolean fromself = ttf.isFromself();
 
-        log.debug("Saving TimeTransfer from user {} to user {} of hours {} for offer {} on date {}",
+        log.debug("Preparing TimeTransfer from user {} to user {} of hours {} for offer {} on date {}",
                 userFromId, userToId, hours, offerId, dateOfService);
 
         model.addAttribute("offers", offerRepository.findAllByOrderByCodeAsc());
@@ -210,6 +210,11 @@ public class TimeTransferController {
         // validate transfer is not to self
         if (memberFrom.getId().equals(memberTo.getId())) {
             return errorTransferToSelf(model, ttf, fromself, memberFrom, memberTo);
+        }
+
+        // validate receiver is not system admin
+        if (memberTo.isSystemAdmin() || memberFrom.isSystemAdmin()) {
+            return errorNoTimeChequesWithSysAdmin(model, ttf, fromself, memberFrom, memberTo);
         }
 
         // validate sufficient hours
@@ -298,6 +303,18 @@ public class TimeTransferController {
         log.debug("\nTransfer from {} to same member, re-displaying form with error.", ttf);
         model.addAttribute("ttf", ttf);
         model.addAttribute("errorMessage", "Leistungsempfänger und Leistungserbringer dürfen nicht identisch sein!");
+
+        if (fromself) return "timetransfers/self-timetransfer";
+        return "timetransfers/create-timetransfer";
+    }
+
+
+    private String errorNoTimeChequesWithSysAdmin(final Model model, TimeTransferForm ttf, boolean fromself, Member memberFrom, Member memberTo) {
+        ttf.setUserFromName(memberFrom.getNameAndAddress());
+        ttf.setUserToName(memberTo.getNameAndAddress());
+        log.debug("\nTransfer to system admin {}, re-displaying form with error.", memberTo.getName());
+        model.addAttribute("ttf", ttf);
+        model.addAttribute("errorMessage", "Systemadministratoren können keine Zeitschecks erhalten oder abgeben!");
 
         if (fromself) return "timetransfers/self-timetransfer";
         return "timetransfers/create-timetransfer";
