@@ -58,9 +58,9 @@
             <form action="${member.getId() == null ? "/members" : "/members/" + member.getId()}" method="post">
                 ${csrfHiddenInput}
 
-                <div class="form-group row">
-                    <div class="col">
-                        <div class="card shadow" style="background-color: #ECFEFF;"">
+                <div class="form-group row g-3">
+                    <div class="col-12 col-xl-6">
+                        <div class="card shadow h-100" style="background-color: #ECFEFF;">
                             <div class="card-body">
 
                                 <h5>Persönliche Daten</h5>
@@ -163,8 +163,8 @@
                         </div>
                     </div>
 
-                    <div class="col">
-                        <div class="card shadow" style="background-color: #ECFEFF;"">
+                    <div class="col-12 col-xl-6">
+                        <div class="card shadow h-100" style="background-color: #ECFEFF;">
                             <div class="card-body">
 
                                 <h5>Kontaktdaten & Adresse</h5>
@@ -187,8 +187,6 @@
                                         <div class="form-text">Beginnt mit + oder 0</div>
                                     </div>
                                 </div>
-
-                                <div>&nbsp</div>
 
                                 <label for="street" class="col col-form-label"><strong>Adresse</strong>
                                     @if(member.getLatitude() != null && member.getLongitude() != null)
@@ -239,8 +237,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <br/>
 
                             </div>
                         </div>
