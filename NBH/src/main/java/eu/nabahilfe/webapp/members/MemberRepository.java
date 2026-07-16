@@ -86,7 +86,7 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     @Query(
         "SELECT m FROM Member m JOIN m.role r " +
         "WHERE r.isBoardMember = true OR r.isTreasurer = true OR r.isSecretary = true " +
-        "ORDER BY m.lastName ASC")
+        "ORDER BY m.role.roleName ASC")
     List<Member> findBoardMembers();
 
 
