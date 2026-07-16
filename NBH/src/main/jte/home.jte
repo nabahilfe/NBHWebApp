@@ -156,10 +156,14 @@
     </div>
 
     <footer class="text-center text-muted small py-3 mt-2 border-top">
+        <a href="/home/legal-and-privacy-policy" class="text-muted text-decoration-none">
+            <strong>§ Rechtliche Informationen</strong>
+        </a>
+        &nbsp;|&nbsp;
         Version ${version} &mdash; Build: ${buildTime}
         &nbsp;|&nbsp;
         <a href="#" class="text-muted text-decoration-none" data-bs-toggle="modal" data-bs-target="#releaseNotesModal">
-            <i class="bi bi-journal-text"></i> Release Notes
+            <i class="bi bi-journal-text" style="-webkit-text-stroke: 0.3px currentColor;"></i> <strong>Release Notes</strong>
         </a>
     </footer>
 

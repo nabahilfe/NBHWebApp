@@ -1,5 +1,10 @@
 package eu.nabahilfe.webapp;
 
+import static eu.nabahilfe.webapp.DateFormatter.dateTimeDE;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +22,7 @@ public class VersionService {
     }
 
     public String getBuildTime() {
-        return buildProperties.getTime().toString();
+        LocalDateTime lt = LocalDateTime.ofInstant(buildProperties.getTime(), ZoneId.systemDefault());
+        return dateTimeDE(lt);
     }
 }
