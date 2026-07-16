@@ -97,7 +97,7 @@
                                     <input type="date" class="form-control" name="birthdate" id="birthdate" value="${formatISO(member.getBirthdate())}" required>
                                 </div>
 
-                                <label for="joiningDate" class="col col-form-label">Beitrittsdatum</label>
+                                <label for="joiningDate" class="col col-form-label">Beitrittsdatum<span class="text-danger">*</span></label>
                                 <div class="col">
                                     @if(member.getId() != null)
                                         <input type="date" class="form-control" name="joiningDate" id="joiningDate"
