@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -64,6 +66,7 @@ public class Transaction implements Accountable {
     // FIXME: im Generator: "@Column(nullable = false)"
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "created_by_id")
+    @CreatedBy
     private Member createdBy;
 
     @UpdateTimestamp
@@ -71,6 +74,7 @@ public class Transaction implements Accountable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "updated_by_id")
+    @LastModifiedBy
     private Member updatedBy;
 
     @Version
