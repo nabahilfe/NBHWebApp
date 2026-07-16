@@ -50,6 +50,7 @@
             <thead>
                 <tr>
                     <th scope="col" data-col="0" style="cursor:pointer;">Datum ↕</th>
+                    <th scope="col">erstellt von</th>
                     <th scope="col">Art</th>
                     <th scope="col" data-col="2" style="cursor:pointer;">Beschreibung ↕</th>
                     <th scope="col" class="text-end">Betrag</th>
@@ -62,6 +63,7 @@
                 @for(Transaction tx : transactions)
                     <tr>
                         <td>${dateReverseDE(tx.getTransactionDate())}</td>
+                        <td>${tx.getCreatedBy() != null ? tx.getCreatedBy().getName() : "-"}</td>
                         <td>
                             @if(tx.getTransactionType().equals(TransactionType.INCOME.name()))
                                 <span class="badge bg-success">Einnahme</span>

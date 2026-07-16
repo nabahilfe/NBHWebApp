@@ -14,11 +14,11 @@ import org.springframework.data.repository.query.Param;
 public interface TransactionRepository extends ListCrudRepository<Transaction, Long> {
 
     /** All unaccounted transactions (accountedBy is null) of a given type, ordered by transactionDate desc. */
-    @Query("SELECT t FROM Transaction t WHERE t.accountedBy IS NULL AND t.transactionType = :transactionType ORDER BY t.transactionDate DESC")
+    @Query("SELECT t FROM Transaction t LEFT JOIN FETCH t.createdBy WHERE t.accountedBy IS NULL AND t.transactionType = :transactionType ORDER BY t.transactionDate DESC")
     List<Transaction> findUnaccountedByType(@Param("transactionType") String transactionType);
 
     /** All unaccounted transactions regardless of type, ordered by transactionDate desc. */
-    @Query("SELECT t FROM Transaction t WHERE t.accountedBy IS NULL ORDER BY t.transactionDate DESC")
+    @Query("SELECT t FROM Transaction t LEFT JOIN FETCH t.createdBy WHERE t.accountedBy IS NULL ORDER BY t.transactionDate DESC")
     List<Transaction> findAllUnaccounted();
 
     /** All transactions of a given type, ordered by transactionDate desc. */

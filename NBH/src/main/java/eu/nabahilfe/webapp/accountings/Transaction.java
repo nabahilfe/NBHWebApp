@@ -7,12 +7,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.members.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,6 +30,7 @@ import jakarta.validation.constraints.Size;
  * Allgemeine Einnahme oder Ausgabe
  */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "TRANSACTIONS")
 public class Transaction implements Accountable {
 

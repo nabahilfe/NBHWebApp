@@ -45,8 +45,8 @@
         <thead>
             <tr>
                 <th scope="col">Erstellungsdatum</th>
-                <th scope="col" id="sortByMember" style="cursor:pointer;">für Mitglied ↕</th>
                 <th scope="col">erstellt von</th>
+                <th scope="col" id="sortByMember" style="cursor:pointer;">für Mitglied ↕</th>
                 <th scope="col" class="text-end">Stunden</th>
                 <th scope="col" class="text-end">Betrag</th>
                 <th scope="col" class="text-center">Buchen</th>
@@ -59,8 +59,8 @@
                     ${csrfHiddenInput}
                     <tr>
                         <td scope="row">${dateDE(tc.getTransactionDate())}</td>
-                        <td scope="row">${tc.getAssignedTo().getNameAndAddress()}</td>
                         <td scope="row">${tc.getCreatedBy().getName()}</td>
+                        <td scope="row">${tc.getAssignedTo().getNameAndAddress()}</td>
                         <td scope="row" class="text-end">${tc.getHours()}</td>
                         <td scope="row" class="text-end">€ ${numberDE(tc.getAmount())}</td>
                         <td>
