@@ -47,19 +47,19 @@
         <thead>
         <tr>
           <th scope="col" data-col="lastName" data-order="${orderBy.equals("lastName") ? order : ""}">
-                Nachname ${orderBy.equals("lastName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+                Nachname ${orderBy.equals("lastName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           <th scope="col" data-col="firstName" data-order="${orderBy.equals("firstName") ? order : ""}">
-                Vorname ${orderBy.equals("firstName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+                Vorname ${orderBy.equals("firstName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           <th scope="col">Adresse</th>
           <th scope="col" data-col="role.roleName" data-order="${orderBy.equals("role.roleName") ? order : ""}">
-                Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+                Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           <th scope="col" data-col="email" data-order="${orderBy.equals("email") ? order : ""}">
-                E-Mail ${orderBy.equals("email") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+                E-Mail ${orderBy.equals("email") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           <th scope="col">Telefon</th>
 
           @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
               <th scope="col" class="text-end" data-col="accumulatedHours" data-order="${orderBy.equals("accumulatedHours") ? order : ""}">
-                    Guthaben ${orderBy.equals("accumulatedHours") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+                    Guthaben ${orderBy.equals("accumulatedHours") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
               <th scope="col" class="text-center" title="Zeitschecks kaufen">Zeitscheck</th>
               <th scope="col" class="text-center" title="Zeitschecks herunterladen">Download</th>
           @endif
