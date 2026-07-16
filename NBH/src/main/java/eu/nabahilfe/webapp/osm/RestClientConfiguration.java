@@ -13,7 +13,7 @@ public class RestClientConfiguration {
         return RestClient.builder()
                 .baseUrl("https://nominatim.openstreetmap.org")
                 .defaultHeader(HttpHeaders.USER_AGENT,
-                        "Nachbarschaftshilfe/1.0 (https://nabahilfe.eu)")
+                        "Nachbarschaftshilfe/1.0 (sysadmin.ma@nabahilfe.eu;+https://nabahilfe.eu)")
                 .build();
     }
 }
