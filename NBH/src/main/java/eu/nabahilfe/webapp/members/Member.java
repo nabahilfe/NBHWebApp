@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -104,6 +105,9 @@ public class Member implements Serializable {
 
     private Double longitude;    // Aus der Adressvalidierung
 
+    /** 1 if address is geo-validated (lat + lon both set), 0 otherwise. Used for sorting only. */
+    @Formula("CASE WHEN latitude IS NOT NULL AND longitude IS NOT NULL THEN 1 ELSE 0 END")
+    private Integer isGeoValidated;
 
 
     @Column(nullable = false)

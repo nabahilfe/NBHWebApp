@@ -432,6 +432,8 @@ public class MemberController {
 
         log.debug("Saving Member: {}", member);
 
+        member = trimAddressData(member);
+
         validateMemberAddress(member);
 
         memberRepository.save(member);
@@ -442,6 +444,24 @@ public class MemberController {
         log.debug("Member saved: {}", member);
 
         return "redirect:/members/" + member.getId();
+    }
+
+
+    private @Valid Member trimAddressData(@Valid Member member) {
+        if (member.getStreet() != null) {
+            member.setStreet(member.getStreet().trim());
+        }
+        if (member.getNumber() != null) {
+            member.setNumber(member.getNumber().trim());
+        }
+        // TODO: add Stiege und Tür
+        if (member.getZip() != null) {
+            member.setZip(member.getZip().trim());
+        }
+        if (member.getCity() != null) {
+            member.setCity(member.getCity().trim());
+        }
+        return member;
     }
 
 
@@ -462,19 +482,19 @@ public class MemberController {
             if (displayNameUPPER.startsWith(m.getNumber()) && displayNameUPPER.contains(m.getStreet().toUpperCase()) &&
                 displayNameUPPER.contains(m.getZip()) && displayNameUPPER.contains(m.getCity().toUpperCase())) {
 
-                log.error("Address validated and geocoded: {} -> lat: {}, lon: {}", address, loc.getLatitude(), loc.getLongitude());
+                log.info("Address validated and geocoded: {} -> lat: {}, lon: {}", address, loc.getLatitude(), loc.getLongitude());
                 m.setLatitude(loc.getLatitude());
                 m.setLongitude(loc.getLongitude());
             }
             else {
-                log.error("Address could not be validated: {} -> geocoded to {}, which does not match the input address", address, loc.displayName());
+                log.warn("Address could not be validated: {} -> geocoded to {}, which does not match the input address", address, loc.displayName());
                 m.setLatitude(null);
                 m.setLongitude(null);
                 return;
             }
         }
         else {
-            log.error("Address could not be validated or geocoded: {}", address);
+            log.warn("Address could not be validated or geocoded: {}", address);
             m.setLatitude(null);
             m.setLongitude(null);
         }

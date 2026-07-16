@@ -51,6 +51,8 @@
           <th scope="col" data-col="firstName" data-order="${orderBy.equals("firstName") ? order : ""}">
                 Vorname ${orderBy.equals("firstName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           <th scope="col">Adresse</th>
+          <th scope="col" class="text-center" data-col="isGeoValidated" data-order="${orderBy.equals("isGeoValidated") ? order : ""}">
+                Validiert ${orderBy.equals("isGeoValidated") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           <th scope="col" data-col="role.roleName" data-order="${orderBy.equals("role.roleName") ? order : ""}">
                 Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           <th scope="col" data-col="email" data-order="${orderBy.equals("email") ? order : ""}">
@@ -81,6 +83,14 @@
                       <a href="https://www.google.com/maps/search/?api=1&query=${member.getAddress().replace(" ", "+")}" target="_blank"
                                rel="noopener noreferrer" class="text-decoration-none" title="In Google Maps öffnen"> ${member.getAddress()}
                       </a>
+                  </td>
+
+                  <td class="text-center">
+                      @if(member.getLatitude() != null && member.getLongitude() != null)
+                          <span class="bi bi-geo-alt-fill text-success" title="Adresse validiert"></span>
+                      @else
+                          <span class="bi bi-geo-alt-fill text-danger" title="Adresse nicht validiert"></span>
+                      @endif
                   </td>
 
                   <td>${member.getRole() != null ? member.getRole().getRoleName() : ""}</td>
