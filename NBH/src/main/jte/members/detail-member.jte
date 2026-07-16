@@ -253,7 +253,7 @@
                         Das Sozialkonto kann nicht bearbeitet oder gelöscht werden.
                     </div>
                 @else
-                    @if(numberOfTimecheques != null && numberOfTimecheques == 0 && member.getIsImportedMember() == false)
+                    @if(numberOfTimecheques != null && numberOfTimecheques == 0 && member.isImportedMember() == false)
                         <div class="alert alert-info py-2 px-3" role="alert">
                             Dieses Mitglied hat noch keine Zeitschecks. Erfasse gleich den ersten Gratis-Zeitscheck über den Button unten.
                         </div>

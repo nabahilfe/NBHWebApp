@@ -100,11 +100,20 @@ public class Member implements Serializable {
     @Size(max = 80)
     private String city;
 
+    private Double latitude;    // Aus der Adressvalidierung
+
+    private Double longitude;    // Aus der Adressvalidierung
+
+
+
     @Column(nullable = false)
     private Boolean directDebitAuthorization;    // Wenn Einziehungsauftrag vorhanden kann Mitglied sebständig Zeitschecks bestellen
 
     @Column(nullable = false)
     private Boolean isImportedMember;    // Für importierte, bestehende Mitglider muss das TRUE sein, damit ihnen kein Gratis-Zeitschecks zugeteilt werden kann und keine Mitgliedsbeeträge berechnet werden.
+
+    @Column(nullable = false)
+    private Boolean isSystemAccount;    // Für SystemAccounts wie SysAdmin und Sozialkonto muss TRUE verwendet werden
 
     private Integer accumulatedHours;    // Gut-Stunden - kommt aus Gutschrift bei Eintritt, Stundenkauf, Stundenerwerb durch Hilfestellung, ...
 
@@ -134,13 +143,6 @@ public class Member implements Serializable {
     @Column(nullable = false)
     private Integer version;
 
-
-
-
-
-    // --------------------------------------------------
-    // generate setter/getter methodes with Eclipse here
-    // --------------------------------------------------
 
     public Long getId() {
         return id;
@@ -394,8 +396,8 @@ public class Member implements Serializable {
     }
 
 
-    public Boolean getIsImportedMember() {
-        return isImportedMember;
+    public boolean isImportedMember() {
+        return isImportedMember != null && isImportedMember.booleanValue();
     }
 
 
@@ -403,10 +405,42 @@ public class Member implements Serializable {
         this.isImportedMember = isImportedMember;
     }
 
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+
+    public boolean isSystemAccount() {
+        return isSystemAccount != null && isSystemAccount.booleanValue();
+    }
+
+
+    public void setIsSystemAccount(Boolean isSystemAccount) {
+        this.isSystemAccount = isSystemAccount;
+    }
+
+
+
+
     // --------------------------------
     // add your business methodes here
     // --------------------------------
-
 
 
     public String getName() {
@@ -426,7 +460,7 @@ public class Member implements Serializable {
 
     // default system admin that may not be modified or deleted, is identified by firstName and lastName and role.isAdmin = true
     public boolean isSystemAdmin() {
-        if (NbhConst.ADMIN_ACCOUNT_FIRST_NAME.equalsIgnoreCase(firstName) && NbhConst.ADMIN_ACCOUNT_LAST_NAME.equalsIgnoreCase(lastName)) {
+        if (isSystemAccount() && NbhConst.ADMIN_ACCOUNT_FIRST_NAME.equalsIgnoreCase(firstName) && NbhConst.ADMIN_ACCOUNT_LAST_NAME.equalsIgnoreCase(lastName)) {
             return true;
         }
         return false;
@@ -437,14 +471,14 @@ public class Member implements Serializable {
     }
 
     public boolean isSozialkonto() {
-        if (NbhConst.SOZIALKONTO_FIRST_NAME.equalsIgnoreCase(firstName) && NbhConst.SOZIALKONTO_LAST_NAME.equalsIgnoreCase(lastName)) {
+        if (isSystemAccount() && NbhConst.SOZIALKONTO_FIRST_NAME.equalsIgnoreCase(firstName) && NbhConst.SOZIALKONTO_LAST_NAME.equalsIgnoreCase(lastName)) {
             return true;
         }
         return false;
     }
 
     public boolean isSystemMember() {
-        return isSystemAdmin() || isSozialkonto();
+        return isSystemAccount();
     }
 
 

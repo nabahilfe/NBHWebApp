@@ -36,43 +36,43 @@ public class ViewContext {
 
 
     public boolean isAdmin() {
-        return user != null && user.isAdmin() ? true : false;
+        return user != null && user.isAdmin();
     }
 
     public boolean isBoardMember() {
-        return user != null && user.isBoardMember() ? true : false;
+        return user != null && user.isBoardMember();
     }
 
     public boolean isTreasurer() {
-        return user != null && user.isTreasurer() ? true : false;
+        return user != null && user.isTreasurer();
     }
 
     public boolean isAuditor() {
-        return user != null && user.isAuditor() ? true : false;
+        return user != null && user.isAuditor();
     }
 
     public boolean isSecretary() {
-        return user != null && user.isSecretary() ? true : false;
+        return user != null && user.isSecretary();
     }
 
     public boolean isTimeKeeper() {
-        return user != null && user.isTimeKeeper() ? true : false;
+        return user != null && user.isTimeKeeper();
     }
 
     public boolean hasAnyRole(String...roles) {
-        return user != null && user.hasAnyRole(roles) ? true : false;
+        return user != null && user.hasAnyRole(roles);
     }
 
     public boolean hasRole(String role) {
-        return user != null && user.hasAnyRole(role) ? true : false;
+        return user != null && user.hasAnyRole(role);
     }
 
     public boolean isSystemAdmin() {
-        return user != null && user.isSystemAdmin() ? true : false;
+        return user != null && user.isSystemAdmin();
     }
 
     public boolean isSystemMember() {
-        return user != null && user.isSystemMember() ? true : false;
+        return user != null && user.isSystemMember();
     }
 
 }

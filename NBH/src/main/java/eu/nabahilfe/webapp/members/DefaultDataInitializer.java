@@ -362,6 +362,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         admin.setJoiningDate(LocalDate.now());
         admin.setDirectDebitAuthorization(false);
         admin.setIsImportedMember(true);
+        admin.setIsSystemAccount(true);
         admin.setAccumulatedHours(null);
         admin.setMemberNmbr(1); // Assuming 1 is the first member number for the admin
 
@@ -389,6 +390,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         sozialkonto.setJoiningDate(LocalDate.now());
         sozialkonto.setDirectDebitAuthorization(false);
         sozialkonto.setIsImportedMember(true);
+        sozialkonto.setIsSystemAccount(true);
         sozialkonto.setAccumulatedHours(null);
         sozialkonto.setMemberNmbr(2); // Assuming 1 is for the admin member, we set 2 for the sozialkonto
 

@@ -287,7 +287,7 @@ public class TimeChequeController {
 
         // Business Rule: TimeCheques can only be purchased if Member has less than 5 accumulated hours, except for the first TimeCheque, which is free of charge.
         int existingTimeCheques = timeChequeRepository.countByAssignedTo(member);
-        if (existingTimeCheques == 0 && (!member.getIsImportedMember())) {
+        if (existingTimeCheques == 0 && (!member.isImportedMember())) {
             log.debug("Member id={} has no existing TimeCheques, is not imported Member, using first hours of {}", member.getId(), NbhConst.FIRST_TIME_CHEQUE_HOURS);
             return createTimeCheque(NbhConst.FIRST_TIME_CHEQUE_HOURS, member);
         }
