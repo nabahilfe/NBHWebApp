@@ -409,6 +409,8 @@ public class MemberController {
             return "members/detail-member";
         }
 
+        // ensure that no member can be created as system account
+        member.setIsSystemAccount(false);
 
         if (member.getId() == null) {
             member.setMemberNmbr(getNextMemberNumber());
@@ -417,6 +419,7 @@ public class MemberController {
             }
             member.setIsImportedMember(false);
         }
+
 
         log.debug("Saving Member: {}", member);
 
@@ -447,6 +450,7 @@ public class MemberController {
 
         return null;
     }
+
 
     private Integer getNextMemberNumber() {
         Integer nmbr =  memberRepository.findTopByOrderByMemberNmbrDesc()
