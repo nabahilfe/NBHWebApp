@@ -100,7 +100,10 @@ public class MemberController {
     @PreAuthorize("hasRole('USER')")
     @ModelAttribute("roles")
     public List<Role> getAllRoles() {
-        return roleRepository.findAllBy(Sort.by("roleName").ascending());
+        return roleRepository.findAllBy(Sort.by("roleName").ascending())
+                .stream()
+                .filter(r -> !NbhConst.ADMIN_ROLE_NAME.equals(r.getRoleName()))
+                .collect(java.util.stream.Collectors.toList());
     }
 
 
