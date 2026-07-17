@@ -83,23 +83,22 @@
 
                   <td>${member.getFirstName()}</td>
 
-                  @if(member.getLatitude() != null && member.getLongitude() != null)
-                      <td>
-                           <span class="bi bi-geo-alt-fill text-success" title="Adresse validiert"></span>
-
-                            <a href="#"
-                               onclick="openMap(${member.getLatitude()}, ${member.getLongitude()}, encodeURIComponent('${member.getAddress()}')); return false;"
-                               class="text-decoration-none"
-                               title="Navigation starten">
-                               ${member.getAddress()}
-                            </a>
-                      </td>
-                  @else
-                      <td>
+                  <td>
+                      @if(member.getLatitude() != null && member.getLongitude() != null)
+                        <span class="bi bi-geo-alt-fill text-success" title="Adresse validiert"></span>
+                        <a href="#"
+                           onclick="openMap(${member.getLatitude()}, ${member.getLongitude()}, encodeURIComponent('${member.getAddress()}')); return false;"
+                           class="text-decoration-none"
+                           title="Navigation starten">
+                           ${member.getAddress()}
+                        </a>
+                      @else
                           <span class="bi bi-geo-alt-fill text-danger" title="Adresse nicht validiert"></span>
-                          ${member.getAddress()}
-                      </td>
-                  @endif
+                          <a href="https://www.google.com/maps/search/?api=1&query=${member.getAddress().replace(" ", "+")}" target="_blank"
+                                   rel="noopener noreferrer" class="text-decoration-none" title="In Google Maps öffnen"> ${member.getAddress()}
+                          </a>
+                      @endif
+                  </td>
 
                   <td>${member.getRole() != null ? member.getRole().getRoleName() : ""}</td>
 
