@@ -40,20 +40,18 @@
     <h3>Unsere Vereinsmitglieder</h3>
 
     <div class="alert alert-light border small mb-3" role="alert">
-        <span class="bi bi-geo-alt-fill text-success"></span> Adresse ist validiert und kann für die Navigation verwendet werden.
+        <span class="bi bi-geo-alt-fill text-success"></span> Adresse ist validiert, kann für die Navigation verwendet werden.
         <br/>
-        <span class="bi bi-geo-alt-fill text-danger"></span> Adresse konnte nicht validiert werden, Navigation möglicherweise nicht richtig!
+        <span class="bi bi-geo-alt-fill text-danger"></span> Adresse nicht validiert, Navigation möglicherweise nicht richtig!
     </div>
 
     <!-- Display all Member records -->
     <table class="table table-hover table-sm" id="memberTable">
 
-        <thead>
+      <thead>
         <tr>
           <th scope="col" data-col="lastName" data-order="${orderBy.equals("lastName") ? order : ""}">
-                Nachname ${orderBy.equals("lastName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
-          <th scope="col" data-col="firstName" data-order="${orderBy.equals("firstName") ? order : ""}">
-                Vorname ${orderBy.equals("firstName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
+                Name ${orderBy.equals("lastName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
 
           @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
               <th scope="col" data-col="isGeoValidated" data-order="${orderBy.equals("isGeoValidated") ? order : ""}">
@@ -61,8 +59,10 @@
           @else
               <th scope="col">Adresse</th>
           @endif
-          <th scope="col" data-col="role.roleName" data-order="${orderBy.equals("role.roleName") ? order : ""}">
-                Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
+          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+              <th scope="col" data-col="role.roleName" data-order="${orderBy.equals("role.roleName") ? order : ""}">
+                    Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
+          @endif
           <th scope="col" data-col="email" data-order="${orderBy.equals("email") ? order : ""}">
                 E-Mail ${orderBy.equals("email") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           <th scope="col">Telefon</th>
@@ -74,21 +74,22 @@
               <th scope="col" class="text-center" title="Zeitschecks herunterladen">Download</th>
           @endif
         </tr>
-          </thead>
+      </thead>
 
       <tbody class="table-group-divider">
         @for (Member member : memberPage.getContent())
             <tr>
                   @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
-                      <td><a class="text-decoration-none" href="/members/${member.getId()}"><b>${member.getLastName()}</b></a></td>
+                      <td><a class="text-decoration-none" href="/members/${member.getId()}">${member.getLastName()} ${member.getFirstName()}</a></td>
                   @else
-                    <td>${member.getLastName()}</td>
+                    <td>${member.getLastName()} ${member.getFirstName()}</td>
                   @endif
 
-                  <td>${member.getFirstName()}</td>
-
                   <td>
-                      @if(member.getLatitude() != null && member.getLongitude() != null)
+                      @if(member.isSystemMember())
+                          <span class="bi bi-geo-alt-fill" style="visibility:hidden;"></span>
+                          ${member.getAddress()}
+                      @elseif(member.getLatitude() != null && member.getLongitude() != null)
                         <span class="bi bi-geo-alt-fill text-success" title="Adresse validiert"></span>
                         <a href="#"
                            onclick="openMap(${member.getLatitude()}, ${member.getLongitude()}, encodeURIComponent('${member.getAddress()}')); return false;"
@@ -104,7 +105,9 @@
                       @endif
                   </td>
 
-                  <td>${member.getRole() != null ? member.getRole().getRoleName() : ""}</td>
+                  @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                      <td>${member.getRole() != null ? member.getRole().getRoleName() : ""}</td>
+                  @endif
 
                   <td>
                       @if(member.getEmail() != null && !member.getEmail().isBlank())

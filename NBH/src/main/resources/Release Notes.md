@@ -7,6 +7,7 @@
 - Finales Logo wird nun auch in den PDFs verwendet <!-- https://github.com/nabahilfe/NBHWebApp/issues/136 -->
 - Systemaccounts (Sozialkonto und Admin) werden nun sauber behandelt <!-- ACHTUNG: DB Erweiterung notwendig, siehe https://github.com/nabahilfe/NBHWebApp/issues/137 -->
 - Footer hinzugefügt für Rechtliche Informationen und Release Notes
+- Optimierungen für Mobile Ansicht
 
 <!--
 
