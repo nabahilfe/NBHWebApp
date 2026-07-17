@@ -107,4 +107,18 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
 
     List<Member> findByFirstNameIgnoreCaseAndLastNameIgnoreCase(String firstName, String lastName);
 
+    /** IDs of active, non-system members whose address has not yet been geo-validated. */
+    @Query("SELECT m.id FROM Member m " +
+           "WHERE (m.resignationDate IS NULL OR m.resignationDate > CURRENT_DATE) " +
+           "AND (m.isSystemAccount = false OR m.isSystemAccount IS NULL) " +
+           "AND (m.latitude IS NULL OR m.longitude IS NULL)")
+    List<Long> findActiveUnvalidatedMemberIds();
+
+    /** Count of active, non-system members whose address has not yet been geo-validated. */
+    @Query("SELECT COUNT(m) FROM Member m " +
+           "WHERE (m.resignationDate IS NULL OR m.resignationDate > CURRENT_DATE) " +
+           "AND (m.isSystemAccount = false OR m.isSystemAccount IS NULL) " +
+           "AND (m.latitude IS NULL OR m.longitude IS NULL)")
+    long countActiveUnvalidatedMembers();
+
 }

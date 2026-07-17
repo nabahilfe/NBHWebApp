@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import eu.nabahilfe.webapp.NbhConst;
@@ -60,6 +61,7 @@ public class MemberController {
     private final AmountDomainValueRepository amountDomainValueRepository;
     private final AccountingRepository accountingRepository;
     private final NominatimService nominatimService;
+    private final AddressValidationService addressValidationService;
 
     private static final Logger log = LoggerFactory.getLogger(MemberController.class);
 
@@ -67,13 +69,14 @@ public class MemberController {
             TimeTransferRepository timeTransferRepository, TimeChequeRepository timeCheckRepository,
             SecurityUtils securityUtils, MembershipFeeRepository membershipFeeRepository,
             AmountDomainValueRepository amountDomainValueRepository, AccountingRepository accountingRepository,
-            NominatimService nominatimService) {
+            NominatimService nominatimService, AddressValidationService addressValidationService) {
         this.memberRepository = memberRepository;
         this.roleRepository = roleRepository;
         this.timeTransferRepository = timeTransferRepository;
         this.timeCheckRepository = timeCheckRepository;
         this.securityUtils = securityUtils;
         this.nominatimService = nominatimService;
+        this.addressValidationService = addressValidationService;
         this.amountDomainValueRepository = amountDomainValueRepository;
         this.membershipFeeRepository = membershipFeeRepository;
         this.accountingRepository = accountingRepository;
@@ -721,6 +724,26 @@ public class MemberController {
         return member.isSozialkonto();
     }
 
+
+    // ------------------
+    // Address validation
+    // ------------------
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @GetMapping("/validate-addresses")
+    public String showValidateAddressesPage(final Model model) {
+        long unvalidatedCount = memberRepository.countActiveUnvalidatedMembers();
+        model.addAttribute("unvalidatedCount", unvalidatedCount);
+        log.debug("Showing address validation page, {} unvalidated addresses found", unvalidatedCount);
+        return "members/validate-addresses";
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @GetMapping("/validate-addresses/stream")
+    public SseEmitter streamValidateAddresses() {
+        log.debug("Starting address validation stream");
+        return addressValidationService.validateAllUnvalidatedAddresses();
+    }
 
 
 }

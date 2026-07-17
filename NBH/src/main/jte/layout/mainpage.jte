@@ -125,6 +125,8 @@
                                     <li><a class="dropdown-item" href="/members/birthdays">Geburtstage</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/members/open-membership-fees">Mitgliedsbeiträge vorschreiben</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/members/validate-addresses">Adressen validieren</a></li>
                                 </ul>
                             </li>
                         @endif
