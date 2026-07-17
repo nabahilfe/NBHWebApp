@@ -190,9 +190,9 @@
 
                                 <label for="street" class="col col-form-label"><strong>Adresse</strong>
                                     @if(member.getLatitude() != null && member.getLongitude() != null)
-                                        <span class="badge bg-success bi-geo-alt-fill"> Gefunden</span>
+                                        <span class="badge bg-success bi-geo-alt-fill"> gefunden</span>
                                     @else
-                                        <span class="badge bg-danger bi-geo-alt"> Nicht gefunden</span>
+                                        <span class="badge bg-danger bi-geo-alt"> nicht gefunden</span>
                                     @endif
                                 </label>
 
