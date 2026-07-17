@@ -163,7 +163,7 @@
         Version ${version} &mdash; Build: ${buildTime}
         &nbsp;|&nbsp;
         <a href="#" class="text-muted text-decoration-none" data-bs-toggle="modal" data-bs-target="#releaseNotesModal">
-            <i class="bi bi-journal-text" style="-webkit-text-stroke: 0.4px currentColor;"></i> <strong>Release Notes</strong>
+            <i class="bi bi-journal-text" style="-webkit-text-stroke: 0.3px currentColor;"></i> <strong>Release Notes</strong>
         </a>
     </footer>
 
