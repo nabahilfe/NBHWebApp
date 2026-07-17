@@ -52,10 +52,11 @@
                 Vorname ${orderBy.equals("firstName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
 
           @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
-              <th scope="col" class="text-center" data-col="isGeoValidated" data-order="${orderBy.equals("isGeoValidated") ? order : ""}">
-                    Validiert ${orderBy.equals("isGeoValidated") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
+              <th scope="col" data-col="isGeoValidated" data-order="${orderBy.equals("isGeoValidated") ? order : ""}">
+                    Adresse ${orderBy.equals("isGeoValidated") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
+          @else
+              <th scope="col">Adresse</th>
           @endif
-          <th scope="col">Adresse</th>
           <th scope="col" data-col="role.roleName" data-order="${orderBy.equals("role.roleName") ? order : ""}">
                 Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           <th scope="col" data-col="email" data-order="${orderBy.equals("email") ? order : ""}">
@@ -82,18 +83,10 @@
 
                   <td>${member.getFirstName()}</td>
 
-                  @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
-                      <td class="text-center">
-                          @if(member.getLatitude() != null && member.getLongitude() != null)
-                              <span class="bi bi-geo-alt-fill text-success" title="Adresse validiert"></span>
-                          @else
-                              <span class="bi bi-geo-alt-fill text-danger" title="Adresse nicht validiert"></span>
-                          @endif
-                      </td>
-                  @endif
-
                   @if(member.getLatitude() != null && member.getLongitude() != null)
                       <td>
+                           <span class="bi bi-geo-alt-fill text-success" title="Adresse validiert"></span>
+
                             <a href="#"
                                onclick="openMap(${member.getLatitude()}, ${member.getLongitude()}, encodeURIComponent('${member.getAddress()}')); return false;"
                                class="text-decoration-none"
@@ -103,6 +96,7 @@
                       </td>
                   @else
                       <td>
+                          <span class="bi bi-geo-alt-fill text-danger" title="Adresse nicht validiert"></span>
                           ${member.getAddress()}
                       </td>
                   @endif
