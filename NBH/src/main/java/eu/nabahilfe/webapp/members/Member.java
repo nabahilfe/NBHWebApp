@@ -479,7 +479,7 @@ public class Member implements Serializable {
 
 
     public String getAddress() {
-        return street + " " + number + (stair != null ? "/" + stair : "") + (door != null ? "/" + door : "") + ", " + zip + " " + city;
+        return street + " " + number + (stair != null && !stair.isEmpty() ? "/" + stair : "") + (door != null && !door.isEmpty() ? "/" + door : "") + ", " + zip + " " + city;
     }
 
 
