@@ -50,9 +50,12 @@
                 Nachname ${orderBy.equals("lastName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           <th scope="col" data-col="firstName" data-order="${orderBy.equals("firstName") ? order : ""}">
                 Vorname ${orderBy.equals("firstName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
+
+          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+              <th scope="col" class="text-center" data-col="isGeoValidated" data-order="${orderBy.equals("isGeoValidated") ? order : ""}">
+                    Validiert ${orderBy.equals("isGeoValidated") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
+          @endif
           <th scope="col">Adresse</th>
-          <th scope="col" class="text-center" data-col="isGeoValidated" data-order="${orderBy.equals("isGeoValidated") ? order : ""}">
-                Validiert ${orderBy.equals("isGeoValidated") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           <th scope="col" data-col="role.roleName" data-order="${orderBy.equals("role.roleName") ? order : ""}">
                 Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           <th scope="col" data-col="email" data-order="${orderBy.equals("email") ? order : ""}">
@@ -79,19 +82,30 @@
 
                   <td>${member.getFirstName()}</td>
 
-                  <td>
-                      <a href="https://www.google.com/maps/search/?api=1&query=${member.getAddress().replace(" ", "+")}" target="_blank"
-                               rel="noopener noreferrer" class="text-decoration-none" title="In Google Maps öffnen"> ${member.getAddress()}
-                      </a>
-                  </td>
+                  @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                      <td class="text-center">
+                          @if(member.getLatitude() != null && member.getLongitude() != null)
+                              <span class="bi bi-geo-alt-fill text-success" title="Adresse validiert"></span>
+                          @else
+                              <span class="bi bi-geo-alt-fill text-danger" title="Adresse nicht validiert"></span>
+                          @endif
+                      </td>
+                  @endif
 
-                  <td class="text-center">
-                      @if(member.getLatitude() != null && member.getLongitude() != null)
-                          <span class="bi bi-geo-alt-fill text-success" title="Adresse validiert"></span>
-                      @else
-                          <span class="bi bi-geo-alt-fill text-danger" title="Adresse nicht validiert"></span>
-                      @endif
-                  </td>
+                  @if(member.getLatitude() != null && member.getLongitude() != null)
+                      <td>
+                            <a href="#"
+                               onclick="openMap(${member.getLatitude()}, ${member.getLongitude()}, encodeURIComponent('${member.getAddress()}')); return false;"
+                               class="text-decoration-none"
+                               title="Navigation starten">
+                               ${member.getAddress()}
+                            </a>
+                      </td>
+                  @else
+                      <td>
+                          ${member.getAddress()}
+                      </td>
+                  @endif
 
                   <td>${member.getRole() != null ? member.getRole().getRoleName() : ""}</td>
 
@@ -167,6 +181,7 @@
 
 
     <script>
+
     document.addEventListener("DOMContentLoaded", () => {
         const form = document.getElementById("sortForm");
         const orderByInput = document.getElementById("orderBy");
@@ -200,7 +215,40 @@
           });
         });
     });
-  </script>
+
+
+    function useAppleMaps() {
+        const ua = navigator.userAgent;
+
+        return /iPhone|iPad|Macintosh/.test(ua) &&
+               ua.includes("Safari") &&
+               !ua.includes("Chrome") &&
+               !ua.includes("CriOS") &&
+               !ua.includes("Edg") &&
+               !ua.includes("OPR") &&
+               !ua.includes("Firefox") &&
+               !ua.includes("FxiOS");
+    };
+
+
+    function openMap(lat, lon, address) {
+        let url;
+
+        //console.log("Address encoded:", address);
+
+        if (useAppleMaps()) {
+            url = "https://maps.apple.com/?ll=" + lat + "," + lon + "&q=" + address;
+        }
+        else {
+            url = "https://www.google.com/maps?q=" + lat + "," + lon;
+        }
+
+        //console.log("URL:", url);
+
+        window.open(url, "_blank", "noopener,noreferrer");
+    };
+
+    </script>
 
 
 `)
