@@ -479,6 +479,9 @@ public class Member implements Serializable {
 
 
     public String getAddress() {
+        if (isSystemAccount()) {
+            return "";
+        }
         return street + " " + number + (stair != null && !stair.isEmpty() ? "/" + stair : "") + (door != null && !door.isEmpty() ? "/" + door : "") + ", " + zip + " " + city;
     }
 
