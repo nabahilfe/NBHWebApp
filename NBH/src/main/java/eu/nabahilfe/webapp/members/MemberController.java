@@ -39,8 +39,6 @@ import eu.nabahilfe.webapp.accountings.TransactionType;
 import eu.nabahilfe.webapp.domaintypes.AmountDomainType;
 import eu.nabahilfe.webapp.domaintypes.AmountDomainValue;
 import eu.nabahilfe.webapp.domaintypes.AmountDomainValueRepository;
-import eu.nabahilfe.webapp.osm.Address;
-import eu.nabahilfe.webapp.osm.NominatimResult;
 import eu.nabahilfe.webapp.osm.NominatimService;
 import eu.nabahilfe.webapp.security.SecurityUtils;
 import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
@@ -434,7 +432,8 @@ public class MemberController {
 
         member = trimAddressData(member);
 
-        validateMemberAddress(member);
+        // we use OpenStreetMap Nominatim API to validate and geocode the member address
+        nominatimService.validateAndUpdateMemberAddress(member);
 
         memberRepository.save(member);
 
@@ -462,42 +461,6 @@ public class MemberController {
             member.setCity(member.getCity().trim());
         }
         return member;
-    }
-
-
-    // we use OpenStreetMap Nominatim API to validate and geocode the member address
-    private void validateMemberAddress(@Valid Member m) {
-
-        // TODO: Country should be a field in the Member entity, not hardcoded to "Österreich"
-        Address address = new Address(m.getStreet(), m.getNumber(), m.getZip(), m.getCity(), "Österreich");
-        Optional<NominatimResult> result = nominatimService.localizeAddress(address);
-
-        if (result.isPresent()) {
-            NominatimResult loc = result.get();
-
-            // we need to check if we have the real address - displaName must start with number and street, zip and city must be contained
-            // otherwise we have a wrong address (e.g. if the number is not found, it will return the city center)
-
-            String displayNameUPPER = loc.displayName().toUpperCase();
-            if (displayNameUPPER.startsWith(m.getNumber()) && displayNameUPPER.contains(m.getStreet().toUpperCase()) &&
-                displayNameUPPER.contains(m.getZip()) && displayNameUPPER.contains(m.getCity().toUpperCase())) {
-
-                log.info("Address validated and geocoded: {} -> lat: {}, lon: {}", address, loc.getLatitude(), loc.getLongitude());
-                m.setLatitude(loc.getLatitude());
-                m.setLongitude(loc.getLongitude());
-            }
-            else {
-                log.warn("Address could not be validated: {} -> geocoded to {}, which does not match the input address", address, loc.displayName());
-                m.setLatitude(null);
-                m.setLongitude(null);
-                return;
-            }
-        }
-        else {
-            log.warn("Address could not be validated or geocoded: {}", address);
-            m.setLatitude(null);
-            m.setLongitude(null);
-        }
     }
 
 
