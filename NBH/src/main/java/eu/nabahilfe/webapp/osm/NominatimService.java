@@ -62,7 +62,8 @@ public class NominatimService {
             // otherwise we have a wrong address (e.g. if the number is not found, it will return the city center)
 
             String displayNameUPPER = loc.displayName().toUpperCase();
-            if (displayNameUPPER.startsWith(m.getNumber().toUpperCase()) && displayNameUPPER.contains(m.getStreet().toUpperCase()) &&
+            if ((displayNameUPPER.startsWith(m.getNumber().toUpperCase()) || displayNameUPPER.contains(m.getNumber() + ",".toUpperCase())) &&
+                displayNameUPPER.contains(m.getStreet().toUpperCase()) &&
                 displayNameUPPER.contains(m.getZip().toUpperCase()) && displayNameUPPER.contains(m.getCity().toUpperCase())) {
 
                 log.info("Address validated and geocoded: {} -> lat: {}, lon: {}", address, loc.getLatitude(), loc.getLongitude());
