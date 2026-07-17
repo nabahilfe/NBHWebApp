@@ -55,7 +55,7 @@ TRUNCATE TABLE SPRING_SESSION;
 
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-07-14 16:09:32
+ * Generated at 2026-07-17 14:04:43
  * ModelDescription: NBH Entity Modell
  */
 
@@ -185,8 +185,10 @@ create table if not exists MEMBERS (
     password VARCHAR(250),
     joining_date DATE not null /* Eintrittsdatum in den Verein */,
     resignation_date DATE /* Austrittsdatum aus dem Verein */,
-    street VARCHAR(80) /* Adressdaten des Mitglieds */,
-    number VARCHAR(20),
+    street VARCHAR(80) /* Adressdaten des Mitglieds - Straße */,
+    number VARCHAR(20) /* Hausunummer */,
+    stair VARCHAR(20) /* Stiege */,
+    door VARCHAR(20) /* Tür */,
     zip VARCHAR(10),
     city VARCHAR(80),
     latitude DOUBLE PRECISION /* Aus der Adressvalidierung */,
@@ -289,7 +291,7 @@ create table if not exists TRANSACTIONS (
 );
 
 
-/* Foto- oder Bildergallerie */
+/* Foto- oder Bildergalerie */
 create table if not exists IMAGE_GALLERY (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     event_date DATE not null,
@@ -303,14 +305,15 @@ create table if not exists IMAGE_GALLERY (
 );
 
 
-/* Bild zu einer Gallerie */
+/* Bild zu einer Galerie */
 create table if not exists IMAGES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     image_name VARCHAR(250) not null,
     image_size INTEGER not null,
-    image_data BYTEA not null,
+    image BYTEA not null,
+    thumbnail BYTEA not null,
     description VARCHAR(250),
-    is_gallery_cover BOOLEAN not null DEFAULT FALSE /* Das repräsentative Bild für die Gallerie das in der Gallerieübersicht angezeigt wird */,
+    is_gallery_cover BOOLEAN not null DEFAULT FALSE /* Das repräsentative Bild für die Galerie das in der Galerieübersicht angezeigt wird */,
     belongs_to_id BIGINT /* FK id from IMAGE_GALLERY(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT,

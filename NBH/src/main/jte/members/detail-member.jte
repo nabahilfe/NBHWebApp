@@ -215,13 +215,13 @@
 
 
                                             <div class="col-2">
-                                                <label for="stiege" class="form-label">Stiege</label>
-                                                <input type="text" class="form-control" name="stiege" id="stiege" value=" ">
+                                                <label for="stair" class="form-label">Stiege</label>
+                                                <input type="text" class="form-control" name="stair" id="stair" value="${member.getStair() != null ? member.getStair() : ""}">
                                             </div>
 
                                             <div class="col-2">
                                                 <label for="door" class="form-label">Tür</label>
-                                                <input type="text" class="form-control" name="door" id="door" value=" ">
+                                                <input type="text" class="form-control" name="door" id="door" value="${member.getDoor() != null ? member.getDoor() : ""}">
                                             </div>
 
 

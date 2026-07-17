@@ -90,10 +90,16 @@ public class Member implements Serializable {
     private LocalDate resignationDate;    // Austrittsdatum aus dem Verein
 
     @Size(max = 80)
-    private String street;    // Adressdaten des Mitglieds
+    private String street;    	// Adressdaten des Mitglieds - Straße
 
     @Size(max = 20)
-    private String number;
+    private String number;    	// Hausunummer
+
+    @Size(max = 20)
+    private String stair;    	// Stiege
+
+    @Size(max = 20)
+    private String door;    	// Tür
 
     @Size(max = 10)
     private String zip;
@@ -101,9 +107,9 @@ public class Member implements Serializable {
     @Size(max = 80)
     private String city;
 
-    private Double latitude;    // Aus der Adressvalidierung
+    private Double latitude;   	// Aus der Adressvalidierung
 
-    private Double longitude;    // Aus der Adressvalidierung
+    private Double longitude;   // Aus der Adressvalidierung
 
     /** 1 if address is geo-validated (lat + lon both set), 0 otherwise. Used for sorting only. */
     @Formula("CASE WHEN latitude IS NOT NULL AND longitude IS NOT NULL THEN 1 ELSE 0 END")
@@ -440,11 +446,31 @@ public class Member implements Serializable {
     }
 
 
+    public String getStair() {
+        return stair;
+    }
+
+
+    public void setStair(String stair) {
+        this.stair = stair;
+    }
+
+
+    public String getDoor() {
+        return door;
+    }
+
+
+    public void setDoor(String door) {
+        this.door = door;
+    }
+
 
 
     // --------------------------------
     // add your business methodes here
     // --------------------------------
+
 
 
     public String getName() {
@@ -453,7 +479,7 @@ public class Member implements Serializable {
 
 
     public String getAddress() {
-        return street + " " + number + ", " + zip + " " + city;
+        return street + " " + number + (stair != null ? "/" + stair : "") + (door != null ? "/" + door : "") + ", " + zip + " " + city;
     }
 
 
