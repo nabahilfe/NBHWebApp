@@ -271,6 +271,12 @@ public class Member implements Serializable {
         return number;
     }
 
+    public String getFullNumber() {
+        String fullNumber = number;
+        if (stair != null && !stair.isEmpty()) fullNumber += "/" + stair;
+        if (door != null && !door.isEmpty()) fullNumber += "/" + door;
+        return fullNumber;
+    }
 
     public void setNumber(String number) {
         this.number = number;

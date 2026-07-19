@@ -44,20 +44,23 @@
 
                     <div class="card-body">
 
-                        <h4 class="card-title text-primary">${ctxt.getFullName()}</h4>
-                        <h6>${roleNames}</h6>
-                        <hr/>
-
                         <div class="card-text">
+                            @if((member.getSalutation() != null && !member.getSalutation().isEmpty()) || (member.getTitle() != null && !member.getTitle().isEmpty()))
+                                <div>
+                                    @if((member.getSalutation() != null && !member.getSalutation().isEmpty()) || (member.getTitle() != null && !member.getTitle().isEmpty()))
+                                        ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}
+                                    @endif
+                                </div>
+                            @endif
+
+                            <div style="font-size: 120%;"><strong>${member.getFirstName()} ${member.getLastName()}</strong></div>
+                            <div class="mb-2"><small class="fst-italic">${roleNames}</small></div>
+
                             <p>
-                                @if((member.getSalutation() != null && !member.getSalutation().isEmpty()) || member.getTitle() != null && !member.getTitle().isEmpty())
-                                    ${member.getSalutation() != null ? member.getSalutation() + " " : ""}${member.getTitle() != null ? member.getTitle() + " " : ""}
-                                    <br/>
-                                @endif
-                                <strong>${member.getFirstName()} ${member.getLastName()}</strong><br/>
-                                ${member.getStreet() + " " + member.getNumber()}<br/>
+                                ${member.getStreet() + " " + member.getFullNumber()}<br/>
                                 ${member.getZip() + " " + member.getCity()}
                             </p>
+
                             <p>
                                 Geburtstag: ${dateReverseDE(member.getBirthdate())}
                                 @if(member.getEmail() != null)
@@ -94,7 +97,7 @@
                                 </div>
                             @endif
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
