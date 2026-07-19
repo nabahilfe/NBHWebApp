@@ -286,22 +286,33 @@ public class AccountingController {
     @GetMapping("/show-accountings")
     public String showAccountings(
             @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) Integer month,
             @RequestParam(required = false) String accountableName,
             @RequestParam(required = false) String transactionType,
             final Model model) {
 
         int selectedYear = (year != null) ? year : LocalDate.now().getYear();
+        int selectedMonth = (month != null && month >= 1 && month <= 12) ? month : 0; // 0 = all
         String selectedTransactionType = (transactionType != null && !transactionType.isBlank())
                 ? transactionType : TransactionType.INCOME.name();
         String selectedAccountableClass = (accountableName != null && !accountableName.isBlank())
                 ? accountableName : "";
 
         List<AccountingEntry> entries;
-        if (selectedAccountableClass.isEmpty()) {
-            entries = accountingRepository.findByYearAndTransactionType(selectedYear, selectedTransactionType);
-        } else {
+        boolean hasClass = !selectedAccountableClass.isEmpty();
+        boolean hasMonth = selectedMonth > 0;
+
+        if (hasClass && hasMonth) {
+            entries = accountingRepository.findByYearAndMonthAndTransactionTypeAndAccountableClass(
+                    selectedYear, selectedMonth, selectedTransactionType, selectedAccountableClass);
+        } else if (hasClass) {
             entries = accountingRepository.findByYearAndTransactionTypeAndAccountableClass(
                     selectedYear, selectedTransactionType, selectedAccountableClass);
+        } else if (hasMonth) {
+            entries = accountingRepository.findByYearAndMonthAndTransactionType(
+                    selectedYear, selectedMonth, selectedTransactionType);
+        } else {
+            entries = accountingRepository.findByYearAndTransactionType(selectedYear, selectedTransactionType);
         }
 
         BigDecimal total = entries.stream()
@@ -320,6 +331,7 @@ public class AccountingController {
         model.addAttribute("distinctAccountableClasses", distinctClasses);
         model.addAttribute("years", years);
         model.addAttribute("selectedYear", selectedYear);
+        model.addAttribute("selectedMonth", selectedMonth);
         model.addAttribute("selectedTransactionType", selectedTransactionType);
         model.addAttribute("selectedAccountableClass", selectedAccountableClass);
 

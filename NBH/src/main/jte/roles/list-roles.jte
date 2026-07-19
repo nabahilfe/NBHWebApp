@@ -4,6 +4,7 @@
 -->
 
 @import eu.nabahilfe.webapp.members.Role
+@import eu.nabahilfe.webapp.NbhConst
 
 @param java.util.List<Role> roles
 
@@ -93,14 +94,18 @@
           <td class="text-center">@if(role.getIsAdmin())<i class="bi bi-check-lg"></i>@endif</td>
           <td class="text-center">@if(role.getIsMiscellaneous())<i class="bi bi-check-lg"></i>@endif</td>
           <td class="text-center">
-            <a class="btn btn-outline-primary btn-sm bi-pencil"
-               href="/roles/${role.getId()}"
-               role="button"></a>
+            @if(!role.getRoleName().equals(NbhConst.ADMIN_ROLE_NAME))
+                <a class="btn btn-outline-primary btn-sm bi-pencil"
+                   href="/roles/${role.getId()}"
+                   role="button"></a>
+            @endif
           </td>
           <td class="text-center">
-            <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
-            <button type="button" class="btn btn-outline-danger btn-sm bi-x-lg" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
-                data-item-id="${role.getId()}"></button>
+            @if(!role.getRoleName().equals(NbhConst.ADMIN_ROLE_NAME))
+              <!-- we need an ordinary botton her for the modal dismiss/confirm popup -->
+              <button type="button" class="btn btn-outline-danger btn-sm bi-x-lg" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
+                  data-item-id="${role.getId()}"></button>
+            @endif
           </td>
         </tr>
         @endfor

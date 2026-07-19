@@ -55,7 +55,7 @@ TRUNCATE TABLE SPRING_SESSION;
 
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-06-18 16:00:28
+ * Generated at 2026-07-17 14:04:43
  * ModelDescription: NBH Entity Modell
  */
 
@@ -185,12 +185,17 @@ create table if not exists MEMBERS (
     password VARCHAR(250),
     joining_date DATE not null /* Eintrittsdatum in den Verein */,
     resignation_date DATE /* Austrittsdatum aus dem Verein */,
-    street VARCHAR(80) /* Adressdaten des Mitglieds */,
-    number VARCHAR(20),
+    street VARCHAR(80) /* Adressdaten des Mitglieds - Straße */,
+    number VARCHAR(20) /* Hausunummer */,
+    stair VARCHAR(20) /* Stiege */,
+    door VARCHAR(20) /* Tür */,
     zip VARCHAR(10),
     city VARCHAR(80),
+    latitude DOUBLE PRECISION /* Aus der Adressvalidierung */,
+    longitude DOUBLE PRECISION /* Aus der Adressvalidierung */,
     direct_debit_authorization BOOLEAN not null DEFAULT FALSE /* Wenn Einziehungsauftrag vorhanden kann Mitglied sebständig Zeitschecks bestellen */,
     is_imported_member BOOLEAN not null DEFAULT TRUE /* Für importierte, bestehende Mitglider muss das TRUE sein, damit ihnen kein Gratis-Zeitschecks zugeteilt werden kann */,
+    is_system_account BOOLEAN not null DEFAULT FALSE /* Für SystemAccounts wie SysAdmin und Sozialkonto muss TRUE verwendet werden */,
     accumulated_hours INTEGER /* Gut-Stunden - kommt aus Gutschrift bei Eintritt, Stundenkauf, Stundenerwerb durch Hilfestellung, ... */,
     role_id BIGINT /* FK id from ROLES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -286,6 +291,67 @@ create table if not exists TRANSACTIONS (
 );
 
 
+/* Foto- oder Bildergalerie */
+create table if not exists IMAGE_GALLERY (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    event_date DATE not null,
+    event_description VARCHAR(250) not null,
+    event_text TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,
+    version INTEGER NOT NULL
+);
+
+
+/* Bild zu einer Galerie */
+create table if not exists IMAGES (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    image_name VARCHAR(250) not null,
+    image_size INTEGER not null,
+    image BYTEA not null,
+    thumbnail BYTEA not null,
+    description VARCHAR(250),
+    is_gallery_cover BOOLEAN not null DEFAULT FALSE /* Das repräsentative Bild für die Galerie das in der Galerieübersicht angezeigt wird */,
+    belongs_to_id BIGINT /* FK id from IMAGE_GALLERY(id) */,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,
+    version INTEGER NOT NULL
+);
+
+
+/* Sammlung von Dokumenten */
+create table if not exists DOCUMENT_GALLERY (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    document_description VARCHAR(250) not null,
+    document_text TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,
+    version INTEGER NOT NULL
+);
+
+
+/* PDF Dokument */
+create table if not exists PDF_DOCUMENT (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    pdf_name VARCHAR(250) not null,
+    pdf_size INTEGER not null,
+    pdf_data BYTEA not null,
+    description VARCHAR(250),
+    belongs_to_id BIGINT /* FK id from DOCUMENT_GALLERY(id) */,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_by_id BIGINT,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,
+    version INTEGER NOT NULL
+);
+
+
 
 /*
  * Generate the foreign key constraints
@@ -322,6 +388,16 @@ alter table ACCOUNTING_ENTRIES
 
 alter table TRANSACTIONS
     add constraint fk_TRANSACTIONS_accounted_by_id foreign key (accounted_by_id) references ACCOUNTING_ENTRIES(id)
+;
+
+
+alter table IMAGES
+    add constraint fk_IMAGES_belongs_to_id foreign key (belongs_to_id) references IMAGE_GALLERY(id)
+;
+
+
+alter table PDF_DOCUMENT
+    add constraint fk_PDF_DOCUMENT_belongs_to_id foreign key (belongs_to_id) references DOCUMENT_GALLERY(id)
 ;
 
 
@@ -395,6 +471,14 @@ drop table if exists TIME_CHEQUES cascade;
 drop table if exists ACCOUNTING_ENTRIES cascade;
 
 drop table if exists TRANSACTIONS cascade;
+
+drop table if exists IMAGE_GALLERY cascade;
+
+drop table if exists IMAGES cascade;
+
+drop table if exists DOCUMENT_GALLERY cascade;
+
+drop table if exists PDF_DOCUMENT cascade;
 
 
 /* end of generated file */

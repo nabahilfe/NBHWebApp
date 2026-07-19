@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import eu.nabahilfe.webapp.NbhConst;
@@ -39,6 +40,7 @@ import eu.nabahilfe.webapp.accountings.TransactionType;
 import eu.nabahilfe.webapp.domaintypes.AmountDomainType;
 import eu.nabahilfe.webapp.domaintypes.AmountDomainValue;
 import eu.nabahilfe.webapp.domaintypes.AmountDomainValueRepository;
+import eu.nabahilfe.webapp.osm.NominatimService;
 import eu.nabahilfe.webapp.security.SecurityUtils;
 import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
 import eu.nabahilfe.webapp.timetransfers.TimeTransferRepository;
@@ -58,18 +60,23 @@ public class MemberController {
     private final MembershipFeeRepository membershipFeeRepository;
     private final AmountDomainValueRepository amountDomainValueRepository;
     private final AccountingRepository accountingRepository;
+    private final NominatimService nominatimService;
+    private final AddressValidationService addressValidationService;
 
     private static final Logger log = LoggerFactory.getLogger(MemberController.class);
 
     public MemberController(MemberRepository memberRepository, RoleRepository roleRepository,
             TimeTransferRepository timeTransferRepository, TimeChequeRepository timeCheckRepository,
             SecurityUtils securityUtils, MembershipFeeRepository membershipFeeRepository,
-            AmountDomainValueRepository amountDomainValueRepository, AccountingRepository accountingRepository) {
+            AmountDomainValueRepository amountDomainValueRepository, AccountingRepository accountingRepository,
+            NominatimService nominatimService, AddressValidationService addressValidationService) {
         this.memberRepository = memberRepository;
         this.roleRepository = roleRepository;
         this.timeTransferRepository = timeTransferRepository;
         this.timeCheckRepository = timeCheckRepository;
         this.securityUtils = securityUtils;
+        this.nominatimService = nominatimService;
+        this.addressValidationService = addressValidationService;
         this.amountDomainValueRepository = amountDomainValueRepository;
         this.membershipFeeRepository = membershipFeeRepository;
         this.accountingRepository = accountingRepository;
@@ -100,7 +107,10 @@ public class MemberController {
     @PreAuthorize("hasRole('USER')")
     @ModelAttribute("roles")
     public List<Role> getAllRoles() {
-        return roleRepository.findAllBy(Sort.by("roleName").ascending());
+        return roleRepository.findAllBy(Sort.by("roleName").ascending())
+                .stream()
+                .filter(r -> !NbhConst.ADMIN_ROLE_NAME.equals(r.getRoleName()))
+                .collect(java.util.stream.Collectors.toList());
     }
 
 
@@ -409,6 +419,8 @@ public class MemberController {
             return "members/detail-member";
         }
 
+        // ensure that no member can be created as system account
+        member.setIsSystemAccount(false);
 
         if (member.getId() == null) {
             member.setMemberNmbr(getNextMemberNumber());
@@ -418,7 +430,13 @@ public class MemberController {
             member.setIsImportedMember(false);
         }
 
+
         log.debug("Saving Member: {}", member);
+
+        member = trimAddressData(member);
+
+        // we use OpenStreetMap Nominatim API to validate and geocode the member address
+        nominatimService.validateAndUpdateMemberAddress(member);
 
         memberRepository.save(member);
 
@@ -428,6 +446,24 @@ public class MemberController {
         log.debug("Member saved: {}", member);
 
         return "redirect:/members/" + member.getId();
+    }
+
+
+    private @Valid Member trimAddressData(@Valid Member member) {
+        if (member.getStreet() != null) {
+            member.setStreet(member.getStreet().trim());
+        }
+        if (member.getNumber() != null) {
+            member.setNumber(member.getNumber().trim());
+        }
+        // TODO: add Stiege und Tür
+        if (member.getZip() != null) {
+            member.setZip(member.getZip().trim());
+        }
+        if (member.getCity() != null) {
+            member.setCity(member.getCity().trim());
+        }
+        return member;
     }
 
 
@@ -447,6 +483,7 @@ public class MemberController {
 
         return null;
     }
+
 
     private Integer getNextMemberNumber() {
         Integer nmbr =  memberRepository.findTopByOrderByMemberNmbrDesc()
@@ -687,6 +724,26 @@ public class MemberController {
         return member.isSozialkonto();
     }
 
+
+    // ------------------
+    // Address validation
+    // ------------------
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @GetMapping("/validate-addresses")
+    public String showValidateAddressesPage(final Model model) {
+        long unvalidatedCount = memberRepository.countActiveUnvalidatedMembers();
+        model.addAttribute("unvalidatedCount", unvalidatedCount);
+        log.debug("Showing address validation page, {} unvalidated addresses found", unvalidatedCount);
+        return "members/validate-addresses";
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @GetMapping("/validate-addresses/stream")
+    public SseEmitter streamValidateAddresses() {
+        log.debug("Starting address validation stream");
+        return addressValidationService.validateAllUnvalidatedAddresses();
+    }
 
 
 }

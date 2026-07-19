@@ -38,52 +38,76 @@
   </form>
 
     <h3>Unsere Vereinsmitglieder</h3>
-    <br/>
 
+    <div class="alert alert-light border small mb-3" role="alert">
+        <span class="bi bi-geo-alt-fill text-success"></span> Adresse ist validiert, kann für die Navigation verwendet werden.
+        <br/>
+        <span class="bi bi-geo-alt-fill text-danger"></span> Adresse nicht validiert, Navigation möglicherweise nicht richtig!
+    </div>
 
     <!-- Display all Member records -->
     <table class="table table-hover table-sm" id="memberTable">
 
-        <thead>
+      <thead>
         <tr>
           <th scope="col" data-col="lastName" data-order="${orderBy.equals("lastName") ? order : ""}">
-                Nachname ${orderBy.equals("lastName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
-          <th scope="col" data-col="firstName" data-order="${orderBy.equals("firstName") ? order : ""}">
-                Vorname ${orderBy.equals("firstName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
-          <th scope="col">Adresse</th>
-          <th scope="col" data-col="role.roleName" data-order="${orderBy.equals("role.roleName") ? order : ""}">
-                Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+                Name ${orderBy.equals("lastName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
+
+          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+              <th scope="col" data-col="isGeoValidated" data-order="${orderBy.equals("isGeoValidated") ? order : ""}">
+                    Adresse ${orderBy.equals("isGeoValidated") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
+          @else
+              <th scope="col">Adresse</th>
+          @endif
+          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+              <th scope="col" data-col="role.roleName" data-order="${orderBy.equals("role.roleName") ? order : ""}">
+                    Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
+          @endif
           <th scope="col" data-col="email" data-order="${orderBy.equals("email") ? order : ""}">
-                E-Mail ${orderBy.equals("email") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+                E-Mail ${orderBy.equals("email") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           <th scope="col">Telefon</th>
 
           @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
               <th scope="col" class="text-end" data-col="accumulatedHours" data-order="${orderBy.equals("accumulatedHours") ? order : ""}">
-                    Guthaben ${orderBy.equals("accumulatedHours") ? (order.equals("asc") ? "↑" : "↓") : ""}</th>
+                    Guthaben ${orderBy.equals("accumulatedHours") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
               <th scope="col" class="text-center" title="Zeitschecks kaufen">Zeitscheck</th>
               <th scope="col" class="text-center" title="Zeitschecks herunterladen">Download</th>
           @endif
         </tr>
-          </thead>
+      </thead>
 
       <tbody class="table-group-divider">
         @for (Member member : memberPage.getContent())
             <tr>
                   @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
-                      <td><a class="text-decoration-none" href="/members/${member.getId()}"><b>${member.getLastName()}</b></a></td>
+                      <td><a class="text-decoration-none" href="/members/${member.getId()}">${member.getLastName()} ${member.getFirstName()}</a></td>
                   @else
-                    <td>${member.getLastName()}</td>
+                    <td>${member.getLastName()} ${member.getFirstName()}</td>
                   @endif
 
-                  <td>${member.getFirstName()}</td>
-
                   <td>
-                      <a href="https://www.google.com/maps/search/?api=1&query=${member.getAddress().replace(" ", "+")}" target="_blank"
-                               rel="noopener noreferrer" class="text-decoration-none" title="In Google Maps öffnen"> ${member.getAddress()}
-                      </a>
+                      @if(member.isSystemMember())
+                          <span class="bi bi-geo-alt-fill" style="visibility:hidden;"></span>
+                          ${member.getAddress()}
+                      @elseif(member.getLatitude() != null && member.getLongitude() != null)
+                        <span class="bi bi-geo-alt-fill text-success" title="Adresse validiert"></span>
+                        <a href="#"
+                           onclick="openMap(${member.getLatitude()}, ${member.getLongitude()}, encodeURIComponent('${member.getAddress()}')); return false;"
+                           class="text-decoration-none"
+                           title="Navigation starten">
+                           ${member.getAddress()}
+                        </a>
+                      @else
+                          <span class="bi bi-geo-alt-fill text-danger" title="Adresse nicht validiert"></span>
+                          <a href="https://www.google.com/maps/search/?api=1&query=${member.getAddress().replace(" ", "+")}" target="_blank"
+                                   rel="noopener noreferrer" class="text-decoration-none" title="In Google Maps öffnen"> ${member.getAddress()}
+                          </a>
+                      @endif
                   </td>
 
-                  <td>${member.getRole() != null ? member.getRole().getRoleName() : ""}</td>
+                  @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                      <td>${member.getRole() != null ? member.getRole().getRoleName() : ""}</td>
+                  @endif
 
                   <td>
                       @if(member.getEmail() != null && !member.getEmail().isBlank())
@@ -157,6 +181,7 @@
 
 
     <script>
+
     document.addEventListener("DOMContentLoaded", () => {
         const form = document.getElementById("sortForm");
         const orderByInput = document.getElementById("orderBy");
@@ -190,7 +215,40 @@
           });
         });
     });
-  </script>
+
+
+    function useAppleMaps() {
+        const ua = navigator.userAgent;
+
+        return /iPhone|iPad|Macintosh/.test(ua) &&
+               ua.includes("Safari") &&
+               !ua.includes("Chrome") &&
+               !ua.includes("CriOS") &&
+               !ua.includes("Edg") &&
+               !ua.includes("OPR") &&
+               !ua.includes("Firefox") &&
+               !ua.includes("FxiOS");
+    };
+
+
+    function openMap(lat, lon, address) {
+        let url;
+
+        //console.log("Address encoded:", address);
+
+        if (useAppleMaps()) {
+            url = "https://maps.apple.com/?ll=" + lat + "," + lon + "&q=" + address;
+        }
+        else {
+            url = "https://www.google.com/maps?q=" + lat + "," + lon;
+        }
+
+        //console.log("URL:", url);
+
+        window.open(url, "_blank", "noopener,noreferrer");
+    };
+
+    </script>
 
 
 `)

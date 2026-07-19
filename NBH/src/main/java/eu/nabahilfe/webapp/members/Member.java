@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -89,10 +90,16 @@ public class Member implements Serializable {
     private LocalDate resignationDate;    // Austrittsdatum aus dem Verein
 
     @Size(max = 80)
-    private String street;    // Adressdaten des Mitglieds
+    private String street;    	// Adressdaten des Mitglieds - Straße
 
     @Size(max = 20)
-    private String number;
+    private String number;    	// Hausunummer
+
+    @Size(max = 20)
+    private String stair;    	// Stiege
+
+    @Size(max = 20)
+    private String door;    	// Tür
 
     @Size(max = 10)
     private String zip;
@@ -100,11 +107,23 @@ public class Member implements Serializable {
     @Size(max = 80)
     private String city;
 
+    private Double latitude;   	// Aus der Adressvalidierung
+
+    private Double longitude;   // Aus der Adressvalidierung
+
+    /** 1 if address is geo-validated (lat + lon both set), 0 otherwise. Used for sorting only. */
+    @Formula("CASE WHEN latitude IS NOT NULL AND longitude IS NOT NULL THEN 1 ELSE 0 END")
+    private Integer isGeoValidated;
+
+
     @Column(nullable = false)
     private Boolean directDebitAuthorization;    // Wenn Einziehungsauftrag vorhanden kann Mitglied sebständig Zeitschecks bestellen
 
     @Column(nullable = false)
     private Boolean isImportedMember;    // Für importierte, bestehende Mitglider muss das TRUE sein, damit ihnen kein Gratis-Zeitschecks zugeteilt werden kann und keine Mitgliedsbeeträge berechnet werden.
+
+    @Column(nullable = false)
+    private Boolean isSystemAccount;    // Für SystemAccounts wie SysAdmin und Sozialkonto muss TRUE verwendet werden
 
     private Integer accumulatedHours;    // Gut-Stunden - kommt aus Gutschrift bei Eintritt, Stundenkauf, Stundenerwerb durch Hilfestellung, ...
 
@@ -134,13 +153,6 @@ public class Member implements Serializable {
     @Column(nullable = false)
     private Integer version;
 
-
-
-
-
-    // --------------------------------------------------
-    // generate setter/getter methodes with Eclipse here
-    // --------------------------------------------------
 
     public Long getId() {
         return id;
@@ -394,14 +406,66 @@ public class Member implements Serializable {
     }
 
 
-    public Boolean getIsImportedMember() {
-        return isImportedMember;
+    public boolean isImportedMember() {
+        return isImportedMember != null && isImportedMember.booleanValue();
     }
 
 
     public void setIsImportedMember(Boolean isImportedMember) {
         this.isImportedMember = isImportedMember;
     }
+
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+
+    public boolean isSystemAccount() {
+        return isSystemAccount != null && isSystemAccount.booleanValue();
+    }
+
+
+    public void setIsSystemAccount(Boolean isSystemAccount) {
+        this.isSystemAccount = isSystemAccount;
+    }
+
+
+    public String getStair() {
+        return stair;
+    }
+
+
+    public void setStair(String stair) {
+        this.stair = stair;
+    }
+
+
+    public String getDoor() {
+        return door;
+    }
+
+
+    public void setDoor(String door) {
+        this.door = door;
+    }
+
+
 
     // --------------------------------
     // add your business methodes here
@@ -415,7 +479,10 @@ public class Member implements Serializable {
 
 
     public String getAddress() {
-        return street + " " + number + ", " + zip + " " + city;
+        if (isSystemAccount()) {
+            return "";
+        }
+        return street + " " + number + (stair != null && !stair.isEmpty() ? "/" + stair : "") + (door != null && !door.isEmpty() ? "/" + door : "") + ", " + zip + " " + city;
     }
 
 
@@ -426,7 +493,7 @@ public class Member implements Serializable {
 
     // default system admin that may not be modified or deleted, is identified by firstName and lastName and role.isAdmin = true
     public boolean isSystemAdmin() {
-        if (NbhConst.ADMIN_ACCOUNT_FIRST_NAME.equalsIgnoreCase(firstName) && NbhConst.ADMIN_ACCOUNT_LAST_NAME.equalsIgnoreCase(lastName)) {
+        if (isSystemAccount() && NbhConst.ADMIN_ACCOUNT_FIRST_NAME.equalsIgnoreCase(firstName) && NbhConst.ADMIN_ACCOUNT_LAST_NAME.equalsIgnoreCase(lastName)) {
             return true;
         }
         return false;
@@ -437,14 +504,14 @@ public class Member implements Serializable {
     }
 
     public boolean isSozialkonto() {
-        if (NbhConst.SOZIALKONTO_FIRST_NAME.equalsIgnoreCase(firstName) && NbhConst.SOZIALKONTO_LAST_NAME.equalsIgnoreCase(lastName)) {
+        if (isSystemAccount() && NbhConst.SOZIALKONTO_FIRST_NAME.equalsIgnoreCase(firstName) && NbhConst.SOZIALKONTO_LAST_NAME.equalsIgnoreCase(lastName)) {
             return true;
         }
         return false;
     }
 
     public boolean isSystemMember() {
-        return isSystemAdmin() || isSozialkonto();
+        return isSystemAccount();
     }
 
 

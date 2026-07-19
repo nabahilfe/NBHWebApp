@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import eu.nabahilfe.webapp.ReleaseNotesService;
+import eu.nabahilfe.webapp.VersionService;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import eu.nabahilfe.webapp.textcontent.TextContent;
@@ -26,11 +28,16 @@ public class HomePageController {
 
     private final TextContentRepository textRepo;
     private final MemberRepository memberRepository;
+    private final VersionService versionService;
+    private final ReleaseNotesService releaseNotesService;
 
 
-    public HomePageController(TextContentRepository textRepo, MemberRepository memberRepository) {
+    public HomePageController(TextContentRepository textRepo, MemberRepository memberRepository,
+            VersionService versionService, ReleaseNotesService releaseNotesService) {
         this.textRepo = textRepo;
         this.memberRepository = memberRepository;
+        this.versionService = versionService;
+        this.releaseNotesService = releaseNotesService;
     }
 
     @GetMapping({"/", "/hompage"})
@@ -64,6 +71,10 @@ public class HomePageController {
 
         List<Member> boardMembers = memberRepository.findBoardMembers();
         model.addAttribute("boardMembers", boardMembers);
+
+        model.addAttribute("version", versionService.getVersion());
+        model.addAttribute("buildTime", versionService.getBuildTime());
+        model.addAttribute("releaseNotesHtml", releaseNotesService.getReleaseNotesHtml());
 
         return "home";
     }

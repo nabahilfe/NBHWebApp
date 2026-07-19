@@ -86,7 +86,7 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     @Query(
         "SELECT m FROM Member m JOIN m.role r " +
         "WHERE r.isBoardMember = true OR r.isTreasurer = true OR r.isSecretary = true " +
-        "ORDER BY m.lastName ASC")
+        "ORDER BY m.role.roleName ASC")
     List<Member> findBoardMembers();
 
 
@@ -98,7 +98,7 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     List<Member> findAuditorMembers();
 
     /** Returns [year, joinedCount] grouped by joiningDate year, ordered ascending */
-    @Query("SELECT YEAR(m.joiningDate), COUNT(m) FROM Member m GROUP BY YEAR(m.joiningDate) ORDER BY YEAR(m.joiningDate) ASC")
+    @Query("SELECT YEAR(m.joiningDate), COUNT(m) FROM Member m WHERE m.isSystemAccount IS FALSE GROUP BY YEAR(m.joiningDate) ORDER BY YEAR(m.joiningDate) ASC")
     List<Object[]> findJoinedCountPerYear();
 
     /** Returns [year, resignedCount] grouped by resignationDate year, ordered ascending */
@@ -106,5 +106,19 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     List<Object[]> findResignedCountPerYear();
 
     List<Member> findByFirstNameIgnoreCaseAndLastNameIgnoreCase(String firstName, String lastName);
+
+    /** IDs of active, non-system members whose address has not yet been geo-validated. */
+    @Query("SELECT m.id FROM Member m " +
+           "WHERE (m.resignationDate IS NULL OR m.resignationDate > CURRENT_DATE) " +
+           "AND (m.isSystemAccount = false OR m.isSystemAccount IS NULL) " +
+           "AND (m.latitude IS NULL OR m.longitude IS NULL)")
+    List<Long> findActiveUnvalidatedMemberIds();
+
+    /** Count of active, non-system members whose address has not yet been geo-validated. */
+    @Query("SELECT COUNT(m) FROM Member m " +
+           "WHERE (m.resignationDate IS NULL OR m.resignationDate > CURRENT_DATE) " +
+           "AND (m.isSystemAccount = false OR m.isSystemAccount IS NULL) " +
+           "AND (m.latitude IS NULL OR m.longitude IS NULL)")
+    long countActiveUnvalidatedMembers();
 
 }

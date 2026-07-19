@@ -58,76 +58,98 @@
             <form action="${member.getId() == null ? "/members" : "/members/" + member.getId()}" method="post">
                 ${csrfHiddenInput}
 
-                <div class="form-group row">
-                    <div class="col">
-                        <div class="card shadow" style="background-color: #ECFEFF;"">
+                <div class="form-group row g-3">
+                    <div class="col-12 col-xl-6">
+                        <div class="card shadow h-100" style="background-color: #ECFEFF;">
                             <div class="card-body">
 
                                 <h5>Persönliche Daten</h5>
 
-                                <label for="salutation" class="col col-form-label">Anrede</label>
-                                <div class="col">
-                                    <select class="form-select" name="salutation" id="salutation">
-                                        <option value="">Auswählen</option>
-                                        @for(Salutation sal : Salutation.values())
-                                            <option value="${sal.name()}" selected="${member.getSalutation() != null && member.getSalutation().equals(sal.name())}">
-                                                ${sal.name()}
-                                            </option>
-                                        @endfor
-                                    </select>
+                                <div class="row g-2 mb-1">
+                                    <div class="col-6">
+                                        <label for="salutation" class="form-label">Anrede</label>
+                                        <select class="form-select" name="salutation" id="salutation">
+                                            <option value="">Auswählen</option>
+                                            @for(Salutation sal : Salutation.values())
+                                                <option value="${sal.name()}" selected="${member.getSalutation() != null && member.getSalutation().equals(sal.name())}">
+                                                    ${sal.name()}
+                                                </option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="title" class="form-label">Titel</label>
+                                        <input type="text" class="form-control" name="title" id="title" value="${member.getTitle()}">
+                                    </div>
                                 </div>
 
-                                <label for="title" class="col col-form-label">Titel</label>
-                                <div class="col">
-                                    <input type="text" class="form-control" name="title" id="title" value="${member.getTitle()}">
+                                <div class="row g-2 mb-1">
+                                    <div class="col-6">
+                                        <label for="firstName" class="form-label">Vorname<span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="firstName" id="firstName" value="${member.getFirstName()}" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="lastName" class="form-label">Nachname<span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="lastName" id="lastName" value="${member.getLastName()}" required>
+                                    </div>
                                 </div>
 
-                                <label for="firstName" class="col col-form-label">Vorname<span class="text-danger">*</span></label>
-                                <div class="col">
-                                    <input type="text" class="form-control" name="firstName" id="firstName" value="${member.getFirstName()}" required>
+                                <div class="row g-2 mb-1">
+                                    <div class="col-4">
+                                        <label for="birthdate" class="form-label">Geburtsdatum<span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" name="birthdate" id="birthdate" value="${formatISO(member.getBirthdate())}" required>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="joiningDate" class="form-label">Beitrittsdatum<span class="text-danger">*</span></label>
+                                        @if(member.getId() != null)
+                                            <input type="date" class="form-control" name="joiningDate" id="joiningDate"
+                                                   value="${member.getJoiningDate() != null ? formatISO(member.getJoiningDate()) : ""}" readonly>
+                                        @else
+                                            <input type="date" class="form-control" name="joiningDate" id="joiningDate"
+                                                   value="${member.getJoiningDate() != null ? formatISO(member.getJoiningDate()) : ""}"
+                                                   min="${joiningDateMinCalculated}">
+                                            <div class="form-text">Maximal 2 Monate in der Vergangenheit</div>
+                                        @endif
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="resignationDate" class="form-label">Austrittsdatum</label>
+                                        <input type="date" class="form-control" name="resignationDate" id="resignationDate"
+                                               value="${member.getResignationDate() != null ? formatISO(member.getResignationDate()) : ""}"
+                                               max="${resignationDateMaxCalculated}">
+                                        <div class="form-text">Maximal 2 Monate in der Zukunft</div>
+                                    </div>
                                 </div>
 
-                                <label for="lastName" class="col col-form-label">Nachname<span class="text-danger">*</span></label>
-                                <div class="col">
-                                    <input type="text" class="form-control" name="lastName" id="lastName" value="${member.getLastName()}" required>
-                                </div>
+                                <div class="row g-2 mb-1">
+                                    <div class="col-4">
+                                        <label for="role" class="form-label">Rolle</label>
+                                        <select class="form-select" name="role" id="role">
+                                            <option value=""></option>
+                                            @for(Role role : roles)
+                                                <option value="${role.getId()}" selected="${member.getRole() != null && member.getRole().getId() == role.getId()}">
+                                                    ${role.getRoleName()}
+                                                </option>
+                                            @endfor
+                                        </select>
+                                        <div class="form-text">Leer lassen für einfache Mitglieder</div>
+                                    </div>
 
-                                <label for="birthdate" class="col col-form-label">Geburtsdatum<span class="text-danger">*</span></label>
-                                <div class="col">
-                                    <input type="date" class="form-control" name="birthdate" id="birthdate" value="${formatISO(member.getBirthdate())}" required>
-                                </div>
+                                    <div class="col-2">
+                                    </div>
 
-                                <label for="joiningDate" class="col col-form-label">Beitrittsdatum</label>
-                                <div class="col">
-                                    @if(member.getId() != null)
-                                        <input type="date" class="form-control" name="joiningDate" id="joiningDate"
-                                               value="${member.getJoiningDate() != null ? formatISO(member.getJoiningDate()) : ""}" readonly>
-                                    @else
-                                        <input type="date" class="form-control" name="joiningDate" id="joiningDate"
-                                               value="${member.getJoiningDate() != null ? formatISO(member.getJoiningDate()) : ""}"
-                                               min="${joiningDateMinCalculated}">
-                                        <div class="form-text">Maximal 2 Monate in der Vergangenheit (bis zum 1. des Monats).</div>
-                                    @endif
-                                </div>
+                                    <div class="form-check col-6 d-flex flex-column justify-content-end pb-1">
+                                        <div>
+                                            <input type="hidden" name="_directDebitAuthorization" value="on"/>
+                                            <input class="form-check-input" type="checkbox"
+                                                id="directDebitAuthorization" name="directDebitAuthorization"
+                                                checked="${member.getDirectDebitAuthorization() != null && member.getDirectDebitAuthorization()}">
+                                            <label class="form-check-label" for="directDebitAuthorization">
+                                                <strong>Einziehungsauftrag erteilt</strong>
+                                            </label>
+                                            <div class="form-text">Auswählen wenn ein Einziehungsauftrag erteilt wurde</div>
+                                        </div>
+                                    </div>
 
-                                <label for="resignationDate" class="col col-form-label">Austrittsdatum</label>
-                                <div class="col">
-                                    <input type="date" class="form-control" name="resignationDate" id="resignationDate"
-                                           value="${member.getResignationDate() != null ? formatISO(member.getResignationDate()) : ""}"
-                                           max="${resignationDateMaxCalculated}">
-                                    <div class="form-text">Maximal 2 Monate in der Zukunft (bis zum Monatsende).</div>
-                                </div>
-
-                                <label for="role" class="col col-form-label">Rolle</label>
-                                <div class="col">
-                                    <select class="form-select" name="role" id="role">
-                                        <option value=""></option>
-                                        @for(Role role : roles)
-                                            <option value="${role.getId()}" selected="${member.getRole() != null && member.getRole().getId() == role.getId()}">
-                                                ${role.getRoleName()}
-                                            </option>
-                                        @endfor
-                                    </select>
                                 </div>
 
                                 @if(member.getId() != null)
@@ -141,67 +163,80 @@
                         </div>
                     </div>
 
-                    <div class="col">
-                        <div class="card shadow" style="background-color: #ECFEFF;"">
+                    <div class="col-12 col-xl-6">
+                        <div class="card shadow h-100" style="background-color: #ECFEFF;">
                             <div class="card-body">
 
                                 <h5>Kontaktdaten & Adresse</h5>
 
-                                <label for="email" class="col col-form-label">E-Mail</label>
+                                <div class="row g-2 mb-1">
+                                    <div class="col-8">
+                                        <label for="email" class="form-label">E-Mail</label>
+                                        <input type="email" class="form-control" name="email" id="email"
+                                               value="${member.getEmail() != null ? member.getEmail() : ""}"
+                                               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                                               title="Bitte eine gültige E-Mail-Adresse eingeben (z.B. name@beispiel.de).">
+                                        <div class="form-text">Format: name@domain.tld</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="phoneNumber" class="form-label">Telefon</label>
+                                        <input type="tel" class="form-control" name="phoneNumber" id="phoneNumber"
+                                               value="${member.getPhoneNumber() != null ? member.getPhoneNumber() : ""}"
+                                               pattern="(\+[1-9][0-9]*( [1-9][0-9]*( [0-9]+)*)?|0[0-9 ]*)"
+                                               title="Telefonnummer muss mit +Ländervorwahl (ohne 0, z.B. +49...) oder mit 0 beginnen und darf nur Ziffern und Leerzeichen enthalten.">
+                                        <div class="form-text">Beginnt mit + oder 0</div>
+                                    </div>
+                                </div>
+
+                                <label for="street" class="col col-form-label"><strong>Adresse</strong>
+                                    @if(member.getLatitude() != null && member.getLongitude() != null)
+                                        <span class="badge bg-success bi-geo-alt-fill"> gefunden</span>
+                                    @else
+                                        <span class="badge bg-danger bi-geo-alt"> nicht gefunden</span>
+                                    @endif
+                                </label>
+
                                 <div class="col">
-                                    <input type="email" class="form-control" name="email" id="email"
-                                           value="${member.getEmail() != null ? member.getEmail() : ""}"
-                                           pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
-                                           title="Bitte eine gültige E-Mail-Adresse eingeben (z.B. name@beispiel.de).">
-                                    <div class="form-text">Format: name@domain.tld</div>
+                                    <div class="border rounded p-3 mb-1">
+                                        <div class="col-6">
+                                            <label for="institution" class="form-label">Institution</label>
+                                            <input type="text" class="form-control" name="institution" id="institut" value="${member.getInstitution()}">
+                                        </div>
+
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <label for="street" class="form-label pt-0">Straße<span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="street" id="street" value="${member.getStreet()}" required>
+                                            </div>
+                                            <div class="col-2">
+                                                <label for="number" class="form-label">Nummer<span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="number" id="number" value="${member.getNumber()}" required>
+                                            </div>
+
+
+                                            <div class="col-2">
+                                                <label for="stair" class="form-label">Stiege</label>
+                                                <input type="text" class="form-control" name="stair" id="stair" value="${member.getStair() != null ? member.getStair() : ""}">
+                                            </div>
+
+                                            <div class="col-2">
+                                                <label for="door" class="form-label">Tür</label>
+                                                <input type="text" class="form-control" name="door" id="door" value="${member.getDoor() != null ? member.getDoor() : ""}">
+                                            </div>
+
+
+
+                                            <div class="col-4">
+                                                <label for="zip" class="form-label">PLZ<span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="zip" id="zip" value="${member.getZip()}" required>
+                                            </div>
+                                            <div class="col-8">
+                                                <label for="city" class="form-label">Ort<span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="city" id="city" value="${member.getCity()}" required>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-
-                                <label for="phoneNumber" class="col col-form-label">Telefon</label>
-                                <div class="col">
-                                    <input type="tel" class="form-control" name="phoneNumber" id="phoneNumber"
-                                           value="${member.getPhoneNumber() != null ? member.getPhoneNumber() : ""}"
-                                           pattern="(\+[1-9][0-9]*( [1-9][0-9]*( [0-9]+)*)?|0[0-9 ]*)"
-                                           title="Telefonnummer muss mit +Ländervorwahl (ohne 0, z.B. +49...) oder mit 0 beginnen und darf nur Ziffern und Leerzeichen enthalten.">
-                                    <div class="form-text">Format: beginnt mit + (dann keine 0 für die Vorwahl) oder 0, nur Ziffern und Leerzeichen erlaubt.</div>
-                                </div>
-
-                                <label for="institution" class="col col-form-label">Institution</label>
-                                <div class="col">
-                                    <input type="text" class="form-control" name="institution" id="institut" value="${member.getInstitution()}">
-                                </div>
-
-                                <label for="street" class="col col-form-label">Straße<span class="text-danger">*</span></label>
-                                <div class="col">
-                                    <input type="text" class="form-control" name="street" id="street" value="${member.getStreet()}" required>
-                                </div>
-
-                                <label for="number" class="col col-form-label">Nummer<span class="text-danger">*</span></label>
-                                <div class="col">
-                                    <input type="text" class="form-control" name="number" id="number" value="${member.getNumber()}" required>
-                                </div>
-
-                                <label for="zip" class="col col-form-label">PLZ<span class="text-danger">*</span></label>
-                                <div class="col">
-                                    <input type="text" class="form-control" name="zip" id="zip" value="${member.getZip()}" required>
-                                </div>
-
-                                <label for="city" class="col col-form-label">Ort<span class="text-danger">*</span></label>
-                                <div class="col">
-                                    <input type="text" class="form-control" name="city" id="city" value="${member.getCity()}" required>
-                                </div>
-
-                                <br/>
-
-                                <div class="form-check">
-                                    <input type="hidden" name="_directDebitAuthorization" value="on"/>
-                                    <input class="form-check-input" type="checkbox"
-                                        id="directDebitAuthorization" name="directDebitAuthorization"
-                                        checked="${member.getDirectDebitAuthorization() != null && member.getDirectDebitAuthorization()}">
-                                    <label class="form-check-label" for="directDebitAuthorization">
-                                      Einziehungsauftrag erteilt
-                                    </label>
-                                </div>
-
 
                             </div>
                         </div>
@@ -253,7 +288,7 @@
                         Das Sozialkonto kann nicht bearbeitet oder gelöscht werden.
                     </div>
                 @else
-                    @if(numberOfTimecheques != null && numberOfTimecheques == 0 && member.getIsImportedMember() == false)
+                    @if(numberOfTimecheques != null && numberOfTimecheques == 0 && member.isImportedMember() == false)
                         <div class="alert alert-info py-2 px-3" role="alert">
                             Dieses Mitglied hat noch keine Zeitschecks. Erfasse gleich den ersten Gratis-Zeitscheck über den Button unten.
                         </div>
