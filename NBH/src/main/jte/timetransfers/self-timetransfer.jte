@@ -46,10 +46,25 @@
                 <div class="card shadow" style="background-color: #ECFEFF;">
                   <div class="card-body">
 
-                    <h4 class="card-title text-primary">Zeitschecks übergeben</h4>
+                    <h4 class="card-title text-primary">Zeitscheck übergeben</h4>
                     Mein aktuelles Zeitguthaben: <strong> ${ttf.getAccumulatedHours()} h</strong>
                     <hr/>
-                    <p class="card-text">Ich - <strong>${ctxt.getFullName()}</strong> - übergebe einen Zeitscheck</p>
+
+                    <!--
+                      Payee input (userTo):
+                      - userToName: visible autocomplete input
+                      - userToId: hidden selected user id for submission
+                      - userToResults: UL showing matching search results
+                    -->
+                    <label for="userToName" class="col-form-label"><strong>Empfänger des Zeitschecks</strong></label>
+                    <input type="text" id="userToName" class="form-control" placeholder="Zeitscheck an..."
+                        autocomplete="off" value="${ttf == null ? "" : ttf.getUserToName()}">
+
+                    <input type="hidden" name="userToId" id="userToId"
+                        value="${ttf == null ? "" : ttf.getUserToId()}">
+
+                    <ul id="userToResults" class="results list-group"></ul>
+
 
                     <!--
                       Payer input (userFrom): visible text input for autocomplete search
@@ -68,63 +83,47 @@
                             @for(Offer offer : offers)
                                 @if((ttf != null && ttf.getOfferId() != null) && ttf.getOfferId().equals(offer.getId().toString()))
                                     <option value="${offer.getId()}" selected>
-                                        ${offer.getCode()} - ${offer.getDescription()}
+                                        ${offer.getCode()} ${offer.getDescription()}
                                     </option>
                                 @else
                                     <option value="${offer.getId()}">
-                                        ${offer.getCode()} - ${offer.getDescription()}
+                                        ${offer.getCode()} ${offer.getDescription()}
                                     </option>
                                 @endif
                             @endfor
                         </select>
                     </div>
 
-                    <!-- Service date: required date input (yyyy-mm-dd). Prefilled when editing. -->
-                    <label for="serviceDate" class="col-form-label">Datum</label>
-                    <div class="col-sm-10">
-                          <input type="date" class="form-control" name="serviceDate" id="serviceDate"
-                              value="${ttf == null ? "" : formatISO(ttf.getServiceDate())}" required>
-                    </div>
-
-                    <!-- Hours selector: choose 1..5 hours. Preselect when ttf provided. -->
-                    <label for="stunden" class="col-form-label">Anzahl Stunden</label>
-                    <div >
-                        <select class="form-select" name="hoursSelected" id="hoursSelect">
-                            @for(int i = 1; i <= 5; i++)
-                                @if((ttf != null && ttf.getHoursSelected() != null) && ttf.getHoursSelected().equals(String.valueOf(i)))
-                                    <option value="${i}" selected>@if(i == 1) 1 Stunde @else ${i} Stunden @endif</option>
-                                @else
-                                    <option value="${i}">@if(i == 1) 1 Stunde @else ${i} Stunden @endif</option>
-                                @endif
-                            @endfor
-                        </select>
-                    </div>
-
-                    <hr/>
-
                     <!-- Optional note/description -->
-                    <label for="note" class="col-form-label">Beschreibung</label>
-                    <div class="col-sm-10">
-                        <textarea class="form-control" id="note" name="note" rows="2" placeholder="Beschreibung (optional)">${ttf == null ? "" : ttf.getNote()}</textarea>
+                    <div class="mt-2">
+                        <textarea class="form-control" id="note" name="note" rows="1" placeholder="Beschreibung (optional)">${ttf == null ? "" : ttf.getNote()}</textarea>
                     </div>
 
-                    <hr/>
 
-                    <p class="card-text text-success"><strong>Empfänger des Zeitschecks</strong></p>
 
-                    <!--
-                      Payee input (userTo):
-                      - userToName: visible autocomplete input
-                      - userToId: hidden selected user id for submission
-                      - userToResults: UL showing matching search results
-                    -->
-                    <input type="text" id="userToName" class="form-control" placeholder="Zeitscheck an..."
-                        autocomplete="off" value="${ttf == null ? "" : ttf.getUserToName()}">
+                    <div class="row g-2 mb-1">
+                        <div class="col-6">
+                            <!-- Service date: required date input (yyyy-mm-dd). Prefilled when editing. -->
+                            <label for="serviceDate" class="col-form-label">Datum</label>
+                            <input type="date" class="form-control" name="serviceDate" id="serviceDate"
+                                  value="${ttf == null ? "" : formatISO(ttf.getServiceDate())}" required>
+                        </div>
 
-                    <input type="hidden" name="userToId" id="userToId"
-                        value="${ttf == null ? "" : ttf.getUserToId()}">
+                        <div class="col-6">
+                            <!-- Hours selector: choose 1..5 hours. Preselect when ttf provided. -->
+                            <label for="stunden" class="col-form-label">Anzahl Stunden</label>
+                            <select class="form-select" name="hoursSelected" id="hoursSelect">
+                                @for(int i = 1; i <= 5; i++)
+                                    @if((ttf != null && ttf.getHoursSelected() != null) && ttf.getHoursSelected().equals(String.valueOf(i)))
+                                        <option value="${i}" selected>@if(i == 1) 1 Stunde @else ${i} Stunden @endif</option>
+                                    @else
+                                        <option value="${i}">@if(i == 1) 1 Stunde @else ${i} Stunden @endif</option>
+                                    @endif
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
 
-                    <ul id="userToResults" class="results list-group"></ul>
                   </div>
 
                 </div>
