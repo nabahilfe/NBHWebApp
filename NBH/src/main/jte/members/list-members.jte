@@ -40,9 +40,8 @@
     <h3>Unsere Vereinsmitglieder</h3>
 
     <div class="alert alert-light border small mb-3" role="alert">
-        <span class="bi bi-geo-alt-fill text-success"></span> Adresse ist validiert, kann für die Navigation verwendet werden.
-        <br/>
-        <span class="bi bi-geo-alt-fill text-danger"></span> Adresse nicht validiert, Navigation möglicherweise nicht richtig!
+        <span class="bi bi-geo-alt-fill text-success"></span>Adresse validiert. &nbsp;
+        <span class="bi bi-geo-alt-fill text-danger"></span>Adresse ev. nicht korrekt!
     </div>
 
     <!-- Display all Member records -->
