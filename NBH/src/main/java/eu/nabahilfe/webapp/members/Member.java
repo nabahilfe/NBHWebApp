@@ -497,6 +497,14 @@ public class Member implements Serializable {
     }
 
 
+    public String getFullStreetAddress() {
+        String fullStreetAddress = street + " " + number;
+        if (stair != null && !stair.isEmpty()) fullStreetAddress += "/" + stair;
+        if (door != null && !door.isEmpty()) fullStreetAddress += "/" + door;
+        return fullStreetAddress;
+    }
+
+
     // default system admin that may not be modified or deleted, is identified by firstName and lastName and role.isAdmin = true
     public boolean isSystemAdmin() {
         if (isSystemAccount() && NbhConst.ADMIN_ACCOUNT_FIRST_NAME.equalsIgnoreCase(firstName) && NbhConst.ADMIN_ACCOUNT_LAST_NAME.equalsIgnoreCase(lastName)) {
