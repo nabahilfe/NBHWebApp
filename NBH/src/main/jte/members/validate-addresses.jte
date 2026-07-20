@@ -4,6 +4,7 @@
 -->
 
 @param long unvalidatedCount = 0
+@param long totalActiveCount = 0
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
@@ -21,11 +22,14 @@
 
         <p id="initialInfo">
             Es wurden <b id="unvalidatedCount">${unvalidatedCount}</b> Mitglieder mit nicht validierter Adresse gefunden
-            (Latitude/Longitude nicht gesetzt).
+            (Latitude/Longitude nicht gesetzt), von insgesamt <b>${totalActiveCount}</b> aktiven Mitgliedern.
         </p>
 
         <button type="button" id="startBtn" class="btn btn-success bi-geo-alt-fill"
                 disabled="${unvalidatedCount == 0}"> Adressen validieren</button>
+
+        <button type="button" id="startAllBtn" class="btn btn-warning bi-arrow-repeat"
+                disabled="${totalActiveCount == 0}"> Alle Adressen neu validieren</button>
 
         <div id="progressArea" class="mt-4" style="display:none;">
 
@@ -56,6 +60,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const startBtn = document.getElementById("startBtn");
+            const startAllBtn = document.getElementById("startAllBtn");
             const progressArea = document.getElementById("progressArea");
             const summaryArea = document.getElementById("summaryArea");
             const progressBar = document.getElementById("progressBar");
@@ -74,13 +79,14 @@
                 }
             });
 
-            startBtn.addEventListener("click", () => {
+            function startValidation(streamUrl) {
                 startBtn.disabled = true;
+                startAllBtn.disabled = true;
                 validationInProgress = true;
                 progressArea.style.display = "block";
                 summaryArea.style.display = "none";
 
-                const eventSource = new EventSource("/members/validate-addresses/stream");
+                const eventSource = new EventSource(streamUrl);
 
                 eventSource.addEventListener("progress", (event) => {
                     const data = JSON.parse(event.data);
@@ -105,6 +111,8 @@
 
                     validationInProgress = false;
                     summaryArea.style.display = "block";
+                    summaryArea.classList.remove("alert-danger");
+                    summaryArea.classList.add("alert-success");
                     summaryArea.textContent = "Fertig! " + data.processed + " Adressen verarbeitet – "
                             + data.successCount + " erfolgreich validiert, "
                             + data.failedCount + " nicht validiert.";
@@ -120,6 +128,16 @@
                     summaryArea.textContent = "Die Verbindung wurde unterbrochen. Bitte Seite neu laden und erneut versuchen.";
                     eventSource.close();
                 };
+            }
+
+            startBtn.addEventListener("click", () => {
+                startValidation("/members/validate-addresses/stream");
+            });
+
+            startAllBtn.addEventListener("click", () => {
+                if (confirm("Sollen wirklich ALLE aktiven Adressen neu validiert werden, auch die bereits validierten? Dies kann je nach Mitgliederanzahl einige Zeit dauern.")) {
+                    startValidation("/members/validate-addresses/stream-all");
+                }
             });
         });
     </script>
