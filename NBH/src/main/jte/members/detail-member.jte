@@ -200,9 +200,11 @@
                                 @if(geoValidationDisplayName != null && !geoValidationDisplayName.isBlank())
                                     <div class="alert alert-warning small py-1 px-2 mb-2" role="alert">
                                         <i class="bi bi-exclamation-triangle-fill"></i>
-                                        Die eingegebene Adresse konnte nicht eindeutig zugeordnet werden.
-                                        OpenStreetMap fand stattdessen:<br>
-                                        <strong>${geoValidationDisplayName}</strong>
+                                        <strong>Die eingegebene Adresse konnte nicht eindeutig zugeordnet werden.
+                                        OpenStreetMap fand stattdessen:</strong><br>
+                                        @for(String line : geoValidationDisplayName.split("\n"))
+                                            ${line}<br>
+                                        @endfor
                                     </div>
                                 @endif
 

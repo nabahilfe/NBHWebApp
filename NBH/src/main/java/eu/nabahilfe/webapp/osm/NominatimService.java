@@ -1,7 +1,6 @@
 package eu.nabahilfe.webapp.osm;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,7 @@ public class NominatimService {
     }
 
 
-    public Optional<NominatimResult> localizeAddress(Address address) {
+    public List<NominatimResult> localizeAddress(Address address) {
 
         List<NominatimResult> result = restClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -35,17 +34,11 @@ public class NominatimService {
                         .queryParam("postalcode", address.postalCode())
                         .queryParam("country", address.country())
                         .queryParam("format", "jsonv2")
-                        .queryParam("limit", "1")
                         .build())
                 .retrieve()
                 .body(new ParameterizedTypeReference<List<NominatimResult>>() {});
 
-        if (result == null || result.isEmpty()) {
-            return Optional.empty();
-        }
-
-        var location = result.getFirst();
-        return Optional.of(location);
+        return result == null ? List.of() : result;
     }
 
 
@@ -62,44 +55,52 @@ public class NominatimService {
 
         // TODO: Country should be a field in the Member entity, not hardcoded to "Österreich"
         Address address = new Address(m.getStreet(), m.getNumber(), m.getZip(), m.getCity(), "Österreich");
-        Optional<NominatimResult> result = localizeAddress(address);
+        List<NominatimResult> results = localizeAddress(address);
 
-        if (result.isPresent()) {
-            NominatimResult loc = result.get();
+        if (!results.isEmpty()) {
 
-            // we need to check if we have the real address - displayName must match number and street, zip and city must be contained
-            // otherwise we have a wrong address (e.g. if the number is not found, it will return the city center)
+            List<String> displayNames = new java.util.ArrayList<>();
 
-            String displayNameUPPER = loc.displayName().toUpperCase();
-            List<String> displayNameParts = List.of(displayNameUPPER.split(","));
+            for (NominatimResult loc : results) {
 
-            // Check if the displayNameParts contains the number, street, zip, and city
-            // Number must be an exact match of the first or second part of the displayNameParts
+                // we need to check if we have the real address - displayName must match number and street, zip and city must be contained
+                // otherwise we have a wrong address (e.g. if the number is not found, it will return the city center)
 
-            boolean matchesNumber = displayNameParts.stream().anyMatch(part -> part.trim().equalsIgnoreCase(m.getNumber()));
-            boolean matchesStreet = displayNameParts.stream().anyMatch(part -> part.trim().equalsIgnoreCase(m.getStreet().toUpperCase()));
-            boolean matchesZip = displayNameParts.stream().anyMatch(part -> part.trim().contains(m.getZip().toUpperCase()));
-            boolean matchesCity = displayNameParts.stream().anyMatch(part -> part.trim().contains(m.getCity().toUpperCase()));
+                displayNames.add(loc.displayName());
 
-            if (matchesNumber && matchesStreet && matchesZip && matchesCity) {
-                // log.info("Address validated and geocoded: {} -> lat: {}, lon: {}", address, loc.getLatitude(), loc.getLongitude());
-                m.setLatitude(loc.getLatitude());
-                m.setLongitude(loc.getLongitude());
-                return null;
-            }
-            else {
+                String displayNameUPPER = loc.displayName().toUpperCase();
+                List<String> displayNameParts = List.of(displayNameUPPER.split(","));
+
+                // Check if the displayNameParts contains the number, street, zip, and city
+                // Number must be an exact match of the first or second part of the displayNameParts
+
+                boolean matchesNumber = displayNameParts.stream().anyMatch(part -> part.trim().equalsIgnoreCase(m.getNumber()));
+                boolean matchesStreet = displayNameParts.stream().anyMatch(part -> part.trim().equalsIgnoreCase(m.getStreet().toUpperCase()));
+                boolean matchesZip = displayNameParts.stream().anyMatch(part -> part.trim().contains(m.getZip().toUpperCase()));
+                boolean matchesCity = displayNameParts.stream().anyMatch(part -> part.trim().contains(m.getCity().toUpperCase()));
+
+                if (matchesNumber && matchesStreet && matchesZip && matchesCity) {
+                    // log.info("Address validated and geocoded: {} -> lat: {}, lon: {}", address, loc.getLatitude(), loc.getLongitude());
+                    m.setLatitude(loc.getLatitude());
+                    m.setLongitude(loc.getLongitude());
+                    return null;
+                }
+
                 log.info("--------------- Address validation does not match --------------------");
                 log.info("DisplayName: {}", loc.displayName());
-                log.warn("Address could not be validated: {} -> geocoded to {}, which does not match the input address", address, loc.displayName());
                 log.info("number match: {}", matchesNumber);
                 log.info("street match: {}", matchesStreet);
                 log.info("zip match:    {}", matchesZip);
                 log.info("city match:   {}", matchesCity);
-
-                m.setLatitude(null);
-                m.setLongitude(null);
-                return loc.displayName();
             }
+
+            // none of the results matched the input address
+            log.warn("Address could not be validated: {} -> {} geocoded result(s) found, none of them match the input address",
+                    address, results.size());
+
+            m.setLatitude(null);
+            m.setLongitude(null);
+            return String.join("\n", displayNames);
         }
         else {
             log.info("--------------- Address validation failed ---------------------");

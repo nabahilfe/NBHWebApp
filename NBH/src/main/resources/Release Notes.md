@@ -1,5 +1,6 @@
 ### Version 0.6.1
-- Kompaktere Panels für **Zeitschecks übergeben** und **Meine Daten** für mehr Übersicht am SmartPhone
+- Optimierung **Zeitscheck übergeben** und **Meine Daten** für SmartPhone
+- Verbesserung der Adress-Validierung mit Hinweisen auf mögliche Korrekturen
 
 ### Version 0.6.0
 - Validierung von Adressen (Überprüfung erfolgt mit OpenStreetMap Nominatim API) <!-- ACHTUNG: DB Erweiterung notwendig, siehe https://github.com/nabahilfe/NBHWebApp/issues/142 -->
