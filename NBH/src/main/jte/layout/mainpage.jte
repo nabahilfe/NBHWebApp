@@ -211,9 +211,11 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/domaintypes">Gebühren-Sätze</a></li>
-                                    <!--li><a class="dropdown-item" href="#">...</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#">...</a></li-->
+                                    <!--li><a class="dropdown-item" href="#">...</a></li>-->
+                                    @if (ctxt != null && ctxt.hasAnyRole("ADMIN"))
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="/email/sendTestEmail">Test E-Mail senden</a></li>
+                                    @endif
                                 </ul>
                             </li>
                         @endif
