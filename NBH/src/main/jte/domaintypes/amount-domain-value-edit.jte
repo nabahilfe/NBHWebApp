@@ -30,10 +30,10 @@
     <div class="container d-flex justify-content-center">
         <div class="row">
             <div class="col-auto">
-                <div class="card shadow" style="min-width: 400px;">
+                <div class="card shadow" style="background-color: #ECFEFF; min-width: 400px;">
                     <div class="card-body">
 
-                        <h4 class="card-title text-primary">
+                        <h4 class="card-title">
                             @if(amountDomainValue.getId() == null)
                                 Neuen Gebühren-Satz erstellen
                             @else

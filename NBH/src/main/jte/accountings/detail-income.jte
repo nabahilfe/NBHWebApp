@@ -16,7 +16,6 @@
     content = @`
 
     <h3>Einnahme erfassen</h3>
-    <br/>
 
     <div class="row">
         <div class="col-lg-7">

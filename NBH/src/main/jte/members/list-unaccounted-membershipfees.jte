@@ -41,8 +41,8 @@
 
     <!-- Display all MembershipFee records -->
 
-    <table class="table table-hover table-sm" id="memberTable">
-        <thead>
+    <table class="table table-bordered table-hover table-sm shadow h-100" id="memberTable">
+        <thead class="table-light">
             <tr>
                 <th scope="col">Erstellungsdatum</th>
                 <th scope="col">erstellt von</th>
@@ -53,7 +53,7 @@
             </tr>
         </thead>
 
-        <tbody class="table-group-divider">
+        <tbody>
             @for (MembershipFee mf : membershipFees)
                 <form method="post" action="/accountings/new-accountable">
                     ${csrfHiddenInput}

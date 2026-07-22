@@ -179,6 +179,40 @@ public class TimeTransferController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
+    @GetMapping("/duplicate")
+    String duplicateTimeTransfer(final Model model, @RequestParam Long id) {
+
+        TimeTransfer tt = timeTransferRepository.findById(id).orElse(null);
+        if (tt == null) {
+            model.addAttribute("status", 404);
+            model.addAttribute("error", "Not Found");
+            model.addAttribute("message", "Zeitübertragung mit ID " + id + " nicht gefunden.");
+            return "error";
+        }
+
+        // Pre-fill the create form with all data from the existing TimeTransfer,
+        // except the service date, which must be entered again.
+        TimeTransferForm ttf = new TimeTransferForm();
+        ttf.setFromself("false");
+        ttf.setUserFromId(tt.getFromMember().getId());
+        ttf.setUserFromName(tt.getFromMember().getNameAndAddress());
+        ttf.setUserToId(tt.getToMember().getId());
+        ttf.setUserToName(tt.getToMember().getNameAndAddress());
+        ttf.setOfferId(tt.getOffer().getId());
+        ttf.setHoursSelected(tt.getHours() == null ? null : String.valueOf(tt.getHours()));
+        ttf.setNote(tt.getNote());
+        // serviceDate intentionally left empty
+
+        log.debug("Duplicating TimeTransfer {} into new form: {}", id, ttf);
+
+        model.addAttribute("offers", offerRepository.findAllByOrderByCodeAsc());
+        model.addAttribute("ttf", ttf);
+
+        return "timetransfers/create-timetransfer";
+    }
+
+
     // --------------------
     // SAVE (process form)
     // --------------------

@@ -45,9 +45,9 @@
     </div>
 
     <!-- Display all Member records -->
-    <table class="table table-hover table-sm" id="memberTable">
+    <table class="table table-bordered table-hover table-sm shadow h-100" id="memberTable">
 
-      <thead>
+      <thead class="table-light">
         <tr>
           <th scope="col" data-col="lastName" data-order="${orderBy.equals("lastName") ? order : ""}">
                 Name ${orderBy.equals("lastName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
@@ -75,7 +75,7 @@
         </tr>
       </thead>
 
-      <tbody class="table-group-divider">
+      <tbody>
         @for (Member member : memberPage.getContent())
             <tr>
                   @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))

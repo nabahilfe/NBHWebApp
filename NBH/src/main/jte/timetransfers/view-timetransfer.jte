@@ -34,11 +34,11 @@
     <br/>
 
     <div class="row">
-        <div class="col-sm-6">
-            <div class="card">
-                <div class="card-body bg-success bg-opacity-10">
+          <div class="col-sm-6 mb-2">
+            <div class="card shadow h-100" style="background-color: #ECFEFF;">
+                <div class="card-body">
 
-                    <h5 class="card-title text-primary">Zeitscheck von</h5>
+                    <h5>Zeitscheck von</h5>
                     <p class="card-text text-success">Gibt Zeitscheck ab</p>
 
                     <input type="text" class="form-control" readonly value="${tt.getFromMember().getNameAndAddress()}">
@@ -59,19 +59,19 @@
                     <input type="text" class="form-control" readonly value="${tt.getHours()} h">
 
                     <br/>
-                    <form action="/timetransfers/new" method="get">
-                        <input type="hidden" name="fromMemberId" value="${tt.getFromMember().getId()}">
-                        <button type="submit" class="btn btn-outline-primary bi-play-btn"> Weiteren Zeitscheck von diesem Mitglied</button>
+                    <form action="/timetransfers/duplicate" method="get">
+                        <input type="hidden" name="id" value="${tt.getId()}">
+                        <button type="submit" class="btn btn-outline-primary bi-play-btn"> Weiteren identischen Zeitscheck erstellen</button>
                     </form>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-6">
-            <div class="card">
-                <div class="card-body bg-success bg-opacity-10">
+          <div class="col-sm-6 mb-2">
+            <div class="card shadow h-100" style="background-color: #ECFEFF;">
+                <div class="card-body">
 
-                    <h5 class="card-title text-primary">Zeitscheck an</h5>
+                    <h5>Zeitscheck an</h5>
                     <p class="card-text text-success">Erhält Zeitscheck</p>
 
                     <input type="text" class="form-control" readonly value="${tt.getToMember().getNameAndAddress()}">

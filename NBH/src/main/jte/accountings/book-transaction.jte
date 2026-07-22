@@ -23,7 +23,6 @@
     content = @`
 
     <h3>Sonstige Buchung anlegen</h3>
-    <br/>
 
     <div class="row">
         <div class="col-lg-7">
