@@ -1,3 +1,6 @@
+### Version 0.6.2
+- Schnelle Duplikate für Zeitschecks (Wunsch von Clemens Csürös)
+
 ### Version 0.6.1
 - Optimierung **Zeitscheck übergeben** und **Meine Daten** für SmartPhone
 - Verbesserung der Adress-Validierung mit Hinweisen auf mögliche Korrekturen
