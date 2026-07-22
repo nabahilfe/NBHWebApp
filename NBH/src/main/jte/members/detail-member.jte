@@ -25,6 +25,7 @@
 
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
+@param java.lang.String geoValidationDisplayName = null
 
 @param Integer numberOfTimecheques = null
 
@@ -195,6 +196,17 @@
                                         <span class="badge bg-danger bi-geo-alt"> nicht gefunden</span>
                                     @endif
                                 </label>
+
+                                @if(geoValidationDisplayName != null && !geoValidationDisplayName.isBlank())
+                                    <div class="alert alert-warning small py-1 px-2 mb-2" role="alert">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                        <strong>Die eingegebene Adresse konnte nicht eindeutig zugeordnet werden.
+                                        OpenStreetMap fand stattdessen:</strong><br>
+                                        @for(String line : geoValidationDisplayName.split("\n"))
+                                            ${line}<br>
+                                        @endfor
+                                    </div>
+                                @endif
 
                                 <div class="col">
                                     <div class="border rounded p-3 mb-1">

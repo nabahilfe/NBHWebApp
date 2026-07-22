@@ -3,7 +3,7 @@
  * Licensed under the MIT License (see LICENSE file).
  */
 
-package eu.nabahilfe.webapp;
+package eu.nabahilfe.webapp.email;
 
 import java.util.List;
 
@@ -13,9 +13,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import eu.nabahilfe.webapp.accountings.TransactionRepository;
-import eu.nabahilfe.webapp.email.EmailComposer;
-import eu.nabahilfe.webapp.email.EmailDetails;
-import eu.nabahilfe.webapp.email.EmailService;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import eu.nabahilfe.webapp.members.MembershipFeeRepository;
@@ -48,6 +45,7 @@ public class EmailScheduler {
         this.membershipFeeRepository = membershipFeeRepository;
         this.transactionRepository = transactionRepository;
     }
+
 
     @Scheduled(cron = "0 0 3 * * *", zone = "Europe/Vienna") // Run every day at 3:00 AM Vienna time
     public void sendOpenAccontablesToBookEmail() {

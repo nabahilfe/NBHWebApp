@@ -16,12 +16,14 @@ import eu.nabahilfe.webapp.NumberFormatter;
 
 @Component
 public class EmailComposer {
+
     private static final String eMailFooter =
             "<p><small>Diese E-Mail wurde automatisch generiert, bitte nicht antworten!</small></p>";
 
     private final String baseUrl;
 
-    public EmailComposer(@Value("${app.base-url}") String baseUrl) {
+
+    public EmailComposer(@Value("${APP_BASE_URL}") String baseUrl) {
         // FIXME: Wie geht das für Multi Tenant?
         this.baseUrl = baseUrl;
     }

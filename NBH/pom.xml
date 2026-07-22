@@ -10,7 +10,7 @@
     </parent>
     <groupId>eu.nabahilfe</groupId>
     <artifactId>nbh</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1</version>
     <name>NBH</name>
     <description>Nachbarschaftshilfe Web App</description>
     <url/>

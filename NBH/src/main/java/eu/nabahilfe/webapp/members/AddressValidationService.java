@@ -26,8 +26,8 @@ public class AddressValidationService {
 
     private static final Logger log = LoggerFactory.getLogger(AddressValidationService.class);
 
-    private static final long MIN_DELAY_MS = 1200;
-    private static final long MAX_DELAY_MS = 3000;
+    private static final long MIN_DELAY_MS = 1000;
+    private static final long MAX_DELAY_MS = 1500;
 
     private final MemberRepository memberRepository;
     private final NominatimService nominatimService;
@@ -43,8 +43,21 @@ public class AddressValidationService {
      * Event types sent: "progress" (after each member) and "done" (final summary).
      */
     public SseEmitter validateAllUnvalidatedAddresses() {
-
         List<Long> memberIds = memberRepository.findActiveUnvalidatedMemberIds();
+        return startValidation(memberIds);
+    }
+
+    /**
+     * Starts the re-validation of ALL active member addresses (even those that already
+     * have latitude/longitude set) in a background thread and returns an {@link SseEmitter}
+     * that streams progress events to the client.
+     */
+    public SseEmitter validateAllAddresses() {
+        List<Long> memberIds = memberRepository.findActiveMemberIds();
+        return startValidation(memberIds);
+    }
+
+    private SseEmitter startValidation(List<Long> memberIds) {
         int total = memberIds.size();
 
         SseEmitter emitter = new SseEmitter(0L); // no timeout, we control lifecycle ourselves

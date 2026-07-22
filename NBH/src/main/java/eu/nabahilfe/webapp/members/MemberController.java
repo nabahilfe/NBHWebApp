@@ -436,9 +436,13 @@ public class MemberController {
         member = trimAddressData(member);
 
         // we use OpenStreetMap Nominatim API to validate and geocode the member address
-        nominatimService.validateAndUpdateMemberAddress(member);
+        String geoValidationDisplayName = nominatimService.validateAndUpdateMemberAddress(member);
 
         memberRepository.save(member);
+
+        if (geoValidationDisplayName != null && !geoValidationDisplayName.isBlank()) {
+            redirectAttributes.addFlashAttribute("geoValidationDisplayName", geoValidationDisplayName);
+        }
 
         redirectAttributes.addFlashAttribute("numberOfTimecheques", timeCheckRepository.countByAssignedTo(member));
         redirectAttributes.addFlashAttribute("successMessage", "Daten für " + member.getName() + " wurden gespeichert.");
@@ -733,16 +737,26 @@ public class MemberController {
     @GetMapping("/validate-addresses")
     public String showValidateAddressesPage(final Model model) {
         long unvalidatedCount = memberRepository.countActiveUnvalidatedMembers();
+        long totalActiveCount = memberRepository.countActiveMembers();
         model.addAttribute("unvalidatedCount", unvalidatedCount);
-        log.debug("Showing address validation page, {} unvalidated addresses found", unvalidatedCount);
+        model.addAttribute("totalActiveCount", totalActiveCount);
+        log.debug("Showing address validation page, {} unvalidated addresses found (of {} active members)",
+                unvalidatedCount, totalActiveCount);
         return "members/validate-addresses";
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @GetMapping("/validate-addresses/stream")
     public SseEmitter streamValidateAddresses() {
-        log.debug("Starting address validation stream");
+        log.debug("Starting address validation stream (unvalidated only)");
         return addressValidationService.validateAllUnvalidatedAddresses();
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @GetMapping("/validate-addresses/stream-all")
+    public SseEmitter streamRevalidateAllAddresses() {
+        log.debug("Starting address validation stream (all active members)");
+        return addressValidationService.validateAllAddresses();
     }
 
 

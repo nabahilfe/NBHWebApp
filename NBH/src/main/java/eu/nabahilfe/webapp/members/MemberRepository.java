@@ -121,4 +121,16 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
            "AND (m.latitude IS NULL OR m.longitude IS NULL)")
     long countActiveUnvalidatedMembers();
 
+    /** IDs of all active, non-system members, regardless of geo-validation status. */
+    @Query("SELECT m.id FROM Member m " +
+           "WHERE (m.resignationDate IS NULL OR m.resignationDate > CURRENT_DATE) " +
+           "AND (m.isSystemAccount = false OR m.isSystemAccount IS NULL)")
+    List<Long> findActiveMemberIds();
+
+    /** Count of all active, non-system members, regardless of geo-validation status. */
+    @Query("SELECT COUNT(m) FROM Member m " +
+           "WHERE (m.resignationDate IS NULL OR m.resignationDate > CURRENT_DATE) " +
+           "AND (m.isSystemAccount = false OR m.isSystemAccount IS NULL)")
+    long countActiveMembers();
+
 }

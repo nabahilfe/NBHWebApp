@@ -88,7 +88,7 @@
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="/members/mydata/${ctxt.getUserId()}">Meine Daten</a></li>
                                         @if (!ctxt.isSystemMember()) <!-- no timecheques for SystemMembers -->
-                                            <li><a class="dropdown-item" href="/timetransfers/fromself?fromMemberId=${ctxt.getUserId()}">Zeitschecks übergeben</a></li>
+                                            <li><a class="dropdown-item" href="/timetransfers/fromself?fromMemberId=${ctxt.getUserId()}">Zeitscheck übergeben</a></li>
                                             <li><a class="dropdown-item" href="/timecheques/newfromself/${ctxt.getUserId()}">Zeitschecks kaufen</a></li>
                                         @endif
                                         <li><hr class="dropdown-divider"></li>
@@ -211,9 +211,11 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/domaintypes">Gebühren-Sätze</a></li>
-                                    <!--li><a class="dropdown-item" href="#">...</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#">...</a></li-->
+                                    <!--li><a class="dropdown-item" href="#">...</a></li>-->
+                                    @if (ctxt != null && ctxt.hasAnyRole("ADMIN"))
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="/email/sendTestEmail">Test E-Mail senden</a></li>
+                                    @endif
                                 </ul>
                             </li>
                         @endif

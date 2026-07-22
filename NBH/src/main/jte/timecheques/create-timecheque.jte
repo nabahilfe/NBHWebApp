@@ -45,8 +45,9 @@
 
                                 <h4 class="card-title text-primary">Zeitschecks erstellen für</h4>
                                 <hr/>
-                                <h4>${timeCheque.getAssignedTo().getName()}</h4>
-                                <h5>${timeCheque.getAssignedTo().getAddress()}</h5>
+                                <h5>${timeCheque.getAssignedTo().getName()}</h5>
+                                <h6>${timeCheque.getAssignedTo().getFullStreetAddress()}</h6>
+                                <h6>${timeCheque.getAssignedTo().getZip()} ${timeCheque.getAssignedTo().getCity()}</h6>
                                 <hr/>
 
                                 Aktuelles Zeitguthaben: <b>${timeCheque.getAssignedTo().getAccumulatedHours() == null ? 0

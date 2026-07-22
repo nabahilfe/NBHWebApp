@@ -32,50 +32,50 @@
 
     <div class="container d-flex justify-content-center">
 
-    <div class="row">
-        <div class="col-auto">
-            <div class="card">
-                <div class="card-body bg-success bg-opacity-10">
+        <div class="row">
+            <div class="col-auto">
+                <div class="card shadow" style="background-color: #ECFEFF;">
+                    <div class="card-body">
 
-                    <h4 class="card-title text-primary">Übergebener Zeitscheck</h4>
-                    <hr/>
-                    <p class="card-text text-success">Ich - <strong>${ctxt.getFullName()}</strong> - habe diesen Zeitscheck übergeben</p>
+                        <h4 class="card-title text-primary">Übergebener Zeitscheck</h4>
+                        <hr/>
 
-                    <label class="col-form-label">Kategorie</label>
-                    <input type="text" class="form-control" disabled value="${tt.getOffer().getDescription()}">
-                    @if(tt.getNote() != null && !tt.getNote().isEmpty())
-                        <div class="small text-muted">Beschreibung: ${tt.getNote()}</div>
-                    @endif
+                        <label class="col-form-label"><strong>Empfänger des Zeitschecks</strong></label>
+                        <input type="text" class="form-control" disabled  value="${tt.getToMember().getNameAndAddress()}">
 
-                    <label class="col-form-label">Datum</label>
-                    <div class="col-sm-10">
-                        <input type="date" class="form-control" disabled value="${formatISO(tt.getDateOfService())}">
+
+                        <label class="col-form-label">Kategorie</label>
+                        <input type="text" class="form-control" disabled value="${tt.getOffer().getCode()} ${tt.getOffer().getDescription()}">
+                        @if(tt.getNote() != null && !tt.getNote().isEmpty())
+                            <div class="small text-muted">Beschreibung: ${tt.getNote()}</div>
+                        @endif
+
+                    <div class="row g-2 mb-1">
+
+                        <div class="col-6">
+                            <label class="col-form-label">Datum</label>
+                            <div class="col-sm-10">
+                                <input type="date" class="form-control" disabled value="${formatISO(tt.getDateOfService())}">
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <label class="col-form-label">Anzahl Stunden</label>
+                            <input type="text" class="form-control" disabled value="${tt.getHours()} h">
+                        </div>
+
                     </div>
 
-                    <label class="col-form-label">Anzahl Stunden</label>
-                    <input type="text" class="form-control" disabled value="${tt.getHours()} h">
+                        <br/>
+                        <form action="/timetransfers/fromself" method="get">
+                            <input type="hidden" name="fromMemberId" value="${tt.getFromMember().getId()}">
+                            <button type="submit" class="btn btn-outline-primary bi-play-btn"> Weiteren Zeitscheck übergeben</button>
+                        </form>
 
-                    <hr/>
-
-                    <p class="card-text text-success"><strong>Empfänger des Zeitscheck</strong></p>
-                    <input type="text" class="form-control" disabled  value="${tt.getToMember().getNameAndAddress()}">
-
-                    <br/>
-                    <form action="/timetransfers/fromself" method="get">
-                        <input type="hidden" name="fromMemberId" value="${tt.getFromMember().getId()}">
-                        <button type="submit" class="btn btn-outline-primary bi-play-btn"> Weiteren Zeitscheck übergeben</button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
-
-    </div>
-
-    <br/>
-
-    @template.components.display-statusmessage(successMessage, errorMessage)
-
 
 `)
