@@ -20,14 +20,13 @@
 
     <div class="container">
         <h3>Mitgliederentwicklung</h3>
-        <br/>
 
         @template.components.display-statusmessage(successMessage, errorMessage)
 
         @if(memberStats == null || memberStats.isEmpty())
             <div class="alert alert-info">Keine Mitgliederdaten gefunden.</div>
         @else
-            <table class="table table-hover table-sm">
+            <table class="table table-bordered table-hover table-sm shadow h-100">
                 <thead class="table-light">
                     <tr>
                         <th scope="col">Jahr</th>

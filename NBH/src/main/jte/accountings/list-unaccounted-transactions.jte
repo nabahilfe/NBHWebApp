@@ -46,8 +46,8 @@
             Keine offenen Buchungen vorhanden.
         </div>
     @else
-        <table class="table table-hover table-sm" id="txTable">
-            <thead>
+        <table class="table table-bordered table-hover table-sm shadow h-100" id="txTable">
+            <thead class="table-light">
                 <tr>
                     <th scope="col" data-col="0" style="cursor:pointer;">Datum ↕</th>
                     <th scope="col">erstellt von</th>
@@ -59,7 +59,7 @@
                     @endif
                 </tr>
             </thead>
-            <tbody class="table-group-divider">
+            <tbody>
                 @for(Transaction tx : transactions)
                     <tr>
                         <td>${dateReverseDE(tx.getTransactionDate())}</td>

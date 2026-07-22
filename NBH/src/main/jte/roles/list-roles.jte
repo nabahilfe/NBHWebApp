@@ -66,8 +66,8 @@
 
 
     <!-- Display all Role records -->
-    <table class="table table-hover table-sm" id="memberTable">
-      <thead>
+    <table class="table table-bordered table-hover table-sm shadow h-100" id="memberTable">
+      <thead class="table-light">
         <tr>
           <th scope="col">Rolle und Berechtigungen</th>
           <th scope="col" class="text-center">Vorstand</th>
@@ -82,7 +82,7 @@
         </tr>
       </thead>
 
-      <tbody class="table-group-divider">
+      <tbody>
         @for (Role role : roles)
         <tr>
           <td scope="row">${role.getRoleName()}</td>

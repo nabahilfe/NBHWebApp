@@ -55,8 +55,8 @@
     </form>
 
     <!-- Table -->
-    <table class="table table-hover table-sm">
-        <thead>
+    <table class="table table-bordered table-hover table-sm shadow h-100">
+        <thead class="table-light">
             <tr>
                 <th scope="col">Typ</th>
                 <th scope="col" class="text-end">Betrag</th>

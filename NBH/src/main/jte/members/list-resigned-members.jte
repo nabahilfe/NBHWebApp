@@ -32,18 +32,18 @@
     content = @`
 
     <h3>Ausgetretene Vereinsmitglieder</h3>
-    <p>
-        <strong>Hinweis</strong>
-        <br>Es werden nur ausgetreten Mitglieder angezeigt, die noch nicht anonymisiert wurden.
-        <br>Mitglieder, die bereits anonymisiert wurden, werden nicht mehr angezeigt.
-        <p><strong>Um der DSGVO zu entsprechen, sollte die Anonymisierung zeitnah, spätestens innerhalb eines Jahres nach Austritt, erfolgen.</strong></p>
-    </p>
 
+    <div class="alert alert-light border mb-3" role="alert">
+        <strong><i class="bi bi-exclamation-triangle"></i> Hinweis</strong>
+        <br>Es werden nur ausgetreten Mitglieder angezeigt, die noch nicht anonymisiert bzw. gelöscht wurden.
+        <br>Mitglieder, die bereits anonymisiert wurden, werden nicht mehr angezeigt.
+        <br><strong>Um der DSGVO zu entsprechen, sollte die Anonymisierung zeitnah, spätestens innerhalb eines Jahres nach Austritt, erfolgen.</strong>
+    </div>
 
     <!-- Display all Member records -->
-    <table class="table table-hover table-sm" id="memberTable">
+    <table class="table table-bordered table-hover table-sm shadow h-100" id="memberTable">
 
-        <thead>
+        <thead class="table-light">
         <tr>
           <th scope="col">Nachname </th>
           <th scope="col">Vorname</th>
@@ -59,7 +59,7 @@
         </tr>
         </thead>
 
-      <tbody class="table-group-divider">
+      <tbody>
         @for (Member member : memberPage.getContent())
             <tr>
                   @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))

@@ -86,46 +86,44 @@
     </form>
 
     <!-- Table -->
-    <div class="table-responsive">
-        <table class="table table-striped table-hover table-sm align-middle">
-            <thead class="table-success">
+    <table class="table table-bordered table-hover table-sm shadow h-100">
+        <thead class="table-light">
+            <tr>
+                <th>Buchungsdatum</th>
+                <th>Buchung von</th>
+                <th>Art</th>
+                <th>Mitglied</th>
+                <th>Beschreibung</th>
+                <th>Transaktionsdatum</th>
+                <th class="text-end">Betrag</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if(entries.isEmpty())
                 <tr>
-                    <th>Buchungsdatum</th>
-                    <th>Buchung von</th>
-                    <th>Art</th>
-                    <th>Mitglied</th>
-                    <th>Beschreibung</th>
-                    <th>Transaktionsdatum</th>
-                    <th class="text-end">Betrag</th>
+                    <td colspan="7" class="text-center text-muted">Keine Einträge gefunden.</td>
                 </tr>
-            </thead>
-            <tbody>
-                @if(entries.isEmpty())
+            @else
+                @for(AccountingEntry e : entries)
                     <tr>
-                        <td colspan="7" class="text-center text-muted">Keine Einträge gefunden.</td>
+                        <td>${dateReverseDE(e.getAccountingDate())}</td>
+                        <td>${e.getCreatedBy() != null ? e.getCreatedBy().getName() : "-"}</td>
+                        <td>${e.getAccountableName()}</td>
+                        <td>${e.getAccountableMember() != null ? e.getAccountableMember().getName() : "-"}</td>
+                        <td>${e.getDescription() != null ? e.getDescription() : "-"}</td>
+                        <td>${dateReverseDE(e.getTransactionDate())}</td>
+                        <td class="text-end">&euro; ${numberDE(e.getTransactionAmount())}</td>
                     </tr>
-                @else
-                    @for(AccountingEntry e : entries)
-                        <tr>
-                            <td>${dateReverseDE(e.getAccountingDate())}</td>
-                            <td>${e.getCreatedBy() != null ? e.getCreatedBy().getName() : "-"}</td>
-                            <td>${e.getAccountableName()}</td>
-                            <td>${e.getAccountableMember() != null ? e.getAccountableMember().getName() : "-"}</td>
-                            <td>${e.getDescription() != null ? e.getDescription() : "-"}</td>
-                            <td>${dateReverseDE(e.getTransactionDate())}</td>
-                            <td class="text-end">&euro; ${numberDE(e.getTransactionAmount())}</td>
-                        </tr>
-                    @endfor
-                @endif
-            </tbody>
-            <tfoot class="table-success fw-bold">
-                <tr>
-                    <td colspan="6" class="text-end">Summe:</td>
-                    <td class="text-end">&euro; ${numberDE(total)}</td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
+                @endfor
+            @endif
+        </tbody>
+        <tfoot class="table-light fw-bold">
+            <tr>
+                <td colspan="6" class="text-end">Summe:</td>
+                <td class="text-end">&euro; ${numberDE(total)}</td>
+            </tr>
+        </tfoot>
+    </table>
 
     @template.components.display-statusmessage(successMessage, errorMessage)
 

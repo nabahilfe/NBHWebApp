@@ -46,13 +46,9 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>
-        ${member.getId() != null ? "Mitglied bearbeiten" : "Neues Mitglied anlegen"}
-    </h3>
+    <h3>${member.getId() != null ? "Mitglied bearbeiten" : "Neues Mitglied anlegen"}</h3>
 
     <div class="row">
-
-        <br/>
 
         @if(! member.isSozialkonto())
             <!-- first action is for save, second action is for update -->
@@ -256,7 +252,7 @@
 
                 </div>
 
-<!-- FIXME: only for Vortsnad / Sysadmin - must show LocalDate!
+<!-- FIXME: only for Vorstand / Sysadmin - must show LocalDate!
                 <br/>
                 <p>
                     <i>Letztes Update: ${dateTimeDE(member.getUpdatedAt())}</i>
@@ -283,21 +279,17 @@
 
         <!-- Only show timecheque info if the member already exists (has an ID) -->
         @if(member.getId() != null)
-
             <div>
-
                 @if(member.isSozialkonto())
-                    <div class="alert alert-warning py-2 px-3" role="alert">
-                        <p>
-                            <h3>Sozialkonto der Nachbarschaftshilfe</h3>
-                            <br>Zeitschecks können nur durch Spenden von anderen Mitgliedern hinzugefügt werden, nicht durch kaufen.
-                            <br>Guthaben von ausgetreten Mitgliedern werden automatisch auf das Sozialkonto übertragen, durch direkte Zuweisung.
-                            <br>Damit bleibt die Anonymität bei Austritt entsprechend DSGVO Vorgaben gewahrt.
-                        </p>
-                        <p>
-                            <b>Zeitguthaben: ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() : 0} h</b>
-                        </p>
-                        Das Sozialkonto kann nicht bearbeitet oder gelöscht werden.
+                    <div class="alert alert-warning" role="alert">
+                        <h3>Sozialkonto der Nachbarschaftshilfe</h3>
+                        Zeitschecks können nur durch Spenden von anderen Mitgliedern hinzugefügt werden, nicht durch kaufen.
+                        <br>Guthaben von ausgetreten Mitgliedern werden automatisch auf das Sozialkonto übertragen, durch direkte Zuweisung.
+                        <br>Damit bleibt die Anonymität bei Austritt entsprechend DSGVO Vorgaben gewahrt.
+                        <br>
+                        <br><b>Zeitguthaben: ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() : 0} h</b>
+                        <br>
+                        <br>Das Sozialkonto kann nicht bearbeitet oder gelöscht werden.
                     </div>
                 @else
                     @if(numberOfTimecheques != null && numberOfTimecheques == 0 && member.isImportedMember() == false)

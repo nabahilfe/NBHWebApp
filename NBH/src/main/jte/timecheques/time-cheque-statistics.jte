@@ -57,11 +57,10 @@
 
         !{String yearLabel = selectedYear == 0 ? "alle Jahre" : String.valueOf(selectedYear);}
         <h4>Zeitschecks erhalten für erbrachte Leistungen</h4>
-        <br/>
         @if(transferStats == null || transferStats.isEmpty())
             <div class="alert alert-info">Keine Zeitgutschriften für ${yearLabel} gefunden.</div>
         @else
-            <table class="table table-hover table-sm">
+            <table class="table table-bordered table-hover table-sm shadow h-100" id="xxx">
                 <thead class="table-light">
                     <tr>
                         <th scope="col">#</th>
@@ -104,7 +103,7 @@
         @if(givenStats == null || givenStats.isEmpty())
             <div class="alert alert-info">Keine übergebenen Zeitgutschriften für ${yearLabel} gefunden.</div>
         @else
-            <table class="table table-hover table-sm">
+            <table class="table table-bordered table-hover table-sm shadow h-100">
                 <thead class="table-light">
                     <tr>
                         <th scope="col">#</th>
@@ -148,7 +147,7 @@
         @if(stats == null || stats.isEmpty())
             <div class="alert alert-info">Keine Zeitschecks für ${yearLabel} gefunden.</div>
         @else
-            <table class="table table-hover table-sm">
+            <table class="table table-bordered table-hover table-sm shadow h-100">
                 <thead class="table-light">
                     <tr>
                         <th scope="col">#</th>

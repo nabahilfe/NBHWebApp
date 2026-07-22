@@ -29,11 +29,8 @@
     content = @`
 
     <h3>Noch nicht vorgeschriebene Mitgliedsbeiträge für das aktuelle Jahr</h3>
-
-    <br/>
-
     <!-- Info panel: fees can only be created from March 1st onwards -->
-    <div class="alert alert-info text-center" role="alert">
+    <div class="alert alert-warning text-center" role="alert">
         <strong>Beitragsvorschreibungen können erst ab dem 1. März des aktuellen Jahres erstellt werden!</strong>
         <br>Bitte vor diesem Termin unbedingt den Mitgliedsbeitrag anpassen, falls dieser sich für das aktuelle Jahr ändern soll!
         <br>Die Vorschreibung wird automatisch auf Basis des aktuellen Mitgliedsbeitrags erstellt.
@@ -46,8 +43,8 @@
         ${csrfHiddenInput}
         <div id="memberIdContainer"></div>
 
-        <table class="table table-hover table-sm" id="memberTable">
-            <thead>
+        <table class="table table-bordered table-hover table-sm shadow h-100" id="memberTable">
+            <thead class="table-light">
                 <tr>
                     <th scope="col" data-col="0" style="cursor:pointer;">Name ↕</th>
                     <th scope="col">Adresse</th>
@@ -58,7 +55,7 @@
                 </tr>
             </thead>
 
-            <tbody class="table-group-divider">
+            <tbody>
                 @for (MembershipFeeOpenForm mf : membershipFeesOpen)
                     <tr>
                         <td>${mf.getName()}</td>

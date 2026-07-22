@@ -61,7 +61,7 @@
         @if(categoryStats == null || categoryStats.isEmpty())
             <div class="alert alert-info">Keine Leistungen für ${yearLabel} gefunden.</div>
         @else
-            <table class="table table-hover table-sm">
+            <table class="table table-bordered table-hover table-sm shadow h-100">
                 <thead class="table-light">
                     <tr>
                         <th scope="col">#</th>
