@@ -97,10 +97,18 @@
                 @endif
             </div>
 
+<div class="alert alert-success shadow d-flex justify-content-between align-items-center" role="alert">
+  <span class="badge text-bg-success align-text-top">New</span>
+    <span class="text-center flex-grow-1">
+        <a href="/home/legal-and-privacy-policy"><strong>Bilder Galerie - schau dir das an!</strong></a>
+    </span>
+  <span class="badge text-bg-success align-text-top">New</span>
+</div>
+
+
             <!-- Contact info at this position only if Desktop mode -->
             <div class="d-none d-md-block">
-                <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4"
-                style="background-color: #ECFEFF;">
+                <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4" style="background-color: #ECFEFF;">
                     <h2>Kontakt</h2>
                     <p class="card-text">
                         $unsafe{contact}

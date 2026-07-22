@@ -54,6 +54,26 @@
                 padding-top: 90px;
                 background: #e9fbe9;
             }
+
+            .dropdown-submenu {
+                position: relative;
+            }
+
+            .dropdown-submenu > .dropdown-menu {
+                top: 0;
+                left: 100%;
+                margin-top: -1px;
+            }
+
+            .dropdown-submenu:hover > .dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-submenu > .dropdown-toggle::after {
+                float: right;
+                margin-top: .5em;
+                transform: rotate(-90deg);
+            }
         </style>
 
     </head>
@@ -178,26 +198,73 @@
                         <!-- Dropdown Text Content -->
                         @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "SECRETARY"))
                             <li class="nav-item dropdown">
-                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                <button class="nav-link dropdown-toggle btn btn-link"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        data-bs-display="static">
                                     Content
                                 </button>
+
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.ABOUT_US}">
-                                            ${TextContentType.ABOUT_US.getCode()}</a></li>
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.CONTACT}">
-                                            ${TextContentType.CONTACT.getCode()}</a></li>
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.EVENTS}">
-                                            ${TextContentType.EVENTS.getCode()}</a></li>
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.NEWS}">
-                                            ${TextContentType.NEWS.getCode()}</a></li>
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.FAQ}">
-                                            ${TextContentType.FAQ.getCode()}</a></li>
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.TERMS_OF_SERVICE}">
-                                            ${TextContentType.TERMS_OF_SERVICE.getCode()}</a></li>
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.PRIVACY_POLICY}">
-                                            ${TextContentType.PRIVACY_POLICY.getCode()}</a></li>
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.LEGAL_NOTICE}">
+
+                                    <!-- Texte -->
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">
+                                            Texte
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.ABOUT_US}">
+                                                ${TextContentType.ABOUT_US.getCode()}</a></li>
+
+                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.CONTACT}">
+                                                ${TextContentType.CONTACT.getCode()}</a></li>
+
+                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.EVENTS}">
+                                                ${TextContentType.EVENTS.getCode()}</a></li>
+
+                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.NEWS}">
+                                                ${TextContentType.NEWS.getCode()}</a></li>
+
+                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.FAQ}">
+                                                ${TextContentType.FAQ.getCode()}</a></li>
+
+                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.TERMS_OF_SERVICE}">
+                                                ${TextContentType.TERMS_OF_SERVICE.getCode()}</a></li>
+
+                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.PRIVACY_POLICY}">
+                                                ${TextContentType.PRIVACY_POLICY.getCode()}</a></li>
+
+                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.LEGAL_NOTICE}">
+                                                ${TextContentType.LEGAL_NOTICE.getCode()}</a></li>
+                                        </ul>
+                                        <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.LEGAL_NOTICE}">
                                             ${TextContentType.LEGAL_NOTICE.getCode()}</a></li>
+                                    </li>
+
+                                    <!-- Bilder -->
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">
+                                            Bilder
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="/images/gallery">Galerie</a></li>
+                                            <li><a class="dropdown-item" href="/images/upload">Bild hochladen</a></li>
+                                            <li><a class="dropdown-item" href="/images/categories">Kategorien</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <!-- Dokumente -->
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">
+                                            Dokumente
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="/documents">Alle Dokumente</a></li>
+                                            <li><a class="dropdown-item" href="/documents/upload">Dokument hochladen</a></li>
+                                            <li><a class="dropdown-item" href="/documents/categories">Kategorien</a></li>
+                                        </ul>
+                                    </li>
+
                                 </ul>
                             </li>
                         @endif
