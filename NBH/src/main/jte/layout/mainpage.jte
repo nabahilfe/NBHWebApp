@@ -69,10 +69,17 @@
                 display: block;
             }
 
+            .dropdown-submenu > .dropdown-toggle {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
             .dropdown-submenu > .dropdown-toggle::after {
-                float: right;
-                margin-top: .5em;
+                margin-left: 1rem;
+                flex-shrink: 0;
                 transform: rotate(-90deg);
+                float: none;   /* wichtig */
             }
         </style>
 
@@ -165,32 +172,48 @@
                             </li>
                         @endif
 
-                        <!-- Dropdown Einnahmen / Ausgaben -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "TREASURER"))
-                            <li class="nav-item dropdown">
-                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
-                                    Einnahmen / Ausgaben
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/accountings/income">Einnahme erfassen</a></li>
-                                    <li><a class="dropdown-item" href="/accountings/expense">Ausgabe erfassen</a></li>
-                                </ul>
-                            </li>
-                        @endif
 
                         <!-- Dropdown Buchungen -->
                         @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "TREASURER", "AUDITOR"))
                             <li class="nav-item dropdown">
-                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                <button class="nav-link dropdown-toggle btn btn-link"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    data-bs-display="static">
                                     Buchungen
                                 </button>
+
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/timecheques/unaccounted">Offene Zeitschecks</a></li>
-                                    <li><a class="dropdown-item" href="/members/unaccounted-mbshipfees">Offene Mitgliedsbeiträge</a></li>
-                                    <li><a class="dropdown-item" href="/accountings/misc-unaccounted">Sonstige offene Buchung</a></li>
-                                    <li><hr class="dropdown-divider"></li>
+
+                                    <!-- Offene Buchungen -->
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">
+                                            Offene Buchungen
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="/timecheques/unaccounted">Offene Zeitschecks</a></li>
+                                            <li><a class="dropdown-item" href="/members/unaccounted-mbshipfees">Offene Mitgliedsbeiträge</a></li>
+                                            <li><a class="dropdown-item" href="/accountings/misc-unaccounted">Sonstige offene Buchung</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <!-- Einnahmen / Ausgaben -->
+                                    @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "TREASURER"))
+                                        <li class="dropdown-submenu">
+                                            <a class="dropdown-item dropdown-toggle" href="#">
+                                                Einnahmen / Ausgaben
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="/accountings/income">Einnahme erfassen</a></li>
+                                                <li><a class="dropdown-item" href="/accountings/expense">Ausgabe erfassen</a></li>
+                                            </ul>
+                                        </li>
+                                    @endif
+
                                     <li><a class="dropdown-item" href="/accountings/show-accountings">Umsätze</a></li>
                                 </ul>
+
+
                             </li>
                         @endif
 
@@ -237,8 +260,6 @@
                                             <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.LEGAL_NOTICE}">
                                                 ${TextContentType.LEGAL_NOTICE.getCode()}</a></li>
                                         </ul>
-                                        <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.LEGAL_NOTICE}">Test direkt
-                                            ${TextContentType.LEGAL_NOTICE.getCode()}</a></li>
                                     </li>
 
                                     <!-- Bilder -->
