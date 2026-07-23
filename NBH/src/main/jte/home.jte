@@ -113,9 +113,6 @@
                     <p class="card-text">
                         $unsafe{contact}
                     </p>
-
-                    <br/>
-                    <a href="/home/legal-and-privacy-policy">Datenschutzerklärung und Impressum</a>
                 </div>
             </div>
 
@@ -151,9 +148,6 @@
                     <p class="card-text">
                         $unsafe{contact}
                     </p>
-
-                    <br/>
-                    <a href="/home/legal-and-privacy-policy">Datenschutzerklärung und Impressum</a>
                 </div>
             </div>
 
