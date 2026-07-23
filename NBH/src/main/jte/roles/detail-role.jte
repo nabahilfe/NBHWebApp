@@ -3,6 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.GlobalModelAttributes
 @import eu.nabahilfe.webapp.members.Role
 
 @param eu.nabahilfe.webapp.members.Role role
@@ -19,9 +20,11 @@
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
+@param GlobalModelAttributes globalModelAttributes
 
 
 @template.layout.mainpage(
+    globalModelAttributes = globalModelAttributes,
     csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`

@@ -3,6 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.GlobalModelAttributes
 @import java.util.List
 @import java.time.LocalDate
 

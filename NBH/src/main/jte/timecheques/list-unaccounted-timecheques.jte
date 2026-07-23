@@ -3,6 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.GlobalModelAttributes
 @import java.util.List
 @import java.math.BigDecimal
 @import java.time.LocalDate
@@ -28,9 +29,11 @@
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
+@param GlobalModelAttributes globalModelAttributes
 
 
 @template.layout.mainpage(
+    globalModelAttributes = globalModelAttributes,
     csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`

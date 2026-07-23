@@ -3,14 +3,17 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.GlobalModelAttributes
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
+@param GlobalModelAttributes globalModelAttributes
 
 
 @template.layout.mainpage(
+    globalModelAttributes = globalModelAttributes,
     csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`

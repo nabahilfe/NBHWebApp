@@ -3,6 +3,9 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.GlobalModelAttributes
+
+
 @param String aboutUs = ""
 @param String contact = ""
 @param String events = ""
@@ -12,15 +15,17 @@
 @param String privacyPolicy = ""
 @param String legalNotice = ""
 @param java.util.List<eu.nabahilfe.webapp.members.Member> boardMembers = java.util.Collections.emptyList()
-@param String version = ""
+@param String appVersion = ""
 @param String buildTime = ""
 @param String releaseNotesHtml = ""
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
+@param GlobalModelAttributes globalModelAttributes
 
 
 @template.layout.mainpage(
+    globalModelAttributes = globalModelAttributes,
     csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
@@ -97,13 +102,14 @@
                 @endif
             </div>
 
-<div class="alert alert-warning shadow d-flex justify-content-between align-items-center" role="alert">
-  <span class="badge text-bg-success align-text-top">Neu</span>
-    <span class="text-center flex-grow-1">
-        <a href="/home/legal-and-privacy-policy"><strong>Bilder Galerie - schau dir das an!</strong></a>
-    </span>
-  <span class="badge text-bg-success align-text-top">Neu</span>
-</div>
+
+            <div class="alert alert-warning shadow d-flex justify-content-between align-items-center" role="alert">
+              <span class="badge text-bg-success align-text-top">Neu</span>
+                <span class="text-center flex-grow-1">
+                    <a href="/home/legal-and-privacy-policy"><strong>Bilder Galerie - schau dir das an!</strong></a>
+                </span>
+              <span class="badge text-bg-success align-text-top">Neu</span>
+            </div>
 
 
             <!-- Contact info at this position only if Desktop mode -->
@@ -157,36 +163,6 @@
 
     </div>
 
-    <footer class="text-center text-muted small py-3 mt-2 border-top">
-        <a href="/home/legal-and-privacy-policy" class="text-muted text-decoration-none">
-            <strong>§ Rechtliche Informationen</strong>
-        </a>
-        &nbsp;|&nbsp;
-        Version ${version} &mdash; Build: ${buildTime}
-        &nbsp;|&nbsp;
-        <a href="#" class="text-muted text-decoration-none" data-bs-toggle="modal" data-bs-target="#releaseNotesModal">
-            <i class="bi bi-journal-text" style="-webkit-text-stroke: 0.3px currentColor;"></i> <strong>Release Notes</strong>
-        </a>
-    </footer>
 
-    <!-- Release Notes Modal -->
-    <div class="modal fade" id="releaseNotesModal" tabindex="-1" aria-labelledby="releaseNotesModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-            <div class="modal-content border-success-subtle">
-                <div class="modal-header" style="background-color: #77DD77;">
-                    <h5 class="modal-title fw-semibold" id="releaseNotesModalLabel">
-                        <i class="bi bi-journal-text me-2"></i>Release Notes
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
-                </div>
-                <div class="modal-body px-4 py-3">
-                    $unsafe{releaseNotesHtml}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Schließen</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 `)

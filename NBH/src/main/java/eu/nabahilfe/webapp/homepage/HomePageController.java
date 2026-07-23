@@ -28,19 +28,15 @@ public class HomePageController {
 
     private final TextContentRepository textRepo;
     private final MemberRepository memberRepository;
-    private final VersionService versionService;
-    private final ReleaseNotesService releaseNotesService;
 
 
     public HomePageController(TextContentRepository textRepo, MemberRepository memberRepository,
             VersionService versionService, ReleaseNotesService releaseNotesService) {
         this.textRepo = textRepo;
         this.memberRepository = memberRepository;
-        this.versionService = versionService;
-        this.releaseNotesService = releaseNotesService;
     }
 
-    @GetMapping({"/", "/hompage"})
+    @GetMapping({"/", "/homepage"})
     public String home(Model model) {
 
         Optional<TextContent> textContent = null;
@@ -72,9 +68,9 @@ public class HomePageController {
         List<Member> boardMembers = memberRepository.findBoardMembers();
         model.addAttribute("boardMembers", boardMembers);
 
-        model.addAttribute("version", versionService.getVersion());
-        model.addAttribute("buildTime", versionService.getBuildTime());
-        model.addAttribute("releaseNotesHtml", releaseNotesService.getReleaseNotesHtml());
+//        model.addAttribute("version", versionService.getVersion());
+//        model.addAttribute("buildTime", versionService.getBuildTime());
+//        model.addAttribute("releaseNotesHtml", releaseNotesService.getReleaseNotesHtml());
 
         return "home";
     }

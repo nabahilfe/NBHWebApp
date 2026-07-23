@@ -3,6 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.GlobalModelAttributes
 
 <!--
     A template to display error messages.
@@ -19,9 +20,11 @@
 @param java.lang.Integer status = null
 @param java.lang.String error = null
 @param java.lang.String message = null
+@param GlobalModelAttributes globalModelAttributes
 
 
 @template.layout.mainpage(
+    globalModelAttributes = globalModelAttributes,
     ctxt = ctxt,
     content = @`
 
