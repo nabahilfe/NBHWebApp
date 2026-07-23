@@ -222,14 +222,14 @@
                                             <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.EVENTS}">
                                                 ${TextContentType.EVENTS.getCode()}</a></li>
 
-                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.NEWS}">
-                                                ${TextContentType.NEWS.getCode()}</a></li>
+                                            <!--li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.NEWS}">
+                                                ${TextContentType.NEWS.getCode()}</a></li-->
 
-                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.FAQ}">
-                                                ${TextContentType.FAQ.getCode()}</a></li>
+                                            <!--li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.FAQ}">
+                                                ${TextContentType.FAQ.getCode()}</a></li-->
 
-                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.TERMS_OF_SERVICE}">
-                                                ${TextContentType.TERMS_OF_SERVICE.getCode()}</a></li>
+                                            <!--li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.TERMS_OF_SERVICE}">
+                                                ${TextContentType.TERMS_OF_SERVICE.getCode()}</a></li-->
 
                                             <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.PRIVACY_POLICY}">
                                                 ${TextContentType.PRIVACY_POLICY.getCode()}</a></li>
@@ -237,7 +237,7 @@
                                             <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.LEGAL_NOTICE}">
                                                 ${TextContentType.LEGAL_NOTICE.getCode()}</a></li>
                                         </ul>
-                                        <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.LEGAL_NOTICE}">
+                                        <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.LEGAL_NOTICE}">Test direkt
                                             ${TextContentType.LEGAL_NOTICE.getCode()}</a></li>
                                     </li>
 
