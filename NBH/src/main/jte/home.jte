@@ -106,6 +106,7 @@
             <div class="alert alert-warning shadow d-flex justify-content-between align-items-center" role="alert">
               <span class="badge text-bg-success align-text-top">Neu</span>
                 <span class="text-center flex-grow-1">
+                    <i class="bi bi-arrow-right-square-fill text-success"></i>
                     <a href="/home/legal-and-privacy-policy"><strong>Bilder Galerie - schau dir das an!</strong></a>
                 </span>
               <span class="badge text-bg-success align-text-top">Neu</span>

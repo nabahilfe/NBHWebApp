@@ -55,7 +55,7 @@ TRUNCATE TABLE SPRING_SESSION;
 
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-07-17 14:04:43
+ * Generated at 2026-07-23 16:07:18
  * ModelDescription: NBH Entity Modell
  */
 
@@ -312,6 +312,7 @@ create table if not exists IMAGES (
     image_size INTEGER not null,
     image BYTEA not null,
     thumbnail BYTEA not null,
+    content_type VARCHAR(20) not null /* image/jpeg, image/png ... */,
     description VARCHAR(250),
     is_gallery_cover BOOLEAN not null DEFAULT FALSE /* Das repräsentative Bild für die Galerie das in der Galerieübersicht angezeigt wird */,
     belongs_to_id BIGINT /* FK id from IMAGE_GALLERY(id) */,
