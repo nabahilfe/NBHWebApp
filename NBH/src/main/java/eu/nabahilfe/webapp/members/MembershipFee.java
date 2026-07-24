@@ -65,7 +65,7 @@ public class MembershipFee implements Accountable {
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    // FIXME: im Generator: "@Column(nullable = false)"
+    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "created_by_id")
     @CreatedBy

@@ -41,21 +41,24 @@ public class ImageGallery  {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
-    private LocalDate eventDate;
+    private LocalDate galleryDate;
 
     @Size(max = 250)
     @NotEmpty
-    private String eventDescription;
+    private String galleryDescription;
 
-    private String eventText;
+    @Size(max = 250)
+    private String galleryRemark;    // Anmerkung für Editor, wird in der Gallery-Ansicht nicht angezeigt
+
+    @Column(nullable = false)
+    private Boolean isPublic;    // wenn nicht public dann nur für angemeldete Mitglieder sichtbar
 
     // Creation timestamp, value is set by Postgres (see Table definition)
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    // FIXME: im Generator: "@Column(nullable = false)"
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "created_by_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "created_by_id", nullable = false)
     @CreatedBy
     private Member createdBy;
 
@@ -71,36 +74,46 @@ public class ImageGallery  {
     @Column(nullable = false)
     private Integer version;
 
+
+
+    public LocalDate getGalleryDate() {
+        return galleryDate;
+    }
+
+    public void setGalleryDate(LocalDate galleryDate) {
+        this.galleryDate = galleryDate;
+    }
+
+    public String getGalleryDescription() {
+        return galleryDescription;
+    }
+
+    public void setGalleryDescription(String galleryDescription) {
+        this.galleryDescription = galleryDescription;
+    }
+
+    public String getGalleryRemark() {
+        return galleryRemark;
+    }
+
+    public void setGalleryRemark(String galleryRemark) {
+        this.galleryRemark = galleryRemark;
+    }
+
+    public Boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public LocalDate getEventDate() {
-        return eventDate;
-    }
-
-    public void setEventDate(LocalDate eventDate) {
-        this.eventDate = eventDate;
-    }
-
-    public String getEventDescription() {
-        return eventDescription;
-    }
-
-    public void setEventDescription(String eventDescription) {
-        this.eventDescription = eventDescription;
-    }
-
-    public String getEventText() {
-        return eventText;
-    }
-
-    public void setEventText(String eventText) {
-        this.eventText = eventText;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -162,10 +175,12 @@ public class ImageGallery  {
 
     @Override
     public String toString() {
-        return "ImageGallery [id=" + id + ", eventDate=" + eventDate + ", eventDescription=" + eventDescription
-                + ", eventText=" + eventText + ", createdAt=" + createdAt + ", createdBy=" + createdBy + ", updatedAt="
-                + updatedAt + ", updatedBy=" + updatedBy + ", version=" + version + "]";
+        return "ImageGallery [id=" + id + ", galleryDate=" + galleryDate + ", galleryDescription=" + galleryDescription
+                + ", galleryRemark=" + galleryRemark + ", isPublic=" + isPublic + ", createdAt=" + createdAt
+                + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt + ", updatedBy=" + updatedBy + ", version="
+                + version + "]";
     }
+
 
 
     // ------------------------------

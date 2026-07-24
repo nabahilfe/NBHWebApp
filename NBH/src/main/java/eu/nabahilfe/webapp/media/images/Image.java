@@ -1,15 +1,12 @@
 package eu.nabahilfe.webapp.media.images;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Objects;
 
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import eu.nabahilfe.webapp.members.Member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,6 +21,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+
+import eu.nabahilfe.webapp.members.Member;
 
 
 /**
@@ -69,9 +68,8 @@ public class Image  {
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    // FIXME: im Generator: "@Column(nullable = false)"
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "created_by_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "created_by_id", nullable = false)
     @CreatedBy
     private Member createdBy;
 
@@ -86,6 +84,9 @@ public class Image  {
     @Version
     @Column(nullable = false)
     private Integer version;
+
+
+
 
     public Long getId() {
         return id;
@@ -218,8 +219,7 @@ public class Image  {
 
     @Override
     public String toString() {
-        return "Image [id=" + id + ", imageName=" + imageName + ", imageSize=" + imageSize + ", image="
-                + Arrays.toString(image) + ", thumbnail=" + Arrays.toString(thumbnail) + ", contentType=" + contentType
+        return "Image [id=" + id + ", imageName=" + imageName + ", imageSize=" + imageSize + ", contentType=" + contentType
                 + ", description=" + description + ", isGalleryCover=" + isGalleryCover + ", belongsTo=" + belongsTo
                 + ", createdAt=" + createdAt + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt + ", updatedBy="
                 + updatedBy + ", version=" + version + "]";
