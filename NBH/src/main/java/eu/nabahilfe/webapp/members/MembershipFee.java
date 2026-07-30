@@ -65,9 +65,8 @@ public class MembershipFee implements Accountable {
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "created_by_id")
+    @JoinColumn(name = "created_by_id", nullable = false)
     @CreatedBy
     private Member createdBy;
 

@@ -3,6 +3,10 @@
 
 -- zuerst update wenn erforderlich
 
+-- ACHTUNG: für die NAS DB ist die id (pk) des Sys-Admins 85
+-- Für die Echt DB ist der Wert 1
+
+
 UPDATE ASSOCIATIONS SET created_by_id = 1 WHERE created_by_id IS NULL;
 
 UPDATE OFFERS SET created_by_id = 1 WHERE created_by_id IS NULL;

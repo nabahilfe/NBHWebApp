@@ -1,6 +1,28 @@
 /* Daten für ROLES */
 /* werden automatisch angelegt */
 
+
+
+/***********************************************************************************************/
+/* Zuerst muss der SysAdmin manuell angelegt werden - erst danach kann die App getartet werden */
+
+
+insert into members
+(id, member_nmbr,      first_name, last_name,    birthdate, street, number, zip, city, email,                     is_imported_member, is_system_account, created_by_id, version, joining_date) values
+( 1,           1, 'Administrator',  'System', '2000-01-01', '-',    '-',    '-',  '-', 'sysadmin.ma@nabahilfe.eu' 'true'              'true'             1,             0,      '2020-01-01');
+
+/* Jetzt App starten, die legt die Rollen an */
+
+
+
+
+
+
+
+
+
+
+
 /*
 INSERT INTO roles (is_board_member,  is_treasurer, is_secretary, is_auditor, is_time_keeper, is_admin, is_miscellaneous, role_name,          version) VALUES
                     (true,             false,          false,       false,      false,       true,       false,          'Obmann',              0),

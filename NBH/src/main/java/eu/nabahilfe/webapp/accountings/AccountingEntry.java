@@ -76,9 +76,8 @@ public class AccountingEntry  {
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "created_by_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "created_by_id", nullable = false)
     @CreatedBy
     private Member createdBy;
 

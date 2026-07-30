@@ -75,9 +75,8 @@ public class Role implements Serializable {
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    // FIXME in Generator: "@Column(nullable = false)"
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "created_by_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "created_by_id", nullable = false)
     @CreatedBy
     private Member createdBy;
 
@@ -182,6 +181,37 @@ public class Role implements Serializable {
         return NbhConst.ADMIN_ROLE_NAME.equalsIgnoreCase(roleName);
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Member getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Member createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Member getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Member updatedBy) {
+        this.updatedBy = updatedBy;
+    }
 
     @Override
     public int hashCode() {
