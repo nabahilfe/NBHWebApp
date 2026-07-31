@@ -52,14 +52,15 @@ public class DefaultDataInitializer implements CommandLineRunner {
         try {
             // System Administrator member must exist, otherwise we cannot create the default roles and offers
             admin = memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME, NbhConst.ADMIN_ACCOUNT_LAST_NAME)
-                    .stream().findFirst().orElseThrow(() -> new IllegalStateException("System Administrator member not found after initialization!"));
+                    .stream().findFirst().orElseThrow(() -> new IllegalStateException("System Administrator member not found, must be created manually with insert to database!"));
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("System Administrator member not found, must be created manually with insert to database!", e);
-            throw new IllegalStateException("Application startup failed, initial Data not created!", e);
+            throw new IllegalStateException("Application startup failed, no System Administrator member found, initial Data not created!", e);
         }
         try {
             Role adminRole = ensureAdminRoleExists(admin);
-            addAdminRoletoAdmin(admin, adminRole);
+            addAdminRoleToAdmin(admin, adminRole);
             ensureDefaultRolesExists(admin);
             ensureOffersExist(admin);
             ensureSozialkontoExists(admin);
@@ -180,6 +181,9 @@ public class DefaultDataInitializer implements CommandLineRunner {
 
     private void ensureDefaultRolesExists(Member admin) {
         Role existing = roleRepository.findByRoleNameIgnoreCase("Obmann").orElse(null);
+        if (existing == null) {
+            existing = roleRepository.findByRoleNameIgnoreCase("Obfrau").orElse(null);
+        }
         if (existing != null) {
             log.debug("RoleNames already exist, skipping default role creation");
             return;
@@ -372,7 +376,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         });
     }
 
-    private void addAdminRoletoAdmin(Member admin, Role adminRole) {
+    private void addAdminRoleToAdmin(Member admin, Role adminRole) {
         admin.setRole(adminRole);
         admin.setUpdatedBy(admin);
         memberRepository.save(admin);

@@ -1,27 +1,30 @@
-/* Daten für ROLES */
-/* werden automatisch angelegt */
-
-
-
 /***********************************************************************************************/
 /* Zuerst muss der SysAdmin manuell angelegt werden - erst danach kann die App getartet werden */
+/* für andere DB-Namen / Subdomains muss die E-Mail Subdomain angepasst werden!                */
 
 
 insert into members
-(id, member_nmbr,      first_name, last_name,    birthdate, street, number, zip, city, email,                     is_imported_member, is_system_account, created_by_id, version, joining_date) values
-( 1,           1, 'Administrator',  'System', '2000-01-01', '-',    '-',    '-',  '-', 'sysadmin.ma@nabahilfe.eu' 'true'              'true'             1,             0,      '2020-01-01');
-
-/* Jetzt App starten, die legt die Rollen an */
+(member_nmbr,      first_name, last_name,    birthdate, street, number, zip, city, email,                      is_imported_member, is_system_account, created_by_id, version, joining_date) values
+(          1, 'Administrator',  'System', '2000-01-01', '-',    '-',    '-',  '-', 'sysadmin.ma@nabahilfe.eu', TRUE,               TRUE,              1,             0,      '2020-01-01');
 
 
+/* prüfen ob alles geklappt hat und ob die created_by_id der id entspricht */
+/***************************************************************************/
+
+
+/* Testdaten
+insert into members
+(member_nmbr,   first_name, last_name,    birthdate, street, number, zip, city, email,              is_imported_member, is_system_account, created_by_id, version, joining_date) values
+(       2001,   'Inserter',  'Member', '2000-01-01', '-',    '-',    '-',  '-', 'test332@test.com', TRUE,               TRUE,              101,           0,      '2020-01-01');
+*/
 
 
 
+/************ Jetzt App starten, die legt die Rollen, Offers und Sozialkonto an *************/
 
 
-
-
-
+/* Daten für ROLES */
+/* werden automatisch angelegt */
 
 /*
 INSERT INTO roles (is_board_member,  is_treasurer, is_secretary, is_auditor, is_time_keeper, is_admin, is_miscellaneous, role_name,          version) VALUES
@@ -88,8 +91,6 @@ insert into offers (code, description, version) values
 insert into members (member_nmbr,  salutation, title, first_name, last_name, institution, birthdate, street, number, zip, city, email, phone_number, direct_debit_authorization, accumulated_hours, joining_date, version) values
 (3001, 'Herr', '',    'Thomas',    'Huber',  '',                       '1978-11-02', 'Hauptstraße',  '7', '4020', 'Linz',          'test@test.com',  '0699 19998080', 'TRUE',  '3', '2018-03-01', '0'),
 (3002, 'Frau', 'Dr.', 'Katharina', 'Gruber', 'Gemeinde Maria Anzbach', '1992-06-21', 'Kirchengasse', '3', '3034', 'Maria Anzbach', '',               '072818993',     'FALSE', '0', '2018-06-01', '0');
-
-
 
 
 
