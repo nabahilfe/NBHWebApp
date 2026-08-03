@@ -27,22 +27,21 @@
     content = @`
 
     <div class="container-fluid">
-        <h3>Aktuelle fremd-verbuchte Zeitschecks</h3>
-        <p>Es werden die letzten <strong>50</strong> fremd-verbuchten Zeitschecks angezeigt, für eine vereinfachte Kontrolle der aktuellen Buchungen.</p>
+        <h3>Aktuelle selbst-verbuchte Zeitschecks</h3>
+        <p>Es werden die letzten <strong>50</strong> selbst-verbuchten Zeitschecks angezeigt, für eine vereinfachte Kontrolle der aktuellen Buchungen.</p>
 
         @if(bookings == null || bookings.isEmpty())
-            <div class="alert alert-info">Keine fremd-verbuchten Zeitschecks gefunden.</div>
+            <div class="alert alert-info">Keine selbst-verbuchten Zeitschecks gefunden.</div>
         @else
             <table class="table table-bordered table-hover table-sm shadow h-100" id="bookingReportTable">
                 <thead class="table-light">
                     <tr>
                         <th scope="col" data-sort-index="0" data-type="text" data-label="Verbucht">Verbucht</th>
-                        <th scope="col" data-sort-index="1" data-type="text" data-label="Verbucht von">Verbucht von</th>
-                        <th scope="col" data-sort-index="2" data-type="text" data-label="von Mitglied">von Mitglied</th>
-                        <th scope="col" data-sort-index="3" data-type="text" data-label="an Mitglied">an Mitglied</th>
-                        <th scope="col" data-sort-index="4" data-type="text" data-label="Datum">Datum</th>
-                        <th scope="col" class="text-end" data-sort-index="5" data-type="number" data-label="h">h</th>
-                        <th scope="col" data-sort-index="6" data-type="text" data-label="Kategorie">Kategorie</th>
+                        <th scope="col" data-sort-index="1" data-type="text" data-label="von Mitglied">von Mitglied</th>
+                        <th scope="col" data-sort-index="2" data-type="text" data-label="an Mitglied">an Mitglied</th>
+                        <th scope="col" data-sort-index="3" data-type="text" data-label="Datum">Datum</th>
+                        <th scope="col" class="text-end" data-sort-index="4" data-type="number" data-label="h">h</th>
+                        <th scope="col" data-sort-index="5" data-type="text" data-label="Kategorie">Kategorie</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,9 +49,6 @@
                         <tr>
                             <td data-sort-value="${row.getCreatedAt().toString()}">
                                 ${dateDE(row.getCreatedAt().toLocalDate())}
-                            </td>
-                            <td data-sort-value="${row.getCreatedByName().toLowerCase()}">
-                                ${row.getCreatedByName()}
                             </td>
                             <td data-sort-value="${row.getFromMemberName().toLowerCase()}">
                                 ${row.getFromMemberName()}

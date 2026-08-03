@@ -39,6 +39,29 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
             """)
     List<TimeTransferBookingReportRow> findForeignBookingsOrderByCreatedAtDesc(Pageable pageable);
 
+    /** Returns the (up to) N most recently created booking-report rows for TimeTransfers that were self-booked
+     *  by the service provider (fromMember == createdBy), pre-formatted as a DTO ready for display. */
+    @Query("""
+            SELECT new eu.nabahilfe.webapp.timetransfers.TimeTransferBookingReportRow(
+                t.createdAt,
+                CONCAT(cb.lastName, ' ', cb.firstName),
+                CONCAT(fm.lastName, ' ', fm.firstName),
+                CONCAT(tm.lastName, ' ', tm.firstName),
+                t.dateOfService,
+                t.hours,
+                TRIM(CONCAT(COALESCE(o.code, ''), ' ', COALESCE(o.description, ''))),
+                t.note
+            )
+            FROM TimeTransfer t
+            JOIN t.createdBy cb
+            JOIN t.fromMember fm
+            JOIN t.toMember tm
+            LEFT JOIN t.offer o
+            WHERE cb.id = fm.id
+            ORDER BY t.createdAt DESC
+            """)
+    List<TimeTransferBookingReportRow> findSelfBookingsOrderByCreatedAtDesc(Pageable pageable);
+
     List<TimeTransfer> findTop10ByFromMember_IdOrToMember_IdOrderByDateOfServiceDesc(Long fromMemberId, Long toMemberId);
 
 

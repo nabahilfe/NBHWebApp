@@ -318,6 +318,7 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/timecheques/booking-report">Fremd-verbuchte Zeitschecks</a></li>
+                                    <li><a class="dropdown-item" href="/timecheques/self-booking-report">Selbst-verbuchte Zeitschecks</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/timecheques/statistics">Zeitschecks pro Mitglied</a></li>
                                     <li><a class="dropdown-item" href="/timecheques/category-statistics">Zeitschecks pro Kategorie</a></li>
