@@ -16,13 +16,28 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
 
     List<TimeTransfer> findAllByOrderByDateOfServiceDesc();
 
-    /** Returns the (up to) N most recently created TimeTransfers that were booked by someone other than the service provider (fromMember) */
+    /** Returns the (up to) N most recently created booking-report rows for TimeTransfers that were booked by someone
+     *  other than the service provider (fromMember), pre-formatted as a DTO ready for display. */
     @Query("""
-            SELECT t FROM TimeTransfer t
-            WHERE t.createdBy.id <> t.fromMember.id
+            SELECT new eu.nabahilfe.webapp.timetransfers.TimeTransferBookingReportRow(
+                t.createdAt,
+                CONCAT(cb.lastName, ' ', cb.firstName),
+                CONCAT(fm.lastName, ' ', fm.firstName),
+                CONCAT(tm.lastName, ' ', tm.firstName),
+                t.dateOfService,
+                t.hours,
+                TRIM(CONCAT(COALESCE(o.code, ''), ' ', COALESCE(o.description, ''))),
+                t.note
+            )
+            FROM TimeTransfer t
+            JOIN t.createdBy cb
+            JOIN t.fromMember fm
+            JOIN t.toMember tm
+            LEFT JOIN t.offer o
+            WHERE cb.id <> fm.id
             ORDER BY t.createdAt DESC
             """)
-    List<TimeTransfer> findForeignBookingsOrderByCreatedAtDesc(Pageable pageable);
+    List<TimeTransferBookingReportRow> findForeignBookingsOrderByCreatedAtDesc(Pageable pageable);
 
     List<TimeTransfer> findTop10ByFromMember_IdOrToMember_IdOrderByDateOfServiceDesc(Long fromMemberId, Long toMemberId);
 

@@ -8,11 +8,9 @@
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
 
-@import eu.nabahilfe.webapp.timetransfers.TimeTransfer
-@import eu.nabahilfe.webapp.org.Offer
-@import eu.nabahilfe.webapp.members.Member
+@import eu.nabahilfe.webapp.timetransfers.TimeTransferBookingReportRow
 
-@param List<TimeTransfer> bookings
+@param List<TimeTransferBookingReportRow> bookings
 
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
@@ -50,37 +48,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for(TimeTransfer tt : bookings)
-                        !{Offer offer = tt.getOffer();}
-                        !{Member createdBy = tt.getCreatedBy();}
-                        !{Member fromMember = tt.getFromMember();}
-                        !{Member toMember = tt.getToMember();}
-                        !{String categoryCode = offer != null && offer.getCode() != null ? offer.getCode() : "";}
-                        !{String categoryDesc = offer != null && offer.getDescription() != null ? offer.getDescription() : "";}
-                        !{String categoryText = (categoryCode + " " + categoryDesc).trim();}
+                    @for(TimeTransferBookingReportRow row : bookings)
                         <tr>
-                            <td data-sort-value="${tt.getCreatedAt() != null ? tt.getCreatedAt().toString() : ""}">
-                                ${tt.getCreatedAt() != null ? dateDE(tt.getCreatedAt().toLocalDate()) : ""}
+                            <td data-sort-value="${row.getCreatedAt().toString()}">
+                                ${dateDE(row.getCreatedAt().toLocalDate())}
                             </td>
-                            <td data-sort-value="${createdBy != null ? createdBy.getName().toLowerCase() : ""}">
-                                ${createdBy != null ? createdBy.getName() : ""}
+                            <td data-sort-value="${row.getCreatedByName().toLowerCase()}">
+                                ${row.getCreatedByName()}
                             </td>
-                            <td data-sort-value="${fromMember != null ? fromMember.getName().toLowerCase() : ""}">
-                                ${fromMember != null ? fromMember.getName() : ""}
+                            <td data-sort-value="${row.getFromMemberName().toLowerCase()}">
+                                ${row.getFromMemberName()}
                             </td>
-                            <td data-sort-value="${toMember != null ? toMember.getName().toLowerCase() : ""}">
-                                ${toMember != null ? toMember.getName() : ""}
+                            <td data-sort-value="${row.getToMemberName().toLowerCase()}">
+                                ${row.getToMemberName()}
                             </td>
-                            <td data-sort-value="${tt.getDateOfService() != null ? tt.getDateOfService().toString() : ""}">
-                                ${dateDE(tt.getDateOfService())}
+                            <td data-sort-value="${row.getDateOfService().toString()}">
+                                ${dateDE(row.getDateOfService())}
                             </td>
-                            <td class="text-end" data-sort-value="${tt.getHours() != null ? tt.getHours() : 0}">
-                                ${tt.getHours()}
+                            <td class="text-end" data-sort-value="${row.getHours()}">
+                                ${row.getHours()}
                             </td>
-                            <td data-sort-value="${categoryText.toLowerCase()}">
-                                ${categoryText}
-                                @if(tt.getNote() != null && !tt.getNote().isBlank())
-                                    <br/><small class="text-muted">${tt.getNote()}</small>
+                            <td data-sort-value="${row.getCategory().toLowerCase()}">
+                                ${row.getCategory()}
+                                @if(row.hasNote())
+                                    <br/><small class="text-muted">${row.getNote()}</small>
                                 @endif
                             </td>
                         </tr>
