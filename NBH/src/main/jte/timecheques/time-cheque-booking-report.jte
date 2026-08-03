@@ -28,7 +28,7 @@
 
     <div class="container-fluid">
         <h3>Aktuelle fremd-verbuchte Zeitschecks</h3>
-        <p>Es werden die letzten <strong>50</strong> fremd-verbuchten Zeitschecks angezeigt, für eine vereinfachte Kontrolle der aktuellen Buchungen.</p>
+        <p>Es werden die letzten 50 fremd-verbuchten Zeitschecks angezeigt, für eine vereinfachte Kontrolle der aktuellen Buchungen.</p>
 
         @if(bookings == null || bookings.isEmpty())
             <div class="alert alert-info">Keine fremd-verbuchten Zeitschecks gefunden.</div>

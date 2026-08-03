@@ -28,7 +28,7 @@
 
     <div class="container-fluid">
         <h3>Aktuelle selbst-verbuchte Zeitschecks</h3>
-        <p>Es werden die letzten <strong>50</strong> selbst-verbuchten Zeitschecks angezeigt, für eine vereinfachte Kontrolle der aktuellen Buchungen.</p>
+        <p>Es werden die letzten 50 selbst-verbuchten Zeitschecks angezeigt, für eine vereinfachte Kontrolle der aktuellen Buchungen.</p>
 
         @if(bookings == null || bookings.isEmpty())
             <div class="alert alert-info">Keine selbst-verbuchten Zeitschecks gefunden.</div>

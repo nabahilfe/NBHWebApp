@@ -30,8 +30,6 @@
 
     <div class="container">
         <h3>Personalisierte Zeitscheck Statistiken</h3>
-        <br/>
-
 
         <!-- Year selector -->
         !{int currentYear = LocalDate.now().getYear();}
@@ -199,7 +197,7 @@
             </div>
 
             <div class="col-12 col-lg-6 mb-3">
-                <h4>Guthaben Rangliste</h4>
+                <h4>Guthaben Rangliste (nicht Jahresabhängig)</h4>
 
                 <!-- Accumulated hours ranking table -->
                 @if(hoursRanking == null || hoursRanking.isEmpty())
