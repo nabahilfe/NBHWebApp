@@ -140,6 +140,15 @@ public class TimeChequeController {
         return "timecheques/time-cheque-statistics";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @GetMapping("/booking-report")
+    String bookingReport(final Model model) {
+        org.springframework.data.domain.Pageable top50 = org.springframework.data.domain.PageRequest.of(0, 50);
+        model.addAttribute("bookings", timeTransferRepository.findForeignBookingsOrderByCreatedAtDesc(top50));
+        return "timecheques/time-cheque-booking-report";
+    }
+
+
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
     @GetMapping("/category-statistics")
     String categoryStatistics(final Model model, @RequestParam(required = false) Integer year) {

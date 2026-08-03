@@ -317,6 +317,8 @@
                                     Auswertungen
                                 </button>
                                 <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/timecheques/booking-report">Fremd-verbuchte Zeitschecks</a></li>
+                                    <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/timecheques/statistics">Zeitschecks pro Mitglied</a></li>
                                     <li><a class="dropdown-item" href="/timecheques/category-statistics">Zeitschecks pro Kategorie</a></li>
                                     <li><a class="dropdown-item" href="/members/statistics">Mitgliederentwicklung</a></li>

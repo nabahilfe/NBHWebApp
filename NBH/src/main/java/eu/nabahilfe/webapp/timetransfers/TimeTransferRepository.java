@@ -8,12 +8,21 @@ package eu.nabahilfe.webapp.timetransfers;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 
 public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer, Long> {
 
     List<TimeTransfer> findAllByOrderByDateOfServiceDesc();
+
+    /** Returns the (up to) N most recently created TimeTransfers that were booked by someone other than the service provider (fromMember) */
+    @Query("""
+            SELECT t FROM TimeTransfer t
+            WHERE t.createdBy.id <> t.fromMember.id
+            ORDER BY t.createdAt DESC
+            """)
+    List<TimeTransfer> findForeignBookingsOrderByCreatedAtDesc(Pageable pageable);
 
     List<TimeTransfer> findTop10ByFromMember_IdOrToMember_IdOrderByDateOfServiceDesc(Long fromMemberId, Long toMemberId);
 
