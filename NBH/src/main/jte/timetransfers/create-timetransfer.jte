@@ -127,12 +127,6 @@
 
             </div>
 
-            <br/>
-            <!-- Form actions: submit posts the transfer; reset clears client-side inputs -->
-            <button id="submitBtn" class="btn btn-primary bi-card-checklist" type="submit"> Zeitscheck verbuchen</button>
-            <button class="btn btn-secondary" type="button" onclick="resetInputs()">Eingabe löschen</button>
-
-
           </div>
 
           <div class="col-sm-6 mb-1">
@@ -158,21 +152,31 @@
 
               </div>
             </div>
-            <br/>
-
-            <!-- Quick links to booking reports, aligned under the right panel -->
-                <a href="/timecheques/booking-report" class="btn btn-outline-primary bi-people">
-                    &nbsp; Fremd-verbuchte Zeitschecks anzeigen
-                </a>
-                <a href="/timecheques/self-booking-report" class="btn btn-outline-primary bi-person-check">
-                    &nbsp; Selbst-verbuchte Zeitschecks anzeigen
-                </a>
 
           </div>
 
         </div>
 
         <br/>
+
+        <!-- Form actions: submit posts the transfer; reset clears client-side inputs -->
+        <div class="d-flex flex-wrap gap-2">
+            <button id="submitBtn" class="btn btn-primary bi-card-checklist" type="submit"> Zeitscheck verbuchen</button>
+            <button class="btn btn-secondary" type="button" onclick="resetInputs()">Eingabe löschen</button>
+        </div>
+
+        <br/>
+
+        <!-- Quick links to booking reports -->
+        <div class="d-flex flex-column flex-sm-row gap-2">
+            <a href="/timecheques/booking-report" class="btn btn-outline-primary bi-people">
+                &nbsp; Fremd-verbuchte Zeitschecks anzeigen
+            </a>
+            <a href="/timecheques/self-booking-report" class="btn btn-outline-primary bi-person-check">
+                &nbsp; Selbst-verbuchte Zeitschecks anzeigen
+            </a>
+        </div>
+
     </form>
 
     <br/>
