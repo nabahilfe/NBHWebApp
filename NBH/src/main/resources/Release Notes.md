@@ -1,3 +1,6 @@
 ### Version 0.7.0
-- Es gibt nun Bilder Galerien
+- Reports für fremd- und selbst-verbuchte Zeitschecks, um die Buchungen leichter überprüfen zu können
+- Vorbereitung der Datenbank für Bildergalerien
+- createdBy ist nun ein Pflichtfeld
+
 

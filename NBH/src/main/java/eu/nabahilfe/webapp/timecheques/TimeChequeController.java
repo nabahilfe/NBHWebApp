@@ -127,6 +127,7 @@ public class TimeChequeController {
         boolean allYears = (year != null && year == 0);
         int selectedYear = allYears ? 0 : (year != null ? year : LocalDate.now().getYear());
         model.addAttribute("selectedYear", selectedYear);
+        model.addAttribute("hoursRanking", memberRepository.findAccumulatedHoursRanking());
         if (allYears) {
             org.springframework.data.domain.Pageable top20 = org.springframework.data.domain.PageRequest.of(0, 20);
             model.addAttribute("stats", timeChequeRepository.findStatsAllYears(top20));

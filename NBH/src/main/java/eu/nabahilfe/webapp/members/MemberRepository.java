@@ -133,4 +133,12 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
            "AND (m.isSystemAccount = false OR m.isSystemAccount IS NULL)")
     long countActiveMembers();
 
+    /** Returns [memberFullName, accumulatedHours] for active, non-system members, ordered by accumulatedHours desc */
+    @Query("SELECT CONCAT(m.lastName, ' ', m.firstName), COALESCE(m.accumulatedHours, 0) " +
+           "FROM Member m " +
+           "WHERE (m.resignationDate IS NULL OR m.resignationDate > CURRENT_DATE) " +
+           "AND (m.isSystemAccount = false OR m.isSystemAccount IS NULL) " +
+           "ORDER BY COALESCE(m.accumulatedHours, 0) DESC")
+    List<Object[]> findAccumulatedHoursRanking();
+
 }
