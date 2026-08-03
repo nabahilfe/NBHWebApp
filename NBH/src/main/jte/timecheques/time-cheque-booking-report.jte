@@ -38,12 +38,12 @@
             <table class="table table-bordered table-hover table-sm shadow h-100" id="bookingReportTable">
                 <thead class="table-light">
                     <tr>
-                        <th scope="col" data-sort-index="0" data-type="text" data-label="Verbucht am">Verbucht am</th>
+                        <th scope="col" data-sort-index="0" data-type="text" data-label="Verbucht">Verbucht</th>
                         <th scope="col" data-sort-index="1" data-type="text" data-label="Verbucht von">Verbucht von</th>
                         <th scope="col" data-sort-index="2" data-type="text" data-label="von Mitglied">von Mitglied</th>
                         <th scope="col" data-sort-index="3" data-type="text" data-label="an Mitglied">an Mitglied</th>
                         <th scope="col" data-sort-index="4" data-type="text" data-label="Datum">Datum</th>
-                        <th scope="col" class="text-end" data-sort-index="5" data-type="number" data-label="Stunden">Stunden</th>
+                        <th scope="col" class="text-end" data-sort-index="5" data-type="number" data-label="h">h</th>
                         <th scope="col" data-sort-index="6" data-type="text" data-label="Kategorie">Kategorie</th>
                     </tr>
                 </thead>
@@ -92,7 +92,7 @@
 
             const tbody = table.querySelector("tbody");
             const headers = Array.from(table.querySelectorAll("th[data-sort-index]"));
-            let currentSort = { index: 0, asc: false }; // default: "Verbucht am" descending
+            let currentSort = { index: 0, asc: false }; // default: "Verbucht" descending
 
             function sortRows(index, asc, type) {
                 const rows = Array.from(tbody.querySelectorAll("tr"));
@@ -139,7 +139,7 @@
                 });
             });
 
-            // initial sort: "Verbucht am" descending
+            // initial sort: "Verbucht" descending
             sortRows(0, false, "text");
             updateHeaderLabels();
         });
