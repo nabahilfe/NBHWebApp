@@ -53,6 +53,17 @@ TRUNCATE TABLE SPRING_SESSION;
 
 
 
+/****************************************************************************************/
+/* ESSENTIAL! Set created_by_id in Table  REGISTRATION_CODE to nullable after creation! */
+/****************************************************************************************/
+
+ALTER TABLE REGISTRATION_CODES ALTER COLUMN created_by_id DROP NOT NULL;
+
+
+
+
+
+
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
  * Generated at 2026-07-24 12:43:05
