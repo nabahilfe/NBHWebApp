@@ -309,6 +309,16 @@ public class MemberController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @GetMapping("/registered")
+    String listRegisteredMembers(final Model model) {
+        log.debug("Listing registered Members (password set)");
+        List<Member> registeredMembers = memberRepository.findRegisteredMembersExcludingSystemAccounts();
+        model.addAttribute("registeredMembers", registeredMembers);
+        log.debug("Found {} registered Members", registeredMembers.size());
+        return "members/list-registered-members";
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @GetMapping("/birthdays")
     String listBirthdays(final Model model) {
         model.addAttribute("currentMonth", memberRepository.findBirthdaysByMonthOffset(0));

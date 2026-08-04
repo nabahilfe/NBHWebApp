@@ -107,6 +107,14 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
 
     List<Member> findByFirstNameIgnoreCaseAndLastNameIgnoreCase(String firstName, String lastName);
 
+    /** All members that have registered (i.e. have set a password), excluding system accounts, sorted by full name (lastName, firstName). */
+    @EntityGraph(attributePaths = "role")
+    @Query("SELECT m FROM Member m " +
+           "WHERE m.password IS NOT NULL " +
+           "AND (m.isSystemAccount = false OR m.isSystemAccount IS NULL) " +
+           "ORDER BY m.lastName ASC, m.firstName ASC")
+    List<Member> findRegisteredMembersExcludingSystemAccounts();
+
     /** IDs of active, non-system members whose address has not yet been geo-validated. */
     @Query("SELECT m.id FROM Member m " +
            "WHERE (m.resignationDate IS NULL OR m.resignationDate > CURRENT_DATE) " +
