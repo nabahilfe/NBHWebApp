@@ -55,10 +55,6 @@
                             @endif
                         </dd>
 
-
-
-
-
                         <dt class="col-sm-4">Transaktionsdatum</dt>
                         <dd class="col-sm-8">${dateReverseDE(accountingEntry.getTransactionDate())}</dd>
 

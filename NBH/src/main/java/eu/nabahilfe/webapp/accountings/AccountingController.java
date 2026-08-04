@@ -229,6 +229,12 @@ public class AccountingController {
             return "accountings/book-transaction";
         }
 
+        if (parsedAccountingDate.isBefore(tx.getTransactionDate())) {
+            model.addAttribute("errorMessage", "Das Buchungsdatum darf nicht vor dem Transaktionsdatum liegen.");
+            model.addAttribute("transaction", tx);
+            return "accountings/book-transaction";
+        }
+
         AccountingEntry entry = new AccountingEntry();
         entry.setAccountableName(tx.getAccountableName());
         entry.setAccountableId(tx.getAccountableId());
@@ -381,6 +387,15 @@ public class AccountingController {
             log.debug("Validation errors found: " + bindingResult.getAllErrors().toString());
             model.addAttribute("accountingEntry", accountingEntry);
             redirectAttributes.addFlashAttribute("errorMessage", bindingResult.getAllErrors().toString());
+            return "accountings/detail-accountable";
+        }
+
+        if (accountingEntry.getAccountingDate() != null && accountingEntry.getTransactionDate() != null
+                && accountingEntry.getAccountingDate().isBefore(accountingEntry.getTransactionDate())) {
+            log.debug("Buchungsdatum {} liegt vor Transaktionsdatum {}", accountingEntry.getAccountingDate(),
+                    accountingEntry.getTransactionDate());
+            model.addAttribute("accountingEntry", accountingEntry);
+            model.addAttribute("errorMessage", "Das Buchungsdatum darf nicht vor dem Transaktionsdatum liegen.");
             return "accountings/detail-accountable";
         }
 
