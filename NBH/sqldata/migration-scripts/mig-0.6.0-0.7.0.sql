@@ -74,14 +74,24 @@ ALTER TABLE TIME_CHEQUES ADD COLUMN liable_member_name VARCHAR(80);
 
 ALTER TABLE TRANSACTIONS ADD COLUMN liable_member_name VARCHAR(80);
 
+ALTER TABLE ACCOUNTING_ENTRIES ADD COLUMN liable_member_name VARCHAR(80);
 
 
-UPDATE MEMBERSHIP_FEES SET liable_member_name = 'Brachmann Susanne';
 
-UPDATE TIME_CHEQUES SET liable_member_name = 'Csürös Clemens';
+UPDATE MEMBERSHIP_FEES SET liable_member_name = 'Brachmann Susanne'
+WHERE liable_member_name IS NULL;
 
-UPDATE TRANSACTIONS SET liable_member_name = 'Brachmann Susanne';
+UPDATE TIME_CHEQUES SET liable_member_name = 'Csürös Clemens'
+WHERE liable_member_name IS NULL;
 
+UPDATE TRANSACTIONS SET liable_member_name = 'Brachmann Susanne'
+WHERE liable_member_name IS NULL;
+
+UPDATE ACCOUNTING_ENTRIES SET liable_member_name = 'Brachmann Susanne'
+WHERE liable_member_name IS NULL AND accountable_name IN ('Mitgliedsbeitrag', 'Sonstiges');
+
+UPDATE ACCOUNTING_ENTRIES SET liable_member_name = 'Brachmann Susanne'
+WHERE liable_member_name IS NULL AND accountable_name IN ('Zeitscheck');
 
 
 ALTER TABLE MEMBERSHIP_FEES ALTER COLUMN liable_member_name SET NOT NULL;
@@ -89,6 +99,8 @@ ALTER TABLE MEMBERSHIP_FEES ALTER COLUMN liable_member_name SET NOT NULL;
 ALTER TABLE TIME_CHEQUES ALTER COLUMN liable_member_name SET NOT NULL;
 
 ALTER TABLE TRANSACTIONS ALTER COLUMN liable_member_name SET NOT NULL;
+
+ALTER TABLE ACCOUNTING_ENTRIES ALTER COLUMN liable_member_name SET NOT NULL;
 
 
 

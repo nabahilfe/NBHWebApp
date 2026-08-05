@@ -3,6 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.accountings.TransactionType
 @import eu.nabahilfe.webapp.GlobalModelAttributes
 @import java.time.LocalDate
 
@@ -47,13 +48,23 @@
                         <dd class="col-sm-8">${accountingEntry.getAccountableMember() != null ? accountingEntry.getAccountableMember().getNameAndAddress() : "-"}</dd>
 
                         <dt class="col-sm-4">Buchungsart</dt>
-                        <dd class="col-sm-8">${accountingEntry.getTransactionDisplayType()}</dd>
+                        <dd class="col-sm-8">
+                            @if(accountingEntry.getTransactionDisplayType().equals(TransactionType.INCOME.getCode()))
+                                <span class="badge bg-success">Einnahme</span>
+                            @else
+                                <span class="badge bg-danger">Ausgabe</span>
+                            @endif
+                        </dd>
+
 
                         <dt class="col-sm-4">Transaktionsdatum</dt>
                         <dd class="col-sm-8">${dateReverseDE(accountingEntry.getTransactionDate())}</dd>
 
                         <dt class="col-sm-4">Betrag</dt>
                         <dd class="col-sm-8">€ ${numberDE(accountingEntry.getTransactionAmount())}</dd>
+
+                        <dt class="col-sm-4">Veranlasst von</dt>
+                        <dd class="col-sm-8">${accountingEntry.getLiableMemberName()}</dd>
 
                         <dt class="col-sm-4">Buchungsdatum</dt>
                         <dd class="col-sm-8">${dateReverseDE(accountingEntry.getAccountingDate())}</dd>

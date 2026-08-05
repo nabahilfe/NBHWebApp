@@ -62,7 +62,7 @@
                     ${csrfHiddenInput}
                     <tr>
                         <td scope="row">${dateDE(tc.getTransactionDate())}</td>
-                        <td scope="row">${tc.getCreatedBy().getName()}</td>
+                        <td scope="row">${tc.getLiableMemberName()}</td>
                         <td scope="row">${tc.getAssignedTo().getNameAndAddress()}</td>
                         <td scope="row" class="text-end">${tc.getHours()}</td>
                         <td scope="row" class="text-end">€ ${numberDE(tc.getAmount())}</td>
@@ -73,6 +73,7 @@
                             <input type="hidden" name="transactionType" value="${tc.getTransactionType()}">
                             <input type="hidden" name="transactionDate" value="${tc.getTransactionISODate()}">
                             <input type="hidden" name="transactionAmount" value="${tc.getTransactionAmount()}">
+                            <input type="hidden" name="liableMemberName" value="${tc.getLiableMemberName()}">
                             @if(ctxt.isTreasurer() || ctxt.isAdmin())
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-outline-primary btn-sm bi-plus-lg"></button>

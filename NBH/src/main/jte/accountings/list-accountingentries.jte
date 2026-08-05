@@ -98,23 +98,25 @@
                 <th>Mitglied</th>
                 <th>Beschreibung</th>
                 <th>Transaktionsdatum</th>
+                <th>Veranlasst von</th>
                 <th class="text-end">Betrag</th>
             </tr>
         </thead>
         <tbody>
             @if(entries.isEmpty())
                 <tr>
-                    <td colspan="7" class="text-center text-muted">Keine Einträge gefunden.</td>
+                    <td colspan="8" class="text-center text-muted">Keine Einträge gefunden.</td>
                 </tr>
             @else
                 @for(AccountingEntry e : entries)
                     <tr>
                         <td>${dateReverseDE(e.getAccountingDate())}</td>
-                        <td>${e.getCreatedBy() != null ? e.getCreatedBy().getName() : "-"}</td>
+                        <td>${e.getCreatedBy() != null ? e.getCreatedBy().getName() : ""}</td>
                         <td>${e.getAccountableName()}</td>
-                        <td>${e.getAccountableMember() != null ? e.getAccountableMember().getName() : "-"}</td>
-                        <td>${e.getDescription() != null ? e.getDescription() : "-"}</td>
+                        <td>${e.getAccountableMember() != null ? e.getAccountableMember().getName() : ""}</td>
+                        <td>${e.getDescription() != null ? e.getDescription() : ""}</td>
                         <td>${dateReverseDE(e.getTransactionDate())}</td>
+                        <td>${e.getLiableMemberName()}</td>
                         <td class="text-end">&euro; ${numberDE(e.getTransactionAmount())}</td>
                     </tr>
                 @endfor
@@ -122,7 +124,7 @@
         </tbody>
         <tfoot class="table-light fw-bold">
             <tr>
-                <td colspan="6" class="text-end">Summe:</td>
+                <td colspan="7" class="text-end">Summe</td>
                 <td class="text-end">&euro; ${numberDE(total)}</td>
             </tr>
         </tfoot>

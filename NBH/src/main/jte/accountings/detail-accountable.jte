@@ -58,6 +58,9 @@
                         <dt class="col-sm-4">Transaktionsdatum</dt>
                         <dd class="col-sm-8">${dateReverseDE(accountingEntry.getTransactionDate())}</dd>
 
+                        <dt class="col-sm-4">Veranlasst von</dt>
+                        <dd class="col-sm-8">${accountingEntry.getLiableMemberName()}</dd>
+
                         <dt class="col-sm-4">Betrag</dt>
                         <dd class="col-sm-8">€ ${numberDE(accountingEntry.getTransactionAmount())}</dd>
 

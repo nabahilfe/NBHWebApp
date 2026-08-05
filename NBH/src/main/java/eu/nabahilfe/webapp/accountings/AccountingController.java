@@ -229,6 +229,7 @@ public class AccountingController {
             return "accountings/book-transaction";
         }
 
+        // Ensure the booking date is ON OR AFTER the transaction date (Buchungsdatum >= Transaktionsdatum)
         if (parsedAccountingDate.isBefore(tx.getTransactionDate())) {
             model.addAttribute("errorMessage", "Das Buchungsdatum darf nicht vor dem Transaktionsdatum liegen.");
             model.addAttribute("transaction", tx);
@@ -243,6 +244,7 @@ public class AccountingController {
         entry.setTransactionAmount(tx.getTransactionAmount());
         entry.setAccountingDate(parsedAccountingDate);
         entry.setDescription(tx.getDescription());
+        entry.setLiableMemberName(tx.getLiableMemberName());
 
         accountingRepository.save(entry);
         tx.setAccountedBy(entry);
@@ -365,6 +367,7 @@ public class AccountingController {
         accountingEntry.setTransactionType(formRowData.getTransactionType());
         accountingEntry.setTransactionDate(formRowData.getTransactionDate());
         accountingEntry.setTransactionAmount(formRowData.getTransactionAmount());
+        accountingEntry.setLiableMemberName(formRowData.getLiableMemberName());
 
 
         log.debug("AccountingEntry prepared for booking: " + accountingEntry.toString());
@@ -390,6 +393,7 @@ public class AccountingController {
             return "accountings/detail-accountable";
         }
 
+        // Ensure the booking date is ON OR AFTER the transaction date (Buchungsdatum >= Transaktionsdatum)
         if (accountingEntry.getAccountingDate() != null && accountingEntry.getTransactionDate() != null
                 && accountingEntry.getAccountingDate().isBefore(accountingEntry.getTransactionDate())) {
             log.debug("Buchungsdatum {} liegt vor Transaktionsdatum {}", accountingEntry.getAccountingDate(),

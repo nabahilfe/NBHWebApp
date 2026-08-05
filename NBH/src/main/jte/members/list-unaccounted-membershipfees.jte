@@ -62,7 +62,7 @@
                     ${csrfHiddenInput}
                     <tr>
                         <td scope="row">${dateDE(mf.getTransactionDate())}</td>
-                        <td scope="row">${mf.getCreatedBy().getName()}</td>
+                        <td scope="row">${mf.getLiableMemberName()}</td>
                         <td scope="row">${mf.getMember().getNameAndAddress()}</td>
                         <td scope="row">@if(mf.getMember().getResignationDate() != null) ${dateReverseDE(mf.getMember().getResignationDate())} @else @endif</td>
                         <td scope="row" class="text-end">€ ${numberDE(mf.getAmount())}</td>
@@ -73,6 +73,7 @@
                             <input type="hidden" name="transactionType" value="${mf.getTransactionType()}">
                             <input type="hidden" name="transactionDate" value="${mf.getTransactionISODate()}">
                             <input type="hidden" name="transactionAmount" value="${mf.getTransactionAmount()}">
+                            <input type="hidden" name="liableMemberName" value="${mf.getLiableMemberName()}">
                             @if(ctxt.isTreasurer() || ctxt.isAdmin())
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-outline-primary btn-sm bi-plus-lg"></button>

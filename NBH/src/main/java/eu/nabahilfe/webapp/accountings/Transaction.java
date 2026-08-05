@@ -166,6 +166,7 @@ public class Transaction implements Accountable {
         return liableMemberName;
     }
 
+    @Override
     public void setLiableMemberName(String name) {
         liableMemberName = name;
     }

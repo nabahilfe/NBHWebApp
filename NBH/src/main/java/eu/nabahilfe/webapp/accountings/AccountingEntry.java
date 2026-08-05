@@ -72,6 +72,10 @@ public class AccountingEntry  {
     @Size(max = 250)
     private String description;    // Verpflichtend wenn kein fix definierter Name wie 'Zeitscheck', 'Mitgliedsgebühr' verwendet wird, sondern 'Sonstiges'
 
+    // FIXME: Das muss auch in das Modell hinein!!!
+    @Size(max = 80)
+    private String liableMemberName;    // Name des Mitglieds, das für die Erstellung Buchung verantwortlich ist, z.B. bei Zeitscheck-Kauf, Mitgliedsbeitrag, ...
+
     // Creation timestamp, value is set by Postgres (see Table definition)
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -217,7 +221,16 @@ public class AccountingEntry  {
         this.accountableMember = accountableMember;
     }
 
-    @Override
+
+    public String getLiableMemberName() {
+		return liableMemberName;
+	}
+
+	public void setLiableMemberName(String liableMemberName) {
+		this.liableMemberName = liableMemberName;
+	}
+
+	@Override
     public int hashCode() {
         return Objects.hash(id);
     }

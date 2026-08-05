@@ -52,6 +52,9 @@
 
                         <dt class="col-sm-4">Betrag</dt>
                         <dd class="col-sm-8">€ ${numberDE(transaction.getAmount())}</dd>
+
+                        <dt class="col-sm-4">Erstellt von</dt>
+                        <dd class="col-sm-8">€ ${transaction.getLiableMemberName()}</dd>
                     </dl>
                 </div>
             </div>

@@ -66,7 +66,7 @@
                 @for(Transaction tx : transactions)
                     <tr>
                         <td>${dateReverseDE(tx.getTransactionDate())}</td>
-                        <td>${tx.getCreatedBy() != null ? tx.getCreatedBy().getName() : "-"}</td>
+                        <td>${tx.getLiableMemberName()}</td>
                         <td>
                             @if(tx.getTransactionType().equals(TransactionType.INCOME.name()))
                                 <span class="badge bg-success">Einnahme</span>
