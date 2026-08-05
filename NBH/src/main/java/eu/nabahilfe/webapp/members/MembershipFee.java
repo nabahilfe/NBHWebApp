@@ -12,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import eu.nabahilfe.webapp.LiableMemberListener;
 import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.accountings.Accountable;
 import eu.nabahilfe.webapp.accountings.AccountingEntry;
@@ -27,12 +28,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 /**
  * Dokumentation des jährlichen Mitgliedsbeitrag. TransactionType ist immer INCOME
  */
 @Entity
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({AuditingEntityListener.class, LiableMemberListener.class})
 @Table(name = "MEMBERSHIP_FEES")
 public class MembershipFee implements Accountable {
 
@@ -52,6 +55,10 @@ public class MembershipFee implements Accountable {
 
     @Column(nullable = false)
     private BigDecimal amount;
+
+    @Size(max = 80)
+    @NotEmpty
+    private String liableMemberName;    // Wer hat das veranlasst oder angeordnet -> Name von cretaedBy Member
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -211,6 +218,15 @@ public class MembershipFee implements Accountable {
     }
 
     @Override
+    public String getLiableMemberName() {
+        return liableMemberName;
+    }
+
+    public void setLiableMemberName(String name) {
+         liableMemberName = name;
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(id);
     }
@@ -234,12 +250,6 @@ public class MembershipFee implements Accountable {
                 + ", accountedBy=" + accountedBy + ", createdAt=" + createdAt + ", createdBy=" + createdBy
                 + ", updatedAt=" + updatedAt + ", updatedBy=" + updatedBy + ", version=" + version + "]";
     }
-
-
-    // -----------------------------------------------
-    // Don't forget to generate toString() for logging
-    // -----------------------------------------------
-
 
 
     // ------------------------------

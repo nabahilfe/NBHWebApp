@@ -12,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import eu.nabahilfe.webapp.LiableMemberListener;
 import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.members.Member;
 import jakarta.persistence.Column;
@@ -32,7 +33,7 @@ import jakarta.validation.constraints.Size;
  * Allgemeine Einnahme oder Ausgabe
  */
 @Entity
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({AuditingEntityListener.class, LiableMemberListener.class})
 @Table(name = "TRANSACTIONS")
 public class Transaction implements Accountable {
 
@@ -51,6 +52,10 @@ public class Transaction implements Accountable {
     @Column(nullable = false)
     private BigDecimal amount;
 
+    @Size(max = 80)
+    @NotEmpty
+    private String liableMemberName;    // Wer hat das veranlasst oder angeordnet -> Name von cretaedBy Member
+
     @Size(max = 250)
     @NotEmpty
     private String description;
@@ -64,7 +69,7 @@ public class Transaction implements Accountable {
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "created_by_id", nullable = false)    
+    @JoinColumn(name = "created_by_id", nullable = false)
     @CreatedBy
     private Member createdBy;
 
@@ -155,6 +160,16 @@ public class Transaction implements Accountable {
         this.createdAt = createdAt;
     }
 
+
+    @Override
+    public String getLiableMemberName() {
+        return liableMemberName;
+    }
+
+    public void setLiableMemberName(String name) {
+        liableMemberName = name;
+    }
+
     public Member getCreatedBy() {
         return createdBy;
     }
@@ -219,6 +234,7 @@ public class Transaction implements Accountable {
                 + ", createdAt=" + createdAt + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt + ", updatedBy="
                 + updatedBy + ", version=" + version + "]";
     }
+
 
 
     // ------------------------------

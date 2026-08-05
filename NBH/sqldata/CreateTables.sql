@@ -66,7 +66,7 @@ ALTER TABLE REGISTRATION_CODES ALTER COLUMN created_by_id DROP NOT NULL;
 
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-07-24 12:43:05
+ * Generated at 2026-08-04 16:15:30
  * ModelDescription: NBH Entity Modell
  */
 
@@ -224,6 +224,7 @@ create table if not exists MEMBERSHIP_FEES (
     do_not_charge BOOLEAN not null /* z.B. für Ehrenmitglieder */,
     transaction_date DATE not null,
     amount NUMERIC(12,2) not null,
+    liable_member_name VARCHAR(80) not null /* Wer hat das veranlasst oder angeordnet -> Name von cretaedBy Member */,
     member_id BIGINT /* FK id from MEMBERS(id) */,
     accounted_by_id BIGINT /* FK id from ACCOUNTING_ENTRIES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -257,6 +258,7 @@ create table if not exists TIME_CHEQUES (
     hours SMALLINT not null /* Anzahl der Stunden, üblicherweise 5 (Beitritt zum Verein) oder 10 */,
     transaction_date DATE not null,
     amount NUMERIC(12,2) not null,
+    liable_member_name VARCHAR(80) not null /* Wer hat das veranlasst oder angeordnet -> Name von cretaedBy Member */,
     assigned_to_id BIGINT /* FK id from MEMBERS(id) */,
     accounted_by_id BIGINT /* FK id from ACCOUNTING_ENTRIES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -292,6 +294,7 @@ create table if not exists TRANSACTIONS (
     transaction_type VARCHAR(10) not null /* INCOME oder EXPENSE - muss aus Enum TransactionType kommen */,
     transaction_date DATE not null,
     amount NUMERIC(12,2) not null,
+    liable_member_name VARCHAR(80) not null /* Wer hat das veranlasst oder angeordnet -> Name von cretaedBy Member */,
     description VARCHAR(250) not null,
     accounted_by_id BIGINT /* FK id from ACCOUNTING_ENTRIES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),

@@ -19,7 +19,7 @@ public class AccountableRowSelectionForm implements Accountable {
     private LocalDate transactionDate;
     private BigDecimal transactionAmount;
 
-
+    private String liableMemberName;    	// Wer hat das veranlasst oder angeordnet -> Name von cretaedBy Member
 
     public String getAccountableName() {
         return accountableName;
@@ -43,6 +43,15 @@ public class AccountableRowSelectionForm implements Accountable {
 
     public void setAccountableMemberId(Long accountableMemberId) {
         this.accountableMemberId = accountableMemberId;
+    }
+
+    @Override
+    public String getLiableMemberName() {
+        return liableMemberName;
+    }
+
+    public void setLiableMemberName(String name) {
+        liableMemberName = name;
     }
 
     public String getTransactionType() {
@@ -80,6 +89,7 @@ public class AccountableRowSelectionForm implements Accountable {
                 + ", accountableMemberId=" + accountableMemberId + ", transactionType=" + transactionType
                 + ", transactionDate=" + transactionDate + ", transactionAmount=" + transactionAmount + "]";
     }
+
 
 
 }

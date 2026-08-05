@@ -66,6 +66,34 @@ ALTER TABLE TRANSACTIONS ALTER COLUMN created_by_id SET NOT NULL;
 
 
 
+--------------------------------------
+-- Anpassungen für die Accountables --
+
+ALTER TABLE MEMBERSHIP_FEES ADD COLUMN liable_member_name VARCHAR(80);
+
+ALTER TABLE TIME_CHEQUES ADD COLUMN liable_member_name VARCHAR(80);
+
+ALTER TABLE TRANSACTIONS ADD COLUMN liable_member_name VARCHAR(80);
+
+
+
+UPDATE MEMBERSHIP_FEES SET liable_member_name = 'Brachmann Susanne';
+
+UPDATE TIME_CHEQUES SET liable_member_name = 'Csürös Clemens';
+
+UPDATE TRANSACTIONS SET liable_member_name = 'Brachmann Susanne';
+
+
+
+ALTER TABLE MEMBERSHIP_FEES ALTER COLUMN liable_member_name SET NOT NULL;
+
+ALTER TABLE TIME_CHEQUES ALTER COLUMN liable_member_name SET NOT NULL;
+
+ALTER TABLE TRANSACTIONS ALTER COLUMN liable_member_name SET NOT NULL;
+
+
+
+
 
 -- neue Tabellen für Fotos und Dokumente
 
