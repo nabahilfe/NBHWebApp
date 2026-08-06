@@ -208,7 +208,7 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Mitglied</th>
-                                <th scope="col" class="text-end">Guthaben</th>
+                                <th scope="col" class="text-end">Stunden</th>
                             </tr>
                         </thead>
                         <tbody>
