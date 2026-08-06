@@ -32,6 +32,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Mitglied</th>
+                    <th scope="col">E-Mail</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,6 +40,7 @@
                     <tr>
                         <td>${i + 1}</td>
                         <td>${registeredMembers.get(i).getName()}</td>
+                        <td>${registeredMembers.get(i).getEmail()}</td>
                     </tr>
                 @endfor
             </tbody>
