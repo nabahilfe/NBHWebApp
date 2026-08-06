@@ -98,7 +98,7 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
 
     /** Returns [memberFullName, totalHours, transferCount] for members who received hours in the given year, sorted by total hours desc */
     @Query("""
-            SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
+            SELECT CONCAT(m.lastName, ' ', m.firstName), SUM(t.hours), COUNT(t)
             FROM TimeTransfer t JOIN t.toMember m
             WHERE YEAR(t.dateOfService) = :year
             GROUP BY m.id, m.firstName, m.lastName
@@ -108,7 +108,7 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
 
     /** Returns [memberFullName, totalHours, transferCount] for members who received hours (all years), sorted by total hours desc */
     @Query("""
-            SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
+            SELECT CONCAT(m.lastName, ' ', m.firstName), SUM(t.hours), COUNT(t)
             FROM TimeTransfer t JOIN t.toMember m
             GROUP BY m.id, m.firstName, m.lastName
             ORDER BY SUM(t.hours) DESC
@@ -117,7 +117,7 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
 
     /** Returns [memberFullName, totalHours, transferCount] for members who gave hours in the given year, sorted by total hours desc */
     @Query("""
-            SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
+            SELECT CONCAT(m.lastName, ' ', m.firstName), SUM(t.hours), COUNT(t)
             FROM TimeTransfer t JOIN t.fromMember m
             WHERE YEAR(t.dateOfService) = :year
             GROUP BY m.id, m.firstName, m.lastName
@@ -127,7 +127,7 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
 
     /** Returns [memberFullName, totalHours, transferCount] for members who gave hours (all years), sorted by total hours desc */
     @Query("""
-            SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
+            SELECT CONCAT(m.lastName, ' ', m.firstName), SUM(t.hours), COUNT(t)
             FROM TimeTransfer t JOIN t.fromMember m
             GROUP BY m.id, m.firstName, m.lastName
             ORDER BY SUM(t.hours) DESC

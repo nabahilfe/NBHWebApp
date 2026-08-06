@@ -36,7 +36,7 @@ public interface TimeChequeRepository extends ListCrudRepository<TimeCheque, Lon
 
     /** Returns [memberFullName, totalHours, chequeCount] per member for all time cheques in the given year, sorted by total hours desc */
     @Query("""
-            SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
+            SELECT CONCAT(m.lastName, ' ', m.firstName), SUM(t.hours), COUNT(t)
             FROM TimeCheque t JOIN t.assignedTo m
             WHERE YEAR(t.transactionDate) = :year
             GROUP BY m.id, m.firstName, m.lastName
@@ -46,7 +46,7 @@ public interface TimeChequeRepository extends ListCrudRepository<TimeCheque, Lon
 
     /** Returns [memberFullName, totalHours, chequeCount] per member for ALL time cheques (all years), sorted by total hours desc */
     @Query("""
-            SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
+            SELECT CONCAT(m.lastName, ' ', m.firstName), SUM(t.hours), COUNT(t)
             FROM TimeCheque t JOIN t.assignedTo m
             GROUP BY m.id, m.firstName, m.lastName
             ORDER BY SUM(t.hours) DESC
