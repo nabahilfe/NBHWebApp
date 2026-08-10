@@ -4,6 +4,7 @@
 - Erweiterung der Zeitscheck Statistik um das Guthaben sowie weitere Auswertungen
 - Vorbereitung der Datenbank für Bildergalerien und Dokumente
 - Umstrukturierung der Menüs um Platz zu gewinnen und Übersichtlichkeit zu erhöhen
+- Mögliche Security Probleme gefixt
 
 <!-- 
 - createdBy ist nun ein Pflichtfeld 

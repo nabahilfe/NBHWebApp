@@ -7,10 +7,10 @@ package eu.nabahilfe.webapp.registration;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +29,7 @@ import eu.nabahilfe.webapp.email.EmailDetails;
 import eu.nabahilfe.webapp.email.EmailService;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
