@@ -304,7 +304,12 @@
                                     <!--li><a class="dropdown-item" href="#">...</a></li>-->
                                     @if (ctxt != null && ctxt.hasAnyRole("ADMIN"))
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="/email/sendTestEmail">Test E-Mail senden</a></li>
+                                        <li>
+                                            <form action="/email/sendTestEmail" method="post" class="m-0 p-0">
+                                                ${csrfHiddenInput}
+                                                <button type="submit" class="dropdown-item">Test E-Mail senden</button>
+                                            </form>
+                                        </li>
                                     @endif
                                 </ul>
                             </li>
