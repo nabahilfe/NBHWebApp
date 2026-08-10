@@ -52,7 +52,9 @@
                 <th scope="col" id="sortByMember" style="cursor:pointer;">für Mitglied ↕</th>
                 <th scope="col" class="text-end">Stunden</th>
                 <th scope="col" class="text-end">Betrag</th>
-                <th scope="col" class="text-center">Buchen</th>
+                @if(ctxt.isTreasurer() || ctxt.isAdmin())
+                	<th scope="col" class="text-center">Buchen</th>
+            	@endif
             </tr>
         </thead>
 
@@ -66,22 +68,20 @@
                         <td scope="row">${tc.getAssignedTo().getNameAndAddress()}</td>
                         <td scope="row" class="text-end">${tc.getHours()}</td>
                         <td scope="row" class="text-end">€ ${numberDE(tc.getAmount())}</td>
-                        <td>
-                            <input type="hidden" name="accountableName" value="${tc.getAccountableName()}">
-                            <input type="hidden" name="accountableId" value="${tc.getAccountableId()}">
-                            <input type="hidden" name="accountableMemberId" value="${tc.getAccountableMemberId()}">
-                            <input type="hidden" name="transactionType" value="${tc.getTransactionType()}">
-                            <input type="hidden" name="transactionDate" value="${tc.getTransactionISODate()}">
-                            <input type="hidden" name="transactionAmount" value="${tc.getTransactionAmount()}">
-                            <input type="hidden" name="liableMemberName" value="${tc.getLiableMemberName()}">
-                            @if(ctxt.isTreasurer() || ctxt.isAdmin())
+                        @if(ctxt.isTreasurer() || ctxt.isAdmin())
+	                        <td>
+	                            <input type="hidden" name="accountableName" value="${tc.getAccountableName()}">
+	                            <input type="hidden" name="accountableId" value="${tc.getAccountableId()}">
+	                            <input type="hidden" name="accountableMemberId" value="${tc.getAccountableMemberId()}">
+	                            <input type="hidden" name="transactionType" value="${tc.getTransactionType()}">
+	                            <input type="hidden" name="transactionDate" value="${tc.getTransactionISODate()}">
+	                            <input type="hidden" name="transactionAmount" value="${tc.getTransactionAmount()}">
+	                            <input type="hidden" name="liableMemberName" value="${tc.getLiableMemberName()}">
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-outline-primary btn-sm bi-plus-lg"></button>
                                 </div>
-                            @else
-                                <div></div>
-                            @endif
-                        </td>
+	                        </td>
+                        @endif
                     </tr>
                 </form>
             @endfor

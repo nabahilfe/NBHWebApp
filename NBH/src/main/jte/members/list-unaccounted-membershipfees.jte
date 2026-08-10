@@ -52,7 +52,9 @@
                 <th scope="col" id="sortByMember" style="cursor:pointer;">für Mitglied ↕</th>
                 <th scope="col">Austrittsdatum</th>
                 <th scope="col" class="text-end">Betrag</th>
-                <th scope="col" class="text-center">Buchen</th>
+				@if(ctxt.isTreasurer() || ctxt.isAdmin())
+                	<th scope="col" class="text-center">Buchen</th>
+                @endif
             </tr>
         </thead>
 
@@ -66,22 +68,20 @@
                         <td scope="row">${mf.getMember().getNameAndAddress()}</td>
                         <td scope="row">@if(mf.getMember().getResignationDate() != null) ${dateReverseDE(mf.getMember().getResignationDate())} @else @endif</td>
                         <td scope="row" class="text-end">€ ${numberDE(mf.getAmount())}</td>
-                        <td>
-                            <input type="hidden" name="accountableName" value="${mf.getAccountableName()}">
-                            <input type="hidden" name="accountableId" value="${mf.getAccountableId()}">
-                            <input type="hidden" name="accountableMemberId" value="${mf.getAccountableMemberId()}">
-                            <input type="hidden" name="transactionType" value="${mf.getTransactionType()}">
-                            <input type="hidden" name="transactionDate" value="${mf.getTransactionISODate()}">
-                            <input type="hidden" name="transactionAmount" value="${mf.getTransactionAmount()}">
-                            <input type="hidden" name="liableMemberName" value="${mf.getLiableMemberName()}">
-                            @if(ctxt.isTreasurer() || ctxt.isAdmin())
+                        @if(ctxt.isTreasurer() || ctxt.isAdmin())
+	                        <td>
+	                            <input type="hidden" name="accountableName" value="${mf.getAccountableName()}">
+	                            <input type="hidden" name="accountableId" value="${mf.getAccountableId()}">
+	                            <input type="hidden" name="accountableMemberId" value="${mf.getAccountableMemberId()}">
+	                            <input type="hidden" name="transactionType" value="${mf.getTransactionType()}">
+	                            <input type="hidden" name="transactionDate" value="${mf.getTransactionISODate()}">
+	                            <input type="hidden" name="transactionAmount" value="${mf.getTransactionAmount()}">
+	                            <input type="hidden" name="liableMemberName" value="${mf.getLiableMemberName()}">
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-outline-primary btn-sm bi-plus-lg"></button>
                                 </div>
-                            @else
-                                <div></div>
-                            @endif
-                        </td>
+	                        </td>
+                        @endif
                     </tr>
                 </form>
             @endfor
