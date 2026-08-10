@@ -41,7 +41,7 @@
 
     <div class="container d-flex justify-content-center">
 
-        <form action="/timetransfers" method="post">
+        <form action="/timetransfers/fromself" method="post">
             ${csrfHiddenInput}
 
             <div class="row">

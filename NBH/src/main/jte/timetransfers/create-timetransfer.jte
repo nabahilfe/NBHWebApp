@@ -48,8 +48,8 @@
 
     <br/>
 
-    <!-- Main form: POST to /timetransfers; server processes the submitted fields -->
-    <form action="/timetransfers" method="post">
+    <!-- Main form: POST to /timetransfers/staff; server processes the submitted fields -->
+    <form action="/timetransfers/staff" method="post">
         ${csrfHiddenInput}
         <input type="hidden" name="fromself" id="fromself" value="false">
 
