@@ -77,11 +77,30 @@
                         @if(adv.getValidFrom().getYear() > java.time.LocalDate.now().getYear())
                             <a href="/domaintypes/edit/${adv.getId()}" class="btn btn-sm btn-outline-primary bi-pencil"></a>
                             @if(deletableIds != null && deletableIds.contains(adv.getId()))
-                                <form method="POST" action="/domaintypes/delete/${adv.getId()}" class="d-inline">
+                                <form id="delete-domainvalue-${adv.getId()}" method="POST" action="/domaintypes/delete/${adv.getId()}" class="d-inline">
                                     ${csrfHiddenInput}
-                                    <button type="submit" class="btn btn-sm btn-outline-danger bi-trash"
-                                            onclick="return confirm('Wirklich löschen?')"></button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger bi-trash"
+                                            data-bs-toggle="modal" data-bs-target="#confirmDeleteDomainValueModal-${adv.getId()}"></button>
                                 </form>
+
+                                <div class="modal fade" id="confirmDeleteDomainValueModal-${adv.getId()}" tabindex="-1"
+                                     aria-labelledby="confirmDeleteDomainValueModalLabel-${adv.getId()}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="confirmDeleteDomainValueModalLabel-${adv.getId()}">Gebühr löschen</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Gebührensatz wirklich löschen?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                                                <button type="submit" class="btn btn-danger" form="delete-domainvalue-${adv.getId()}">Löschen</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             @endif
                         @else
                             <span class="text-muted small">geschützt</span>

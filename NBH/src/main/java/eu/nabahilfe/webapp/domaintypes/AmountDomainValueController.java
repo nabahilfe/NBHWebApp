@@ -135,7 +135,6 @@ public class AmountDomainValueController {
 
 
     /* Save (create or update) */
-    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER')")
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/save")
     public String save(@Valid @ModelAttribute AmountDomainValue amountDomainValue, RedirectAttributes redirectAttributes, Model model) {
