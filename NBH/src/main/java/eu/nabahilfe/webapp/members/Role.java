@@ -46,7 +46,7 @@ public class Role implements Serializable {
     private Long id;
 
     @Column(nullable = false)
-    private Boolean isBoardMember;    	// VEREINSROLLE: Vorstand - kann Mitglieder verwalten, Kassaführung einsehen und Content bearbeiten.
+    private Boolean isExecutiveMember;  // VEREINSROLLE: Vorstand - kann Mitglieder verwalten, Kassaführung einsehen und Content bearbeiten.
 
     @Column(nullable = false)
     private Boolean isAdmin;    		// ZUSATZ-ROLLE: Hat alle Rechte - es gibt immer einen sysadmin Account
@@ -113,12 +113,12 @@ public class Role implements Serializable {
         this.isAdmin = isAdmin;
     }
 
-    public Boolean getIsBoardMember() {
-        return isBoardMember;
+    public Boolean getIsExecutiveMember() {
+        return isExecutiveMember;
     }
 
-    public void setIsBoardMember(Boolean isBoardMember) {
-        this.isBoardMember = isBoardMember;
+    public void setIsExecutiveMember(Boolean isExecutiveMember) {
+        this.isExecutiveMember = isExecutiveMember;
     }
 
     public String getRoleName() {
@@ -232,7 +232,7 @@ public class Role implements Serializable {
 
     @Override
     public String toString() {
-        return "Role [id=" + id + ", isAdmin=" + isAdmin + ", isBoardMember=" + isBoardMember + ", isTreasurer="
+        return "Role [id=" + id + ", isAdmin=" + isAdmin + ", isExecutiveMember=" + isExecutiveMember + ", isTreasurer="
                 + isTreasurer + ", isSecretary=" + isSecretary + ", isAuditor=" + isAuditor + ", isTimeKeeper="
                 + isTimeKeeper + ", isMiscellaneous=" + isMiscellaneous + ", roleName=" + roleName + ", version="
                 + version + "]";
@@ -246,7 +246,7 @@ public class Role implements Serializable {
 
     public Role() {
         this.isAdmin = false;
-        this.isBoardMember = false;
+        this.isExecutiveMember = false;
         this.isAuditor = false;
         this.isTimeKeeper = false;
         this.isMiscellaneous = false;
@@ -266,8 +266,8 @@ public class Role implements Serializable {
             auths.add("ROLE_ADMIN");
         }
 
-        if (Boolean.TRUE.equals(isBoardMember)) {	// Vorstand (Obmann, Obfrau und Stellvertreter) - kann Mitglieder verwalten, Kassaführung einsehen und Content bearbeiten.
-            auths.add("ROLE_BOARD_MEMBER");
+        if (Boolean.TRUE.equals(isExecutiveMember)) {	// Vorstand (Obmann, Obfrau und Stellvertreter) - kann Mitglieder verwalten, Kassaführung einsehen und Content bearbeiten.
+            auths.add("ROLE_EXECUTIVE_MEMBER");
         }
 
         if (Boolean.TRUE.equals(isTreasurer)) {		// Kassier - kann Geld-Buchungen verwalten

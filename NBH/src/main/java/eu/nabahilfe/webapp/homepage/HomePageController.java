@@ -68,10 +68,6 @@ public class HomePageController {
         List<Member> boardMembers = memberRepository.findBoardMembers();
         model.addAttribute("boardMembers", boardMembers);
 
-//        model.addAttribute("version", versionService.getVersion());
-//        model.addAttribute("buildTime", versionService.getBuildTime());
-//        model.addAttribute("releaseNotesHtml", releaseNotesService.getReleaseNotesHtml());
-
         return "home";
     }
 

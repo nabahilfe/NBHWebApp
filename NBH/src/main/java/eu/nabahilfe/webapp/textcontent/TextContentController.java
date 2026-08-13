@@ -46,7 +46,7 @@ public class TextContentController {
 
 
     /* Liste */
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'SECRETARY')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'SECRETARY')")
     @GetMapping
     public String list(Model model) {
 
@@ -58,7 +58,7 @@ public class TextContentController {
 
 
     /* Edit/Create form */
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'SECRETARY')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'SECRETARY')")
     @GetMapping({"/edit", "/edit/cc/{contentCode}"})
     public String edit(final Model model, @ModelAttribute("textContentForm") TextContentForm tcf, @PathVariable String contentCode) {
 
@@ -84,7 +84,7 @@ public class TextContentController {
 
 
     /* Preview markdown without saving */
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'SECRETARY')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'SECRETARY')")
     @PostMapping("/preview")
     @GetMapping("/preview")
     public String preview(@ModelAttribute("textContentForm") TextContentForm tcf, Model model) {
@@ -100,7 +100,7 @@ public class TextContentController {
 
 
     /* Save after preview */
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'SECRETARY')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'SECRETARY')")
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/save")
     public String save(@ModelAttribute("textContentForm") TextContentForm tcf, Model model) {

@@ -141,7 +141,7 @@
                         </div>
 
                         <!-- Dropdown Mitglied -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Mitglieder
@@ -162,7 +162,7 @@
 
 
                         <!-- Dropdown Zeitschecks -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER", "BOARD_MEMBER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER", "EXECUTIVE_MEMBER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Zeitschecks
@@ -176,7 +176,7 @@
 
 
                         <!-- Dropdown Buchungen -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "TREASURER", "AUDITOR"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER", "TREASURER", "AUDITOR"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link"
                                     type="button"
@@ -200,7 +200,7 @@
                                     </li>
 
                                     <!-- Einnahmen / Ausgaben -->
-                                    @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                                    @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
                                         <li class="dropdown-submenu">
                                             <a class="dropdown-item dropdown-toggle" href="#">
                                                 Einnahmen / Ausgaben
@@ -221,7 +221,7 @@
 
 
                         <!-- Dropdown Text Content -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "SECRETARY"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER", "SECRETARY"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link"
                                         type="button"
@@ -296,7 +296,7 @@
 
 
                         <!-- Dropdown Domain Values -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "TREASURER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER", "TREASURER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Einstellungen
@@ -318,7 +318,7 @@
                         @endif
 
                         <!-- Dropdown Auswertung -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Auswertungen

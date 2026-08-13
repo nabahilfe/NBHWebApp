@@ -55,7 +55,7 @@
           <th scope="col">E-Mail</th>
           <th scope="col">Telefon</th>
 
-          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
               <th scope="col" class="text-end">Guthaben</th>
               <th scope="col" class="text-center">Löschen</th>
           @endif
@@ -65,7 +65,7 @@
       <tbody>
         @for (Member member : memberPage.getContent())
             <tr>
-                  @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                  @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
                       <td><a class="text-decoration-none" href="/members/${member.getId()}"><b>${member.getLastName()}</b></a></td>
                   @else
                     <td>${member.getLastName()}</td>
@@ -94,7 +94,7 @@
                       @endif
                   </td>
 
-                  @if(ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                  @if(ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
                       <td class="text-end">
                         ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}
                       </td>

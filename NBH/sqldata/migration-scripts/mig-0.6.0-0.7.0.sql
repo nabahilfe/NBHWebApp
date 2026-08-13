@@ -174,6 +174,8 @@ create table DOCUMENTS (
 
 
 
+/* umbenennung der Spalte is_board_member in roles zu is_executive_member */
+ALTER TABLE roles RENAME COLUMN is_board_member TO is_executive_member;
 
 
 

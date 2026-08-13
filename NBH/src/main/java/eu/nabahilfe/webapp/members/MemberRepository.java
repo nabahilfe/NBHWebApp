@@ -85,7 +85,7 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     @EntityGraph(attributePaths = "role")
     @Query(
         "SELECT m FROM Member m JOIN m.role r " +
-        "WHERE r.isBoardMember = true OR r.isTreasurer = true OR r.isSecretary = true " +
+        "WHERE r.isExecutiveMember = true OR r.isTreasurer = true OR r.isSecretary = true " +
         "ORDER BY m.role.roleName ASC")
     List<Member> findBoardMembers();
 

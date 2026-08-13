@@ -91,8 +91,8 @@ public class CustomUserDetails implements UserDetails {
         return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 
-    public boolean isBoardMember() {
-        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_BOARD_MEMBER"));
+    public boolean isExecutiveMember() {
+        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EXECUTIVE_MEMBER"));
     }
 
     public boolean isTreasurer() {

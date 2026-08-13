@@ -83,7 +83,7 @@ public class TimeTransferController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'EXECUTIVE_MEMBER')")
     @GetMapping("/view")
     String viewTimeTransfer(final Model model, @RequestParam Long id) {
         TimeTransfer tt = timeTransferRepository.findById(id).orElse(null);
@@ -150,7 +150,7 @@ public class TimeTransferController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'EXECUTIVE_MEMBER')")
     @GetMapping("/new")
     String addTimeTransfer(final Model model, @RequestParam(required = false) Long fromMemberId) {
 
@@ -178,7 +178,7 @@ public class TimeTransferController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'EXECUTIVE_MEMBER')")
     @GetMapping("/duplicate")
     String duplicateTimeTransfer(final Model model, @RequestParam Long id) {
 
@@ -225,7 +225,7 @@ public class TimeTransferController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'EXECUTIVE_MEMBER')")
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/staff")
     String saveStaffTimeTransfer(final Model model, @ModelAttribute TimeTransferForm ttf,

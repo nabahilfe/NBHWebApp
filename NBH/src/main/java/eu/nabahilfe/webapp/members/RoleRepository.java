@@ -14,7 +14,7 @@ import org.springframework.data.repository.ListCrudRepository;
 
 public interface RoleRepository extends ListCrudRepository<Role, Long> {
 
-    List<Role> findByIsBoardMember(Boolean isBoardMember);
+    List<Role> findByIsExecutiveMember(Boolean isExecutiveMember);
 
     List<Role>findByIsAdmin(Boolean isAdmin);
 

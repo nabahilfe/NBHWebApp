@@ -74,10 +74,10 @@ public class TimeChequeController {
     @GetMapping("/{id}")
     String viewTimeCheque(final Model model, @PathVariable Long id) {
 
-        // Check if user has ADMIN or TIME_KEEPER or BOARD_MEMBER role - all of them are TimeKeepers
+        // Check if user has ADMIN or TIME_KEEPER or EXECUTIVE_MEMBER role - all of them are TimeKeepers
         boolean isTimeKeeper = SecurityContextHolder.getContext().getAuthentication()
                 .getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_TIME_KEEPER") || a.getAuthority().equals("ROLE_BOARD_MEMBER"));
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_TIME_KEEPER") || a.getAuthority().equals("ROLE_EXECUTIVE_MEMBER"));
 
         TimeCheque tc = timeChequeRepository.findById(id).orElse(null);
         if (tc == null) {
@@ -110,7 +110,7 @@ public class TimeChequeController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER', 'EXECUTIVE_MEMBER')")
     @GetMapping("/unaccounted")
     String listUnaccountedTimeCheques(final Model model) {
         log.debug("Listing unaccounted TimeCheques");
@@ -120,7 +120,7 @@ public class TimeChequeController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'TREASURER')")
     @GetMapping("/statistics")
     String statistics(final Model model, @RequestParam(required = false) Integer year) {
         // year=0 is the sentinel for "Alle Jahre" (all years)
@@ -141,7 +141,7 @@ public class TimeChequeController {
         return "timecheques/time-cheque-statistics";
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @GetMapping("/booking-report")
     String bookingReport(final Model model) {
         org.springframework.data.domain.Pageable top50 = org.springframework.data.domain.PageRequest.of(0, 50);
@@ -150,7 +150,7 @@ public class TimeChequeController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @GetMapping("/self-booking-report")
     String selfBookingReport(final Model model) {
         org.springframework.data.domain.Pageable top50 = org.springframework.data.domain.PageRequest.of(0, 50);
@@ -159,7 +159,7 @@ public class TimeChequeController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'TREASURER')")
     @GetMapping("/category-statistics")
     String categoryStatistics(final Model model, @RequestParam(required = false) Integer year) {
         boolean allYears = (year != null && year == 0);
@@ -183,7 +183,7 @@ public class TimeChequeController {
     // --------------------
 
     // Create TimeCheque for specific Member
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'EXECUTIVE_MEMBER')")
     @GetMapping("/new")
     String addTimeCheque(final Model model, @RequestParam Long memberId) {
 

@@ -58,7 +58,7 @@ public class RoleController {
     // LIST & DETAIL
     // --------------------
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER', 'SECRETARY', 'TIME_KEEPER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'TREASURER', 'SECRETARY', 'TIME_KEEPER')")
     @GetMapping
     String listAllRoles(final Model model) {
         List<Role> roles = roleRepository.findAllBy(Sort.by("roleName"));
@@ -163,7 +163,7 @@ public class RoleController {
     // --------------------
 
     // FIXME : Add actions to table header to enable sorting - see how it is done in list-members
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER', 'SECRETARY', 'TIME_KEEPER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'TREASURER', 'SECRETARY', 'TIME_KEEPER')")
     @GetMapping("/sort/{sortField}")
     String listAll(final Model model, @PathVariable String sortField) {
         List<Role> roles = roleRepository.findAllBy(Sort.by(sortField).descending());
@@ -185,7 +185,7 @@ public class RoleController {
             3) ZUSATZ-ROLLE Admin und TimeKeeper müssen eine der Vereinsrollen BoardMember, Treasurer, Secretary haben
             4) Admin nicht mit TimeKeeper kombinieren, da Admin alle Rechte hat und TimeKeeper nur Zeit-Schecks vergeben kann
 
-        isBoardMember       Bool not null    "VEREINSROLLE - Vorstand"
+        isExecutiveMember       Bool not null    "VEREINSROLLE - Vorstand"
         isTreasurer         Bool not null    "VEREINSROLLE - Kassier, Verwaltet die Buchungen"
         isSecretary         Bool not null    "VEREINSROLLE - Schriftführer"
         isAuditor           Bool not null    "VEREINSROLLE - Rechnungsprüfer, muss unabhängig vom Vorstand sein, darf keine sonstige Rollen haben"
@@ -198,16 +198,16 @@ public class RoleController {
 
         // Check rule 1: Auditor und Miscellaneous dürfen keine andere Rolle haben
 
-        if (role.getIsAuditor() && (role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary() || role.getIsTimeKeeper() || role.getIsAdmin() || role.getIsMiscellaneous()))
+        if (role.getIsAuditor() && (role.getIsExecutiveMember() || role.getIsTreasurer() || role.getIsSecretary() || role.getIsTimeKeeper() || role.getIsAdmin() || role.getIsMiscellaneous()))
             return "Rolle mit Funktion 'Rechnungsrüfer' darf keine andere Funktion haben!";
 
-        if (role.getIsMiscellaneous() && (role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary() || role.getIsAuditor() || role.getIsTimeKeeper() || role.getIsAdmin()))
+        if (role.getIsMiscellaneous() && (role.getIsExecutiveMember() || role.getIsTreasurer() || role.getIsSecretary() || role.getIsAuditor() || role.getIsTimeKeeper() || role.getIsAdmin()))
             return "Rolle mit Funktion 'Sonsiges' darf keine andere Funktion haben!";
 
         // Check rule 2: VEREINSROLLEN BoardMember, Treasurer, Secretary, Auditor können NICHT kombiniert werden
 
         int clubRoleCount = 0;
-        if (role.getIsBoardMember()) clubRoleCount++;
+        if (role.getIsExecutiveMember()) clubRoleCount++;
         if (role.getIsTreasurer()) clubRoleCount++;
         if (role.getIsSecretary()) clubRoleCount++;
         if (role.getIsAuditor()) clubRoleCount++;
@@ -215,11 +215,11 @@ public class RoleController {
             return "Es darf nur eine Vereinsrolle (Vorstand, Kassier, Schriftführer, Rechnungsprüfer) ausgewählt werden!";
 
         // Check rule 3: ZUSATZ-ROLLE Admin und TimeKeeper müssen eine der Vereinsrollen BoardMember, Treasurer, Secretary haben
-        if ((role.getIsTimeKeeper()) && !(role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary()))
+        if ((role.getIsTimeKeeper()) && !(role.getIsExecutiveMember() || role.getIsTreasurer() || role.getIsSecretary()))
             return "Rollen mit Funktion 'Zeitschecks' müssen eine der Vereinsrollen Vorstand, Kassier oder Schriftführer haben!";
 
         // Check rule 4: Admin muss mit mindestens einer Vereinsrolle (ausser Auditor) kombiniert werden, da Admin alle Rechte hat und dshalb im Vorstand sein muss
-        if (role.getIsAdmin() && !(role.getIsBoardMember() || role.getIsTreasurer() || role.getIsSecretary()))
+        if (role.getIsAdmin() && !(role.getIsExecutiveMember() || role.getIsTreasurer() || role.getIsSecretary()))
             return "Rollen mit Funktion 'Administrator' müssen mit mindestens einer Vereinsrolle (Vorstand, Kassier, Schriftführer) kombiniert werden!";
 
         // Check rule 5: Es können keine Rollen ohne Funktion angelegt werden! Bitte wählen Sie mindestens eine Funktion aus.

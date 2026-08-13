@@ -96,7 +96,7 @@
 
     <br/>
 
-    @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+    @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
         <form action="/members/${member.getId()}" method="get">
             <button type="submit" class="btn btn-outline-primary bi-arrow-left"> Zurück zum Mitglied</button>
         </form>

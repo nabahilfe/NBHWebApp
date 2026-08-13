@@ -62,11 +62,11 @@
             <div class="col-sm-10">
 
               <div class="form-check">
-                <input type="hidden" name="_isBoardMember" value="on"/>
+                <input type="hidden" name="_isExecutiveMember" value="on"/>
                 <input class="form-check-input" type="checkbox"
-                    id="isBoardMember" name="isBoardMember"
-                    checked="${role.getIsBoardMember()}">
-                <label class="form-check-label" for="isBoardMember">
+                    id="isExecutiveMember" name="isExecutiveMember"
+                    checked="${role.getIsExecutiveMember()}">
+                <label class="form-check-label" for="isExecutiveMember">
                   Vorstand - kann Mitglieder verwalten, Kassaführung einsehen und Content bearbeiten
                 </label>
               </div>

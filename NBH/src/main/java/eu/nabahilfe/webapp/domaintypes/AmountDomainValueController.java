@@ -30,7 +30,7 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/domaintypes")
-@PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
+@PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'TREASURER')")
 public class AmountDomainValueController {
 
     private static final Logger log = LoggerFactory.getLogger(AmountDomainValueController.class);

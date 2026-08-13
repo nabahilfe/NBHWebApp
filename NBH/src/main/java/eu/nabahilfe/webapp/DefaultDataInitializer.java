@@ -195,7 +195,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Obfrau
         role = new Role();
         role.setRoleName("Obfrau");
-        role.setIsBoardMember(true);
+        role.setIsExecutiveMember(true);
         role.setIsTreasurer(false);
         role.setIsSecretary(false);
         role.setIsAuditor(false);
@@ -209,7 +209,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Obfrau Stv.
         role = new Role();
         role.setRoleName("Obfrau Stv.");
-        role.setIsBoardMember(true);
+        role.setIsExecutiveMember(true);
         role.setIsTreasurer(false);
         role.setIsSecretary(false);
         role.setIsAuditor(false);
@@ -225,7 +225,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Obmann
         role = new Role();
         role.setRoleName("Obmann");
-        role.setIsBoardMember(true);
+        role.setIsExecutiveMember(true);
         role.setIsTreasurer(false);
         role.setIsSecretary(false);
         role.setIsAuditor(false);
@@ -239,7 +239,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Obmann Stv.
         role = new Role();
         role.setRoleName("Obmann Stv.");
-        role.setIsBoardMember(true);
+        role.setIsExecutiveMember(true);
         role.setIsTreasurer(false);
         role.setIsSecretary(false);
         role.setIsAuditor(false);
@@ -255,7 +255,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Kassier
         role = new Role();
         role.setRoleName("Kassier");
-        role.setIsBoardMember(false);
+        role.setIsExecutiveMember(false);
         role.setIsTreasurer(true);
         role.setIsSecretary(false);
         role.setIsAuditor(false);
@@ -269,7 +269,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Kassier Stv.
         role = new Role();
         role.setRoleName("Kassier Stv.");
-        role.setIsBoardMember(false);
+        role.setIsExecutiveMember(false);
         role.setIsTreasurer(true);
         role.setIsSecretary(false);
         role.setIsAuditor(false);
@@ -285,7 +285,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Rechnungsprüfer
         role = new Role();
         role.setRoleName("Rechnungsprüfer");
-        role.setIsBoardMember(false);
+        role.setIsExecutiveMember(false);
         role.setIsTreasurer(false);
         role.setIsSecretary(false);
         role.setIsAuditor(true);
@@ -299,7 +299,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Rechnungsprüfer Stv.
         role = new Role();
         role.setRoleName("Rechnungsprüfer Stv.");
-        role.setIsBoardMember(false);
+        role.setIsExecutiveMember(false);
         role.setIsTreasurer(false);
         role.setIsSecretary(false);
         role.setIsAuditor(true);
@@ -315,7 +315,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Schriftführer
         role = new Role();
         role.setRoleName("Schriftführer");
-        role.setIsBoardMember(false);
+        role.setIsExecutiveMember(false);
         role.setIsTreasurer(false);
         role.setIsSecretary(true);
         role.setIsAuditor(false);
@@ -329,7 +329,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Schriftführer Stv.
         role = new Role();
         role.setRoleName("Schriftführer Stv.");
-        role.setIsBoardMember(false);
+        role.setIsExecutiveMember(false);
         role.setIsTreasurer(false);
         role.setIsSecretary(true);
         role.setIsAuditor(false);
@@ -344,7 +344,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Ehrenmitglied
         role = new Role();
         role.setRoleName("Ehrenmitglied");
-        role.setIsBoardMember(false);
+        role.setIsExecutiveMember(false);
         role.setIsTreasurer(false);
         role.setIsSecretary(false);
         role.setIsAuditor(false);
@@ -363,7 +363,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
             Role adminRole = new Role();
             adminRole.setRoleName(NbhConst.ADMIN_ROLE_NAME);
             adminRole.setIsAdmin(true);
-            adminRole.setIsBoardMember(false);
+            adminRole.setIsExecutiveMember(false);
             adminRole.setIsTreasurer(false);
             adminRole.setIsSecretary(false);
             adminRole.setIsAuditor(false);

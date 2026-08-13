@@ -55,13 +55,13 @@
           <th scope="col" data-col="lastName" data-order="${orderBy.equals("lastName") ? order : ""}">
                 Name ${orderBy.equals("lastName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
 
-          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
               <th scope="col" data-col="isGeoValidated" data-order="${orderBy.equals("isGeoValidated") ? order : ""}">
                     Adresse ${orderBy.equals("isGeoValidated") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           @else
               <th scope="col">Adresse</th>
           @endif
-          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
               <th scope="col" data-col="role.roleName" data-order="${orderBy.equals("role.roleName") ? order : ""}">
                     Rolle ${orderBy.equals("role.roleName") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           @endif
@@ -69,7 +69,7 @@
                 E-Mail ${orderBy.equals("email") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
           <th scope="col">Telefon</th>
 
-          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+          @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
               <th scope="col" class="text-end" data-col="accumulatedHours" data-order="${orderBy.equals("accumulatedHours") ? order : ""}">
                     Guthaben ${orderBy.equals("accumulatedHours") ? (order.equals("asc") ? "↑" : "↓") : "↕"}</th>
               <th scope="col" class="text-center" title="Zeitschecks kaufen">Zeitscheck</th>
@@ -81,7 +81,7 @@
       <tbody>
         @for (Member member : memberPage.getContent())
             <tr>
-                  @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                  @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
                       <td><a class="text-decoration-none" href="/members/${member.getId()}">${member.getLastName()} ${member.getFirstName()}</a></td>
                   @else
                     <td>${member.getLastName()} ${member.getFirstName()}</td>
@@ -107,7 +107,7 @@
                       @endif
                   </td>
 
-                  @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                  @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
                       <td>${member.getRole() != null ? member.getRole().getRoleName() : ""}</td>
                   @endif
 
@@ -124,7 +124,7 @@
                       @endif
                   </td>
 
-                  @if(ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                  @if(ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
                       <td class="text-end">
                         ${member.getAccumulatedHours() != null ? member.getAccumulatedHours() + " h" : ""}
                       </td>
@@ -158,7 +158,7 @@
     </table>
 
 
-    @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+    @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
         <!-- add button to creeate new member -->
         <form action="/members/new" method="get">
             <button type="submit" class="btn btn-outline-primary bi-plus-circle"> Mitglied hinzufügen</button>
