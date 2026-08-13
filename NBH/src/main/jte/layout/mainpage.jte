@@ -162,7 +162,7 @@
 
 
                         <!-- Dropdown Zeitschecks -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER", "BOARD_MEMBER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Zeitschecks
@@ -200,7 +200,7 @@
                                     </li>
 
                                     <!-- Einnahmen / Ausgaben -->
-                                    @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "TREASURER"))
+                                    @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
                                         <li class="dropdown-submenu">
                                             <a class="dropdown-item dropdown-toggle" href="#">
                                                 Einnahmen / Ausgaben
@@ -264,7 +264,7 @@
                                         </ul>
                                     </li>
 
-                                    <!-- Bilder -->
+                                    <!-- FIXME: enable this Bilder menu once we have a proper image management system in place
                                     <li class="dropdown-submenu">
                                         <a class="dropdown-item dropdown-toggle" href="#">
                                             Bilder
@@ -275,8 +275,9 @@
                                             <li><a class="dropdown-item" href="/images/categories">Kategorien</a></li>
                                         </ul>
                                     </li>
+                                    -->
 
-                                    <!-- Dokumente -->
+                                    <!-- FIXME: enable this Dokumente menu once we have a proper document management system in place
                                     <li class="dropdown-submenu">
                                         <a class="dropdown-item dropdown-toggle" href="#">
                                             Dokumente
@@ -287,6 +288,7 @@
                                             <li><a class="dropdown-item" href="/documents/categories">Kategorien</a></li>
                                         </ul>
                                     </li>
+                                    -->
 
                                 </ul>
                             </li>

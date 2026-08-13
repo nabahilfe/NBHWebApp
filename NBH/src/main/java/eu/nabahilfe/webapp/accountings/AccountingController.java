@@ -67,14 +67,14 @@ public class AccountingController {
     // INCOME FORM
     // --------------------
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @GetMapping("/income")
     public String showIncomeForm(final Model model) {
         log.debug("Showing income entry form");
         return "accountings/detail-income";
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/save-income")
     public String saveIncome(
@@ -121,14 +121,14 @@ public class AccountingController {
     // EXPENSE FORM
     // --------------------
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @GetMapping("/expense")
     public String showExpenseForm(final Model model) {
         log.debug("Showing expense entry form");
         return "accountings/detail-expense";
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/save-expense")
     public String saveExpense(
@@ -262,7 +262,7 @@ public class AccountingController {
     // --------------------
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER', 'BOARD_MEMBER', 'AUDITOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER', 'BOARD_MEMBER')")
     @GetMapping("/view-accounting/{id}")
     public String viewAccountingEntry(final Model model, @PathVariable Long id) {
 
@@ -276,7 +276,7 @@ public class AccountingController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER', 'BOARD_MEMBER', 'AUDITOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER', 'BOARD_MEMBER')")
     @GetMapping("/view-transaction/{id}")
     public String viewTransaction(final Model model, @PathVariable Long id) {
 

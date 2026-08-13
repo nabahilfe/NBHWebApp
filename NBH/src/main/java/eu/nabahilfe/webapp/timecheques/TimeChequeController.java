@@ -74,10 +74,10 @@ public class TimeChequeController {
     @GetMapping("/{id}")
     String viewTimeCheque(final Model model, @PathVariable Long id) {
 
-        // Check if user has ADMIN or TIME_KEEPER role
-        boolean isAdminOrTimeKeeper = SecurityContextHolder.getContext().getAuthentication()
+        // Check if user has ADMIN or TIME_KEEPER or BOARD_MEMBER role - all of them are TimeKeepers
+        boolean isTimeKeeper = SecurityContextHolder.getContext().getAuthentication()
                 .getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_TIME_KEEPER"));
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_TIME_KEEPER") || a.getAuthority().equals("ROLE_BOARD_MEMBER"));
 
         TimeCheque tc = timeChequeRepository.findById(id).orElse(null);
         if (tc == null) {
@@ -87,8 +87,8 @@ public class TimeChequeController {
             return "error";
         }
 
-        // If user is not ADMIN or TIME_KEEPER, only allow viewing own TimeCheques
-        if (!isAdminOrTimeKeeper && !securityUtils.isAuthenticatedAndMatches(tc.getAssignedTo().getId())) {
+        // If user is not a timeKeeper, only allow viewing own TimeCheques
+        if (!isTimeKeeper && !securityUtils.isAuthenticatedAndMatches(tc.getAssignedTo().getId())) {
             return "redirect:/statuscode/403";
         }
 
@@ -110,7 +110,7 @@ public class TimeChequeController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER', 'BOARD_MEMBER')")
     @GetMapping("/unaccounted")
     String listUnaccountedTimeCheques(final Model model) {
         log.debug("Listing unaccounted TimeCheques");
@@ -183,7 +183,7 @@ public class TimeChequeController {
     // --------------------
 
     // Create TimeCheque for specific Member
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'BOARD_MEMBER')")
     @GetMapping("/new")
     String addTimeCheque(final Model model, @RequestParam Long memberId) {
 

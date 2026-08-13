@@ -128,7 +128,7 @@ public class MemberController {
     // SEARCH, LIST & DETAIL
     // ----------------------
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER', 'BOARD_MEMBER')")
     @GetMapping("/unaccounted-mbshipfees")
     String listUnaccountedMembershipFees(final Model model) {
         log.debug("Listing unaccounted MembershipFees");
@@ -138,7 +138,7 @@ public class MemberController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @GetMapping("/open-membership-fees")
     String listOpenMembershipFees(final Model model, @RequestParam(required = false) Year year) {
 
@@ -522,7 +522,7 @@ public class MemberController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/create-fees-batch")
     String createFeesBatch(@RequestParam(required = false) List<Long> memberIds,
