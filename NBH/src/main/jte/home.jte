@@ -102,7 +102,7 @@
                 @endif
             </div>
 
-
+			<!-- FIXME: enable this when we have a gallery
             <div class="alert alert-warning shadow d-flex justify-content-between align-items-center" role="alert">
               <span class="badge text-bg-success align-text-top">Neu</span>
                 <span class="text-center flex-grow-1">
@@ -111,7 +111,7 @@
                 </span>
               <span class="badge text-bg-success align-text-top">Neu</span>
             </div>
-
+			-->
 
             <!-- Contact info at this position only if Desktop mode -->
             <div class="d-none d-md-block">
