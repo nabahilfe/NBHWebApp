@@ -1,6 +1,6 @@
 manual:
-  path: "/NBHWebApp/testspecs" # optional path to specs root, defaults to "specs"
-  publish_path: "/NBHWebApp/testspecs/reports" # optional Testspace result's path to publish status to, defaults to ""
+  path: "/NBH/testspecs" # optional path to specs root, defaults to "specs"
+  publish_path: "/NBH/testspecs/reports" # optional Testspace result's path to publish status to, defaults to ""
 
 issues:
   provider: # optional, defaults to "github:" (current org/repo)
