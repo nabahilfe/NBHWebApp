@@ -159,7 +159,7 @@ public class TimeChequeController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'TREASURER', 'BOARD_MEMBER')")
     @GetMapping("/category-statistics")
     String categoryStatistics(final Model model, @RequestParam(required = false) Integer year) {
         boolean allYears = (year != null && year == 0);
@@ -173,9 +173,6 @@ public class TimeChequeController {
         }
         return "timecheques/time-cheque-category-statistics";
     }
-
-
-    // --------------------
 
 
     // --------------------
