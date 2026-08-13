@@ -1,0 +1,11 @@
+manual:
+  path: "/testing/testspecs" # optional path to specs root, defaults to "specs"
+  publish_path: "/testing/testspecs" # optional Testspace result's path to publish status to, defaults to ""
+
+issues:
+  provider: "github:nabahilfe/NBHWebApp"
+  label: # optional, defaults to "testspace"
+
+release: "*_rel" # optional one or more branch-wildcard entries
+
+commit_status: true # optional, defaults to true
