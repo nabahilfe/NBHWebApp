@@ -62,7 +62,7 @@
              <b>Die Funktionen <i>Prüfer</i> und <i>Sonstiges</i> lassen sich <i>nicht</i> mit anderen Berechtigungen kombinieren!</b>
              <br/><br/>
              <p><i>Hinweis:<br/>
-                Rollen können nur vom Administrator bearbeitet werden.</i>
+                Rollen können nur von Administratoren bearbeitet werden.</i>
              </p>
           </div>
         </div>
