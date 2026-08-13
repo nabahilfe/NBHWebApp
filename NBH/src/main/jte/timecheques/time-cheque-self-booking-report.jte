@@ -65,7 +65,7 @@
                             <td data-sort-value="${row.getCategory().toLowerCase()}">
                                 ${row.getCategory()}
                                 @if(row.hasNote())
-                                    <br/><small class="text-muted">${row.getNote()}</small>
+                                    <small class="text-muted"> - ${row.getNote()}</small>
                                 @endif
                             </td>
                         </tr>
