@@ -120,7 +120,7 @@ public class TimeChequeController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/statistics")
     String statistics(final Model model, @RequestParam(required = false) Integer year) {
         // year=0 is the sentinel for "Alle Jahre" (all years)
@@ -141,7 +141,7 @@ public class TimeChequeController {
         return "timecheques/time-cheque-statistics";
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/booking-report")
     String bookingReport(final Model model) {
         org.springframework.data.domain.Pageable top50 = org.springframework.data.domain.PageRequest.of(0, 50);
@@ -150,7 +150,7 @@ public class TimeChequeController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/self-booking-report")
     String selfBookingReport(final Model model) {
         org.springframework.data.domain.Pageable top50 = org.springframework.data.domain.PageRequest.of(0, 50);

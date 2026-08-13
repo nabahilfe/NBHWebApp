@@ -31,8 +31,10 @@
         <button type="button" id="startBtn" class="btn btn-success bi-geo-alt-fill"
                 disabled="${unvalidatedCount == 0}"> Adressen validieren</button>
 
-        <button type="button" id="startAllBtn" class="btn btn-warning bi-arrow-repeat"
-                disabled="${totalActiveCount == 0}"> Alle Adressen neu validieren</button>
+        @if (ctxt != null && ctxt.hasAnyRole("ADMIN"))
+	        <button type="button" id="startAllBtn" class="btn btn-warning bi-arrow-repeat"
+	                disabled="${totalActiveCount == 0}"> Alle Adressen neu validieren</button>
+        @endif
 
         <div id="progressArea" class="mt-4" style="display:none;">
 

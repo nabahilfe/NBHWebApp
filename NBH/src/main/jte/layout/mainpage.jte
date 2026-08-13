@@ -149,9 +149,6 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/members">Mitglieder verwalten</a></li>
                                     <li><a class="dropdown-item" href="/members/resigned">Ausgetretene Mitglieder</a></li>
-                                    <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/members/birthdays">Geburtstage</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/members/open-membership-fees">Mitgliedsbeiträge vorschreiben</a></li>
                                     <li><hr class="dropdown-divider"></li>
@@ -303,6 +300,8 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/domaintypes">Gebühren-Sätze</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/roles">Rollen und Berechtigungen</a></li>
                                     <!--li><a class="dropdown-item" href="#">...</a></li>-->
                                     @if (ctxt != null && ctxt.hasAnyRole("ADMIN"))
                                         <li><hr class="dropdown-divider"></li>
@@ -318,17 +317,20 @@
                         @endif
 
                         <!-- Dropdown Auswertung -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER", "BOARD_MEMBER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Auswertungen
                                 </button>
                                 <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/members/birthdays">Geburtstage</a></li>
+                                    <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/timecheques/booking-report">Fremd-verbuchte Zeitschecks</a></li>
                                     <li><a class="dropdown-item" href="/timecheques/self-booking-report">Selbst-verbuchte Zeitschecks</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/timecheques/statistics">Zeitschecks pro Mitglied</a></li>
                                     <li><a class="dropdown-item" href="/timecheques/category-statistics">Zeitschecks pro Kategorie</a></li>
+                                    <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/members/statistics">Mitgliederentwicklung</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/members/registered">Registrierte Mitglieder</a></li>

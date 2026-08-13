@@ -281,7 +281,7 @@ public class MemberController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/statistics")
     String memberStatistics(final Model model) {
         // Merge joined and resigned counts by year into a combined list
@@ -308,7 +308,7 @@ public class MemberController {
         return new long[2];
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/registered")
     String listRegisteredMembers(final Model model) {
         log.debug("Listing registered Members (password set)");
@@ -318,7 +318,7 @@ public class MemberController {
         return "members/list-registered-members";
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/birthdays")
     String listBirthdays(final Model model) {
         model.addAttribute("currentMonth", memberRepository.findBirthdaysByMonthOffset(0));

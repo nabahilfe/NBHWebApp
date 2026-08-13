@@ -268,14 +268,17 @@ public class Role implements Serializable {
 
         if (Boolean.TRUE.equals(isExecutiveMember)) {	// Vorstand (Obmann, Obfrau und Stellvertreter) - kann Mitglieder verwalten, Kassaführung einsehen und Content bearbeiten.
             auths.add("ROLE_EXECUTIVE_MEMBER");
+            auths.add("ROLE_BOARD_MEMBER");
         }
 
-        if (Boolean.TRUE.equals(isTreasurer)) {		// Kassier - kann Geld-Buchungen verwalten
+        if (Boolean.TRUE.equals(isTreasurer)) {		// Kassier - kann Geld-Buchungen verwalten und ist im Vorstand
             auths.add("ROLE_TREASURER");
+            auths.add("ROLE_BOARD_MEMBER");
         }
 
-        if (Boolean.TRUE.equals(isSecretary)) {		// Schriftführer
+        if (Boolean.TRUE.equals(isSecretary)) {		// Schriftführer kann Text-Content verwalten, z.B. News, Veranstaltungen, ... und ist im Vorstand
             auths.add("ROLE_SECRETARY");
+            auths.add("ROLE_BOARD_MEMBER");
         }
 
         if (Boolean.TRUE.equals(isAuditor)) {		// Rechnungsprüfer, muss unabhängig vom Vorstand sein, darf also kein Board Meber sein oder sonstige rollen haben
