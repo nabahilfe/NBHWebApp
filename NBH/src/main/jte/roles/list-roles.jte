@@ -60,6 +60,10 @@
                 oder ein Schriftführer könnte auch Administrator sein.</p>
              <p>Die Funktionen <b>Zeitschecks</b> muss immer mit einer Vereins-Funktion wie Vorstand, Schriftführer oder Kassier kombiniert werden.</p>
              <b>Die Funktionen <i>Prüfer</i> und <i>Sonstiges</i> lassen sich <i>nicht</i> mit anderen Berechtigungen kombinieren!</b>
+             <br/><br/>
+             <p><i>Hinweis:<br/>
+                Rollen können nur vom Administrator bearbeitet werden.</i>
+             </p>
           </div>
         </div>
       </div>
