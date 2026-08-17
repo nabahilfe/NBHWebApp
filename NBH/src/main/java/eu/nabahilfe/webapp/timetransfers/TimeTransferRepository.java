@@ -8,12 +8,59 @@ package eu.nabahilfe.webapp.timetransfers;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 
 public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer, Long> {
 
     List<TimeTransfer> findAllByOrderByDateOfServiceDesc();
+
+    /** Returns the (up to) N most recently created booking-report rows for TimeTransfers that were booked by someone
+     *  other than the service provider (fromMember), pre-formatted as a DTO ready for display. */
+    @Query("""
+            SELECT new eu.nabahilfe.webapp.timetransfers.TimeTransferBookingReportRow(
+                t.createdAt,
+                CONCAT(cb.lastName, ' ', cb.firstName),
+                CONCAT(fm.lastName, ' ', fm.firstName),
+                CONCAT(tm.lastName, ' ', tm.firstName),
+                t.dateOfService,
+                t.hours,
+                TRIM(CONCAT(COALESCE(o.code, ''), ' ', COALESCE(o.description, ''))),
+                t.note
+            )
+            FROM TimeTransfer t
+            JOIN t.createdBy cb
+            JOIN t.fromMember fm
+            JOIN t.toMember tm
+            LEFT JOIN t.offer o
+            WHERE cb.id <> fm.id
+            ORDER BY t.createdAt DESC
+            """)
+    List<TimeTransferBookingReportRow> findForeignBookingsOrderByCreatedAtDesc(Pageable pageable);
+
+    /** Returns the (up to) N most recently created booking-report rows for TimeTransfers that were self-booked
+     *  by the service provider (fromMember == createdBy), pre-formatted as a DTO ready for display. */
+    @Query("""
+            SELECT new eu.nabahilfe.webapp.timetransfers.TimeTransferBookingReportRow(
+                t.createdAt,
+                CONCAT(cb.lastName, ' ', cb.firstName),
+                CONCAT(fm.lastName, ' ', fm.firstName),
+                CONCAT(tm.lastName, ' ', tm.firstName),
+                t.dateOfService,
+                t.hours,
+                TRIM(CONCAT(COALESCE(o.code, ''), ' ', COALESCE(o.description, ''))),
+                t.note
+            )
+            FROM TimeTransfer t
+            JOIN t.createdBy cb
+            JOIN t.fromMember fm
+            JOIN t.toMember tm
+            LEFT JOIN t.offer o
+            WHERE cb.id = fm.id
+            ORDER BY t.createdAt DESC
+            """)
+    List<TimeTransferBookingReportRow> findSelfBookingsOrderByCreatedAtDesc(Pageable pageable);
 
     List<TimeTransfer> findTop10ByFromMember_IdOrToMember_IdOrderByDateOfServiceDesc(Long fromMemberId, Long toMemberId);
 
@@ -51,7 +98,7 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
 
     /** Returns [memberFullName, totalHours, transferCount] for members who received hours in the given year, sorted by total hours desc */
     @Query("""
-            SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
+            SELECT CONCAT(m.lastName, ' ', m.firstName), SUM(t.hours), COUNT(t)
             FROM TimeTransfer t JOIN t.toMember m
             WHERE YEAR(t.dateOfService) = :year
             GROUP BY m.id, m.firstName, m.lastName
@@ -61,7 +108,7 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
 
     /** Returns [memberFullName, totalHours, transferCount] for members who received hours (all years), sorted by total hours desc */
     @Query("""
-            SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
+            SELECT CONCAT(m.lastName, ' ', m.firstName), SUM(t.hours), COUNT(t)
             FROM TimeTransfer t JOIN t.toMember m
             GROUP BY m.id, m.firstName, m.lastName
             ORDER BY SUM(t.hours) DESC
@@ -70,7 +117,7 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
 
     /** Returns [memberFullName, totalHours, transferCount] for members who gave hours in the given year, sorted by total hours desc */
     @Query("""
-            SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
+            SELECT CONCAT(m.lastName, ' ', m.firstName), SUM(t.hours), COUNT(t)
             FROM TimeTransfer t JOIN t.fromMember m
             WHERE YEAR(t.dateOfService) = :year
             GROUP BY m.id, m.firstName, m.lastName
@@ -80,7 +127,7 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
 
     /** Returns [memberFullName, totalHours, transferCount] for members who gave hours (all years), sorted by total hours desc */
     @Query("""
-            SELECT CONCAT(m.firstName, ' ', m.lastName), SUM(t.hours), COUNT(t)
+            SELECT CONCAT(m.lastName, ' ', m.firstName), SUM(t.hours), COUNT(t)
             FROM TimeTransfer t JOIN t.fromMember m
             GROUP BY m.id, m.firstName, m.lastName
             ORDER BY SUM(t.hours) DESC

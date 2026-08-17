@@ -3,6 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.GlobalModelAttributes
 @import java.util.List
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
@@ -23,9 +24,11 @@
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
+@param GlobalModelAttributes globalModelAttributes
 
 
 @template.layout.mainpage(
+    globalModelAttributes = globalModelAttributes,
     csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
@@ -45,8 +48,8 @@
 
     <br/>
 
-    <!-- Main form: POST to /timetransfers; server processes the submitted fields -->
-    <form action="/timetransfers" method="post">
+    <!-- Main form: POST to /timetransfers/staff; server processes the submitted fields -->
+    <form action="/timetransfers/staff" method="post">
         ${csrfHiddenInput}
         <input type="hidden" name="fromself" id="fromself" value="false">
 
@@ -121,7 +124,9 @@
                 </div>
 
               </div>
+
             </div>
+
           </div>
 
           <div class="col-sm-6 mb-1">
@@ -147,6 +152,7 @@
 
               </div>
             </div>
+
           </div>
 
         </div>
@@ -154,8 +160,22 @@
         <br/>
 
         <!-- Form actions: submit posts the transfer; reset clears client-side inputs -->
-        <button id="submitBtn" class="btn btn-primary bi-card-checklist" type="submit"> Zeitscheck verbuchen</button>
-        <button class="btn btn-secondary" type="button" onclick="resetInputs()">Eingabe löschen</button>
+        <div class="d-flex flex-wrap gap-2">
+            <button id="submitBtn" class="btn btn-primary bi-card-checklist" type="submit"> Zeitscheck verbuchen</button>
+            <button class="btn btn-secondary" type="button" onclick="resetInputs()">Eingabe löschen</button>
+        </div>
+
+        <br/>
+
+        <!-- Quick links to booking reports -->
+        <div class="d-flex flex-column flex-sm-row gap-2">
+            <a href="/timecheques/booking-report" class="btn btn-outline-primary bi-people">
+                &nbsp; Fremd-verbuchte Zeitschecks anzeigen
+            </a>
+            <a href="/timecheques/self-booking-report" class="btn btn-outline-primary bi-person-check">
+                &nbsp; Selbst-verbuchte Zeitschecks anzeigen
+            </a>
+        </div>
 
     </form>
 

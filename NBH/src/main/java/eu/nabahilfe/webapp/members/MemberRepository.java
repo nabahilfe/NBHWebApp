@@ -85,7 +85,7 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     @EntityGraph(attributePaths = "role")
     @Query(
         "SELECT m FROM Member m JOIN m.role r " +
-        "WHERE r.isBoardMember = true OR r.isTreasurer = true OR r.isSecretary = true " +
+        "WHERE r.isExecutiveMember = true OR r.isTreasurer = true OR r.isSecretary = true " +
         "ORDER BY m.role.roleName ASC")
     List<Member> findBoardMembers();
 
@@ -106,6 +106,14 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
     List<Object[]> findResignedCountPerYear();
 
     List<Member> findByFirstNameIgnoreCaseAndLastNameIgnoreCase(String firstName, String lastName);
+
+    /** All members that have registered (i.e. have set a password), excluding system accounts, sorted by full name (lastName, firstName). */
+    @EntityGraph(attributePaths = "role")
+    @Query("SELECT m FROM Member m " +
+           "WHERE m.password IS NOT NULL " +
+           "AND (m.isSystemAccount = false OR m.isSystemAccount IS NULL) " +
+           "ORDER BY m.lastName ASC, m.firstName ASC")
+    List<Member> findRegisteredMembersExcludingSystemAccounts();
 
     /** IDs of active, non-system members whose address has not yet been geo-validated. */
     @Query("SELECT m.id FROM Member m " +
@@ -132,5 +140,13 @@ public interface MemberRepository extends ListCrudRepository<Member, Long> {
            "WHERE (m.resignationDate IS NULL OR m.resignationDate > CURRENT_DATE) " +
            "AND (m.isSystemAccount = false OR m.isSystemAccount IS NULL)")
     long countActiveMembers();
+
+    /** Returns [memberFullName, accumulatedHours] for active, non-system members, ordered by accumulatedHours desc */
+    @Query("SELECT CONCAT(m.lastName, ' ', m.firstName), COALESCE(m.accumulatedHours, 0) " +
+           "FROM Member m " +
+           "WHERE (m.resignationDate IS NULL OR m.resignationDate > CURRENT_DATE) " +
+           "AND (m.isSystemAccount = false OR m.isSystemAccount IS NULL) " +
+           "ORDER BY COALESCE(m.accumulatedHours, 0) DESC")
+    List<Object[]> findAccumulatedHoursRanking();
 
 }

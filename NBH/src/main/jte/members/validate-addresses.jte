@@ -3,14 +3,17 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.GlobalModelAttributes
 @param long unvalidatedCount = 0
 @param long totalActiveCount = 0
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
+@param GlobalModelAttributes globalModelAttributes
 
 
 @template.layout.mainpage(
+    globalModelAttributes = globalModelAttributes,
     csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
@@ -28,8 +31,10 @@
         <button type="button" id="startBtn" class="btn btn-success bi-geo-alt-fill"
                 disabled="${unvalidatedCount == 0}"> Adressen validieren</button>
 
-        <button type="button" id="startAllBtn" class="btn btn-warning bi-arrow-repeat"
-                disabled="${totalActiveCount == 0}"> Alle Adressen neu validieren</button>
+        @if (ctxt != null && ctxt.hasAnyRole("ADMIN"))
+	        <button type="button" id="startAllBtn" class="btn btn-warning bi-arrow-repeat"
+	                disabled="${totalActiveCount == 0}"> Alle Adressen neu validieren</button>
+        @endif
 
         <div id="progressArea" class="mt-4" style="display:none;">
 

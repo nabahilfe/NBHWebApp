@@ -74,10 +74,10 @@ public class TimeChequeController {
     @GetMapping("/{id}")
     String viewTimeCheque(final Model model, @PathVariable Long id) {
 
-        // Check if user has ADMIN or TIME_KEEPER role
-        boolean isAdminOrTimeKeeper = SecurityContextHolder.getContext().getAuthentication()
+        // Check if user has ADMIN or TIME_KEEPER or EXECUTIVE_MEMBER role - all of them are TimeKeepers
+        boolean isTimeKeeper = SecurityContextHolder.getContext().getAuthentication()
                 .getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_TIME_KEEPER"));
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_TIME_KEEPER") || a.getAuthority().equals("ROLE_EXECUTIVE_MEMBER"));
 
         TimeCheque tc = timeChequeRepository.findById(id).orElse(null);
         if (tc == null) {
@@ -87,8 +87,8 @@ public class TimeChequeController {
             return "error";
         }
 
-        // If user is not ADMIN or TIME_KEEPER, only allow viewing own TimeCheques
-        if (!isAdminOrTimeKeeper && !securityUtils.isAuthenticatedAndMatches(tc.getAssignedTo().getId())) {
+        // If user is not a timeKeeper, only allow viewing own TimeCheques
+        if (!isTimeKeeper && !securityUtils.isAuthenticatedAndMatches(tc.getAssignedTo().getId())) {
             return "redirect:/statuscode/403";
         }
 
@@ -110,7 +110,7 @@ public class TimeChequeController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER', 'EXECUTIVE_MEMBER')")
     @GetMapping("/unaccounted")
     String listUnaccountedTimeCheques(final Model model) {
         log.debug("Listing unaccounted TimeCheques");
@@ -120,13 +120,14 @@ public class TimeChequeController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/statistics")
     String statistics(final Model model, @RequestParam(required = false) Integer year) {
         // year=0 is the sentinel for "Alle Jahre" (all years)
         boolean allYears = (year != null && year == 0);
         int selectedYear = allYears ? 0 : (year != null ? year : LocalDate.now().getYear());
         model.addAttribute("selectedYear", selectedYear);
+        model.addAttribute("hoursRanking", memberRepository.findAccumulatedHoursRanking());
         if (allYears) {
             org.springframework.data.domain.Pageable top20 = org.springframework.data.domain.PageRequest.of(0, 20);
             model.addAttribute("stats", timeChequeRepository.findStatsAllYears(top20));
@@ -140,7 +141,25 @@ public class TimeChequeController {
         return "timecheques/time-cheque-statistics";
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
+    @GetMapping("/booking-report")
+    String bookingReport(final Model model) {
+        org.springframework.data.domain.Pageable top50 = org.springframework.data.domain.PageRequest.of(0, 50);
+        model.addAttribute("bookings", timeTransferRepository.findForeignBookingsOrderByCreatedAtDesc(top50));
+        return "timecheques/time-cheque-booking-report";
+    }
+
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
+    @GetMapping("/self-booking-report")
+    String selfBookingReport(final Model model) {
+        org.springframework.data.domain.Pageable top50 = org.springframework.data.domain.PageRequest.of(0, 50);
+        model.addAttribute("bookings", timeTransferRepository.findSelfBookingsOrderByCreatedAtDesc(top50));
+        return "timecheques/time-cheque-self-booking-report";
+    }
+
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'TREASURER', 'BOARD_MEMBER')")
     @GetMapping("/category-statistics")
     String categoryStatistics(final Model model, @RequestParam(required = false) Integer year) {
         boolean allYears = (year != null && year == 0);
@@ -157,14 +176,11 @@ public class TimeChequeController {
 
 
     // --------------------
-
-
-    // --------------------
     // CREATE NEW
     // --------------------
 
     // Create TimeCheque for specific Member
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'EXECUTIVE_MEMBER')")
     @GetMapping("/new")
     String addTimeCheque(final Model model, @RequestParam Long memberId) {
 

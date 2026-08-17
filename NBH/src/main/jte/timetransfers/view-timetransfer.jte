@@ -3,6 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.GlobalModelAttributes
 @import java.util.List
 
 @import static eu.nabahilfe.webapp.DateFormatter.*
@@ -22,9 +23,11 @@
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
+@param GlobalModelAttributes globalModelAttributes
 
 
 @template.layout.mainpage(
+    globalModelAttributes = globalModelAttributes,
     csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
@@ -83,9 +86,6 @@
 
     </div>
 
-
-
-    <br/>
     <br/>
 
     <form action="/timetransfers/new" method="get">
@@ -93,6 +93,18 @@
     </form>
 
     <br/>
+
+    <!-- Quick links to booking reports -->
+    <div class="d-flex flex-column flex-sm-row gap-2">
+        <a href="/timecheques/booking-report" class="btn btn-outline-primary bi-people">
+            &nbsp; Fremd-verbuchte Zeitschecks anzeigen
+        </a>
+        <a href="/timecheques/self-booking-report" class="btn btn-outline-primary bi-person-check">
+            &nbsp; Selbst-verbuchte Zeitschecks anzeigen
+        </a>
+    </div>
+
+	<br/>
 
     @template.components.display-statusmessage(successMessage, errorMessage)
 

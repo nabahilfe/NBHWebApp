@@ -21,6 +21,8 @@ public interface Accountable {
     public abstract String getTransactionType();    	// INCOME oder EXPENSE - muss aus Enum TransactionType kommen
     public abstract LocalDate getTransactionDate();
     public abstract BigDecimal getTransactionAmount();
+    public abstract String getLiableMemberName();    	// Wer hat das veranlasst oder angeordnet -> Name von cretaedBy Member
+    public abstract void setLiableMemberName(String name);
 
     public abstract String getTransactionISODate();    	// Date of transaction as ISO Date String
 }

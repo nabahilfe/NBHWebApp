@@ -3,6 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.GlobalModelAttributes
 @import static eu.nabahilfe.webapp.DateFormatter.*
 @import static eu.nabahilfe.webapp.NumberFormatter.*
 @import eu.nabahilfe.webapp.accountings.Transaction
@@ -15,9 +16,11 @@
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
+@param GlobalModelAttributes globalModelAttributes
 
 
 @template.layout.mainpage(
+    globalModelAttributes = globalModelAttributes,
     csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
@@ -32,7 +35,7 @@
                 </div>
                 <div class="card-body">
                     <dl class="row mb-0">
-                        <dt class="col-sm-4">Art</dt>
+                        <dt class="col-sm-4">Buchungsart</dt>
                         <dd class="col-sm-8">
                             ${TransactionType.INCOME.name().equals(transaction.getTransactionType()) ? "Einnahme" : "Ausgabe"}
                         </dd>
@@ -42,6 +45,9 @@
 
                         <dt class="col-sm-4">Transaktionsdatum</dt>
                         <dd class="col-sm-8">${dateReverseDE(transaction.getTransactionDate())}</dd>
+
+                        <dt class="col-sm-4">Erstellt von</dt>
+                        <dd class="col-sm-8">${transaction.getLiableMemberName()}</dd>
 
                         <dt class="col-sm-4">Betrag</dt>
                         <dd class="col-sm-8">${numberDE(transaction.getAmount())}&nbsp;&euro;</dd>

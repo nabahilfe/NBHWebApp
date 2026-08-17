@@ -3,7 +3,7 @@
  * Licensed under the MIT License (see LICENSE file).
  */
 
-package eu.nabahilfe.webapp.members;
+package eu.nabahilfe.webapp;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,7 +14,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import eu.nabahilfe.webapp.NbhConst;
+import eu.nabahilfe.webapp.members.Member;
+import eu.nabahilfe.webapp.members.MemberRepository;
+import eu.nabahilfe.webapp.members.Role;
+import eu.nabahilfe.webapp.members.RoleRepository;
 import eu.nabahilfe.webapp.org.Offer;
 import eu.nabahilfe.webapp.org.OfferRepository;
 import jakarta.transaction.Transactional;
@@ -43,20 +46,31 @@ public class DefaultDataInitializer implements CommandLineRunner {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public void run(String... args) {
+
         log.info("Running DefaultDataInitializer to ensure default roles, admin member and offers exist");
+        Member admin = null;
         try {
-            Role adminRole = ensureAdminRoleExists();
-            ensureAdminMemberExists(adminRole);
-            ensureDefaultRolesExists();
-            ensureOffersExist();
-            ensureSozialkontoExists();
+            // System Administrator member must exist, otherwise we cannot create the default roles and offers
+            admin = memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME, NbhConst.ADMIN_ACCOUNT_LAST_NAME)
+                    .stream().findFirst().orElseThrow(() -> new IllegalStateException("System Administrator member not found, must be created manually with insert to database!"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("System Administrator member not found, must be created manually with insert to database!", e);
+            throw new IllegalStateException("Application startup failed, no System Administrator member found, initial Data not created!", e);
+        }
+        try {
+            Role adminRole = ensureAdminRoleExists(admin);
+            addAdminRoleToAdmin(admin, adminRole);
+            ensureDefaultRolesExists(admin);
+            ensureOffersExist(admin);
+            ensureSozialkontoExists(admin);
         } catch (Exception e) {
             log.error("Failed to initialize default data", e);
             throw new IllegalStateException("Application startup failed, initial Data not created!", e);
         }
     }
 
-    private void ensureOffersExist() {
+    private void ensureOffersExist(Member admin) {
         if (offerRepository.count() > 0) {
             log.debug("Offers already exist, skipping default offer creation");
             return;
@@ -69,6 +83,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         offer = new Offer();
         offer.setCode("100");
         offer.setDescription("Erfahrungsaustausch und Gespräche");
+        offer.setCreatedBy(admin);
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
 
@@ -77,60 +92,61 @@ public class DefaultDataInitializer implements CommandLineRunner {
         offer = new Offer();
         offer.setCode("200");
         offer.setDescription("Alltägliche Hilfsdienste");
+        offer.setCreatedBy(admin);
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
-
 
 
         // '300','Initiieren und Organisieren von Freizeitaktivitäten'
         offer = new Offer();
         offer.setCode("300");
         offer.setDescription("Initiieren und Organisieren von Freizeitaktivitäten");
+        offer.setCreatedBy(admin);
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
-
 
 
         // '400','Unterstützung bei Formularen sowie Behördenkontakten'
         offer = new Offer();
         offer.setCode("400");
         offer.setDescription("Unterstützung bei Formularen sowie Behördenkontakten");
+        offer.setCreatedBy(admin);
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
-
 
 
         // '500','Transport und Fahrtendienste'
         offer = new Offer();
         offer.setCode("500");
         offer.setDescription("Transport und Fahrtendienste");
+        offer.setCreatedBy(admin);
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
-
 
 
         // '600','Leih-Oma / Leih-Opa'
         offer = new Offer();
         offer.setCode("600");
         offer.setDescription("Leih-Oma / Leih-Opa");
+        offer.setCreatedBy(admin);
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
-
 
 
         // '700','Kleinere Außen- oder Reparaturarbeiten'
         offer = new Offer();
         offer.setCode("700");
         offer.setDescription("Kleinere Außen- oder Reparaturarbeiten");
+        offer.setCreatedBy(admin);
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
-
 
 
         // '800','Hilfe beim Bedienen technischer Geräte und Computer'
         offer = new Offer();
         offer.setCode("800");
         offer.setDescription("Hilfe beim Bedienen technischer Geräte und Computer");
+        offer.setCreatedBy(admin);
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
 
@@ -139,6 +155,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         offer = new Offer();
         offer.setCode("900");
         offer.setDescription("Sonstiges - bitte Beschreibung angeben!");
+        offer.setCreatedBy(admin);
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
 
@@ -147,6 +164,7 @@ public class DefaultDataInitializer implements CommandLineRunner {
         offer = new Offer();
         offer.setCode("950");
         offer.setDescription("Spende von Stunden");
+        offer.setCreatedBy(admin);
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
 
@@ -154,14 +172,18 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // '999','Korrekturbuchung'
         offer = new Offer();
         offer.setCode("999");
+        offer.setCreatedBy(admin);
         offer.setDescription("Korrekturbuchung");
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
     }
 
 
-    private void ensureDefaultRolesExists() {
+    private void ensureDefaultRolesExists(Member admin) {
         Role existing = roleRepository.findByRoleNameIgnoreCase("Obmann").orElse(null);
+        if (existing == null) {
+            existing = roleRepository.findByRoleNameIgnoreCase("Obfrau").orElse(null);
+        }
         if (existing != null) {
             log.debug("RoleNames already exist, skipping default role creation");
             return;
@@ -173,26 +195,28 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Obfrau
         role = new Role();
         role.setRoleName("Obfrau");
-        role.setIsBoardMember(true);
+        role.setIsExecutiveMember(true);
         role.setIsTreasurer(false);
         role.setIsSecretary(false);
         role.setIsAuditor(false);
         role.setIsTimeKeeper(true);
         role.setIsAdmin(false);
         role.setIsMiscellaneous(false);
+        role.setCreatedBy(admin);
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
 
         // Obfrau Stv.
         role = new Role();
         role.setRoleName("Obfrau Stv.");
-        role.setIsBoardMember(true);
+        role.setIsExecutiveMember(true);
         role.setIsTreasurer(false);
         role.setIsSecretary(false);
         role.setIsAuditor(false);
         role.setIsTimeKeeper(true);
         role.setIsAdmin(true);
         role.setIsMiscellaneous(false);
+        role.setCreatedBy(admin);
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
 
@@ -201,26 +225,28 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Obmann
         role = new Role();
         role.setRoleName("Obmann");
-        role.setIsBoardMember(true);
+        role.setIsExecutiveMember(true);
         role.setIsTreasurer(false);
         role.setIsSecretary(false);
         role.setIsAuditor(false);
         role.setIsTimeKeeper(true);
         role.setIsAdmin(false);
         role.setIsMiscellaneous(false);
+        role.setCreatedBy(admin);
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
 
         // Obmann Stv.
         role = new Role();
         role.setRoleName("Obmann Stv.");
-        role.setIsBoardMember(true);
+        role.setIsExecutiveMember(true);
         role.setIsTreasurer(false);
         role.setIsSecretary(false);
         role.setIsAuditor(false);
         role.setIsTimeKeeper(true);
         role.setIsAdmin(true);
         role.setIsMiscellaneous(false);
+        role.setCreatedBy(admin);
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
 
@@ -229,26 +255,28 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Kassier
         role = new Role();
         role.setRoleName("Kassier");
-        role.setIsBoardMember(false);
+        role.setIsExecutiveMember(false);
         role.setIsTreasurer(true);
         role.setIsSecretary(false);
         role.setIsAuditor(false);
         role.setIsTimeKeeper(false);
         role.setIsAdmin(false);
         role.setIsMiscellaneous(false);
+        role.setCreatedBy(admin);
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
 
         // Kassier Stv.
         role = new Role();
         role.setRoleName("Kassier Stv.");
-        role.setIsBoardMember(false);
+        role.setIsExecutiveMember(false);
         role.setIsTreasurer(true);
         role.setIsSecretary(false);
         role.setIsAuditor(false);
         role.setIsTimeKeeper(false);
         role.setIsAdmin(false);
         role.setIsMiscellaneous(false);
+        role.setCreatedBy(admin);
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
 
@@ -257,26 +285,28 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Rechnungsprüfer
         role = new Role();
         role.setRoleName("Rechnungsprüfer");
-        role.setIsBoardMember(false);
+        role.setIsExecutiveMember(false);
         role.setIsTreasurer(false);
         role.setIsSecretary(false);
         role.setIsAuditor(true);
         role.setIsTimeKeeper(false);
         role.setIsAdmin(false);
         role.setIsMiscellaneous(false);
+        role.setCreatedBy(admin);
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
 
         // Rechnungsprüfer Stv.
         role = new Role();
         role.setRoleName("Rechnungsprüfer Stv.");
-        role.setIsBoardMember(false);
+        role.setIsExecutiveMember(false);
         role.setIsTreasurer(false);
         role.setIsSecretary(false);
         role.setIsAuditor(true);
         role.setIsTimeKeeper(false);
         role.setIsAdmin(false);
         role.setIsMiscellaneous(false);
+        role.setCreatedBy(admin);
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
 
@@ -285,26 +315,28 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Schriftführer
         role = new Role();
         role.setRoleName("Schriftführer");
-        role.setIsBoardMember(false);
+        role.setIsExecutiveMember(false);
         role.setIsTreasurer(false);
         role.setIsSecretary(true);
         role.setIsAuditor(false);
         role.setIsTimeKeeper(false);
         role.setIsAdmin(false);
         role.setIsMiscellaneous(false);
+        role.setCreatedBy(admin);
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
 
         // Schriftführer Stv.
         role = new Role();
         role.setRoleName("Schriftführer Stv.");
-        role.setIsBoardMember(false);
+        role.setIsExecutiveMember(false);
         role.setIsTreasurer(false);
         role.setIsSecretary(true);
         role.setIsAuditor(false);
         role.setIsTimeKeeper(false);
         role.setIsAdmin(false);
         role.setIsMiscellaneous(false);
+        role.setCreatedBy(admin);
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
 
@@ -312,67 +344,48 @@ public class DefaultDataInitializer implements CommandLineRunner {
         // Ehrenmitglied
         role = new Role();
         role.setRoleName("Ehrenmitglied");
-        role.setIsBoardMember(false);
+        role.setIsExecutiveMember(false);
         role.setIsTreasurer(false);
         role.setIsSecretary(false);
         role.setIsAuditor(false);
         role.setIsTimeKeeper(false);
         role.setIsAdmin(false);
         role.setIsMiscellaneous(true);
+        role.setCreatedBy(admin);
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
 
 
     }
 
-    private Role ensureAdminRoleExists() {
+    private Role ensureAdminRoleExists(Member admin) {
         return roleRepository.findByRoleNameIgnoreCase(NbhConst.ADMIN_ROLE_NAME).orElseGet(() -> {
-            Role admin = new Role();
-            admin.setRoleName(NbhConst.ADMIN_ROLE_NAME);
-            admin.setIsAdmin(true);
-            admin.setIsBoardMember(false);
-            admin.setIsTreasurer(false);
-            admin.setIsSecretary(false);
-            admin.setIsAuditor(false);
-            admin.setIsTimeKeeper(false);
-            admin.setIsMiscellaneous(false);
-            Role saved = roleRepository.save(admin);
+            Role adminRole = new Role();
+            adminRole.setRoleName(NbhConst.ADMIN_ROLE_NAME);
+            adminRole.setIsAdmin(true);
+            adminRole.setIsExecutiveMember(false);
+            adminRole.setIsTreasurer(false);
+            adminRole.setIsSecretary(false);
+            adminRole.setIsAuditor(false);
+            adminRole.setIsTimeKeeper(false);
+            adminRole.setIsMiscellaneous(false);
+            adminRole.setCreatedBy(admin);
+            Role saved = roleRepository.save(adminRole);
             log.info("{} role created at startup", saved.getRoleName());
             return saved;
         });
     }
 
-    private void ensureAdminMemberExists(Role adminRole) {
-        List<Member> existing = memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME, NbhConst.ADMIN_ACCOUNT_LAST_NAME);
-        if (!existing.isEmpty()) {
-            log.info("System Administrator member already present with id={}", existing.get(0).getId());
-            return;
-        }
-
-        Member admin = new Member();
-        admin.setFirstName(NbhConst.ADMIN_ACCOUNT_FIRST_NAME);
-        admin.setLastName(NbhConst.ADMIN_ACCOUNT_LAST_NAME);
-        admin.setBirthdate(LocalDate.of(2000, 1, 1));
-        admin.setEmail(NbhConst.ADMIN_EMAIL_PREFIX + getTenantName() + NbhConst.ADMIN_EMAIL_SUFFIX);
-        admin.setStreet("-");
-        admin.setNumber("-");
-        admin.setZip("-");
-        admin.setCity("-");
+    private void addAdminRoleToAdmin(Member admin, Role adminRole) {
         admin.setRole(adminRole);
-        admin.setJoiningDate(LocalDate.now());
-        admin.setDirectDebitAuthorization(false);
-        admin.setIsImportedMember(true);
-        admin.setIsSystemAccount(true);
-        admin.setAccumulatedHours(null);
-        admin.setMemberNmbr(1); // Assuming 1 is the first member number for the admin
-
+        admin.setUpdatedBy(admin);
         memberRepository.save(admin);
         log.info("System Administrator member created at startup with email={} and memberNmbr={}", admin.getEmail(), admin.getMemberNmbr());
     }
 
 
 
-    private void ensureSozialkontoExists() {
+    private void ensureSozialkontoExists(Member admin) {
         List<Member> existing = memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME, NbhConst.SOZIALKONTO_LAST_NAME);
         if (!existing.isEmpty()) {
             log.info("Sozialkonto already present with id={}", existing.get(0).getId());
@@ -393,14 +406,14 @@ public class DefaultDataInitializer implements CommandLineRunner {
         sozialkonto.setIsSystemAccount(true);
         sozialkonto.setAccumulatedHours(null);
         sozialkonto.setMemberNmbr(2); // Assuming 1 is for the admin member, we set 2 for the sozialkonto
+        sozialkonto.setCreatedBy(admin);
 
         memberRepository.save(sozialkonto);
         log.info("Sozialkonto created at startup with memberNmbr={}", sozialkonto.getMemberNmbr());
     }
 
 
-
-    private String getTenantName() {
+    public String getTenantName() {
         // FIXME: for now we just return "ma" as tenant name, but in the future we should determine this dynamically based on the url subdomain
         return "ma";
     }

@@ -53,9 +53,20 @@ TRUNCATE TABLE SPRING_SESSION;
 
 
 
+/****************************************************************************************/
+/* ESSENTIAL! Set created_by_id in Table  REGISTRATION_CODE to nullable after creation! */
+/****************************************************************************************/
+
+ALTER TABLE REGISTRATION_CODES ALTER COLUMN created_by_id DROP NOT NULL;
+
+
+
+
+
+
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-07-17 14:04:43
+ * Generated at 2026-08-04 16:15:30
  * ModelDescription: NBH Entity Modell
  */
 
@@ -75,7 +86,7 @@ create table if not exists ASSOCIATIONS (
     zip VARCHAR(10) not null,
     city VARCHAR(80) not null,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -88,7 +99,7 @@ create table if not exists OFFERS (
     code VARCHAR(10) /* z.B. 200, 300, 400 */,
     description VARCHAR(250) /* z.B. Allgemein Hilfe im Haushalt */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -107,7 +118,7 @@ create table if not exists ROLES (
     is_miscellaneous BOOLEAN not null /* SPEZIAL-ROLLE - z.B. Ehrenmitglied */,
     role_name VARCHAR(80) not null /* Mitglied, Vorstand, stv. Vorstand, Kassier, stv. Kassier, Rechnungsprüfer, Schriftführer, .... */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -122,7 +133,7 @@ create table if not exists AMOUNT_DOMAIN_VALUES (
     valid_from DATE not null,
     valid_to DATE not null /* letzter Eintrag hat immer 9999-12-31 */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -134,7 +145,7 @@ create table if not exists EVENTS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     date DATE /* Datum der Veranstaltung */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -148,7 +159,7 @@ create table if not exists TEXT_CONTENTS (
     md_text TEXT /* Text mit Markdoen formatiert */,
     html_text TEXT /* Aus dem Markdown Text generierter HTML Text */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -163,7 +174,7 @@ create table if not exists REGISTRATION_CODES (
     expires_at TIMESTAMP not null /* Gültigkeitsdauer des Codes */,
     failed_attempts INTEGER /* Anzahl der Retries */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -199,7 +210,7 @@ create table if not exists MEMBERS (
     accumulated_hours INTEGER /* Gut-Stunden - kommt aus Gutschrift bei Eintritt, Stundenkauf, Stundenerwerb durch Hilfestellung, ... */,
     role_id BIGINT /* FK id from ROLES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -213,10 +224,11 @@ create table if not exists MEMBERSHIP_FEES (
     do_not_charge BOOLEAN not null /* z.B. für Ehrenmitglieder */,
     transaction_date DATE not null,
     amount NUMERIC(12,2) not null,
+    liable_member_name VARCHAR(80) not null /* Wer hat das veranlasst oder angeordnet -> Name von cretaedBy Member */,
     member_id BIGINT /* FK id from MEMBERS(id) */,
     accounted_by_id BIGINT /* FK id from ACCOUNTING_ENTRIES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -233,7 +245,7 @@ create table if not exists TIME_TRANSFERS (
     from_member_id BIGINT /* FK id from MEMBERS(id) */,
     to_member_id BIGINT /* FK id from MEMBERS(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -246,10 +258,11 @@ create table if not exists TIME_CHEQUES (
     hours SMALLINT not null /* Anzahl der Stunden, üblicherweise 5 (Beitritt zum Verein) oder 10 */,
     transaction_date DATE not null,
     amount NUMERIC(12,2) not null,
+    liable_member_name VARCHAR(80) not null /* Wer hat das veranlasst oder angeordnet -> Name von cretaedBy Member */,
     assigned_to_id BIGINT /* FK id from MEMBERS(id) */,
     accounted_by_id BIGINT /* FK id from ACCOUNTING_ENTRIES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -268,7 +281,7 @@ create table if not exists ACCOUNTING_ENTRIES (
     accounting_date DATE not null /* Verrechnungsdatum */,
     description VARCHAR(250) /* Verpflichtend wenn kein fix definierter Name wie 'Zeitscheck', 'Mitgliedsgebühr' verwendet wird, sondern 'Sonstiges' */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -281,10 +294,11 @@ create table if not exists TRANSACTIONS (
     transaction_type VARCHAR(10) not null /* INCOME oder EXPENSE - muss aus Enum TransactionType kommen */,
     transaction_date DATE not null,
     amount NUMERIC(12,2) not null,
+    liable_member_name VARCHAR(80) not null /* Wer hat das veranlasst oder angeordnet -> Name von cretaedBy Member */,
     description VARCHAR(250) not null,
     accounted_by_id BIGINT /* FK id from ACCOUNTING_ENTRIES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -294,11 +308,12 @@ create table if not exists TRANSACTIONS (
 /* Foto- oder Bildergalerie */
 create table if not exists IMAGE_GALLERY (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    event_date DATE not null,
-    event_description VARCHAR(250) not null,
-    event_text TEXT,
+    gallery_date DATE not null,
+    gallery_description VARCHAR(250) not null,
+    gallery_remark VARCHAR(250) /* Anmerkung für Editor, wird in der Gallery-Ansicht nicht angezeigt */,
+    is_public BOOLEAN not null DEFAULT FALSE /* wenn nicht public dann nur für angemeldete Mitglieder sichtbar */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -312,11 +327,12 @@ create table if not exists IMAGES (
     image_size INTEGER not null,
     image BYTEA not null,
     thumbnail BYTEA not null,
+    content_type VARCHAR(20) not null /* image/jpeg, image/png ... */,
     description VARCHAR(250),
     is_gallery_cover BOOLEAN not null DEFAULT FALSE /* Das repräsentative Bild für die Galerie das in der Galerieübersicht angezeigt wird */,
     belongs_to_id BIGINT /* FK id from IMAGE_GALLERY(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -324,28 +340,30 @@ create table if not exists IMAGES (
 
 
 /* Sammlung von Dokumenten */
-create table if not exists DOCUMENT_GALLERY (
+create table if not exists DOCUMENT_LIBRARY (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    document_description VARCHAR(250) not null,
-    document_text TEXT,
+    library_description VARCHAR(250) not null,
+    library_remark VARCHAR(250) /* Anmerkung für Editor, wird in der Library-Ansicht nicht angezeigt */,
+    is_public BOOLEAN not null DEFAULT FALSE /* public zugänglich oder nur für Mitglieder */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
 );
 
 
-/* PDF Dokument */
-create table if not exists PDF_DOCUMENT (
+/* Dokument - PDF erlauben, sonst nix */
+create table if not exists DOCUMENTS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    pdf_name VARCHAR(250) not null,
-    pdf_size INTEGER not null,
-    pdf_data BYTEA not null,
+    document_name VARCHAR(250) not null,
+    document_size INTEGER not null,
+    document_d_data BYTEA not null,
+    content_type VARCHAR(20) not null /* application/pdf */,
     description VARCHAR(250),
-    belongs_to_id BIGINT /* FK id from DOCUMENT_GALLERY(id) */,
+    belongs_to_id BIGINT /* FK id from DOCUMENT_LIBRARY(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_by_id BIGINT,
+    created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -396,8 +414,8 @@ alter table IMAGES
 ;
 
 
-alter table PDF_DOCUMENT
-    add constraint fk_PDF_DOCUMENT_belongs_to_id foreign key (belongs_to_id) references DOCUMENT_GALLERY(id)
+alter table DOCUMENTS
+    add constraint fk_DOCUMENTS_belongs_to_id foreign key (belongs_to_id) references DOCUMENT_LIBRARY(id)
 ;
 
 
@@ -476,9 +494,9 @@ drop table if exists IMAGE_GALLERY cascade;
 
 drop table if exists IMAGES cascade;
 
-drop table if exists DOCUMENT_GALLERY cascade;
+drop table if exists DOCUMENT_LIBRARY cascade;
 
-drop table if exists PDF_DOCUMENT cascade;
+drop table if exists DOCUMENTS cascade;
 
 
 /* end of generated file */

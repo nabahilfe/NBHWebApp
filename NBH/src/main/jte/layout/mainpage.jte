@@ -3,13 +3,15 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.GlobalModelAttributes
 @import eu.nabahilfe.webapp.textcontent.TextContentType
+@import eu.nabahilfe.webapp.GlobalModelAttributes
 
 
 @param gg.jte.Content content
 @param String searchTerm = null
 
-
+@param GlobalModelAttributes globalModelAttributes = null
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput = null
 @param eu.nabahilfe.webapp.security.ViewContext ctxt = null
 
@@ -53,6 +55,33 @@
             body {
                 padding-top: 90px;
                 background: #e9fbe9;
+            }
+
+            .dropdown-submenu {
+                position: relative;
+            }
+
+            .dropdown-submenu > .dropdown-menu {
+                top: 0;
+                left: 100%;
+                margin-top: -1px;
+            }
+
+            .dropdown-submenu:hover > .dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-submenu > .dropdown-toggle {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .dropdown-submenu > .dropdown-toggle::after {
+                margin-left: 1rem;
+                flex-shrink: 0;
+                transform: rotate(-90deg);
+                float: none;   /* wichtig */
             }
         </style>
 
@@ -112,7 +141,7 @@
                         </div>
 
                         <!-- Dropdown Mitglied -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Mitglieder
@@ -120,9 +149,6 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/members">Mitglieder verwalten</a></li>
                                     <li><a class="dropdown-item" href="/members/resigned">Ausgetretene Mitglieder</a></li>
-                                    <li><a class="dropdown-item" href="/roles">Rollen verwalten</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/members/birthdays">Geburtstage</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/members/open-membership-fees">Mitgliedsbeiträge vorschreiben</a></li>
                                     <li><hr class="dropdown-divider"></li>
@@ -133,7 +159,7 @@
 
 
                         <!-- Dropdown Zeitschecks -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER", "EXECUTIVE_MEMBER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Zeitschecks
@@ -145,91 +171,169 @@
                             </li>
                         @endif
 
-                        <!-- Dropdown Einnahmen / Ausgaben -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "TREASURER"))
-                            <li class="nav-item dropdown">
-                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
-                                    Einnahmen / Ausgaben
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/accountings/income">Einnahme erfassen</a></li>
-                                    <li><a class="dropdown-item" href="/accountings/expense">Ausgabe erfassen</a></li>
-                                </ul>
-                            </li>
-                        @endif
 
                         <!-- Dropdown Buchungen -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "TREASURER", "AUDITOR"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER", "TREASURER", "AUDITOR"))
                             <li class="nav-item dropdown">
-                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                <button class="nav-link dropdown-toggle btn btn-link"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    data-bs-display="static">
                                     Buchungen
                                 </button>
+
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/timecheques/unaccounted">Offene Zeitschecks</a></li>
-                                    <li><a class="dropdown-item" href="/members/unaccounted-mbshipfees">Offene Mitgliedsbeiträge</a></li>
-                                    <li><a class="dropdown-item" href="/accountings/misc-unaccounted">Sonstige offene Buchung</a></li>
-                                    <li><hr class="dropdown-divider"></li>
+
+                                    <!-- Offene Buchungen -->
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">
+                                            Offene Buchungen
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="/timecheques/unaccounted">Offene Zeitschecks</a></li>
+                                            <li><a class="dropdown-item" href="/members/unaccounted-mbshipfees">Offene Mitgliedsbeiträge</a></li>
+                                            <li><a class="dropdown-item" href="/accountings/misc-unaccounted">Sonstige offene Buchung</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <!-- Einnahmen / Ausgaben -->
+                                    @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
+                                        <li class="dropdown-submenu">
+                                            <a class="dropdown-item dropdown-toggle" href="#">
+                                                Einnahmen / Ausgaben
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="/accountings/income">Einnahme erfassen</a></li>
+                                                <li><a class="dropdown-item" href="/accountings/expense">Ausgabe erfassen</a></li>
+                                            </ul>
+                                        </li>
+                                    @endif
+
                                     <li><a class="dropdown-item" href="/accountings/show-accountings">Umsätze</a></li>
                                 </ul>
+
+
                             </li>
                         @endif
 
 
                         <!-- Dropdown Text Content -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "SECRETARY"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER", "SECRETARY"))
                             <li class="nav-item dropdown">
-                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                <button class="nav-link dropdown-toggle btn btn-link"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        data-bs-display="static">
                                     Content
                                 </button>
+
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.ABOUT_US}">
-                                            ${TextContentType.ABOUT_US.getCode()}</a></li>
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.CONTACT}">
-                                            ${TextContentType.CONTACT.getCode()}</a></li>
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.EVENTS}">
-                                            ${TextContentType.EVENTS.getCode()}</a></li>
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.NEWS}">
-                                            ${TextContentType.NEWS.getCode()}</a></li>
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.FAQ}">
-                                            ${TextContentType.FAQ.getCode()}</a></li>
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.TERMS_OF_SERVICE}">
-                                            ${TextContentType.TERMS_OF_SERVICE.getCode()}</a></li>
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.PRIVACY_POLICY}">
-                                            ${TextContentType.PRIVACY_POLICY.getCode()}</a></li>
-                                    <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.LEGAL_NOTICE}">
-                                            ${TextContentType.LEGAL_NOTICE.getCode()}</a></li>
+
+                                    <!-- Texte -->
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">
+                                            Texte
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.ABOUT_US}">
+                                                ${TextContentType.ABOUT_US.getCode()}</a></li>
+
+                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.CONTACT}">
+                                                ${TextContentType.CONTACT.getCode()}</a></li>
+
+                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.EVENTS}">
+                                                ${TextContentType.EVENTS.getCode()}</a></li>
+
+                                            <!--li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.NEWS}">
+                                                ${TextContentType.NEWS.getCode()}</a></li-->
+
+                                            <!--li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.FAQ}">
+                                                ${TextContentType.FAQ.getCode()}</a></li-->
+
+                                            <!--li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.TERMS_OF_SERVICE}">
+                                                ${TextContentType.TERMS_OF_SERVICE.getCode()}</a></li-->
+
+                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.PRIVACY_POLICY}">
+                                                ${TextContentType.PRIVACY_POLICY.getCode()}</a></li>
+
+                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.LEGAL_NOTICE}">
+                                                ${TextContentType.LEGAL_NOTICE.getCode()}</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <!-- FIXME: enable this Bilder menu once we have a proper image management system in place
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">
+                                            Bilder
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="/images/gallery">Galerie</a></li>
+                                            <li><a class="dropdown-item" href="/images/upload">Bild hochladen</a></li>
+                                            <li><a class="dropdown-item" href="/images/categories">Kategorien</a></li>
+                                        </ul>
+                                    </li>
+                                    -->
+
+                                    <!-- FIXME: enable this Dokumente menu once we have a proper document management system in place
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">
+                                            Dokumente
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="/documents">Alle Dokumente</a></li>
+                                            <li><a class="dropdown-item" href="/documents/upload">Dokument hochladen</a></li>
+                                            <li><a class="dropdown-item" href="/documents/categories">Kategorien</a></li>
+                                        </ul>
+                                    </li>
+                                    -->
+
                                 </ul>
                             </li>
                         @endif
 
 
                         <!-- Dropdown Domain Values -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER", "TREASURER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER", "TREASURER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Einstellungen
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/domaintypes">Gebühren-Sätze</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/roles">Rollen und Berechtigungen</a></li>
                                     <!--li><a class="dropdown-item" href="#">...</a></li>-->
                                     @if (ctxt != null && ctxt.hasAnyRole("ADMIN"))
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="/email/sendTestEmail">Test E-Mail senden</a></li>
+                                        <li>
+                                            <form action="/email/sendTestEmail" method="post" class="m-0 p-0">
+                                                ${csrfHiddenInput}
+                                                <button type="submit" class="dropdown-item">Test E-Mail senden</button>
+                                            </form>
+                                        </li>
                                     @endif
                                 </ul>
                             </li>
                         @endif
 
                         <!-- Dropdown Auswertung -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER", "BOARD_MEMBER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                     Auswertungen
                                 </button>
                                 <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/members/birthdays">Geburtstage</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/timecheques/booking-report">Fremd-verbuchte Zeitschecks</a></li>
+                                    <li><a class="dropdown-item" href="/timecheques/self-booking-report">Selbst-verbuchte Zeitschecks</a></li>
+                                    <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/timecheques/statistics">Zeitschecks pro Mitglied</a></li>
                                     <li><a class="dropdown-item" href="/timecheques/category-statistics">Zeitschecks pro Kategorie</a></li>
+                                    <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/members/statistics">Mitgliederentwicklung</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/members/registered">Registrierte Mitglieder</a></li>
                                 </ul>
                             </li>
                         @endif
@@ -252,6 +356,40 @@
         <div class="container-fluid px-2 px-sm-3 px-lg-5 pb-4">
             ${content}
         </div>
+
+
+        <footer class="text-center text-muted small py-3 mt-2 border-top">
+            <a href="/home/legal-and-privacy-policy" class="text-muted text-decoration-none">
+                <strong>§ Rechtliche Informationen</strong>
+            </a>
+            &nbsp;|&nbsp;
+            Version ${globalModelAttributes.appVersion()} &mdash; Build: ${globalModelAttributes.buildTime()}
+            &nbsp;|&nbsp;
+            <a href="#" class="text-muted text-decoration-none" data-bs-toggle="modal" data-bs-target="#releaseNotesModal">
+                <i class="bi bi-journal-text" style="-webkit-text-stroke: 0.3px currentColor;"></i> <strong>Release Notes</strong>
+            </a>
+        </footer>
+
+        <!-- Release Notes Modal -->
+        <div class="modal fade" id="releaseNotesModal" tabindex="-1" aria-labelledby="releaseNotesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                <div class="modal-content border-success-subtle">
+                    <div class="modal-header" style="background-color: #77DD77;">
+                        <h5 class="modal-title fw-semibold" id="releaseNotesModalLabel">
+                            <i class="bi bi-journal-text me-2"></i>Release Notes
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                    </div>
+                    <div class="modal-body px-4 py-3">
+                        $unsafe{globalModelAttributes.releaseNotesHtml()}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Schließen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- Bootstrap JS Bundle -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>

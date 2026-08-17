@@ -33,8 +33,8 @@ public class TimeChequePdfController {
     @GetMapping("/download/timecheque-pdf")
     public void downloadTimeChequePdf(@RequestParam Long memberId, HttpServletResponse response) throws IOException {
 
-        // Security: only allow download for own data unless ADMIN/TIME_KEEPER
-        if (!securityUtils.isAuthenticatedAndMatches(memberId) && !securityUtils.hasAnyRole("ADMIN", "TIME_KEEPER")) {
+        // Security: only allow download for own data unless ADMIN/TIME_KEEPER/EXECUTIVE_MEMBER
+        if (!securityUtils.isAuthenticatedAndMatches(memberId) && !securityUtils.hasAnyRole("ADMIN", "TIME_KEEPER", "EXECUTIVE_MEMBER")) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }

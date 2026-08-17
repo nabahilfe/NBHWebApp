@@ -6,7 +6,6 @@
 package eu.nabahilfe.webapp.timetransfers;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +83,7 @@ public class TimeTransferController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'EXECUTIVE_MEMBER')")
     @GetMapping("/view")
     String viewTimeTransfer(final Model model, @RequestParam Long id) {
         TimeTransfer tt = timeTransferRepository.findById(id).orElse(null);
@@ -151,7 +150,7 @@ public class TimeTransferController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'EXECUTIVE_MEMBER')")
     @GetMapping("/new")
     String addTimeTransfer(final Model model, @RequestParam(required = false) Long fromMemberId) {
 
@@ -179,7 +178,7 @@ public class TimeTransferController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'EXECUTIVE_MEMBER')")
     @GetMapping("/duplicate")
     String duplicateTimeTransfer(final Model model, @RequestParam Long id) {
 
@@ -217,72 +216,103 @@ public class TimeTransferController {
     // SAVE (process form)
     // --------------------
 
-    // FIXME: Prüfe ob das ein Security Problem sein kann, sollte wegen CSRF Token eigentlich nicht sein
     @PreAuthorize("hasRole('USER')")
     @Transactional(rollbackOn = Exception.class)
-    @PostMapping
-    String saveTimeTransfer(final Model model, @ModelAttribute TimeTransferForm ttf,
+    @PostMapping("/fromself")
+    String saveSelfTimeTransfer(final Model model, @ModelAttribute TimeTransferForm ttf,
             RedirectAttributes redirectAttributes) {
+        return saveTimeTransferInternal(model, ttf, redirectAttributes, true);
+    }
+
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'EXECUTIVE_MEMBER')")
+    @Transactional(rollbackOn = Exception.class)
+    @PostMapping("/staff")
+    String saveStaffTimeTransfer(final Model model, @ModelAttribute TimeTransferForm ttf,
+            RedirectAttributes redirectAttributes) {
+        return saveTimeTransferInternal(model, ttf, redirectAttributes, false);
+    }
+
+
+    private String saveTimeTransferInternal(final Model model, TimeTransferForm ttf,
+            RedirectAttributes redirectAttributes, boolean selfFlow) {
 
         Long userFromId = ttf.userFromId;
         Long userToId = ttf.userToId;
-        Integer hours = (ttf.hoursSelected != null && !ttf.hoursSelected.isBlank())
-                ? Integer.valueOf(ttf.hoursSelected) : null;
+        Integer hours = parseHours(ttf.hoursSelected);
         Long offerId = ttf.offerId;
         LocalDate dateOfService = ttf.getServiceDate();
         String note = ttf.getNote();
-        boolean fromself = ttf.isFromself();
 
-        log.debug("Preparing TimeTransfer from user {} to user {} of hours {} for offer {} on date {}",
-                userFromId, userToId, hours, offerId, dateOfService);
+        log.debug("Preparing {} TimeTransfer from user {} to user {} of hours {} for offer {} on date {}",
+                selfFlow ? "SELF" : "STAFF", userFromId, userToId, hours, offerId, dateOfService);
 
         model.addAttribute("offers", offerRepository.findAllByOrderByCodeAsc());
 
-        Member memberFrom = memberRepository.findById(userFromId).get();
-        Member memberTo = memberRepository.findById(userToId).get();
+        if (userFromId == null || userToId == null || offerId == null || hours == null || hours < 1 || hours > 5
+                || dateOfService == null) {
+            model.addAttribute("ttf", ttf);
+            model.addAttribute("errorMessage", "Ungültige Eingabedaten. Bitte alle Pflichtfelder korrekt ausfüllen.");
+            return selfFlow ? "timetransfers/self-timetransfer" : "timetransfers/create-timetransfer";
+        }
+
+        // IDOR protection: self flow may only transfer from currently authenticated member.
+        if (selfFlow && !securityUtils.isAuthenticatedAndMatches(userFromId)) {
+            Long currentUserId = securityUtils.getCurrentUserId();
+            log.warn("Blocked self TimeTransfer IDOR attempt: currentUserId={}, requestedFromMemberId={}", currentUserId, userFromId);
+            return "redirect:/statuscode/403";
+        }
+
+        Member memberFrom = memberRepository.findById(userFromId).orElse(null);
+        Member memberTo = memberRepository.findById(userToId).orElse(null);
+        Offer offer = offerRepository.findById(offerId).orElse(null);
+
+        if (memberFrom == null || memberTo == null || offer == null) {
+            model.addAttribute("ttf", ttf);
+            model.addAttribute("errorMessage", "Ungültige Auswahl. Bitte Mitglied/Kategorie erneut auswählen.");
+            return selfFlow ? "timetransfers/self-timetransfer" : "timetransfers/create-timetransfer";
+        }
 
         // validate transfer is not to self
         if (memberFrom.getId().equals(memberTo.getId())) {
-            return errorTransferToSelf(model, ttf, fromself, memberFrom, memberTo);
+            return errorTransferToSelf(model, ttf, selfFlow, memberFrom, memberTo);
         }
 
         // validate receiver is not system admin
         if (memberTo.isSystemAdmin() || memberFrom.isSystemAdmin()) {
-            return errorNoTimeChequesWithSysAdmin(model, ttf, fromself, memberFrom, memberTo);
+            return errorNoTimeChequesWithSysAdmin(model, ttf, selfFlow, memberFrom, memberTo);
         }
 
         // validate sufficient hours
         if (memberFrom.getAccumulatedHours() == null || memberFrom.getAccumulatedHours() < hours) {
-            return errorNotSufficentHours(model, ttf, fromself, memberFrom, memberTo);
+            return errorNotSufficentHours(model, ttf, selfFlow, memberFrom, memberTo);
         }
 
         // validate category is 950 or 999 if Sozialkonto is involved
         if (memberFrom.isSozialkonto() || memberTo.isSozialkonto()) {
-            Optional<Offer> offer = offerRepository.findById(offerId);
-            if (offer.isPresent()) {
-                String code = offer.get().getCode();
-                if (!"950".equals(code) && !"999".equals(code)) {
-                    return errorWrongCategorie(model, ttf, fromself, memberFrom, memberTo, code);
-                }
+            String code = offer.getCode();
+            if (!"950".equals(code) && !"999".equals(code)) {
+                return errorWrongCategorie(model, ttf, selfFlow, memberFrom, memberTo, code);
             }
         }
 
         // create and save TimeTransfer
         TimeTransfer tt = new TimeTransfer();
-
         tt.setFromMember(memberFrom);
         tt.setToMember(memberTo);
         tt.setHours(hours);
         tt.setDateOfService(dateOfService);
-        tt.setOffer(offerRepository.findById(offerId).get());
-        if (note != null && !note.trim().isEmpty()) tt.setNote(note.trim());
+        tt.setOffer(offer);
+        if (note != null && !note.trim().isEmpty()) {
+            tt.setNote(note.trim());
+        }
 
         timeTransferRepository.save(tt);
 
         // adjust hours
         Integer newHoursFrom = memberFrom.getAccumulatedHours() - hours;
-        // if hours are zero, set to null so that UI shows empty field and sorts to last positin in table
-        memberFrom.setAccumulatedHours(newHoursFrom.intValue() == 0 ? null : newHoursFrom);
+        // if hours are zero, set to null so that UI shows empty field and sorts to last position in table
+        memberFrom.setAccumulatedHours(newHoursFrom == 0 ? null : newHoursFrom);
         memberRepository.save(memberFrom);
 
         Integer newHoursTo = (memberTo.getAccumulatedHours() == null ? hours
@@ -290,14 +320,27 @@ public class TimeTransferController {
         memberTo.setAccumulatedHours(newHoursTo);
         memberRepository.save(memberTo);
 
-
-        sendEmailsToParticipants(hours, offerId, note, memberFrom, memberTo, tt);
+        sendEmailsToParticipants(hours, offer, note, memberFrom, memberTo, tt);
 
         redirectAttributes.addFlashAttribute("successMessage",
                 (hours == 1 ? "Eine Stunde für " : hours + " Stunden für ") + memberTo.getName() + " verbucht.");
 
-        if (fromself) return "redirect:/timetransfers/self-timetransfer?id=" + tt.getId();
+        if (selfFlow) {
+            return "redirect:/timetransfers/self-timetransfer?id=" + tt.getId();
+        }
         return "redirect:/timetransfers/view?id=" + tt.getId();
+    }
+
+
+    private Integer parseHours(String hoursSelected) {
+        if (hoursSelected == null || hoursSelected.isBlank()) {
+            return null;
+        }
+        try {
+            return Integer.valueOf(hoursSelected);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
 
@@ -355,14 +398,14 @@ public class TimeTransferController {
     }
 
 
-    private void sendEmailsToParticipants(Integer hours, Long offerId, String note, Member memberFrom, Member memberTo,
+    private void sendEmailsToParticipants(Integer hours, Offer offer, String note, Member memberFrom, Member memberTo,
             TimeTransfer tt) {
         // email notification to recipient
         if (memberTo.getEmail() != null && !memberTo.getEmail().isBlank()) {
             emailService.sendEmailHtml(emailComposer.composeTimeChequeTransferToEmail(
                     memberTo.getEmail(), memberTo.getEmailSalutation(),
                     memberFrom.getName(),
-                    hours, offerRepository.findById(offerId).get().getDescription(), note));
+                    hours, offer.getDescription(), note));
         }
         else {
             log.debug("No email sent for TimeTransfer ID {} because recipient {} has no email address.", tt.getId(), memberTo.getName());
@@ -375,7 +418,7 @@ public class TimeTransferController {
                 emailService.sendEmailHtml(emailComposer.composeTimeChequeTransferFromEmail(
                         memberFrom.getEmail(), memberFrom.getEmailSalutation(),
                         memberTo.getName(), tt.getCreatedBy().getName(),
-                        hours, offerRepository.findById(offerId).get().getDescription(), note));
+                        hours, offer.getDescription(), note));
             }
         }
         else {

@@ -39,8 +39,8 @@ public class ViewContext {
         return user != null && user.isAdmin();
     }
 
-    public boolean isBoardMember() {
-        return user != null && user.isBoardMember();
+    public boolean isExecutiveMember() {
+        return user != null && user.isExecutiveMember();
     }
 
     public boolean isTreasurer() {

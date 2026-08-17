@@ -14,6 +14,23 @@ if [ ! -f "${IMAGE_FILE}" ]; then
     exit 1
 fi
 
+
+echo
+read -r -p "Deployment wirklich starten? [y/N] " ANSWER
+
+ANSWER=${ANSWER:-N}
+
+case "${ANSWER}" in
+    [Yy])
+        echo "Deployment wird gestartet..."
+        ;;
+    *)
+        echo "Deployment abgebrochen."
+        exit 0
+        ;;
+esac
+
+
 echo
 echo "Lade Docker-Image..."
 docker load < "${IMAGE_FILE}"

@@ -3,6 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.GlobalModelAttributes
 @import java.util.List
 @import static eu.nabahilfe.webapp.DateFormatter.*
 @import static eu.nabahilfe.webapp.NumberFormatter.*
@@ -17,9 +18,11 @@
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
+@param GlobalModelAttributes globalModelAttributes
 
 
 @template.layout.mainpage(
+    globalModelAttributes = globalModelAttributes,
     csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
@@ -63,7 +66,7 @@
                 @for(Transaction tx : transactions)
                     <tr>
                         <td>${dateReverseDE(tx.getTransactionDate())}</td>
-                        <td>${tx.getCreatedBy() != null ? tx.getCreatedBy().getName() : "-"}</td>
+                        <td>${tx.getLiableMemberName()}</td>
                         <td>
                             @if(tx.getTransactionType().equals(TransactionType.INCOME.name()))
                                 <span class="badge bg-success">Einnahme</span>

@@ -30,7 +30,7 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/domaintypes")
-@PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER', 'TREASURER')")
+@PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'TREASURER')")
 public class AmountDomainValueController {
 
     private static final Logger log = LoggerFactory.getLogger(AmountDomainValueController.class);
@@ -135,15 +135,15 @@ public class AmountDomainValueController {
 
 
     /* Save (create or update) */
-    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER')")
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/save")
     public String save(@Valid @ModelAttribute AmountDomainValue amountDomainValue, RedirectAttributes redirectAttributes, Model model) {
         boolean isNew = (amountDomainValue.getId() == null);
+        Optional<AmountDomainValue> existing = Optional.empty();
 
         if (!isNew) {
             // Guard: existing records for current year or earlier must not be modified
-            Optional<AmountDomainValue> existing = repo.findById(amountDomainValue.getId());
+            existing = repo.findById(amountDomainValue.getId());
             if (existing.isPresent() && isProtected(existing.get())) {
                 redirectAttributes.addFlashAttribute("errorMessage", EDIT_FORBIDDEN_MSG);
                 return "redirect:/domaintypes";
@@ -173,7 +173,8 @@ public class AmountDomainValueController {
                 prev.setValidTo(lastDayOfPrevMonth);
                 repo.save(prev);
                 log.debug("Closed previous AmountDomainValue: {}", prev);
-            } else {
+            }
+            else {
                 // First record: validFrom must be Jan 1 of the current year
                 LocalDate requiredValidFrom = LocalDate.of(LocalDate.now().getYear(), 1, 1);
                 if (!amountDomainValue.getValidFrom().equals(requiredValidFrom)) {
@@ -183,6 +184,12 @@ public class AmountDomainValueController {
                     return "domaintypes/amount-domain-value-edit";
                 }
             }
+        }
+        else { // for updates, ensure createdAt and createdBy are preserved
+            existing.ifPresent(existingValue -> {
+                amountDomainValue.setCreatedAt(existingValue.getCreatedAt());
+                amountDomainValue.setCreatedBy(existingValue.getCreatedBy());
+            });
         }
 
         repo.save(amountDomainValue);

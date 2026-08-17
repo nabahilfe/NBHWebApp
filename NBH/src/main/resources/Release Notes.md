@@ -1,28 +1,15 @@
-### Version 0.6.2
-- Schnelle Duplikate für Zeitschecks (Wunsch von Clemens Csürös)
-- Layout und Farben vereinheitlicht für Tabellen
+### Version 0.7.0
+- Reports für fremd- und selbst-verbuchte Zeitschecks (einfache Überprüfung möglich)
+- Detaillierte Daten bei den Buchungen (einfachere Kontrolle für Rechnungsprüfer)
+- Erweiterung der Zeitscheck Statistik um das Guthaben sowie weitere Auswertungen
+- Vorbereitung der Datenbank für Bildergalerien und Dokumente
+- Umstrukturierung der Menüs um Platz zu gewinnen und Übersichtlichkeit zu erhöhen
+- Mögliche Security Probleme gefixt
 
-### Version 0.6.1
-- Optimierung **Zeitscheck übergeben** und **Meine Daten** für SmartPhone
-- Verbesserung der Adress-Validierung mit Hinweisen auf mögliche Korrekturen
-
-### Version 0.6.0
-- Validierung von Adressen (Überprüfung erfolgt mit OpenStreetMap Nominatim API) <!-- ACHTUNG: DB Erweiterung notwendig, siehe https://github.com/nabahilfe/NBHWebApp/issues/142 -->
-- Besseres Layout für die Mitglieder Maske und Anzeige ob Adresse gefunden wurde
-- Bei Umsätzen Erweiterung der Filtermöglichkeiten und zusätzliche Informationen  <!-- https://github.com/nabahilfe/NBHWebApp/issues/132 -->
-- Vorstandsliste wird nun nach Funktion statt Name sortiert
-- Sortierbare Spalten sind nun erkennbar an zusätzlichem ↕ Icon
-- Finales Logo wird nun auch in den PDFs verwendet <!-- https://github.com/nabahilfe/NBHWebApp/issues/136 -->
-- Systemaccounts (Sozialkonto und Admin) werden nun sauber behandelt <!-- ACHTUNG: DB Erweiterung notwendig, siehe https://github.com/nabahilfe/NBHWebApp/issues/137 -->
-- Footer hinzugefügt für Rechtliche Informationen und Release Notes
-- Optimierungen für Mobile Ansicht
-
-<!--
-
-Systemaccounts sind nun sauber 
-- https://github.com/nabahilfe/NBHWebApp/issues/137 - ACHTUNG: DB Erweiterung notwendig!
-- https://github.com/nabahilfe/NBHWebApp/issues/123
-- https://github.com/nabahilfe/NBHWebApp/issues/138
-
+<!-- 
+- createdBy ist nun ein Pflichtfeld 
+- Datenbankmigration für Buchungsdaten
 -->
+
+
 

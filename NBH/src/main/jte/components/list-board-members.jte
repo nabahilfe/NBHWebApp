@@ -3,6 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.GlobalModelAttributes
 <!--
     Displays a list of board members (Vorstand, Kassier, Schriftführer)
     with their full name and role name.

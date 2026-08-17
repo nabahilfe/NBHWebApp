@@ -15,6 +15,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import eu.nabahilfe.webapp.LiableMemberListener;
 import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.accountings.Accountable;
 import eu.nabahilfe.webapp.accountings.AccountingEntry;
@@ -31,13 +32,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 
 /**
  * Zeitscheck - zuerst angelegt und dann später verbucht vom Kassier. TransactionType ist immer INCOME
  */
 @Entity
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({AuditingEntityListener.class, LiableMemberListener.class})
 @Table(name = "TIME_CHEQUES")
 public class TimeCheque implements Accountable {
 
@@ -55,6 +58,10 @@ public class TimeCheque implements Accountable {
     @Column(nullable = false)
     private BigDecimal amount;
 
+    @Size(max = 80)
+    @NotEmpty
+    private String liableMemberName;    // Wer hat das veranlasst oder angeordnet -> Name von cretaedBy Member
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assigned_to_id")
     private Member assignedTo;    // wem werden die Stunden gutgeschrieben
@@ -67,9 +74,8 @@ public class TimeCheque implements Accountable {
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    // FIXME: im Generator: "@Column(nullable = false)"
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "created_by_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "created_by_id", nullable = false)
     @CreatedBy
     private Member createdBy;
 
@@ -108,6 +114,15 @@ public class TimeCheque implements Accountable {
 
     public LocalDate getTransactionDate() {
         return transactionDate;
+    }
+
+    @Override
+    public String getLiableMemberName() {
+        return liableMemberName;
+    }
+
+    public void setLiableMemberName(String name) {
+        liableMemberName = name;
     }
 
     @Override
@@ -220,15 +235,6 @@ public class TimeCheque implements Accountable {
                 + getCreatedBy() + ", getUpdatedAt()=" + getUpdatedAt() + ", getUpdatedBy()=" + getUpdatedBy()
                 + ", getVersion()=" + getVersion() + "]";
     }
-
-
-
-
-
-    // -----------------------------------------------
-    // Don't forget to generate toString() for logging
-    // -----------------------------------------------
-
 
 
 

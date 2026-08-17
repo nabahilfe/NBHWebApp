@@ -3,6 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.GlobalModelAttributes
 @import eu.nabahilfe.webapp.members.Role
 
 @param eu.nabahilfe.webapp.members.Role role
@@ -19,9 +20,11 @@
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
+@param GlobalModelAttributes globalModelAttributes
 
 
 @template.layout.mainpage(
+    globalModelAttributes = globalModelAttributes,
     csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
@@ -59,11 +62,11 @@
             <div class="col-sm-10">
 
               <div class="form-check">
-                <input type="hidden" name="_isBoardMember" value="on"/>
+                <input type="hidden" name="_isExecutiveMember" value="on"/>
                 <input class="form-check-input" type="checkbox"
-                    id="isBoardMember" name="isBoardMember"
-                    checked="${role.getIsBoardMember()}">
-                <label class="form-check-label" for="isBoardMember">
+                    id="isExecutiveMember" name="isExecutiveMember"
+                    checked="${role.getIsExecutiveMember()}">
+                <label class="form-check-label" for="isExecutiveMember">
                   Vorstand - kann Mitglieder verwalten, Kassaführung einsehen und Content bearbeiten
                 </label>
               </div>

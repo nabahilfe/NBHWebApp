@@ -128,7 +128,7 @@ public class MemberController {
     // SEARCH, LIST & DETAIL
     // ----------------------
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER', 'EXECUTIVE_MEMBER')")
     @GetMapping("/unaccounted-mbshipfees")
     String listUnaccountedMembershipFees(final Model model) {
         log.debug("Listing unaccounted MembershipFees");
@@ -138,7 +138,7 @@ public class MemberController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @GetMapping("/open-membership-fees")
     String listOpenMembershipFees(final Model model, @RequestParam(required = false) Year year) {
 
@@ -163,7 +163,7 @@ public class MemberController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @GetMapping("/resigned")
     public String listResignedMembers(Model model, RedirectAttributes redirectAttributes,
                                       jakarta.servlet.http.HttpSession session) {
@@ -176,7 +176,7 @@ public class MemberController {
 
 
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'EXECUTIVE_MEMBER')")
     @GetMapping
     String listAllMembersPaginated(final Model model,
             @RequestParam(required = false, defaultValue = "lastName") String orderBy,
@@ -248,7 +248,7 @@ public class MemberController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @GetMapping("/{id}")
     String editMember(final Model model, @PathVariable Long id, RedirectAttributes redirectAttributes,
                       @RequestParam(required = false) Integer year,
@@ -281,7 +281,7 @@ public class MemberController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/statistics")
     String memberStatistics(final Model model) {
         // Merge joined and resigned counts by year into a combined list
@@ -308,7 +308,17 @@ public class MemberController {
         return new long[2];
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
+    @GetMapping("/registered")
+    String listRegisteredMembers(final Model model) {
+        log.debug("Listing registered Members (password set)");
+        List<Member> registeredMembers = memberRepository.findRegisteredMembersExcludingSystemAccounts();
+        model.addAttribute("registeredMembers", registeredMembers);
+        log.debug("Found {} registered Members", registeredMembers.size());
+        return "members/list-registered-members";
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/birthdays")
     String listBirthdays(final Model model) {
         model.addAttribute("currentMonth", memberRepository.findBirthdaysByMonthOffset(0));
@@ -367,7 +377,7 @@ public class MemberController {
 
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @GetMapping("/new")
     String newMember(final Model model) {
         log.debug("Creating new Member");
@@ -375,7 +385,7 @@ public class MemberController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @Transactional(rollbackOn = Exception.class)
     @PostMapping
     public String saveMember(Model model, @ModelAttribute @Valid Member member,
@@ -502,7 +512,7 @@ public class MemberController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @PostMapping("/{id}")
     public String updateMember(Model model, @ModelAttribute @Valid Member member,
             BindingResult result, @RequestParam(required = false) Long roleId,
@@ -512,7 +522,7 @@ public class MemberController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TIME_KEEPER', 'AUDITOR', 'TREASURER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/create-fees-batch")
     String createFeesBatch(@RequestParam(required = false) List<Long> memberIds,
@@ -579,7 +589,7 @@ public class MemberController {
     // LÖSCHEN
     // --------------------
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/delete/{id}")
     String deletMember(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
@@ -733,7 +743,7 @@ public class MemberController {
     // Address validation
     // ------------------
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @GetMapping("/validate-addresses")
     public String showValidateAddressesPage(final Model model) {
         long unvalidatedCount = memberRepository.countActiveUnvalidatedMembers();
@@ -745,14 +755,14 @@ public class MemberController {
         return "members/validate-addresses";
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @GetMapping("/validate-addresses/stream")
     public SseEmitter streamValidateAddresses() {
         log.debug("Starting address validation stream (unvalidated only)");
         return addressValidationService.validateAllUnvalidatedAddresses();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'BOARD_MEMBER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @GetMapping("/validate-addresses/stream-all")
     public SseEmitter streamRevalidateAllAddresses() {
         log.debug("Starting address validation stream (all active members)");

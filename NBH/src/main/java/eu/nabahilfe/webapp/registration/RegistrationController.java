@@ -5,11 +5,12 @@
 
 package eu.nabahilfe.webapp.registration;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +29,7 @@ import eu.nabahilfe.webapp.email.EmailDetails;
 import eu.nabahilfe.webapp.email.EmailService;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -111,10 +113,10 @@ public class RegistrationController {
             emailRateLimiter.recordFailure(clientIp);
             if (emailRateLimiter.isBlocked(clientIp)) {
                 model.addAttribute("errorMessage",
-                        "E-Mail '" + email + "' ist nicht bekannt. Zu viele Fehlversuche – bitte "
+                        "Zu viele Fehlversuche. Bitte "
                         + emailRateLimiter.blockedMinutesRemaining(clientIp) + " Minute(n) warten.");
             } else {
-                model.addAttribute("errorMessage", "E-Mail '" + email + "' ist nicht bekannt");
+                model.addAttribute("errorMessage", "Falls die Adresse existiert, wurde ein Code versendet");
             }
             return "registration/email";
         }
@@ -274,8 +276,6 @@ public class RegistrationController {
 
     private boolean verifyCode(String email, String code) {
 
-        log.debug("Verifying code {} for email {}", code, email);
-
         RegistrationCode regCode = registrationCodeRepository.findFirstByEmailOrderByIdDesc(email);
 
         if (regCode == null) {
@@ -302,7 +302,6 @@ public class RegistrationController {
     private void sendCode(@Valid String recipient, String name, String randomCode) {
         EmailDetails email = emailComposer.composeConfirmationCodeEmail(recipient, name, randomCode);
         emailService.sendEmailHtml(email);
-        log.debug("Generated code ##### {} ##### for email {}", randomCode, email);
     }
 
 
@@ -311,7 +310,7 @@ public class RegistrationController {
     final int range = max - min + 1;
 
     private String randomCode() {
-        Random r = new Random();
+    	SecureRandom r = new SecureRandom();
         return String.valueOf(r.nextInt(range) + min);
     }
 

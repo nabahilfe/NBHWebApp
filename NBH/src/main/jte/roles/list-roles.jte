@@ -3,6 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+@import eu.nabahilfe.webapp.GlobalModelAttributes
 @import eu.nabahilfe.webapp.members.Role
 @import eu.nabahilfe.webapp.NbhConst
 
@@ -18,9 +19,11 @@
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
+@param GlobalModelAttributes globalModelAttributes
 
 
 @template.layout.mainpage(
+    globalModelAttributes = globalModelAttributes,
     csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
@@ -45,11 +48,11 @@
             <p>Die <b>Rollen</b> bieten einerseitzs die Möglichkeit <b>Bezeichnungen für Funktionen</b> zu vergeben,
                 andererseits sind damit auch <b>bestimmte Berechtigungen</b> vebunden.</p>
             <ul>
-              <li><b>Vorstand</b> - kann Mitglieder verwalten, Kassaführung einsehen und Content bearbeiten.</li>
+              <li><b>Vorstand</b> - kann Mitglieder und Zeitschecks verwalten, Rechnungen und Spenden erfassen sowie Kassaführung einsehen.</li>
               <li><b>Schriftführer</b> - kann Content bearbeiten, Protokolle erstellen und verwalten.</li>
               <li><b>Kassier</b> - kann Zahlungen erfassen und die Kassaführung verwalten.</li>
               <li><b>Prüfer</b> - kann Zahlungen und Kassaführung einsehen.</li>
-              <li><b>Zeitschecks</b> - kann Zeitschecks erfassen und verwalten.</li>
+              <li><b>Zeitschecks</b> - eine Zusatzberechtigung, kann Zeitschecks erfassen und verwalten.</li>
               <li><b>Administrator</b> - kann alles einsehen, erfassen und verwalten.</li>
               <li><b>Sonstiges</b> - wie ein einfaches Mitglied, nur eigene Daten einsehen, Mitglieder suchen, Stunden übertragen.</li>
              </ul>
@@ -57,6 +60,10 @@
                 oder ein Schriftführer könnte auch Administrator sein.</p>
              <p>Die Funktionen <b>Zeitschecks</b> muss immer mit einer Vereins-Funktion wie Vorstand, Schriftführer oder Kassier kombiniert werden.</p>
              <b>Die Funktionen <i>Prüfer</i> und <i>Sonstiges</i> lassen sich <i>nicht</i> mit anderen Berechtigungen kombinieren!</b>
+             <br/><br/>
+             <p><i>Hinweis:<br/>
+                Rollen können nur von Administratoren bearbeitet werden.</i>
+             </p>
           </div>
         </div>
       </div>
@@ -86,7 +93,7 @@
         @for (Role role : roles)
         <tr>
           <td scope="row">${role.getRoleName()}</td>
-          <td class="text-center">@if(role.getIsBoardMember())<i class="bi bi-check-lg"></i>@endif</td>
+          <td class="text-center">@if(role.getIsExecutiveMember())<i class="bi bi-check-lg"></i>@endif</td>
           <td class="text-center">@if(role.getIsSecretary())<i class="bi bi-check-lg"></i>@endif</td>
           <td class="text-center">@if(role.getIsTreasurer())<i class="bi bi-check-lg"></i>@endif</td>
           <td class="text-center">@if(role.getIsAuditor())<i class="bi bi-check-lg"></i>@endif</td>
