@@ -26,7 +26,7 @@
     ctxt = ctxt,
     content = @`
 
-    <div class="container">
+    <div class="container-fluid px-0">
 
         <!-- Kopfbereich -->
         <div class="d-flex flex-column flex-sm-row
@@ -76,7 +76,7 @@
 
                 @for (GalleryImageInfo image : images)
 
-                    <div class="col-6 col-md-4 col-lg-3">
+                    <div class="col-6 col-md-4 col-lg-3 col-xl-2">
 
                         <a
                             href="/gallery/${gallery.getId()}/image/${image.id()}"
