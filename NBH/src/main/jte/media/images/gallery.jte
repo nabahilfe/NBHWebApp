@@ -11,6 +11,7 @@
 
 @param Gallery gallery
 @param List<GalleryImageInfo> images
+@param Boolean readOnly = false
 
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
@@ -41,7 +42,7 @@
                 </div>
             </div>
 
-            <a href="/gallery"
+            <a href="${Boolean.TRUE.equals(readOnly) ? "/gallery/user-list" : "/gallery/list"}"
                class="btn btn-outline-secondary">
                 Zurück
             </a>
@@ -49,11 +50,13 @@
         </div>
 
 
-        <!-- Upload -->
-        @template.media.images._image-upload(
-            gallery = gallery,
-            csrfHiddenInput = csrfHiddenInput
-        )
+        @if (!Boolean.TRUE.equals(readOnly))
+            <!-- Upload -->
+            @template.media.images._image-upload(
+                gallery = gallery,
+                csrfHiddenInput = csrfHiddenInput
+            )
+        @endif
 
 
         <!-- Galerie -->

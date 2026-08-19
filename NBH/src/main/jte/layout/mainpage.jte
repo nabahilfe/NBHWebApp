@@ -267,9 +267,8 @@
                                             Bilder
                                         </a>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="/gallery/list">Galerie</a></li>
-                                            <li><a class="dropdown-item" href="/images/upload">Bild hochladen</a></li>
-                                            <li><a class="dropdown-item" href="/images/categories">Kategorien</a></li>
+                                            <li><a class="dropdown-item" href="/gallery/list">Galerien bearbeiten</a></li>
+                                            <li><a class="dropdown-item" href="/gallery/user-list">Gallerien anzeigen</a></li>
                                         </ul>
                                     </li>
 

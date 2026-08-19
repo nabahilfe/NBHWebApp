@@ -36,6 +36,13 @@ public class GalleryController {
     }
 
 
+    @GetMapping("/user-list")
+    public String listGalleriesForUsers(Model model) {
+        model.addAttribute("galleries", galleryService.findAll());
+        return "media/images/user-list-galleries";
+    }
+
+
     @GetMapping("/new")
     public String newGallery(Model model) {
         if (!model.containsAttribute("galleryForm")) {
@@ -81,6 +88,20 @@ public class GalleryController {
 
         model.addAttribute("gallery", gallery);
         model.addAttribute("images",images);
+
+        return "media/images/gallery";
+    }
+
+
+    @GetMapping("/user/{galleryId}")
+    public String showGalleryForUsers(@PathVariable Long galleryId, Model model) {
+
+        Gallery gallery = galleryService.findById(galleryId);
+        List<GalleryImageInfo> images = galleryImageService.findImages(galleryId);
+
+        model.addAttribute("gallery", gallery);
+        model.addAttribute("images", images);
+        model.addAttribute("readOnly", Boolean.TRUE);
 
         return "media/images/gallery";
     }
