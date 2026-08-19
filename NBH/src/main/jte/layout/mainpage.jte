@@ -217,7 +217,7 @@
                         @endif
 
 
-                        <!-- Dropdown Text Content -->
+                        <!-- Dropdown Content -->
                         @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER", "SECRETARY"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link"
@@ -261,18 +261,18 @@
                                         </ul>
                                     </li>
 
-                                    <!-- FIXME: enable this Bilder menu once we have a proper image management system in place
+                                    <!-- image management -->
                                     <li class="dropdown-submenu">
                                         <a class="dropdown-item dropdown-toggle" href="#">
                                             Bilder
                                         </a>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="/images/gallery">Galerie</a></li>
+                                            <li><a class="dropdown-item" href="/gallery/list">Galerie</a></li>
                                             <li><a class="dropdown-item" href="/images/upload">Bild hochladen</a></li>
                                             <li><a class="dropdown-item" href="/images/categories">Kategorien</a></li>
                                         </ul>
                                     </li>
-                                    -->
+
 
                                     <!-- FIXME: enable this Dokumente menu once we have a proper document management system in place
                                     <li class="dropdown-submenu">

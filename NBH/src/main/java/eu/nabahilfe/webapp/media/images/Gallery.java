@@ -1,7 +1,6 @@
 package eu.nabahilfe.webapp.media.images;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.time.LocalDate;
 
 import org.hibernate.annotations.UpdateTimestamp;
@@ -32,23 +31,28 @@ import eu.nabahilfe.webapp.members.Member;
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "IMAGE_GALLERY")
-public class ImageGallery  {
+@Table(name = "GALLERIES")
+public class Gallery  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(nullable = false)
-    private LocalDate galleryDate;
+    private LocalDate galleryDate;    // use it only for images from one specific date, eg. Flohmarkt
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate showGalleryFrom;    // Starting Date for displaying Gallery to Public - if null, do not display
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate showGalleryTo;    // if set, do not show after this date
 
     @Size(max = 250)
     @NotEmpty
-    private String galleryDescription;
+    private String description;
 
     @Size(max = 250)
-    private String galleryRemark;    // Anmerkung für Editor, wird in der Gallery-Ansicht nicht angezeigt
+    private String remark;    // Anmerkung für Editor, wird in der Gallery-Ansicht nicht angezeigt
 
     @Column(nullable = false)
     private Boolean isPublic;    // wenn nicht public dann nur für angemeldete Mitglieder sichtbar
@@ -74,112 +78,119 @@ public class ImageGallery  {
     @Column(nullable = false)
     private Integer version;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public LocalDate getGalleryDate() {
+		return galleryDate;
+	}
+
+	public void setGalleryDate(LocalDate galleryDate) {
+		this.galleryDate = galleryDate;
+	}
+
+	public LocalDate getShowGalleryFrom() {
+		return showGalleryFrom;
+	}
+
+	public void setShowGalleryFrom(LocalDate showGalleryFrom) {
+		this.showGalleryFrom = showGalleryFrom;
+	}
+
+	public LocalDate getShowGalleryTo() {
+		return showGalleryTo;
+	}
+
+	public void setShowGalleryTo(LocalDate showGalleryTo) {
+		this.showGalleryTo = showGalleryTo;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String galleryDescription) {
+		this.description = galleryDescription;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String galleryRemark) {
+		this.remark = galleryRemark;
+	}
+
+	public Boolean getIsPublic() {
+		return isPublic;
+	}
+
+	public void setIsPublic(Boolean isPublic) {
+		this.isPublic = isPublic;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Member getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Member createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public Member getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(Member updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 
 
-    public LocalDate getGalleryDate() {
-        return galleryDate;
-    }
+    // -------------------------------------------------
+    // generate setter/getter methodes with Eclipse here
+    // -------------------------------------------------
 
-    public void setGalleryDate(LocalDate galleryDate) {
-        this.galleryDate = galleryDate;
-    }
 
-    public String getGalleryDescription() {
-        return galleryDescription;
-    }
 
-    public void setGalleryDescription(String galleryDescription) {
-        this.galleryDescription = galleryDescription;
-    }
 
-    public String getGalleryRemark() {
-        return galleryRemark;
-    }
+    // ------------------------------------------------------------------------
+    // generate equals/hashCode methodes with Eclipse here - use ONLY id field!
+    // ------------------------------------------------------------------------
 
-    public void setGalleryRemark(String galleryRemark) {
-        this.galleryRemark = galleryRemark;
-    }
 
-    public Boolean getIsPublic() {
-        return isPublic;
-    }
 
-    public void setIsPublic(Boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Member getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(Member createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Member getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(Member updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ImageGallery other = (ImageGallery) obj;
-        return Objects.equals(id, other.id);
-    }
-
-    @Override
-    public String toString() {
-        return "ImageGallery [id=" + id + ", galleryDate=" + galleryDate + ", galleryDescription=" + galleryDescription
-                + ", galleryRemark=" + galleryRemark + ", isPublic=" + isPublic + ", createdAt=" + createdAt
-                + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt + ", updatedBy=" + updatedBy + ", version="
-                + version + "]";
-    }
+    // -----------------------------------------------
+    // Don't forget to generate toString() for logging
+    // -----------------------------------------------
 
 
 

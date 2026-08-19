@@ -30,7 +30,7 @@ CREATE TABLE SPRING_SESSION_ATTRIBUTES (
         REFERENCES SPRING_SESSION(PRIMARY_ID) ON DELETE CASCADE
 );
 
-CREATE TABLE persistent_logins (
+CREATE TABLE PERSISTENT_LOGINS (
     username VARCHAR(64) NOT NULL,
     series VARCHAR(64) PRIMARY KEY,
     token VARCHAR(64) NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE persistent_logins (
 
 /* Invalidate all Sessions and Logons */
 
-TRUNCATE TABLE persistent_logins;
+TRUNCATE TABLE PERSISTENT_LOGINS;
 
 TRUNCATE TABLE SPRING_SESSION_ATTRIBUTES;
 
@@ -66,8 +66,8 @@ ALTER TABLE REGISTRATION_CODES ALTER COLUMN created_by_id DROP NOT NULL;
 
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-08-04 16:15:30
- * ModelDescription: NBH Entity Modell
+ * Generated at 2026-08-19 16:35:51
+ * ModelDescription: NBH Entity Model
  */
 
 
@@ -306,11 +306,13 @@ create table if not exists TRANSACTIONS (
 
 
 /* Foto- oder Bildergalerie */
-create table if not exists IMAGE_GALLERY (
+create table if not exists GALLERYS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    gallery_date DATE not null,
-    gallery_description VARCHAR(250) not null,
-    gallery_remark VARCHAR(250) /* Anmerkung für Editor, wird in der Gallery-Ansicht nicht angezeigt */,
+    gallery_date DATE /* use it only for images from one specific date, eg. Flohmarkt */,
+    show_gallery_from DATE /* Starting Date for displaying Gallery to Public - if null, do not display */,
+    show_gallery_to DATE /* if set, do not show after this date */,
+    description VARCHAR(250) not null,
+    remark VARCHAR(250) /* Anmerkung für Editor, wird in der Gallery-Ansicht nicht angezeigt */,
     is_public BOOLEAN not null DEFAULT FALSE /* wenn nicht public dann nur für angemeldete Mitglieder sichtbar */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT NOT NULL,
@@ -323,14 +325,16 @@ create table if not exists IMAGE_GALLERY (
 /* Bild zu einer Galerie */
 create table if not exists IMAGES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    image_name VARCHAR(250) not null,
+    file_name VARCHAR(250) not null,
+    image_width INTEGER not null,
+    image_height INTEGER not null,
     image_size INTEGER not null,
-    image BYTEA not null,
-    thumbnail BYTEA not null,
+    image BYTEA not null /* max 1920 x 1920 - scale down at upload */,
+    thumbnail BYTEA not null /* max 400 x 400 - scale down at upload */,
     content_type VARCHAR(20) not null /* image/jpeg, image/png ... */,
     description VARCHAR(250),
     is_gallery_cover BOOLEAN not null DEFAULT FALSE /* Das repräsentative Bild für die Galerie das in der Galerieübersicht angezeigt wird */,
-    belongs_to_id BIGINT /* FK id from IMAGE_GALLERY(id) */,
+    gallery_id BIGINT /* FK id from GALLERYS(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
@@ -340,10 +344,12 @@ create table if not exists IMAGES (
 
 
 /* Sammlung von Dokumenten */
-create table if not exists DOCUMENT_LIBRARY (
+create table if not exists LIBRARYS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    library_description VARCHAR(250) not null,
-    library_remark VARCHAR(250) /* Anmerkung für Editor, wird in der Library-Ansicht nicht angezeigt */,
+    show_library_from DATE /* Starting Date for displaying Library to Public - if null, do not display */,
+    show_library_to DATE /* if set, do not show after this date */,
+    description VARCHAR(250) not null,
+    remark VARCHAR(250) /* Anmerkung für Editor, wird in der Library-Ansicht nicht angezeigt */,
     is_public BOOLEAN not null DEFAULT FALSE /* public zugänglich oder nur für Mitglieder */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT NOT NULL,
@@ -356,12 +362,12 @@ create table if not exists DOCUMENT_LIBRARY (
 /* Dokument - PDF erlauben, sonst nix */
 create table if not exists DOCUMENTS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    document_name VARCHAR(250) not null,
+    file_name VARCHAR(250) not null,
     document_size INTEGER not null,
-    document_d_data BYTEA not null,
+    document_data BYTEA not null,
     content_type VARCHAR(20) not null /* application/pdf */,
     description VARCHAR(250),
-    belongs_to_id BIGINT /* FK id from DOCUMENT_LIBRARY(id) */,
+    lobrary_id BIGINT /* FK id from LIBRARYS(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
@@ -410,12 +416,12 @@ alter table TRANSACTIONS
 
 
 alter table IMAGES
-    add constraint fk_IMAGES_belongs_to_id foreign key (belongs_to_id) references IMAGE_GALLERY(id)
+    add constraint fk_IMAGES_gallery_id foreign key (gallery_id) references GALLERYS(id)
 ;
 
 
 alter table DOCUMENTS
-    add constraint fk_DOCUMENTS_belongs_to_id foreign key (belongs_to_id) references DOCUMENT_LIBRARY(id)
+    add constraint fk_DOCUMENTS_lobrary_id foreign key (lobrary_id) references LIBRARYS(id)
 ;
 
 
@@ -490,13 +496,14 @@ drop table if exists ACCOUNTING_ENTRIES cascade;
 
 drop table if exists TRANSACTIONS cascade;
 
-drop table if exists IMAGE_GALLERY cascade;
+drop table if exists GALLERYS cascade;
 
 drop table if exists IMAGES cascade;
 
-drop table if exists DOCUMENT_LIBRARY cascade;
+drop table if exists LIBRARYS cascade;
 
 drop table if exists DOCUMENTS cascade;
 
 
 /* end of generated file */
+
