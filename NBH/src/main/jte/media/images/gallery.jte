@@ -104,35 +104,44 @@
 
             <div class="modal fade" id="galleryLightboxModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-xl gallery-lightbox-dialog">
-                    <div class="modal-content bg-dark border-0">
+                    <div class="modal-content border-0 bg-transparent shadow-none">
                         <div class="modal-body p-0 position-relative">
-
-                            <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3"
-                                    data-bs-dismiss="modal" aria-label="Close" style="z-index: 20;"></button>
 
                             <div id="galleryLightboxCarousel" class="carousel slide" data-bs-ride="false" data-bs-interval="false">
                                 <div class="carousel-inner">
                                     @for (int imageIndex = 0; imageIndex < images.size(); imageIndex++)
                                         <div class="carousel-item ${imageIndex == 0 ? "active" : ""}">
-                                            <img
-                                                src="/gallery/${gallery.getId()}/image/${images.get(imageIndex).id()}"
-                                                class="d-block w-100"
-                                                style="max-height: 88vh; object-fit: contain;"
-                                                alt="Bild">
+                                            <div class="gallery-lightbox-frame mx-auto">
+                                                <button type="button"
+                                                        class="btn-close gallery-lightbox-close"
+                                                        data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+
+                                                <img
+                                                    src="/gallery/${gallery.getId()}/image/${images.get(imageIndex).id()}"
+                                                    class="d-block gallery-lightbox-image"
+                                                    alt="Bild">
+
+                                                @if (images.size() > 1)
+                                                    <button class="carousel-control-prev gallery-carousel-control gallery-carousel-control-prev"
+                                                            type="button"
+                                                            data-bs-target="#galleryLightboxCarousel"
+                                                            data-bs-slide="prev">
+                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                        <span class="visually-hidden">Previous</span>
+                                                    </button>
+                                                    <button class="carousel-control-next gallery-carousel-control gallery-carousel-control-next"
+                                                            type="button"
+                                                            data-bs-target="#galleryLightboxCarousel"
+                                                            data-bs-slide="next">
+                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                        <span class="visually-hidden">Next</span>
+                                                    </button>
+                                                @endif
+                                            </div>
                                         </div>
                                     @endfor
                                 </div>
-
-                                @if (images.size() > 1)
-                                    <button class="carousel-control-prev gallery-carousel-control" type="button" data-bs-target="#galleryLightboxCarousel" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </button>
-                                    <button class="carousel-control-next gallery-carousel-control" type="button" data-bs-target="#galleryLightboxCarousel" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Next</span>
-                                    </button>
-                                @endif
                             </div>
 
                         </div>
@@ -145,13 +154,68 @@
                     max-width: min(1920px, 96vw);
                 }
 
-                #galleryLightboxModal .gallery-carousel-control {
-                    opacity: 0;
-                    transition: opacity 0.2s ease-in-out;
+                #galleryLightboxModal .carousel-item {
+                    text-align: center;
                 }
 
-                #galleryLightboxModal .modal-body:hover .gallery-carousel-control {
+                #galleryLightboxModal .gallery-carousel-control {
+                    top: 0;
+                    bottom: 0;
                     opacity: 1;
+                    width: 33.333%;
+                    display: flex;
+                    align-items: center;
+                }
+
+                #galleryLightboxModal .gallery-lightbox-frame {
+                    display: inline-block;
+                    position: relative;
+                    max-width: 100%;
+                    background: #1f1f1f;
+                    border: 2px solid rgba(255, 255, 255, 0.9);
+                    border-radius: 0.4rem;
+                    overflow: hidden;
+                }
+
+                #galleryLightboxModal .gallery-lightbox-image {
+                    max-width: 100%;
+                    max-height: 88vh;
+                    width: auto;
+                    height: auto;
+                    object-fit: contain;
+                }
+
+                #galleryLightboxModal .gallery-lightbox-close {
+                    --bs-btn-close-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
+                    position: absolute;
+                    top: 0.6rem;
+                    right: 0.6rem;
+                    z-index: 30;
+                    background-color: rgba(90, 90, 90, 0.9);
+                    border-radius: 999px;
+                    padding: 0.4rem;
+                    opacity: 1;
+                    filter: none;
+                }
+
+                #galleryLightboxModal .gallery-carousel-control .carousel-control-prev-icon,
+                #galleryLightboxModal .gallery-carousel-control .carousel-control-next-icon {
+                    background-color: rgba(90, 90, 90, 0.9);
+                    border-radius: 0.6rem;
+                    padding: 1.2rem;
+                    background-size: 60% 60%;
+                }
+
+                #galleryLightboxModal .gallery-carousel-control-prev {
+                    left: 0.35rem;
+                    justify-content: flex-start;
+                    padding-left: 0.35rem;
+                }
+
+                #galleryLightboxModal .gallery-carousel-control-next {
+                    right: 0.35rem;
+                    justify-content: flex-end;
+                    padding-right: 0.35rem;
                 }
             </style>
 
