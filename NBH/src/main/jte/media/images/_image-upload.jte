@@ -19,6 +19,7 @@
         </h5>
 
         <form
+            id="galleryUploadForm"
             method="post"
             action="/gallery/${gallery.getId()}/images"
             enctype="multipart/form-data">
@@ -53,6 +54,7 @@
             </div>
 
             <button
+                id="galleryUploadSubmitBtn"
                 type="submit"
                 class="btn btn-primary">
 
@@ -61,6 +63,33 @@
             </button>
 
         </form>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const form = document.getElementById("galleryUploadForm");
+                const submitBtn = document.getElementById("galleryUploadSubmitBtn");
+
+                if (!form || !submitBtn) {
+                    return;
+                }
+
+                // Fresh page state (after redirect/refresh): button must be usable.
+                submitBtn.disabled = false;
+
+                form.addEventListener("submit", () => {
+                    // Browser runs HTML validation first. If submit is valid,
+                    // disable button to prevent duplicate uploads.
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = "Bilder werden hochgeladen...";
+                });
+
+                // Re-enable when this page is shown again (e.g. back-forward cache).
+                window.addEventListener("pageshow", () => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Bilder hochladen";
+                });
+            });
+        </script>
 
     </div>
 
