@@ -88,23 +88,13 @@
                             data-slide-index="${imageIndex}"
                             class="d-block">
 
-                            @if (images.get(imageIndex).height() > images.get(imageIndex).width())
-                                <div class="gallery-thumb-square rounded shadow-sm">
-                                    <img
-                                        src="/gallery/${gallery.getId()}/image/${images.get(imageIndex).id()}/thumbnail"
-                                        class="gallery-thumb-square-image"
-                                        loading="lazy"
-                                        alt="Bild">
-                                </div>
-                            @else
+                            <div class="gallery-thumb-square rounded shadow-sm">
                                 <img
                                     src="/gallery/${gallery.getId()}/image/${images.get(imageIndex).id()}/thumbnail"
-                                    class="img-fluid rounded shadow-sm"
+                                    class="gallery-thumb-square-image"
                                     loading="lazy"
-                                    width="${images.get(imageIndex).width()}"
-                                    height="${images.get(imageIndex).height()}"
                                     alt="Bild">
-                            @endif
+                            </div>
 
                         </a>
 
@@ -212,7 +202,7 @@
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
-                    object-position: center;
+                    object-position: center 30%;
                     display: block;
                 }
 
@@ -298,6 +288,29 @@
                         interval: false,
                         ride: false,
                         wrap: true
+                    });
+
+                    const keyNavHandler = event => {
+                        if (!modal.classList.contains("show")) {
+                            return;
+                        }
+
+                        if (event.key === "ArrowLeft") {
+                            event.preventDefault();
+                            carousel.prev();
+                        }
+                        else if (event.key === "ArrowRight") {
+                            event.preventDefault();
+                            carousel.next();
+                        }
+                    };
+
+                    modal.addEventListener("shown.bs.modal", () => {
+                        document.addEventListener("keydown", keyNavHandler);
+                    });
+
+                    modal.addEventListener("hidden.bs.modal", () => {
+                        document.removeEventListener("keydown", keyNavHandler);
                     });
 
                     document.querySelectorAll("a[data-slide-index]").forEach(link => {
