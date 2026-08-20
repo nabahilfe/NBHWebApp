@@ -88,13 +88,23 @@
                             data-slide-index="${imageIndex}"
                             class="d-block">
 
-                            <img
-                                src="/gallery/${gallery.getId()}/image/${images.get(imageIndex).id()}/thumbnail"
-                                class="img-fluid rounded shadow-sm"
-                                loading="lazy"
-                                width="${images.get(imageIndex).width()}"
-                                height="${images.get(imageIndex).height()}"
-                                alt="Bild">
+                            @if (images.get(imageIndex).height() > images.get(imageIndex).width())
+                                <div class="gallery-thumb-square rounded shadow-sm">
+                                    <img
+                                        src="/gallery/${gallery.getId()}/image/${images.get(imageIndex).id()}/thumbnail"
+                                        class="gallery-thumb-square-image"
+                                        loading="lazy"
+                                        alt="Bild">
+                                </div>
+                            @else
+                                <img
+                                    src="/gallery/${gallery.getId()}/image/${images.get(imageIndex).id()}/thumbnail"
+                                    class="img-fluid rounded shadow-sm"
+                                    loading="lazy"
+                                    width="${images.get(imageIndex).width()}"
+                                    height="${images.get(imageIndex).height()}"
+                                    alt="Bild">
+                            @endif
 
                         </a>
 
@@ -191,6 +201,21 @@
             </div>
 
             <style>
+                .gallery-thumb-square {
+                    width: 100%;
+                    aspect-ratio: 1 / 1;
+                    overflow: hidden;
+                    background: #f2f2f2;
+                }
+
+                .gallery-thumb-square-image {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    object-position: center;
+                    display: block;
+                }
+
                 #galleryLightboxModal .gallery-lightbox-dialog {
                     max-width: min(1920px, 96vw);
                 }
