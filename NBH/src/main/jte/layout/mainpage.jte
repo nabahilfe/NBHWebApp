@@ -217,6 +217,24 @@
                         @endif
 
 
+						<! Öffentliche Bilder und Dokumente -->
+                        <li class="nav-item dropdown">
+                            <button class="nav-link dropdown-toggle btn btn-link"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    data-bs-display="static">
+                                Bilder & Dokumente
+                            </button>
+
+                            <ul class="dropdown-menu">
+                                <!-- Bilder Galerien -->
+                                <li><a class="dropdown-item" href="/gallery/user-list">Bilder-Gallerien</a></li>
+								<!-- Dokumente -->
+                            </ul>
+                        </li>
+
+
+
                         <!-- Dropdown Content -->
                         @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER", "SECRETARY"))
                             <li class="nav-item dropdown">

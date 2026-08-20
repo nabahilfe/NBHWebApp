@@ -53,7 +53,7 @@
 					<td>${gallery.getGalleryDate() != null ? gallery.getGalleryDate().toString() : ""}</td>
 					<td>${gallery.getShowGalleryFrom() != null ? gallery.getShowGalleryFrom().toString() : ""}</td>
 					<td>${gallery.getShowGalleryTo() != null ? gallery.getShowGalleryTo().toString() : ""}</td>
-					<td>${Boolean.TRUE.equals(gallery.getIsPublic()) ? "Oeffentlich" : "Nur Mitglieder"}</td>
+					<td>${Boolean.TRUE.equals(gallery.getIsPublic()) ? "Öffentlich" : "Nur Mitglieder"}</td>
 					<td>${gallery.getRemark() != null ? gallery.getRemark() : ""}</td>
 					<td class="text-center">
 						<button type="button"

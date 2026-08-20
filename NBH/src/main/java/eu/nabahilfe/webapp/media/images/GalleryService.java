@@ -33,6 +33,26 @@ public class GalleryService {
     }
 
 
+    @Transactional(readOnly = true)
+    public List<Gallery> findVisibleForUsers(boolean isAuthenticated) {
+        if (isAuthenticated) {
+            return galleryRepository.findAllByOrderByCreatedAtDescIdDesc();
+        }
+        return galleryRepository.findAllByIsPublicTrueOrderByCreatedAtDescIdDesc();
+    }
+
+
+    @Transactional(readOnly = true)
+    public Gallery findVisibleByIdForUsers(Long galleryId, boolean isAuthenticated) {
+        if (isAuthenticated) {
+            return findById(galleryId);
+        }
+
+        return galleryRepository.findByIdAndIsPublicTrue(galleryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Galerie nicht gefunden: " + galleryId));
+    }
+
+
     public Gallery create(GalleryForm form) {
 
         validateForm(form);

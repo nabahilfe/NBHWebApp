@@ -89,7 +89,7 @@
                         <input type="hidden" name="_isPublic" value="on"/>
                         <input class="form-check-input" type="checkbox" id="isPublic" name="isPublic"
                                checked="${Boolean.TRUE.equals(galleryForm.getIsPublic())}">
-                        <label class="form-check-label" for="isPublic">Oeffentlich sichtbar</label>
+                        <label class="form-check-label" for="isPublic">Öffentlich sichtbar</label>
                     </div>
                 </div>
             </div>

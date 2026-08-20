@@ -4,6 +4,8 @@ package eu.nabahilfe.webapp.media.images;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,8 +39,8 @@ public class GalleryController {
 
 
     @GetMapping("/user-list")
-    public String listGalleriesForUsers(Model model) {
-        model.addAttribute("galleries", galleryService.findAll());
+    public String listGalleriesForUsers(Model model, Authentication authentication) {
+        model.addAttribute("galleries", galleryService.findVisibleForUsers(isAuthenticated(authentication)));
         return "media/images/user-list-galleries";
     }
 
@@ -158,9 +160,9 @@ public class GalleryController {
 
 
     @GetMapping("/user/{galleryId}")
-    public String showGalleryForUsers(@PathVariable Long galleryId, Model model) {
+    public String showGalleryForUsers(@PathVariable Long galleryId, Model model, Authentication authentication) {
 
-        Gallery gallery = galleryService.findById(galleryId);
+        Gallery gallery = galleryService.findVisibleByIdForUsers(galleryId, isAuthenticated(authentication));
         List<GalleryImageInfo> images = galleryImageService.findImages(galleryId);
 
         model.addAttribute("gallery", gallery);
@@ -168,6 +170,13 @@ public class GalleryController {
         model.addAttribute("readOnly", Boolean.TRUE);
 
         return "media/images/gallery";
+    }
+
+
+    private boolean isAuthenticated(Authentication authentication) {
+        return authentication != null
+                && authentication.isAuthenticated()
+                && !(authentication instanceof AnonymousAuthenticationToken);
     }
 
 
