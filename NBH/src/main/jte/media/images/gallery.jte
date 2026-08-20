@@ -45,8 +45,8 @@
             </div>
 
             <a href="${Boolean.TRUE.equals(readOnly) ? "/gallery/user-list" : "/gallery/list"}"
-               class="btn btn-outline-secondary">
-                Zurück zur Foto-Galerie Übersicht
+               class="btn btn-secondary">
+                <i class="bi bi-arrow-left-square"></i> &nbsp; Zurück zu den Foto-Galerien
             </a>
 
         </div>

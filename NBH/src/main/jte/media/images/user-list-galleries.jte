@@ -5,6 +5,7 @@
 
 @import eu.nabahilfe.webapp.GlobalModelAttributes
 @import eu.nabahilfe.webapp.media.images.Gallery
+@import static eu.nabahilfe.webapp.DateFormatter.*
 
 @param java.util.List<Gallery> galleries
 
@@ -27,7 +28,7 @@
         <thead class="table-light">
             <tr>
                 <th scope="col">Titel</th>
-                <th scope="col">Galerie-Datum</th>
+                <th scope="col">Datum</th>
                 <th scope="col">Beschreibung</th>
             </tr>
         </thead>
@@ -38,7 +39,7 @@
                     <td>
                         <a class="text-decoration-none" href="/gallery/user/${gallery.getId()}">${gallery.getDescription()}</a>
                     </td>
-                    <td>${gallery.getGalleryDate() != null ? gallery.getGalleryDate().toString() : ""}</td>
+                    <td>${gallery.getGalleryDate() != null ? dateReverseDE(gallery.getGalleryDate()) : "Diverse"}</td>
 					<td>${gallery.getRemark() != null ? gallery.getRemark() : ""}</td>
                 </tr>
             @endfor

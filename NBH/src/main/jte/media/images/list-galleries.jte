@@ -28,7 +28,7 @@
 			<tr>
 				<th scope="col">Titel</th>
 				<th scope="col" class="text-center">Edit</th>
-				<th scope="col">Galerie-Datum</th>
+				<th scope="col">Datum</th>
 				<th scope="col">Anzeigen von</th>
 				<th scope="col">Anzeigen bis</th>
 				<th scope="col">Sichtbarkeit</th>

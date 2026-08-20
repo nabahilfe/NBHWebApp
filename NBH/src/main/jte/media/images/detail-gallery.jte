@@ -46,7 +46,7 @@
             <br/>
 
             <div class="form-group row">
-                <label for="galleryDate" class="col-sm-2 col-form-label">Galerie-Datum</label>
+                <label for="galleryDate" class="col-sm-2 col-form-label">Datum</label>
                 <div class="col-sm-4">
                     <input type="date"
                            class="form-control"
