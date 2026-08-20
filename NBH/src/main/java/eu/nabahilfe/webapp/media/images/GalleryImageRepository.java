@@ -13,6 +13,8 @@ public interface GalleryImageRepository
 
     long countByGallery_Id(Long galleryId);
 
+    void deleteByGallery_Id(Long galleryId);
+
     Optional<Image> findByIdAndGallery_Id(Long imageId, Long galleryId);
 
     Optional<Image> findFirstByGallery_IdOrderByIdAsc(Long galleryId);

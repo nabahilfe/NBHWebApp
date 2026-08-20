@@ -13,9 +13,11 @@ import java.util.List;
 public class GalleryService {
 
     private final GalleryRepository galleryRepository;
+    private final GalleryImageRepository galleryImageRepository;
 
-    public GalleryService(GalleryRepository galleryRepository) {
+    public GalleryService(GalleryRepository galleryRepository, GalleryImageRepository galleryImageRepository) {
         this.galleryRepository = galleryRepository;
+        this.galleryImageRepository = galleryImageRepository;
     }
 
     @Transactional(readOnly = true)
@@ -65,5 +67,14 @@ public class GalleryService {
         form.setDescription(name);
         form.setIsPublic(Boolean.FALSE);
         return create(form);
+    }
+
+
+    public void deleteGallery(Long galleryId) {
+        Gallery gallery = galleryRepository.findById(galleryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Galerie nicht gefunden: " + galleryId));
+
+        galleryImageRepository.deleteByGallery_Id(galleryId);
+        galleryRepository.delete(gallery);
     }
 }

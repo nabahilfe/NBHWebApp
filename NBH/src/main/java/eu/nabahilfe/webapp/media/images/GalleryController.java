@@ -76,6 +76,24 @@ public class GalleryController {
     }
 
 
+    @PostMapping("/{galleryId}/delete")
+    public String deleteGallery(@PathVariable Long galleryId, RedirectAttributes redirectAttributes) {
+        try {
+            galleryService.deleteGallery(galleryId);
+            redirectAttributes.addFlashAttribute("successMessage", "Galerie wurde geloescht.");
+        }
+        catch (ResponseStatusException ex) {
+            String message = ex.getReason() != null ? ex.getReason() : "Galerie konnte nicht geloescht werden.";
+            redirectAttributes.addFlashAttribute("errorMessage", message);
+        }
+        catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Beim Loeschen ist ein unerwarteter Fehler aufgetreten.");
+        }
+
+        return "redirect:/gallery/list";
+    }
+
+
     /**
      * Galerie anzeigen
      */
