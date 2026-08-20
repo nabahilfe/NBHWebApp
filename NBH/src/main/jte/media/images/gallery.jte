@@ -6,6 +6,7 @@
 @import eu.nabahilfe.webapp.GlobalModelAttributes
 @import eu.nabahilfe.webapp.media.images.Gallery
 @import eu.nabahilfe.webapp.media.images.GalleryImageInfo
+@import static eu.nabahilfe.webapp.DateFormatter.*
 
 @import java.util.List
 
@@ -36,15 +37,16 @@
 
             <div>
                 <h3 class="mb-1">${gallery.getDescription()}</h3>
-
-                <div class="text-body-secondary">
+                @if(gallery.getGalleryDate() != null)<div>${dateReverseDE(gallery.getGalleryDate())}</div>@endif
+                @if(gallery.getRemark() != null)<div><strong>${gallery.getRemark()}</strong></div>@endif
+                <div>
                     ${images.size()} Bilder
                 </div>
             </div>
 
             <a href="${Boolean.TRUE.equals(readOnly) ? "/gallery/user-list" : "/gallery/list"}"
                class="btn btn-outline-secondary">
-                Zurück
+                Zurück zur Foto-Galerie Übersicht
             </a>
 
         </div>

@@ -11,10 +11,6 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@param String fullUsername = null
-@param String username = null
-@param Boolean isAuthenticated = false
-
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 @param GlobalModelAttributes globalModelAttributes
@@ -25,16 +21,14 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>Bildgalerien</h3>
+    <h3>${(ctxt == null || !ctxt.isAuthenticated()) ? "Öffentliche " : "Alle "}Foto-Galerien</h3>
 
     <table class="table table-bordered table-hover table-sm shadow h-100" id="galleryTable">
         <thead class="table-light">
             <tr>
-                <th scope="col">Beschreibung</th>
+                <th scope="col">Titel</th>
                 <th scope="col">Galerie-Datum</th>
-                <th scope="col">Anzeigen von</th>
-                <th scope="col">Anzeigen bis</th>
-                <th scope="col">Sichtbarkeit</th>
+                <th scope="col">Beschreibung</th>
             </tr>
         </thead>
 
@@ -45,13 +39,15 @@
                         <a class="text-decoration-none" href="/gallery/user/${gallery.getId()}">${gallery.getDescription()}</a>
                     </td>
                     <td>${gallery.getGalleryDate() != null ? gallery.getGalleryDate().toString() : ""}</td>
-                    <td>${gallery.getShowGalleryFrom() != null ? gallery.getShowGalleryFrom().toString() : ""}</td>
-                    <td>${gallery.getShowGalleryTo() != null ? gallery.getShowGalleryTo().toString() : ""}</td>
-                    <td>${Boolean.TRUE.equals(gallery.getIsPublic()) ? "Öffentlich" : "Nur Mitglieder"}</td>
+					<td>${gallery.getRemark() != null ? gallery.getRemark() : ""}</td>
                 </tr>
             @endfor
         </tbody>
     </table>
+
+    @if (ctxt == null || !ctxt.isAuthenticated())
+        <p class="text-muted small mt-3">Für angemeldete Mitglieder gib es möglicherweise mehr Foto-Galerien.</p>
+    @endif
 
     @template.components.display-statusmessage(successMessage, errorMessage)
 

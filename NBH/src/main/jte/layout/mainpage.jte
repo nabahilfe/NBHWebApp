@@ -5,7 +5,6 @@
 
 @import eu.nabahilfe.webapp.GlobalModelAttributes
 @import eu.nabahilfe.webapp.textcontent.TextContentType
-@import eu.nabahilfe.webapp.GlobalModelAttributes
 
 
 @param gg.jte.Content content
@@ -217,18 +216,18 @@
                         @endif
 
 
-						<! Öffentliche Bilder und Dokumente -->
+            			<!-- Öffentliche Fotos und Dokumente -->
                         <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle btn btn-link"
                                     type="button"
                                     data-bs-toggle="dropdown"
                                     data-bs-display="static">
-                                Bilder & Dokumente
+                                Fotos & Dokumente
                             </button>
 
                             <ul class="dropdown-menu">
-                                <!-- Bilder Galerien -->
-                                <li><a class="dropdown-item" href="/gallery/user-list">Bilder-Gallerien</a></li>
+                                <!-- Foto-Galerien -->
+                                <li><a class="dropdown-item" href="/gallery/user-list">Foto-Galerien</a></li>
 								<!-- Dokumente -->
                             </ul>
                         </li>
@@ -278,17 +277,7 @@
                                                 ${TextContentType.LEGAL_NOTICE.getCode()}</a></li>
                                         </ul>
                                     </li>
-
-                                    <!-- image management -->
-                                    <li class="dropdown-submenu">
-                                        <a class="dropdown-item dropdown-toggle" href="#">
-                                            Bilder
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="/gallery/list">Galerien bearbeiten</a></li>
-                                            <li><a class="dropdown-item" href="/gallery/user-list">Gallerien anzeigen</a></li>
-                                        </ul>
-                                    </li>
+                                    <li><a class="dropdown-item" href="/gallery/list">Foto-Galerien</a></li>
 
 
                                     <!-- FIXME: enable this Dokumente menu once we have a proper document management system in place

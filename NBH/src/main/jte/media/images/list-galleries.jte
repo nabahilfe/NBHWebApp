@@ -11,10 +11,6 @@
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
 
-@param String fullUsername = null
-@param String username = null
-@param Boolean isAuthenticated = false
-
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 @param GlobalModelAttributes globalModelAttributes
@@ -25,18 +21,18 @@
 	ctxt = ctxt,
 	content = @`
 
-	<h3>Bildgalerien</h3>
+	<h3>Foto-Galerien</h3>
 
 	<table class="table table-bordered table-hover table-sm shadow h-100" id="galleryTable">
 		<thead class="table-light">
 			<tr>
-				<th scope="col">Beschreibung</th>
+				<th scope="col">Titel</th>
 				<th scope="col" class="text-center">Edit</th>
 				<th scope="col">Galerie-Datum</th>
 				<th scope="col">Anzeigen von</th>
 				<th scope="col">Anzeigen bis</th>
 				<th scope="col">Sichtbarkeit</th>
-				<th scope="col">Anmerkung</th>
+				<th scope="col">Beschreibung</th>
 				<th scope="col" class="text-center">Löschen</th>
 			</tr>
 		</thead>
@@ -53,7 +49,12 @@
 					<td>${gallery.getGalleryDate() != null ? gallery.getGalleryDate().toString() : ""}</td>
 					<td>${gallery.getShowGalleryFrom() != null ? gallery.getShowGalleryFrom().toString() : ""}</td>
 					<td>${gallery.getShowGalleryTo() != null ? gallery.getShowGalleryTo().toString() : ""}</td>
-					<td>${Boolean.TRUE.equals(gallery.getIsPublic()) ? "Öffentlich" : "Nur Mitglieder"}</td>
+					<td>@if(Boolean.TRUE.equals(gallery.getIsPublic()))
+							<span class="badge bg-danger">Öffentlich</span>
+						@else
+							<span class="badge bg-success">Nur Mitglieder</span>
+						@endif
+					</td>
 					<td>${gallery.getRemark() != null ? gallery.getRemark() : ""}</td>
 					<td class="text-center">
 						<button type="button"
@@ -77,7 +78,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<p class="mb-2">Es werden sämtliche Bilder aus der Gallerie und die Gallerie selbst gelöscht!</p>
+					<p class="mb-2">Es werden sämtliche Bilder aus der Foto-Galerie und die Galerie selbst gelöscht!</p>
 					<p class="small text-muted mb-3" id="galleryToDeleteLabel"></p>
 					<div class="form-check">
 						<input class="form-check-input" type="checkbox" value="" id="confirmDeleteGalleryCheckbox">

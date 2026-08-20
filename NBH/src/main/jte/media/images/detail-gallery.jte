@@ -6,17 +6,11 @@
 @import eu.nabahilfe.webapp.GlobalModelAttributes
 @import eu.nabahilfe.webapp.media.images.GalleryForm
 
-@import java.lang.Long
-
 @param GalleryForm galleryForm
 @param Long galleryId = null
 
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
-
-@param String fullUsername = null
-@param String username = null
-@param Boolean isAuthenticated = false
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
@@ -104,7 +98,7 @@
                               id="remark"
                               maxlength="250"
                               rows="3"
-                              placeholder="Interne Notiz">${galleryForm.getRemark() != null ? galleryForm.getRemark() : ""}</textarea>
+                              placeholder="Weiter Informationen zur Foto-Galerie">${galleryForm.getRemark() != null ? galleryForm.getRemark() : ""}</textarea>
                 </div>
             </div>
 
