@@ -105,4 +105,22 @@ public class ImageGalleryService {
         return galleryImageRepository.findImageData(galleryId, imageId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
+
+
+    @Transactional
+    public void deleteImage(Long galleryId, Long imageId) {
+        Image image = galleryImageRepository.findByIdAndGallery_Id(imageId, galleryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Bild nicht gefunden."));
+
+        boolean wasCover = Boolean.TRUE.equals(image.getIsGalleryCover());
+        galleryImageRepository.delete(image);
+
+        if (wasCover) {
+            galleryImageRepository.findFirstByGallery_IdOrderByIdAsc(galleryId)
+                    .ifPresent(next -> {
+                        next.setIsGalleryCover(Boolean.TRUE);
+                        galleryImageRepository.save(next);
+                    });
+        }
+    }
 }

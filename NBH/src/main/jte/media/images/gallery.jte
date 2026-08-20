@@ -98,11 +98,49 @@
 
                         </a>
 
+                        @if (!Boolean.TRUE.equals(readOnly))
+                            <div class="mt-2 text-center">
+                                <button type="button"
+                                        class="btn btn-outline-danger btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#confirmDeleteImageModal"
+                                        data-image-id="${images.get(imageIndex).id()}">
+                                    Löschen
+                                </button>
+                            </div>
+                        @endif
+
                     </div>
 
                 @endfor
 
             </div>
+
+
+            @if (!Boolean.TRUE.equals(readOnly))
+                <div class="modal fade" id="confirmDeleteImageModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Bild wirklich löschen?</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Das Bild wird endgueltig gelöscht.
+                                <input type="hidden" id="imageIdToDelete">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                                <button type="button" class="btn btn-danger" id="confirmDeleteImageBtn">Ja</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="deleteImageForm" method="post" style="display:none;">
+                    ${csrfHiddenInput}
+                </form>
+            @endif
 
 
             <div class="modal fade" id="galleryLightboxModal" tabindex="-1" aria-hidden="true">
@@ -244,11 +282,34 @@
                             carousel.to(Number.isNaN(idx) ? 0 : idx);
                         });
                     });
+
+                    const deleteModal = document.getElementById("confirmDeleteImageModal");
+                    const deleteForm = document.getElementById("deleteImageForm");
+                    const confirmDeleteBtn = document.getElementById("confirmDeleteImageBtn");
+                    const imageIdInput = document.getElementById("imageIdToDelete");
+
+                    if (deleteModal && deleteForm && confirmDeleteBtn && imageIdInput) {
+                        deleteModal.addEventListener("show.bs.modal", event => {
+                            const trigger = event.relatedTarget;
+                            const imageId = trigger ? trigger.getAttribute("data-image-id") : null;
+                            imageIdInput.value = imageId || "";
+                        });
+
+                        confirmDeleteBtn.addEventListener("click", () => {
+                            const imageId = imageIdInput.value;
+                            if (!imageId) {
+                                return;
+                            }
+                            deleteForm.action = "/gallery/${gallery.getId()}/image/" + imageId + "/delete";
+                            deleteForm.submit();
+                        });
+                    }
                 });
             </script>
 
         @endif
 
+		<br/>
 
         @template.components.display-statusmessage(
             successMessage,

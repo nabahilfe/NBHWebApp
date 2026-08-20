@@ -132,6 +132,28 @@ public class GalleryController {
     }
 
 
+    @PostMapping("/{galleryId}/image/{imageId}/delete")
+    public String deleteImage(
+            @PathVariable Long galleryId,
+            @PathVariable Long imageId,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            galleryImageService.deleteImage(galleryId, imageId);
+            redirectAttributes.addFlashAttribute("successMessage", "Bild wurde gelöscht.");
+        }
+        catch (ResponseStatusException ex) {
+            String message = ex.getReason() != null ? ex.getReason() : "Bild konnte nicht gelöscht werden.";
+            redirectAttributes.addFlashAttribute("errorMessage", message);
+        }
+        catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Beim Löschen ist ein unerwarteter Fehler aufgetreten.");
+        }
+
+        return "redirect:/gallery/" + galleryId;
+    }
+
+
     /**
      * Thumbnail ausliefern
      */
