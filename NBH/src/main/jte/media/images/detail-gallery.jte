@@ -6,7 +6,10 @@
 @import eu.nabahilfe.webapp.GlobalModelAttributes
 @import eu.nabahilfe.webapp.media.images.GalleryForm
 
+@import java.lang.Long
+
 @param GalleryForm galleryForm
+@param Long galleryId = null
 
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null
@@ -25,11 +28,11 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>Neue Galerie anlegen</h3>
+    <h3>${galleryId == null ? "Neue Galerie anlegen" : "Galerie bearbeiten"}</h3>
     <br/>
 
     <div class="row">
-        <form action="/gallery" method="post">
+        <form action="${galleryId == null ? "/gallery" : "/gallery/" + galleryId}" method="post">
             ${csrfHiddenInput}
 
             <div class="form-group row">
@@ -110,7 +113,7 @@
             <div class="form-group row">
                 <div class="col-sm-10">
                     <button type="submit" class="btn btn-primary bi-floppy"> Speichern</button>
-                    <a href="/gallery" class="btn btn-outline-secondary">Abbrechen</a>
+                    <a href="${galleryId == null ? "/gallery/list" : "/gallery/" + galleryId}" class="btn btn-outline-secondary">Abbrechen</a>
                 </div>
             </div>
 

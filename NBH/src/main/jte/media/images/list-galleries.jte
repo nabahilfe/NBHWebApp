@@ -31,6 +31,7 @@
 		<thead class="table-light">
 			<tr>
 				<th scope="col">Beschreibung</th>
+				<th scope="col" class="text-center">Edit</th>
 				<th scope="col">Galerie-Datum</th>
 				<th scope="col">Anzeigen von</th>
 				<th scope="col">Anzeigen bis</th>
@@ -45,6 +46,9 @@
 				<tr>
 					<td>
 						<a class="text-decoration-none" href="/gallery/${gallery.getId()}">${gallery.getDescription()}</a>
+					</td>
+					<td class="text-center">
+						<a class="btn btn-outline-primary btn-sm bi-pencil" href="/gallery/${gallery.getId()}/edit" role="button"></a>
 					</td>
 					<td>${gallery.getGalleryDate() != null ? gallery.getGalleryDate().toString() : ""}</td>
 					<td>${gallery.getShowGalleryFrom() != null ? gallery.getShowGalleryFrom().toString() : ""}</td>

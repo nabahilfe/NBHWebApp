@@ -48,6 +48,25 @@ public class GalleryController {
         if (!model.containsAttribute("galleryForm")) {
             model.addAttribute("galleryForm", new GalleryForm());
         }
+        model.addAttribute("galleryId", null);
+        return "media/images/detail-gallery";
+    }
+
+
+    @GetMapping("/{galleryId}/edit")
+    public String editGallery(@PathVariable Long galleryId, Model model) {
+        Gallery gallery = galleryService.findById(galleryId);
+
+        GalleryForm form = new GalleryForm();
+        form.setDescription(gallery.getDescription());
+        form.setRemark(gallery.getRemark());
+        form.setGalleryDate(gallery.getGalleryDate());
+        form.setShowGalleryFrom(gallery.getShowGalleryFrom());
+        form.setShowGalleryTo(gallery.getShowGalleryTo());
+        form.setIsPublic(gallery.getIsPublic());
+
+        model.addAttribute("galleryForm", form);
+        model.addAttribute("galleryId", galleryId);
         return "media/images/detail-gallery";
     }
 
@@ -71,6 +90,33 @@ public class GalleryController {
         }
         catch (IllegalArgumentException ex) {
             model.addAttribute("errorMessage", ex.getMessage());
+            return "media/images/detail-gallery";
+        }
+    }
+
+
+    @PostMapping("/{galleryId}")
+    public String updateGallery(
+            @PathVariable Long galleryId,
+            @ModelAttribute("galleryForm") @Valid GalleryForm galleryForm,
+            BindingResult result,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
+        if (result.hasErrors()) {
+            model.addAttribute("errorMessage", "Bitte die Pflichtfelder korrekt ausfuellen.");
+            model.addAttribute("galleryId", galleryId);
+            return "media/images/detail-gallery";
+        }
+
+        try {
+            Gallery gallery = galleryService.update(galleryId, galleryForm);
+            redirectAttributes.addFlashAttribute("successMessage", "Galerie '" + gallery.getDescription() + "' wurde gespeichert.");
+            return "redirect:/gallery/" + gallery.getId();
+        }
+        catch (IllegalArgumentException ex) {
+            model.addAttribute("errorMessage", ex.getMessage());
+            model.addAttribute("galleryId", galleryId);
             return "media/images/detail-gallery";
         }
     }

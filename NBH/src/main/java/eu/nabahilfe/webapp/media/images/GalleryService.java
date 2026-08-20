@@ -35,6 +35,28 @@ public class GalleryService {
 
     public Gallery create(GalleryForm form) {
 
+        validateForm(form);
+
+        Gallery gallery = new Gallery();
+        applyForm(gallery, form);
+
+        return galleryRepository.save(gallery);
+    }
+
+
+    public Gallery update(Long galleryId, GalleryForm form) {
+
+        validateForm(form);
+
+        Gallery gallery = findById(galleryId);
+        applyForm(gallery, form);
+
+        return galleryRepository.save(gallery);
+    }
+
+
+    private void validateForm(GalleryForm form) {
+
         if (form.getDescription() == null || form.getDescription().isBlank()) {
             throw new IllegalArgumentException("Die Beschreibung der Galerie darf nicht leer sein.");
         }
@@ -43,16 +65,16 @@ public class GalleryService {
                 && form.getShowGalleryTo().isBefore(form.getShowGalleryFrom())) {
             throw new IllegalArgumentException("'Anzeigen bis' darf nicht vor 'Anzeigen von' liegen.");
         }
+    }
 
-        Gallery gallery = new Gallery();
+
+    private void applyForm(Gallery gallery, GalleryForm form) {
         gallery.setDescription(form.getDescription().trim());
         gallery.setRemark(form.getRemark());
         gallery.setGalleryDate(form.getGalleryDate());
         gallery.setShowGalleryFrom(form.getShowGalleryFrom());
         gallery.setShowGalleryTo(form.getShowGalleryTo());
         gallery.setIsPublic(Boolean.TRUE.equals(form.getIsPublic()));
-
-        return galleryRepository.save(gallery);
     }
 
 
