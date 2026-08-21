@@ -92,12 +92,12 @@
     <table class="table table-bordered table-hover table-sm shadow h-100">
         <thead class="table-light">
             <tr>
-                <th>Buchungsdatum</th>
+                <th>Datum</th>
                 <th>Buchung von</th>
                 <th>Art</th>
                 <th>Mitglied</th>
                 <th>Beschreibung</th>
-                <th>Transaktionsdatum</th>
+                <th>Transaktion</th>
                 <th>Veranlasst von</th>
                 <th class="text-end">Betrag</th>
             </tr>

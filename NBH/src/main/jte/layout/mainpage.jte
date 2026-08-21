@@ -5,7 +5,6 @@
 
 @import eu.nabahilfe.webapp.GlobalModelAttributes
 @import eu.nabahilfe.webapp.textcontent.TextContentType
-@import eu.nabahilfe.webapp.GlobalModelAttributes
 
 
 @param gg.jte.Content content
@@ -217,8 +216,28 @@
                         @endif
 
 
-                        <!-- Dropdown Text Content -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER", "SECRETARY"))
+            			<!-- FIXME: derzeit zugriff beschränkt! Öffentliche Fotos und Dokumente -->
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+                        <li class="nav-item dropdown">
+                            <button class="nav-link dropdown-toggle btn btn-link"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    data-bs-display="static">
+                                Fotos & Dokumente
+                            </button>
+
+                            <ul class="dropdown-menu">
+                                <!-- Foto-Galerien -->
+                                <li><a class="dropdown-item" href="/gallery/user-list">Foto-Galerien</a></li>
+								<!-- Dokumente -->
+                            </ul>
+                        </li>
+                        @endif
+
+
+
+                        <!-- Dropdown Content -->
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link"
                                         type="button"
@@ -230,49 +249,41 @@
                                 <ul class="dropdown-menu">
 
                                     <!-- Texte -->
-                                    <li class="dropdown-submenu">
-                                        <a class="dropdown-item dropdown-toggle" href="#">
-                                            Texte
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.ABOUT_US}">
-                                                ${TextContentType.ABOUT_US.getCode()}</a></li>
+                        			@if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER", "SECRETARY"))
+	                                    <li class="dropdown-submenu">
+	                                        <a class="dropdown-item dropdown-toggle" href="#">
+	                                            Texte
+	                                        </a>
+	                                        <ul class="dropdown-menu">
+	                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.ABOUT_US}">
+	                                                ${TextContentType.ABOUT_US.getCode()}</a></li>
 
-                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.CONTACT}">
-                                                ${TextContentType.CONTACT.getCode()}</a></li>
+	                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.CONTACT}">
+	                                                ${TextContentType.CONTACT.getCode()}</a></li>
 
-                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.EVENTS}">
-                                                ${TextContentType.EVENTS.getCode()}</a></li>
+	                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.EVENTS}">
+	                                                ${TextContentType.EVENTS.getCode()}</a></li>
 
-                                            <!--li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.NEWS}">
-                                                ${TextContentType.NEWS.getCode()}</a></li-->
+	                                            <!--li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.NEWS}">
+	                                                ${TextContentType.NEWS.getCode()}</a></li-->
 
-                                            <!--li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.FAQ}">
-                                                ${TextContentType.FAQ.getCode()}</a></li-->
+	                                            <!--li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.FAQ}">
+	                                                ${TextContentType.FAQ.getCode()}</a></li-->
 
-                                            <!--li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.TERMS_OF_SERVICE}">
-                                                ${TextContentType.TERMS_OF_SERVICE.getCode()}</a></li-->
+	                                            <!--li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.TERMS_OF_SERVICE}">
+	                                                ${TextContentType.TERMS_OF_SERVICE.getCode()}</a></li-->
 
-                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.PRIVACY_POLICY}">
-                                                ${TextContentType.PRIVACY_POLICY.getCode()}</a></li>
+	                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.PRIVACY_POLICY}">
+	                                                ${TextContentType.PRIVACY_POLICY.getCode()}</a></li>
 
-                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.LEGAL_NOTICE}">
-                                                ${TextContentType.LEGAL_NOTICE.getCode()}</a></li>
-                                        </ul>
-                                    </li>
+	                                            <li><a class="dropdown-item" href="/textcontent/edit/cc/${TextContentType.LEGAL_NOTICE}">
+	                                                ${TextContentType.LEGAL_NOTICE.getCode()}</a></li>
+	                                        </ul>
+	                                    </li>
+	                                @endif
 
-                                    <!-- FIXME: enable this Bilder menu once we have a proper image management system in place
-                                    <li class="dropdown-submenu">
-                                        <a class="dropdown-item dropdown-toggle" href="#">
-                                            Bilder
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="/images/gallery">Galerie</a></li>
-                                            <li><a class="dropdown-item" href="/images/upload">Bild hochladen</a></li>
-                                            <li><a class="dropdown-item" href="/images/categories">Kategorien</a></li>
-                                        </ul>
-                                    </li>
-                                    -->
+                                    <li><a class="dropdown-item" href="/gallery/list">Foto-Galerien</a></li>
+
 
                                     <!-- FIXME: enable this Dokumente menu once we have a proper document management system in place
                                     <li class="dropdown-submenu">

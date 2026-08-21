@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -45,6 +46,10 @@ public class SecurityConfig {
                 .requestMatchers("/registration/**").permitAll()
                 .requestMatchers("/statuscode/**").permitAll()
                 .requestMatchers("/home", "/home/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/gallery/user-list").permitAll()
+                .requestMatchers(HttpMethod.GET, "/gallery/user/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/gallery/*/image/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/gallery/*/image/*/thumbnail").permitAll()
 
                 .anyRequest().authenticated()
             )

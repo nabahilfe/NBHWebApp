@@ -16,6 +16,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import eu.nabahilfe.webapp.LiableMemberListener;
 import eu.nabahilfe.webapp.members.Member;
 
 import jakarta.persistence.Column;
@@ -37,7 +38,7 @@ import jakarta.validation.constraints.Size;
  * Buchungsdatensatz zu Zeitscheck-Kauf, Mitgliedschaft, Weihnachtsessen, usw.
  */
 @Entity
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({AuditingEntityListener.class, LiableMemberListener.class})
 @Table(name = "ACCOUNTING_ENTRIES")
 public class AccountingEntry  {
 
