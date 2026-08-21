@@ -131,7 +131,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                Das Bild wird endgueltig gelöscht.
+                                Das Bild wird endgültig gelöscht.
                                 <input type="hidden" id="imageIdToDelete">
                             </div>
                             <div class="modal-footer">
