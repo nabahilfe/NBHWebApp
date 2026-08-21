@@ -1,8 +1,5 @@
 package eu.nabahilfe.webapp.media.images;
 
-import com.drew.imaging.ImageMetadataReader;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.exif.ExifIFD0Directory;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,12 +11,11 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 
 @Service
@@ -29,6 +25,17 @@ public class ImageProcessingService {
     private static final int MAX_THUMBNAIL_SIZE = 400;
 
     /**
+     * Maximale Anzahl Pixel eines hochgeladenen Bildes.
+     *
+     * Die Prüfung erfolgt VOR der eigentlichen Bilddekodierung.
+     *
+     * 25 MP entsprechen z.B. ungefähr:
+     *
+     * 6000 x 4166 Pixel
+     */
+    private static final long MAX_PIXEL_COUNT = 25_000_000L;
+
+    /**
      * WebP Qualität:
      *
      * 0.0 = maximale Kompression / schlechte Qualität
@@ -36,248 +43,393 @@ public class ImageProcessingService {
      */
     private static final float WEBP_QUALITY = 0.90f;
 
+
+    /**
+     * Verarbeitet ein hochgeladenes Bild.
+     *
+     * Es werden zwei WebP-Versionen erzeugt:
+     *
+     * - maximal 1920 px für die Darstellung
+     * - maximal 400 px als Thumbnail
+     */
     public ProcessedImage process(MultipartFile file) {
 
         validate(file);
 
         try {
-            byte[] originalData = file.getBytes();
-            BufferedImage original = readImage(originalData);
-            int orientation = readOrientation(originalData);
-            BufferedImage oriented = applyOrientation(original, orientation);
-            BufferedImage image = resize(oriented, MAX_IMAGE_SIZE);
-            BufferedImage thumbnail = resize(oriented, MAX_THUMBNAIL_SIZE);
-            byte[] imageData = toWebP(image);
-            byte[] thumbnailData = toWebP(thumbnail);
+
+            /*
+             * Zuerst nur die Dimensionen des Bildes bestimmen.
+             *
+             * Das vollständige Bild wird hierbei noch NICHT
+             * als BufferedImage in den Heap geladen.
+             */
+            ImageDimensions dimensions = readDimensions(file);
+
+            /*
+             * Schutz gegen extrem große Bilder.
+             *
+             * Diese Prüfung passiert vor der eigentlichen
+             * Bildverarbeitung.
+             */
+            validateDimensions(dimensions, file.getOriginalFilename());
+
+            /*
+             * 1920er WebP erzeugen.
+             */
+            byte[] imageData =
+                    createWebP(file, MAX_IMAGE_SIZE);
+
+            /*
+             * Thumbnail erzeugen.
+             *
+             * Das Original wird hierfür erneut vom InputStream
+             * gelesen, aber nicht vorher als BufferedImage
+             * vollständig in unserem Code gehalten.
+             */
+            byte[] thumbnailData =
+                    createWebP(file, MAX_THUMBNAIL_SIZE);
+
+            /*
+             * Die tatsächlichen Dimensionen der erzeugten
+             * 1920er WebP-Version bestimmen.
+             */
+            ImageDimensions resultDimensions =
+                    readDimensions(imageData);
 
             return new ProcessedImage(
                     imageData,
                     thumbnailData,
-                    image.getWidth(),
-                    image.getHeight());
+                    resultDimensions.width(),
+                    resultDimensions.height());
+
+        } catch (ImageTooLargeException e) {
+
+            /*
+             * Das ist ein erwarteter Fehler:
+             * Das hochgeladene Bild ist zu groß.
+             */
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    e.getMessage(),
+                    e);
 
         } catch (UnsupportedImageFormatException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Dateiformat wird nicht unterstuetzt. Bitte JPG, PNG oder WebP verwenden.", e);
+
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Dateiformat wird nicht unterstützt. " +
+                            "Bitte JPG, PNG oder WebP verwenden.",
+                    e);
+
         } catch (MissingWebPWriterException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Server-Konfiguration unvollstaendig: WebP-Writer ist nicht verfuegbar.", e);
+
+            /*
+             * Das ist kein Fehler des Benutzers,
+             * sondern eine Server-Konfiguration.
+             */
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Server-Konfiguration unvollständig: " +
+                            "WebP-Writer ist nicht verfügbar.",
+                    e);
+
         } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Bilddatei ist beschaedigt oder konnte nicht gelesen werden.", e);
+
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Bilddatei ist beschädigt oder konnte " +
+                            "nicht gelesen werden.",
+                    e);
+
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Bild konnte nicht verarbeitet werden. Bitte anderes Bild versuchen.", e);
+
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Bild konnte nicht verarbeitet werden. " +
+                            "Bitte ein anderes Bild versuchen.",
+                    e);
         }
     }
 
 
+    /**
+     * Grundlegende Prüfung der Multipart-Datei.
+     */
     private void validate(MultipartFile file) {
 
         if (file == null || file.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
                     "Leere Bilddatei");
         }
-
-        /*
-         * Wir verlassen uns absichtlich nicht auf
-         * MultipartFile.getContentType().
-         *
-         * Das tatsächliche Bild wird später mit ImageIO
-         * dekodiert.
-         */
     }
 
 
-    private BufferedImage readImage(byte[] data) throws IOException {
+    /**
+     * Erzeugt eine WebP-Version direkt aus dem Upload-Stream.
+     *
+     * Es wird bewusst NICHT zuerst ImageIO.read() aufgerufen.
+     *
+     * Thumbnailator übernimmt:
+     *
+     * - Decodierung
+     * - Skalierung
+     * - Seitenverhältnis
+     * - EXIF-Orientation
+     */
+    private byte[] createWebP(
+            MultipartFile file,
+            int maxSize) throws IOException {
 
-        ImageIO.scanForPlugins();
+        try (InputStream input = file.getInputStream()) {
 
-        try (ByteArrayInputStream input = new ByteArrayInputStream(data)) {
+            BufferedImage image =
+                    Thumbnails.of(input)
+                            .size(maxSize, maxSize)
+                            .keepAspectRatio(true)
+                            .useExifOrientation(true)
+                            .asBufferedImage();
 
-            BufferedImage image = ImageIO.read(input);
+            try {
 
-            if (image == null) {
-                throw new UnsupportedImageFormatException("Datei ist kein unterstuetztes Bild");
+                return toWebP(image);
+
+            } finally {
+
+                /*
+                 * BufferedImage kann relativ viel Heap belegen.
+                 *
+                 * Explizites flush() gibt die von der
+                 * BufferedImage-Struktur verwendeten Ressourcen frei.
+                 */
+                image.flush();
+            }
+        }
+    }
+
+
+    /**
+     * Ermittelt die Dimensionen eines Bildes, ohne das Bild
+     * als vollständiges BufferedImage zu dekodieren.
+     */
+    private ImageDimensions readDimensions(MultipartFile file) throws IOException {
+
+        try (InputStream input = file.getInputStream()) {
+
+            var imageInput = ImageIO.createImageInputStream(input);
+
+            if (imageInput == null) {
+                throw new UnsupportedImageFormatException("Bild konnte nicht gelesen werden");
             }
 
-            return image;
+            try (imageInput) {
+
+                Iterator<javax.imageio.ImageReader> readers =
+                        ImageIO.getImageReaders(imageInput);
+
+                if (!readers.hasNext()) {
+
+                    throw new UnsupportedImageFormatException(
+                            "Datei ist kein unterstütztes Bild");
+                }
+
+                javax.imageio.ImageReader reader =
+                        readers.next();
+
+                try {
+
+                    reader.setInput(
+                            imageInput,
+                            true,
+                            true);
+
+                    int width = reader.getWidth(0);
+                    int height = reader.getHeight(0);
+
+                    return new ImageDimensions(
+                            width,
+                            height);
+
+                } finally {
+
+                    reader.dispose();
+                }
+            }
         }
     }
 
 
-    private int readOrientation(byte[] data) {
+    /**
+     * Ermittelt die Dimensionen eines bereits erzeugten
+     * Bild-Byte-Arrays.
+     */
+    private ImageDimensions readDimensions(
+            byte[] data) throws IOException {
 
-        try (ByteArrayInputStream input = new ByteArrayInputStream(data)) {
+        try (InputStream input =
+                     new ByteArrayInputStream(data)) {
 
-            Metadata metadata = ImageMetadataReader.readMetadata(input);
-            ExifIFD0Directory directory = metadata.getFirstDirectoryOfType( ExifIFD0Directory.class);
+            var imageInput =
+                    ImageIO.createImageInputStream(input);
 
-            if (directory != null&& directory.containsTag(ExifIFD0Directory.TAG_ORIENTATION)) {
-                return directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
+            if (imageInput == null) {
+
+                throw new UnsupportedImageFormatException(
+                        "Bild konnte nicht gelesen werden");
             }
 
-        } catch (Exception ignored) {
-            /*
-             * Kein EXIF bzw. keine Orientation.
-             * Das ist völlig in Ordnung.
-             */
-        }
+            try (imageInput) {
 
-        return 1;
+                Iterator<javax.imageio.ImageReader> readers =
+                        ImageIO.getImageReaders(imageInput);
+
+                if (!readers.hasNext()) {
+
+                    throw new UnsupportedImageFormatException(
+                            "Datei ist kein unterstütztes Bild");
+                }
+
+                javax.imageio.ImageReader reader =
+                        readers.next();
+
+                try {
+
+                    reader.setInput(
+                            imageInput,
+                            true,
+                            true);
+
+                    int width = reader.getWidth(0);
+                    int height = reader.getHeight(0);
+
+                    return new ImageDimensions(
+                            width,
+                            height);
+
+                } finally {
+
+                    reader.dispose();
+                }
+            }
+        }
     }
 
 
-    private BufferedImage applyOrientation(BufferedImage image, int orientation) {
+    /**
+     * Prüft die maximale Anzahl Pixel.
+     *
+     * Wichtig:
+     * Die Multiplikation erfolgt als long, damit es bei sehr
+     * großen Dimensionen keinen Integer Overflow gibt.
+     */
+    private void validateDimensions(ImageDimensions dimensions, String imgName) {
 
-        int width = image.getWidth();
-        int height = image.getHeight();
+        long pixelCount = (long) dimensions.width() * dimensions.height();
 
-        AffineTransform transform;
-
-        int newWidth;
-        int newHeight;
-
-        switch (orientation) {
-
-            case 2: // Horizontal spiegeln
-                transform = new AffineTransform(-1, 0, 0, 1, width, 0);
-                newWidth = width;
-                newHeight = height;
-                break;
-
-            case 3: // 180°
-                transform = new AffineTransform(-1, 0, 0, -1, width, height);
-                newWidth = width;
-                newHeight = height;
-                break;
-
-            case 4: // Vertikal spiegeln
-                transform = new AffineTransform(1, 0, 0, -1, 0, height);
-                newWidth = width;
-                newHeight = height;
-                break;
-
-            case 5: // Transpose
-                transform = new AffineTransform(0, 1, 1, 0, 0, 0);
-                newWidth = height;
-                newHeight = width;
-                break;
-
-            case 6: // 90° clockwise
-                transform = new AffineTransform(0, 1, -1, 0, height, 0);
-                newWidth = height;
-                newHeight = width;
-                break;
-
-            case 7: // Transverse
-                transform = new AffineTransform(0, -1, -1, 0,height, width);
-                newWidth = height;
-                newHeight = width;
-                break;
-
-            case 8: // 270° clockwise
-                transform = new AffineTransform(0, -1, 1, 0, 0, width);
-                newWidth = height;
-                newHeight = width;
-                break;
-
-            default:
-                return image;
+        if (pixelCount > MAX_PIXEL_COUNT) {
+            throw new ImageTooLargeException(
+                    "Das Bild -> " + imgName + " <- ist zu groß. " + "Maximal erlaubt sind " + (MAX_PIXEL_COUNT / 1_000_000) + " Megapixel. " +
+                            "Das hochgeladene Bild hat " + pixelCount / 1_000_000 + " Megapixel.");
         }
-
-        BufferedImage result =
-                new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
-
-        AffineTransformOp operation =
-                new AffineTransformOp(transform, AffineTransformOp.TYPE_BICUBIC);
-
-        operation.filter(image, result);
-
-        return result;
     }
 
 
-    private BufferedImage resize(BufferedImage image, int maxSize) throws IOException {
+    /**
+     * Kodiert ein BufferedImage als WebP.
+     */
+    private byte[] toWebP(
+            BufferedImage image) throws IOException {
 
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        /*
-         * Niemals hochskalieren.
-         */
-        if (width <= maxSize && height <= maxSize) {
-            return image;
-        }
-
-        return Thumbnails.of(image)
-                .size(maxSize, maxSize)
-                .keepAspectRatio(true)
-                .asBufferedImage();
-    }
-
-
-    private byte[] toWebP(BufferedImage image) throws IOException {
-
-        ImageIO.scanForPlugins();
-
-        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("webp");
+        Iterator<ImageWriter> writers =
+                ImageIO.getImageWritersByFormatName("webp");
 
         if (!writers.hasNext()) {
-            throw new MissingWebPWriterException("Kein WebP ImageWriter verfuegbar");
+
+            throw new MissingWebPWriterException(
+                    "Kein WebP ImageWriter verfügbar");
         }
 
         ImageWriter writer = writers.next();
 
         try {
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
 
-            try (ImageOutputStream imageOutput = ImageIO.createImageOutputStream(output)) {
+            ByteArrayOutputStream output =
+                    new ByteArrayOutputStream();
+
+            try (ImageOutputStream imageOutput =
+                         ImageIO.createImageOutputStream(output)) {
 
                 writer.setOutput(imageOutput);
 
-                ImageWriteParam param = writer.getDefaultWriteParam();
+                ImageWriteParam param =
+                        writer.getDefaultWriteParam();
 
                 if (param.canWriteCompressed()) {
 
-                    param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+                    param.setCompressionMode(
+                            ImageWriteParam.MODE_EXPLICIT);
 
-                    /*
-                     * TwelveMonkeys stellt bei WebP
-                     * entsprechende Compression Types bereit.
-                     *
-                     * Wir verwenden Lossy, wenn verfügbar.
-                     */
-                    String[] types = param.getCompressionTypes();
+                    String[] types =
+                            param.getCompressionTypes();
 
                     if (types != null) {
 
                         for (String type : types) {
+
                             if ("Lossy".equalsIgnoreCase(type)) {
+
                                 param.setCompressionType(type);
                                 break;
                             }
                         }
                     }
 
-                    param.setCompressionQuality(WEBP_QUALITY);
+                    param.setCompressionQuality(
+                            WEBP_QUALITY);
                 }
 
-                writer.write(null, new IIOImage(image, null, null), param);
+                writer.write(
+                        null,
+                        new IIOImage(
+                                image,
+                                null,
+                                null),
+                        param);
 
                 imageOutput.flush();
             }
 
             return output.toByteArray();
 
-        }
-        finally {
+        } finally {
+
             writer.dispose();
         }
     }
 
 
-    private static class UnsupportedImageFormatException extends IOException {
+    private record ImageDimensions(
+            int width,
+            int height) {
+    }
+
+
+    private static class ImageTooLargeException
+            extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
+        ImageTooLargeException(String message) {
+            super(message);
+        }
+    }
+
+
+    private static class UnsupportedImageFormatException
+            extends IOException {
+
         private static final long serialVersionUID = 1L;
 
         UnsupportedImageFormatException(String message) {
@@ -286,7 +438,9 @@ public class ImageProcessingService {
     }
 
 
-    private static class MissingWebPWriterException extends IOException {
+    private static class MissingWebPWriterException
+            extends IOException {
+
         private static final long serialVersionUID = 1L;
 
         MissingWebPWriterException(String message) {

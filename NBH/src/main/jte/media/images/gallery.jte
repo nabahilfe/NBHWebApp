@@ -58,6 +58,10 @@
                 gallery = gallery,
                 csrfHiddenInput = csrfHiddenInput
             )
+	        @template.components.display-statusmessage(
+	            successMessage,
+	            errorMessage
+	        )
         @endif
 
 
@@ -349,11 +353,6 @@
         @endif
 
 		<br/>
-
-        @template.components.display-statusmessage(
-            successMessage,
-            errorMessage
-        )
 
     `
 )
