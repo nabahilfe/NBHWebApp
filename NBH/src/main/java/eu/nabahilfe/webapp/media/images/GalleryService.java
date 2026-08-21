@@ -36,9 +36,9 @@ public class GalleryService {
     @Transactional(readOnly = true)
     public List<Gallery> findVisibleForUsers(boolean isAuthenticated) {
         if (isAuthenticated) {
-            return galleryRepository.findAllByOrderByCreatedAtDescIdDesc();
+            return galleryRepository.findAllVisibleForCurrentDateOrderByGalleryDateDescNullFirst();
         }
-        return galleryRepository.findAllByIsPublicTrueOrderByCreatedAtDescIdDesc();
+        return galleryRepository.findPublicVisibleForCurrentDateOrderByGalleryDateDescNullFirst();
     }
 
 
