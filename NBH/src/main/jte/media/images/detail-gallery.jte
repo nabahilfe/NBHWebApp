@@ -107,7 +107,7 @@
             <div class="form-group row">
                 <div class="col-sm-10">
                     <button type="submit" class="btn btn-primary bi-floppy"> Speichern</button>
-                    <a href="${galleryId == null ? "/gallery/list" : "/gallery/" + galleryId}" class="btn btn-outline-secondary">Abbrechen</a>
+                    <a href="/gallery/list" class="btn btn-outline-secondary">Abbrechen</a>
                 </div>
             </div>
 

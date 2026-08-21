@@ -70,8 +70,7 @@
                 </h5>
 
                 <p class="mb-0">
-                    In dieser Galerie wurden noch keine Bilder
-                    hochgeladen.
+                    In dieser Galerie wurden noch keine Bilder hochgeladen.
                 </p>
             </div>
 
