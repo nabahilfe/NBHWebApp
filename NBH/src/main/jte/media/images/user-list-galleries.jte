@@ -47,7 +47,7 @@
     </table>
 
     @if (ctxt == null || !ctxt.isAuthenticated())
-        <p class="text-muted small mt-3">Für angemeldete Mitglieder gib es möglicherweise mehr Foto-Galerien.</p>
+        <p class="text-muted small mt-3">Für angemeldete Mitglieder gib es möglicherweise weitere Foto-Galerien.</p>
     @endif
 
     @template.components.display-statusmessage(successMessage, errorMessage)
