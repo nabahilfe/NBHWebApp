@@ -216,7 +216,8 @@
                         @endif
 
 
-            			<!-- Öffentliche Fotos und Dokumente -->
+            			<!-- FIXME: derzeit zugriff beschränkt! Öffentliche Fotos und Dokumente -->
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
                         <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle btn btn-link"
                                     type="button"
@@ -231,11 +232,12 @@
 								<!-- Dokumente -->
                             </ul>
                         </li>
+                        @endif
 
 
 
                         <!-- Dropdown Content -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER", "EXECUTIVE_MEMBER"))
+                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle btn btn-link"
                                         type="button"

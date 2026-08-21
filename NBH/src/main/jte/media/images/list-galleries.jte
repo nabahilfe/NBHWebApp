@@ -83,7 +83,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<p class="mb-2">Es werden sämtliche Bilder aus der Foto-Galerie und die Galerie selbst gelöscht!</p>
+					<p class="mb-2">ACHTUNG!<br/>Alle Bilder und die Galerie werden endgültig gelöscht!</p>
 					<p class="small text-muted mb-3" id="galleryToDeleteLabel"></p>
 					<div class="form-check">
 						<input class="form-check-input" type="checkbox" value="" id="confirmDeleteGalleryCheckbox">
