@@ -4,6 +4,7 @@ package eu.nabahilfe.webapp.media.images;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,7 @@ public class GalleryController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/list")
     public String listGalleries(Model model) {
         model.addAttribute("galleries", galleryService.findAll());
@@ -45,6 +47,7 @@ public class GalleryController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/new")
     public String newGallery(Model model) {
         if (!model.containsAttribute("galleryForm")) {
@@ -55,6 +58,7 @@ public class GalleryController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/{galleryId}/edit")
     public String editGallery(@PathVariable Long galleryId, Model model) {
         Gallery gallery = galleryService.findById(galleryId);
@@ -74,6 +78,7 @@ public class GalleryController {
 
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     public String createGallery(
             @ModelAttribute("galleryForm") @Valid GalleryForm galleryForm,
             BindingResult result,
@@ -98,6 +103,7 @@ public class GalleryController {
 
 
     @PostMapping("/{galleryId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     public String updateGallery(
             @PathVariable Long galleryId,
             @ModelAttribute("galleryForm") @Valid GalleryForm galleryForm,
@@ -125,6 +131,7 @@ public class GalleryController {
 
 
     @PostMapping("/{galleryId}/delete")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     public String deleteGallery(@PathVariable Long galleryId, RedirectAttributes redirectAttributes) {
         try {
             galleryService.deleteGallery(galleryId);
@@ -145,6 +152,7 @@ public class GalleryController {
     /**
      * Galerie anzeigen
      */
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/{galleryId}")
     public String showGallery(@PathVariable Long galleryId, Model model) {
 
@@ -183,6 +191,7 @@ public class GalleryController {
     /**
      * Bilder hochladen
      */
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @PostMapping("/{galleryId}/images")
     public String uploadImages(
             @PathVariable Long galleryId,
@@ -205,6 +214,7 @@ public class GalleryController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @PostMapping("/{galleryId}/image/{imageId}/delete")
     public String deleteImage(
             @PathVariable Long galleryId,
@@ -246,7 +256,7 @@ public class GalleryController {
     @GetMapping("/{galleryId}/image/{imageId}")
     @ResponseBody
     public ResponseEntity<byte[]> getImage(@PathVariable Long galleryId,@PathVariable Long imageId) {
-        byte[] data =galleryImageService.getImage(galleryId, imageId);
+        byte[] data = galleryImageService.getImage(galleryId, imageId);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("image/webp"))
                 .cacheControl(CacheControl.maxAge(Duration.ofDays(30)))

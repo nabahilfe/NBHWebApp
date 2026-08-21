@@ -26,12 +26,12 @@
 	<table class="table table-bordered table-hover table-sm shadow h-100" id="galleryTable">
 		<thead class="table-light">
 			<tr>
-				<th scope="col">Titel</th>
+				<th scope="col" data-sort-key="title">Titel <span class="sort-indicator" aria-hidden="true">↕</span></th>
 				<th scope="col" class="text-center">Edit</th>
-				<th scope="col">Datum</th>
-				<th scope="col">Anzeigen von</th>
-				<th scope="col">Anzeigen bis</th>
-				<th scope="col">Sichtbarkeit</th>
+				<th scope="col" data-sort-key="galleryDate" data-default-dir="desc">Datum <span class="sort-indicator" aria-hidden="true">↕</span></th>
+				<th scope="col" data-sort-key="showFrom">Anzeigen von <span class="sort-indicator" aria-hidden="true">↕</span></th>
+				<th scope="col" data-sort-key="showTo">Anzeigen bis <span class="sort-indicator" aria-hidden="true">↕</span></th>
+				<th scope="col" data-sort-key="isPublic">Sichtbarkeit <span class="sort-indicator" aria-hidden="true">↕</span></th>
 				<th scope="col">Beschreibung</th>
 				<th scope="col" class="text-center">Löschen</th>
 			</tr>
@@ -39,7 +39,12 @@
 
 		<tbody>
 			@for (Gallery gallery : galleries)
-				<tr>
+				<tr
+					data-sort-title="${gallery.getDescription() != null ? gallery.getDescription().toLowerCase() : ""}"
+					data-sort-gallery-date="${gallery.getGalleryDate() != null ? gallery.getGalleryDate().toString() : ""}"
+					data-sort-show-from="${gallery.getShowGalleryFrom() != null ? gallery.getShowGalleryFrom().toString() : ""}"
+					data-sort-show-to="${gallery.getShowGalleryTo() != null ? gallery.getShowGalleryTo().toString() : ""}"
+					data-sort-is-public="${Boolean.TRUE.equals(gallery.getIsPublic()) ? "1" : "0"}">
 					<td>
 						<a class="text-decoration-none" href="/gallery/${gallery.getId()}">${gallery.getDescription()}</a>
 					</td>
@@ -110,6 +115,127 @@
 
 	<script>
 		document.addEventListener("DOMContentLoaded", () => {
+			const table = document.getElementById("galleryTable");
+			const tbody = table ? table.querySelector("tbody") : null;
+			const sortableHeaders = table ? table.querySelectorAll("th[data-sort-key]") : [];
+			const sortState = { key: "galleryDate", direction: "desc" };
+
+			const updateSortIcons = () => {
+				sortableHeaders.forEach(th => {
+					const indicator = th.querySelector(".sort-indicator");
+					if (!indicator) {
+						return;
+					}
+
+					indicator.textContent = "↕";
+					if (th.dataset.sortKey === sortState.key) {
+						indicator.textContent = sortState.direction === "asc" ? "↑" : "↓";
+					}
+				});
+			};
+
+			const compareValues = (a, b, key, direction) => {
+				const multiplier = direction === "asc" ? 1 : -1;
+				const readSortValue = row => {
+					switch (key) {
+						case "galleryDate":
+							return row.dataset.sortGalleryDate || "";
+						case "showFrom":
+							return row.dataset.sortShowFrom || "";
+						case "showTo":
+							return row.dataset.sortShowTo || "";
+						case "isPublic":
+							return row.dataset.sortIsPublic || "0";
+						case "title":
+						default:
+							return row.dataset.sortTitle || "";
+					}
+				};
+
+				if (key === "galleryDate" || key === "showFrom" || key === "showTo") {
+					const av = readSortValue(a);
+					const bv = readSortValue(b);
+
+					if (key === "galleryDate") {
+						if (av === "" && bv !== "") {
+							return 1;
+						}
+						if (av !== "" && bv === "") {
+							return -1;
+						}
+					}
+
+					if (av < bv) {
+						return -1 * multiplier;
+					}
+					if (av > bv) {
+						return 1 * multiplier;
+					}
+					return 0;
+				}
+
+				if (key === "isPublic") {
+					const av = readSortValue(a);
+					const bv = readSortValue(b);
+					if (av < bv) {
+						return -1 * multiplier;
+					}
+					if (av > bv) {
+						return 1 * multiplier;
+					}
+					return 0;
+				}
+
+				const av = readSortValue(a);
+				const bv = readSortValue(b);
+				return av.localeCompare(bv) * multiplier;
+			};
+
+			const sortRows = (key, direction) => {
+				if (!tbody) {
+					return;
+				}
+
+				const rows = Array.from(tbody.querySelectorAll("tr"));
+				rows.sort((rowA, rowB) => {
+					const result = compareValues(rowA, rowB, key, direction);
+					if (result !== 0) {
+						return result;
+					}
+					const triggerA = rowA.querySelector("[data-gallery-id]");
+					const triggerB = rowB.querySelector("[data-gallery-id]");
+					const idA = Number(triggerA ? (triggerA.getAttribute("data-gallery-id") || "0") : "0");
+					const idB = Number(triggerB ? (triggerB.getAttribute("data-gallery-id") || "0") : "0");
+					return idB - idA;
+				});
+
+				rows.forEach(row => tbody.appendChild(row));
+			};
+
+			sortableHeaders.forEach(th => {
+				th.style.cursor = "pointer";
+				th.addEventListener("click", () => {
+					const key = th.dataset.sortKey;
+					if (!key) {
+						return;
+					}
+
+					if (sortState.key === key) {
+						sortState.direction = sortState.direction === "asc" ? "desc" : "asc";
+					}
+					else {
+						sortState.key = key;
+						sortState.direction = th.dataset.defaultDir || "asc";
+					}
+
+					sortRows(sortState.key, sortState.direction);
+					updateSortIcons();
+				});
+			});
+
+			sortRows(sortState.key, sortState.direction);
+			updateSortIcons();
+
 			const modal = document.getElementById("confirmDeleteGalleryModal");
 			const checkbox = document.getElementById("confirmDeleteGalleryCheckbox");
 			const confirmBtn = document.getElementById("confirmDeleteGalleryBtn");
