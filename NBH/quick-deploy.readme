@@ -40,3 +40,9 @@ docker logs -f nbh-app
 
 - container neu starten
 docker compose up -d
+
+
+## Backup prüfen
+- open terminal and run command
+ssh nbh-backup
+ls -lh /home/backups/nbh/postgres
