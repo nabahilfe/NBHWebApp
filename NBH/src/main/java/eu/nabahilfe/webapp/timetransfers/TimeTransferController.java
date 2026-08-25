@@ -405,7 +405,7 @@ public class TimeTransferController {
             emailService.sendEmailHtml(emailComposer.composeTimeChequeTransferToEmail(
                     memberTo.getEmail(), memberTo.getEmailSalutation(),
                     memberFrom.getName(),
-                    hours, offer.getDescription(), note));
+                    hours, offer.getDescription(), tt.getDateOfService(), note));
         }
         else {
             log.debug("No email sent for TimeTransfer ID {} because recipient {} has no email address.", tt.getId(), memberTo.getName());
@@ -418,7 +418,7 @@ public class TimeTransferController {
                 emailService.sendEmailHtml(emailComposer.composeTimeChequeTransferFromEmail(
                         memberFrom.getEmail(), memberFrom.getEmailSalutation(),
                         memberTo.getName(), tt.getCreatedBy().getName(),
-                        hours, offer.getDescription(), note));
+                        hours, offer.getDescription(), tt.getDateOfService(), note));
             }
         }
         else {

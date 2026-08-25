@@ -7,9 +7,12 @@ package eu.nabahilfe.webapp.email;
 
 
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import eu.nabahilfe.webapp.DateFormatter;
 import eu.nabahilfe.webapp.NumberFormatter;
 
 
@@ -129,15 +132,15 @@ public class EmailComposer {
 
     // email for the recipient of a time cheque transfer (the one who receives the time cheque)
     public EmailDetails composeTimeChequeTransferToEmail(
-            String emailToMember, String salutationToMember,
-            String nameFromMember,
-            int hours, String offerTitle, String note) {
+            String emailToMember, String salutationToMember, String nameFromMember,
+            int hours, String offerTitle, LocalDate serviceDate, String note) {
 
         String subject = "Zeitscheck von " + nameFromMember + " erhalten";
 
         String message = "Du hast einen Zeitscheck von <strong>" + nameFromMember + "</strong> erhalten!<br>"
                 + "<br>Anzahl der Stunden: <strong>" + hours + "</strong><br>"
                 + "Art der Leistung: <strong>" + offerTitle + "</strong><br>"
+                + "Leistungsdatum: <strong>" + DateFormatter.dateDE(serviceDate) + "</strong><br>"
                 + (note != null && !note.isBlank() ? "Anmerkung: <em>" + note + "</em><br>" : "");
 
         EmailDetails details = new EmailDetails(
@@ -154,12 +157,13 @@ public class EmailComposer {
     public EmailDetails composeTimeChequeTransferFromEmail(
             String emailFromMember, String salutationFromMember,
             String nameToMember, String nameCreatedBy,
-            int hours, String offerTitle, String note) {
+            int hours, String offerTitle, LocalDate serviceDate, String note) {
 
         String subject = "Zeitscheck an " + nameToMember + " übergeben";
         String message = "Von <strong>" + nameCreatedBy + "</strong> wurde in deinem Auftrag ein Zeitscheck an <strong>" + nameToMember + "</strong> übergeben!<br>"
                 + "<br>Anzahl der Stunden: <strong>" + hours + "</strong><br>"
                 + "Art der Leistung: <strong>" + offerTitle + "</strong><br>"
+                + "Leistungsdatum: <strong>" + DateFormatter.dateDE(serviceDate) + "</strong><br>"
                 + (note != null && !note.isBlank() ? "Anmerkung: <em>" + note + "</em><br>" : "");
 
         EmailDetails details = new EmailDetails(
