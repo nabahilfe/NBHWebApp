@@ -54,8 +54,8 @@ public class Document  {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lobrary_id")
-    private DocumentLibrary lobrary;
+    @JoinColumn(name = "library_id")
+    private Library library;
 
     // Creation timestamp, value is set by Postgres (see Table definition)
     @Column(insertable = false, updatable = false)
