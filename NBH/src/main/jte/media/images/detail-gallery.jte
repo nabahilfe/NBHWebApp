@@ -22,99 +22,106 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>${galleryId == null ? "Neue Galerie anlegen" : "Galerie bearbeiten"}</h3>
+    <h3>${galleryId == null ? "Neue Foto-Galerie anlegen" : "Foto-Galerie bearbeiten"}</h3>
     <br/>
 
     <div class="row">
         <form action="${galleryId == null ? "/gallery" : "/gallery/" + galleryId}" method="post">
             ${csrfHiddenInput}
 
-            <div class="form-group row">
-                <label for="description" class="col-sm-2 col-form-label">Beschreibung <span class="text-danger">*</span></label>
-                <div class="col-sm-10">
-                    <input type="text"
-                           class="form-control"
-                           name="description"
-                           id="description"
-                           maxlength="250"
-                           placeholder="Kurzbeschreibung der Galerie"
-                           value="${galleryForm.getDescription() != null ? galleryForm.getDescription() : ""}"
-                           required>
-                </div>
-            </div>
+            <div class="row g-3">
+                <div class="col-12 col-xl-6">
+                    <div class="card shadow h-100" style="background-color: #ECFEFF;">
+                        <div class="card-body">
 
-            <br/>
+				            <div class="form-group row g-2 mb-1 align-items-start">
+				                <div class="col-sm-8">
+				                    <label for="description" class="form-label">Name der Foto-Galerie <span class="text-danger">*</span></label>
+				                    <input type="text"
+				                           class="form-control"
+				                           name="description"
+				                           id="description"
+				                           maxlength="250"
+				                           placeholder="Sprechender Name für Foto-Galerie"
+				                           value="${galleryForm.getDescription() != null ? galleryForm.getDescription() : ""}"
+				                           required>
+				                </div>
+				                <div class="col-sm-4 col-lg-4">
+				                    <label for="galleryDate" class="form-label">Datum der Fotos</label>
+				                    <input type="date"
+				                           class="form-control"
+				                           name="galleryDate"
+				                           id="galleryDate"
+				                           value="${galleryForm.getGalleryDate() != null ? galleryForm.getGalleryDate().toString() : ""}">
+				                    <div class="form-text">Leer lassen wenn Fotos von verschiedenen Tagen sind</div>
+				                </div>
+				            </div>
 
-            <div class="form-group row">
-                <label for="galleryDate" class="col-sm-2 col-form-label">Datum</label>
-                <div class="col-sm-4">
-                    <input type="date"
-                           class="form-control"
-                           name="galleryDate"
-                           id="galleryDate"
-                           value="${galleryForm.getGalleryDate() != null ? galleryForm.getGalleryDate().toString() : ""}">
-                </div>
+				            <br/>
 
-                <label for="showGalleryFrom" class="col-sm-2 col-form-label">Anzeigen von</label>
-                <div class="col-sm-4">
-                    <input type="date"
-                           class="form-control"
-                           name="showGalleryFrom"
-                           id="showGalleryFrom"
-                           value="${galleryForm.getShowGalleryFrom() != null ? galleryForm.getShowGalleryFrom().toString() : ""}">
-                </div>
-            </div>
+				            <div class="form-group row g-2 mb-1 align-items-start">
+				                <div class="col-sm-4">
+				                    <label for="showGalleryFrom" class="form-label">Anzeigen von</label>
+				                    <input type="date"
+				                           class="form-control"
+				                           name="showGalleryFrom"
+				                           id="showGalleryFrom"
+				                           value="${galleryForm.getShowGalleryFrom() != null ? galleryForm.getShowGalleryFrom().toString() : ""}">
+				                    <div class="form-text">Galerie wird erst ab dem angegeben Datum sichtbar für die Mitglieder - leer lassen solange vorbereitet wird</div>
+				                </div>
+				                <div class="col-sm-4">
+				                    <label for="showGalleryTo" class="form-label">Anzeigen bis</label>
+				                    <input type="date"
+				                           class="form-control"
+				                           name="showGalleryTo"
+				                           id="showGalleryTo"
+				                           value="${galleryForm.getShowGalleryTo() != null ? galleryForm.getShowGalleryTo().toString() : ""}">
+				                    <div class="form-text">Galerie wird ab dem angegeben Datum nicht mehr angezeigt - leer lassen wenn sie immer angezeigt werden soll</div>
+				                </div>
+				                <div class="col-sm-4">
+				                    <label for="isPublic" class="form-label">Sichtbarkeit</label>
+				                    <div class="form-check pb-2">
+				                        <input type="hidden" name="_isPublic" value="on"/>
+				                        <input class="form-check-input" type="checkbox" id="isPublic" name="isPublic"
+				                               checked="${Boolean.TRUE.equals(galleryForm.getIsPublic())}">
+				                        <label class="form-check-label" for="isPublic">Öffentlich sichtbar</label>
+				                    </div>
+				                </div>
+				            </div>
 
-            <br/>
+				            <br/>
 
-            <div class="form-group row">
-                <label for="showGalleryTo" class="col-sm-2 col-form-label">Anzeigen bis</label>
-                <div class="col-sm-4">
-                    <input type="date"
-                           class="form-control"
-                           name="showGalleryTo"
-                           id="showGalleryTo"
-                           value="${galleryForm.getShowGalleryTo() != null ? galleryForm.getShowGalleryTo().toString() : ""}">
-                </div>
+				            <div class="form-group row g-2 mb-1">
+				                <div class="col-12">
+				                    <label for="remark" class="form-label">Beschreibung <span class="text-danger">*</span></label>
+				                    <textarea class="form-control"
+				                              name="remark"
+				                              id="remark"
+				                              maxlength="250"
+				                              rows="3"
+				                              placeholder="Beschreibung bzw. weitere Informationen zur Foto-Galerie"
+				                              required>${galleryForm.getRemark() != null ? galleryForm.getRemark() : ""}</textarea>
+				                </div>
+				            </div>
 
-                <label for="isPublic" class="col-sm-2 col-form-label">Sichtbarkeit</label>
-                <div class="col-sm-4 d-flex align-items-center">
-                    <div class="form-check">
-                        <input type="hidden" name="_isPublic" value="on"/>
-                        <input class="form-check-input" type="checkbox" id="isPublic" name="isPublic"
-                               checked="${Boolean.TRUE.equals(galleryForm.getIsPublic())}">
-                        <label class="form-check-label" for="isPublic">Öffentlich sichtbar</label>
+				            <br/>
+
+				            <div class="form-group row">
+				                <div class="col-sm-12">
+				                    <button type="submit" class="btn btn-primary bi-floppy"> Speichern</button>
+				                    <a href="/gallery/list" class="btn btn-outline-secondary">Abbrechen</a>
+				                </div>
+				            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <br/>
-
-            <div class="form-group row">
-                <label for="remark" class="col-sm-2 col-form-label">Anmerkung</label>
-                <div class="col-sm-10">
-                    <textarea class="form-control"
-                              name="remark"
-                              id="remark"
-                              maxlength="250"
-                              rows="3"
-                              placeholder="Weiter Informationen zur Foto-Galerie">${galleryForm.getRemark() != null ? galleryForm.getRemark() : ""}</textarea>
-                </div>
-            </div>
-
-            <br/>
-
-            <div class="form-group row">
-                <div class="col-sm-10">
-                    <button type="submit" class="btn btn-primary bi-floppy"> Speichern</button>
-                    <a href="/gallery/list" class="btn btn-outline-secondary">Abbrechen</a>
-                </div>
-            </div>
-
-            <br/>
-
-            @template.components.display-statusmessage(successMessage, errorMessage)
         </form>
+
+        <br/>
+        @template.components.display-statusmessage(successMessage, errorMessage)
+
     </div>
 
 `)
+
