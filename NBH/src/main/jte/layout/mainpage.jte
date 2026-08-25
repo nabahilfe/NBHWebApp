@@ -216,8 +216,7 @@
                         @endif
 
 
-            			<!-- FIXME: derzeit zugriff beschränkt! Öffentliche Fotos und Dokumente -->
-                        @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "BOARD_MEMBER"))
+            			      <!-- Öffentliche Fotos und Dokumente -->
                         <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle btn btn-link"
                                     type="button"
@@ -229,11 +228,9 @@
                             <ul class="dropdown-menu">
                                 <!-- Foto-Galerien -->
                                 <li><a class="dropdown-item" href="/gallery/user-list">Foto-Galerien</a></li>
-								<!-- Dokumente -->
+								                <!-- FIXME: Add Dokumente -->
                             </ul>
                         </li>
-                        @endif
-
 
 
                         <!-- Dropdown Content -->
@@ -292,8 +289,6 @@
                                         </a>
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="/documents">Alle Dokumente</a></li>
-                                            <li><a class="dropdown-item" href="/documents/upload">Dokument hochladen</a></li>
-                                            <li><a class="dropdown-item" href="/documents/categories">Kategorien</a></li>
                                         </ul>
                                     </li>
                                     -->

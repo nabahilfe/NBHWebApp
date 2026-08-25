@@ -101,16 +101,16 @@
                 @endif
             </div>
 
-			<!-- FIXME: enable this when we have a gallery
+			<!-- FIXME: remove this with next big release -->
             <div class="alert alert-warning shadow d-flex justify-content-between align-items-center" role="alert">
               <span class="badge text-bg-success align-text-top">Neu</span>
                 <span class="text-center flex-grow-1">
-                    <i class="bi bi-arrow-right-square-fill text-success"></i>
-                    <a href="/home/legal-and-privacy-policy"><strong>Bilder Galerie - schau dir das an!</strong></a>
+                    <a href="/gallery/user-list"><strong>Foto-Galerien - schau dir das an!</strong></a>
+                    <br/>
+					<small>&nbsp;Die Foto-Galerien sind auch über den Menüpunkt <strong>Fotos & Dokumente</strong> zu erreichen.</small>
                 </span>
-              <span class="badge text-bg-success align-text-top">Neu</span>
+              &nbsp;<span class="badge text-bg-success align-text-top">Neu</span>
             </div>
-			-->
 
             <!-- Contact info at this position only if Desktop mode -->
             <div class="d-none d-md-block">

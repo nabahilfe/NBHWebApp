@@ -27,9 +27,15 @@ public class ImageGalleryService {
 
 
     @Transactional
-    public void uploadImages(
-            Long galleryId,
-            List<MultipartFile> files) {
+    public void uploadImages(Long galleryId, List<MultipartFile> files) {
+
+    	if (files == null || files.isEmpty()) {
+    	    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bitte mindestens ein Bild auswählen.");
+    	}
+
+    	if (files.size() > 10) {
+    	    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Es können maximal 10 Bilder gleichzeitig hochgeladen werden.");
+    	}
 
         Gallery gallery = galleryRepository.findById(galleryId).orElseThrow(() ->
                                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Galerie nicht gefunden"));

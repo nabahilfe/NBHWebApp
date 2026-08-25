@@ -43,12 +43,11 @@
                     name="images"
                     accept=".jpg,.jpeg,.png,.webp"
                     multiple
-                    required>
+                    required
+                    data-max-files="10">
 
                 <div class="form-text">
-                    Du kannst mehrere Bilder gleichzeitig auswählen.
-                    Die Bilder werden automatisch optimiert und als
-                    WebP gespeichert.
+                    Du kannst bis zu 10 Bilder gleichzeitig auswählen.  Die Bilder werden automatisch optimiert und als WebP gespeichert.
                 </div>
 
             </div>
