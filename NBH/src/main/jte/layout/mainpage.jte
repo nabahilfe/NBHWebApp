@@ -185,9 +185,9 @@
 
                                     <!-- Offene Buchungen -->
                                     <li class="dropdown-submenu">
-                                        <a class="dropdown-item dropdown-toggle" href="#">
+                                        <span class="dropdown-item dropdown-toggle">
                                             Offene Buchungen
-                                        </a>
+                                        </span>
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="/timecheques/unaccounted">Offene Zeitschecks</a></li>
                                             <li><a class="dropdown-item" href="/members/unaccounted-mbshipfees">Offene Mitgliedsbeiträge</a></li>
