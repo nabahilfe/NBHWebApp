@@ -29,7 +29,7 @@
         <form action="${galleryId == null ? "/gallery" : "/gallery/" + galleryId}" method="post">
             ${csrfHiddenInput}
 
-            <div class="row g-3">
+			<div class="row g-3 justify-content-center">
                 <div class="col-12 col-xl-6">
                     <div class="card shadow h-100" style="background-color: #ECFEFF;">
                         <div class="card-body">
@@ -67,7 +67,7 @@
 				                           name="showGalleryFrom"
 				                           id="showGalleryFrom"
 				                           value="${galleryForm.getShowGalleryFrom() != null ? galleryForm.getShowGalleryFrom().toString() : ""}">
-				                    <div class="form-text">Galerie wird erst ab dem angegeben Datum sichtbar für die Mitglieder - leer lassen solange vorbereitet wird</div>
+				                    <div class="form-text">Galerie wird erst ab angegebenem Datum sichtbar - leer lassen während Vorbereitung</div>
 				                </div>
 				                <div class="col-sm-4">
 				                    <label for="showGalleryTo" class="form-label">Anzeigen bis</label>
@@ -76,7 +76,7 @@
 				                           name="showGalleryTo"
 				                           id="showGalleryTo"
 				                           value="${galleryForm.getShowGalleryTo() != null ? galleryForm.getShowGalleryTo().toString() : ""}">
-				                    <div class="form-text">Galerie wird ab dem angegeben Datum nicht mehr angezeigt - leer lassen wenn sie immer angezeigt werden soll</div>
+				                    <div class="form-text">Galerie wird nach angegebem Datum nicht mehr angezeigt - leer lassen um sie immer anzuzeigen</div>
 				                </div>
 				                <div class="col-sm-4">
 				                    <label for="isPublic" class="form-label">Sichtbarkeit</label>
@@ -86,6 +86,7 @@
 				                               checked="${Boolean.TRUE.equals(galleryForm.getIsPublic())}">
 				                        <label class="form-check-label" for="isPublic">Öffentlich sichtbar</label>
 				                    </div>
+				                    <div class="form-text">Wenn ausgewählt, haben alle Besucher der Homepage Zugriff auf diese Galerie</div>
 				                </div>
 				            </div>
 
