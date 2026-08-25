@@ -14,7 +14,7 @@ public interface GalleryRepository extends JpaRepository<Gallery, Long> {
 	@Query("""
 			SELECT g
 			FROM Gallery g
-			WHERE (g.showGalleryFrom IS NULL OR g.showGalleryFrom <= CURRENT_DATE)
+			WHERE g.showGalleryFrom <= CURRENT_DATE
 			  AND (g.showGalleryTo IS NULL OR g.showGalleryTo >= CURRENT_DATE)
 			ORDER BY
 			  CASE WHEN g.galleryDate IS NULL THEN 0 ELSE 1 END ASC,
@@ -27,7 +27,7 @@ public interface GalleryRepository extends JpaRepository<Gallery, Long> {
 			SELECT g
 			FROM Gallery g
 			WHERE g.isPublic = true
-			  AND (g.showGalleryFrom IS NULL OR g.showGalleryFrom <= CURRENT_DATE)
+			  AND g.showGalleryFrom <= CURRENT_DATE
 			  AND (g.showGalleryTo IS NULL OR g.showGalleryTo >= CURRENT_DATE)
 			ORDER BY
 			  CASE WHEN g.galleryDate IS NULL THEN 0 ELSE 1 END ASC,

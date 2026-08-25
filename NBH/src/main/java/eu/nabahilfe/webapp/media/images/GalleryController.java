@@ -120,7 +120,7 @@ public class GalleryController {
         try {
             Gallery gallery = galleryService.update(galleryId, galleryForm);
             redirectAttributes.addFlashAttribute("successMessage", "Galerie '" + gallery.getDescription() + "' wurde gespeichert.");
-            return "redirect:/gallery/" + gallery.getId();
+            return "redirect:/gallery/list";
         }
         catch (IllegalArgumentException ex) {
             model.addAttribute("errorMessage", ex.getMessage());
