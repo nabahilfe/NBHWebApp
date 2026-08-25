@@ -80,7 +80,7 @@ public class GalleryController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     public String createGallery(
-            @ModelAttribute("galleryForm") @Valid GalleryForm galleryForm,
+            @ModelAttribute @Valid GalleryForm galleryForm,
             BindingResult result,
             Model model,
             RedirectAttributes redirectAttributes) {
@@ -106,7 +106,7 @@ public class GalleryController {
     @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     public String updateGallery(
             @PathVariable Long galleryId,
-            @ModelAttribute("galleryForm") @Valid GalleryForm galleryForm,
+            @ModelAttribute @Valid GalleryForm galleryForm,
             BindingResult result,
             Model model,
             RedirectAttributes redirectAttributes) {

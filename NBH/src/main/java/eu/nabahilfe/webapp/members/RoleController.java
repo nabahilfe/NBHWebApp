@@ -61,7 +61,7 @@ public class RoleController {
     @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'TREASURER', 'SECRETARY', 'TIME_KEEPER')")
     @GetMapping
     String listAllRoles(final Model model) {
-        List<Role> roles = roleRepository.findAllBy(Sort.by("roleName"));
+        List<Role> roles = roleRepository.findAllBy(Sort.by(Role::getRoleName));
         model.addAttribute("roles", roles);
         log.debug("Listing all Roles, count: {}", roles.size());
         return "roles/list-roles";
