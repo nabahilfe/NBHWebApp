@@ -30,9 +30,9 @@ spring:
         open-in-view: true
         properties:
             hibernate:
-                format_sql: false
-                order_by:
-                    default_null_ordering: last
+                '[format_sql]': false
+                '[order_by]':
+                    '[default_null_ordering]': last
                 transaction:
                     jta:
                         platform: enabled
@@ -58,10 +58,10 @@ spring:
 
 logging:
     level:
-        org.springframework.jdc: DEBUG
-        eu.nabahilfe: INFO
-        org.springframework.web.servlet: WARN
-        org.eclipse.angus.mail: DEBUG
+        '[org.springframework.jdc]': DEBUG
+        '[eu.nabahilfe]': INFO
+        '[org.springframework.web.servlet]': WARN
+        '[org.eclipse.angus.mail]': DEBUG
 
 server:
     port: ${APP_PORT:8080}
