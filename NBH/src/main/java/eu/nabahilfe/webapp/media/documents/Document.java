@@ -7,6 +7,8 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import eu.nabahilfe.webapp.members.Member;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -20,8 +22,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-
-import eu.nabahilfe.webapp.members.Member;
 
 
 /**
@@ -38,7 +38,7 @@ public class Document  {
 
     @Size(max = 250)
     @NotEmpty
-    private String documentName;
+    private String fileName;
 
     @Column(nullable = false)
     private Integer documentSize;
@@ -54,8 +54,8 @@ public class Document  {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "belongs_to_id")
-    private DocumentLibrary belongsTo;
+    @JoinColumn(name = "lobrary_id")
+    private DocumentLibrary lobrary;
 
     // Creation timestamp, value is set by Postgres (see Table definition)
     @Column(insertable = false, updatable = false)
@@ -77,7 +77,6 @@ public class Document  {
     @Version
     @Column(nullable = false)
     private Integer version;
-
 
 
     // -------------------------------------------------

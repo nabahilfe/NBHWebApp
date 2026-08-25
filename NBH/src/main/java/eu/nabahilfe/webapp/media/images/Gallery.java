@@ -1,4 +1,4 @@
-package eu.nabahilfe.webapp.media.documents;
+package eu.nabahilfe.webapp.media.images;
 
 import java.time.LocalDateTime;
 import java.time.LocalDate;
@@ -27,32 +27,35 @@ import eu.nabahilfe.webapp.members.Member;
 
 
 /**
- * Sammlung von Dokumenten
+ * Foto- oder Bildergalerie
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "DOCUMENT_LIBRARY")
-public class DocumentLibrary  {
+@Table(name = "GALLERIES")
+public class Gallery  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate showLibraryFrom;    // Starting Date for displaying Library to Public - if null, do not display
+    private LocalDate galleryDate;    // use it only for images from one specific date, eg. Flohmarkt
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate showLibraryTo;    // if set, do not show after this date
+    private LocalDate showGalleryFrom;    // Starting Date for displaying Gallery to Public - if null, do not display
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate showGalleryTo;    // if set, do not show after this date
 
     @Size(max = 250)
     @NotEmpty
     private String description;
 
     @Size(max = 250)
-    private String remark;    // Anmerkung für Editor, wird in der Library-Ansicht nicht angezeigt
+    private String remark;    // Anmerkung für Editor, wird in der Gallery-Ansicht nicht angezeigt
 
     @Column(nullable = false)
-    private Boolean isPublic;    // public zugänglich oder nur für Mitglieder
+    private Boolean isPublic;    // wenn nicht public dann nur für angemeldete Mitglieder sichtbar
 
     // Creation timestamp, value is set by Postgres (see Table definition)
     @Column(insertable = false, updatable = false)
@@ -75,10 +78,107 @@ public class DocumentLibrary  {
     @Column(nullable = false)
     private Integer version;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public LocalDate getGalleryDate() {
+		return galleryDate;
+	}
+
+	public void setGalleryDate(LocalDate galleryDate) {
+		this.galleryDate = galleryDate;
+	}
+
+	public LocalDate getShowGalleryFrom() {
+		return showGalleryFrom;
+	}
+
+	public void setShowGalleryFrom(LocalDate showGalleryFrom) {
+		this.showGalleryFrom = showGalleryFrom;
+	}
+
+	public LocalDate getShowGalleryTo() {
+		return showGalleryTo;
+	}
+
+	public void setShowGalleryTo(LocalDate showGalleryTo) {
+		this.showGalleryTo = showGalleryTo;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String galleryDescription) {
+		this.description = galleryDescription;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String galleryRemark) {
+		this.remark = galleryRemark;
+	}
+
+	public Boolean getIsPublic() {
+		return isPublic;
+	}
+
+	public void setIsPublic(Boolean isPublic) {
+		this.isPublic = isPublic;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Member getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Member createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public Member getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(Member updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
 
     // -------------------------------------------------
     // generate setter/getter methodes with Eclipse here
     // -------------------------------------------------
+
 
 
 
