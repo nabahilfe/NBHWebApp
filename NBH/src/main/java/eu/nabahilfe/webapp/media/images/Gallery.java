@@ -52,7 +52,7 @@ public class Gallery  {
     private String description;
 
     @Size(max = 250)
-    private String remark;    // Anmerkung für Editor, wird in der Gallery-Ansicht nicht angezeigt
+    private String remark;    // Anmerkung bzw. Beschreibung, wird in der Gallery-Ansicht angezeigt
 
     @Column(nullable = false)
     private Boolean isPublic;    // wenn nicht public dann nur für angemeldete Mitglieder sichtbar
