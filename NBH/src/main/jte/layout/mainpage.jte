@@ -216,7 +216,7 @@
                         @endif
 
 
-            			<!-- Öffentliche Fotos und Dokumente -->
+            			      <!-- Öffentliche Fotos und Dokumente -->
                         <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle btn btn-link"
                                     type="button"
@@ -228,7 +228,7 @@
                             <ul class="dropdown-menu">
                                 <!-- Foto-Galerien -->
                                 <li><a class="dropdown-item" href="/gallery/user-list">Foto-Galerien</a></li>
-								<!-- Dokumente -->
+								                <!-- FIXME: Add Dokumente -->
                             </ul>
                         </li>
 
