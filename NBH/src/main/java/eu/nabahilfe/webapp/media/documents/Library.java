@@ -32,7 +32,7 @@ import eu.nabahilfe.webapp.members.Member;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "DOCUMENT_LIBRARY")
-public class DocumentLibrary  {
+public class Library  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,7 +49,7 @@ public class DocumentLibrary  {
     private String description;
 
     @Size(max = 250)
-    private String remark;    // Anmerkung für Editor, wird in der Library-Ansicht nicht angezeigt
+    private String remark;    // Anmerkung bzw. Beschreibung, wird in der Library-Ansicht angezeigt
 
     @Column(nullable = false)
     private Boolean isPublic;    // public zugänglich oder nur für Mitglieder
