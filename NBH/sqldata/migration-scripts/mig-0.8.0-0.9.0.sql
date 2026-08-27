@@ -1,10 +1,12 @@
 
 drop table if exists DOCUMENTS cascade;
 drop table if exists LIBARIES cascade;
+drop table if exists LIBRARIES cascade;
+
 
 
 /* Sammlung von Dokumenten */
-create table if not exists LIBARIES (
+create table if not exists LIBRARIES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     show_library_from DATE /* Starting Date for displaying Library to Public - if null, do not display */,
     show_library_to DATE /* if set, do not show after this date */,
@@ -28,7 +30,7 @@ create table if not exists DOCUMENTS (
     document_data BYTEA not null,
     content_type VARCHAR(20) not null /* application/pdf */,
     description VARCHAR(250),
-    library_id BIGINT /* FK id from LIBARIES(id) */,
+    library_id BIGINT /* FK id from LIBRARIES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
@@ -37,14 +39,16 @@ create table if not exists DOCUMENTS (
 );
 
 
+
 alter table LIBRARIES
     add constraint fk_LIBRARIES_from_member_id foreign key (from_member_id) references MEMBERS(id)
 ;
 
 
 alter table DOCUMENTS
-    add constraint fk_DOCUMENTS_library_id foreign key (library_id) references LIBARIES(id)
+    add constraint fk_DOCUMENTS_library_id foreign key (library_id) references LIBRARIES(id)
 ;
+
 
 
 
