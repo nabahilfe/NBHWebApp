@@ -266,7 +266,13 @@ public class GalleryController {
      */
     @GetMapping("/{galleryId}/image/{imageId}/thumbnail")
     @ResponseBody
-    public ResponseEntity<byte[]> getThumbnail(@PathVariable Long galleryId, @PathVariable Long imageId) {
+    public ResponseEntity<byte[]> getThumbnail(
+            @PathVariable Long galleryId,
+            @PathVariable Long imageId,
+            Authentication authentication) {
+        // Enforce visibility for anonymous users to prevent URL guessing on private galleries.
+        galleryService.findVisibleByIdForUsers(galleryId, isAuthenticated(authentication));
+
         byte[] data = galleryImageService.getThumbnail(galleryId, imageId);
         return ResponseEntity.ok().contentType(MediaType.parseMediaType("image/webp"))
                 .cacheControl(CacheControl.maxAge(Duration.ofDays(30)))
@@ -279,7 +285,13 @@ public class GalleryController {
      */
     @GetMapping("/{galleryId}/image/{imageId}")
     @ResponseBody
-    public ResponseEntity<byte[]> getImage(@PathVariable Long galleryId,@PathVariable Long imageId) {
+    public ResponseEntity<byte[]> getImage(
+            @PathVariable Long galleryId,
+            @PathVariable Long imageId,
+            Authentication authentication) {
+        // Enforce visibility for anonymous users to prevent URL guessing on private galleries.
+        galleryService.findVisibleByIdForUsers(galleryId, isAuthenticated(authentication));
+
         byte[] data = galleryImageService.getImage(galleryId, imageId);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("image/webp"))
