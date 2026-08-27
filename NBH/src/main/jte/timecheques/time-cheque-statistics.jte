@@ -66,7 +66,7 @@
                 @if(transferStats == null || transferStats.isEmpty())
                     <div class="alert alert-info">Keine Zeitgutschriften für ${yearLabel} gefunden.</div>
                 @else
-                    <table class="table table-bordered table-hover table-sm shadow" id="xxx">
+                    <table class="table table-bordered table-hover table-sm shadow h-100" id="xxx">
                         <thead class="table-light">
                             <tr>
                                 <th scope="col">#</th>
@@ -109,7 +109,7 @@
                 @if(givenStats == null || givenStats.isEmpty())
                     <div class="alert alert-info">Keine übergebenen Zeitgutschriften für ${yearLabel} gefunden.</div>
                 @else
-                    <table class="table table-bordered table-hover table-sm shadow">
+                    <table class="table table-bordered table-hover table-sm shadow h-100">
                         <thead class="table-light">
                             <tr>
                                 <th scope="col">#</th>
@@ -158,7 +158,7 @@
                 @if(stats == null || stats.isEmpty())
                     <div class="alert alert-info">Keine Zeitschecks für ${yearLabel} gefunden.</div>
                 @else
-                    <table class="table table-bordered table-hover table-sm shadow">
+                    <table class="table table-bordered table-hover table-sm shadow h-100">
                         <thead class="table-light">
                             <tr>
                                 <th scope="col">#</th>
@@ -203,7 +203,7 @@
                 @if(hoursRanking == null || hoursRanking.isEmpty())
                     <div class="alert alert-info">Keine Mitglieder mit Zeitguthaben gefunden.</div>
                 @else
-                    <table class="table table-bordered table-hover table-sm shadow">
+                    <table class="table table-bordered table-hover table-sm shadow h-100">
                         <thead class="table-light">
                             <tr>
                                 <th scope="col">#</th>

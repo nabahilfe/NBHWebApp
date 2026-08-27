@@ -57,8 +57,7 @@
                 <p class="mb-0">In dieser Bibliothek wurden noch keine PDF-Dokumente hochgeladen.</p>
             </div>
         @else
-            <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle shadow-sm">
+                <table class="table table-bordered table-hover table-sm shadow h-100">
                     <thead class="table-light">
                         <tr>
                             <th scope="col">Dateiname</th>
@@ -91,7 +90,6 @@
                         @endfor
                     </tbody>
                 </table>
-            </div>
         @endif
 
         @if (Boolean.TRUE.equals(readOnly))

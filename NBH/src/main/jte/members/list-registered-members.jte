@@ -27,7 +27,7 @@
         <h3>Registrierte Mitglieder</h3>
         <p>Diese Mitglieder sind aktuell registriert und können die App verwenden.</p>
 
-        <table class="table table-bordered table-hover table-sm shadow" id="registeredMembersTable">
+        <table class="table table-bordered table-hover table-sm shadow h-100" id="registeredMembersTable">
             <thead class="table-light">
                 <tr>
                     <th scope="col">#</th>

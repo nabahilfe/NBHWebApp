@@ -21,7 +21,7 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>${(ctxt == null || !ctxt.isAuthenticated()) ? "Oeffentliche " : "Alle "}Dokument-Bibliotheken</h3>
+    <h3>${(ctxt == null || !ctxt.isAuthenticated()) ? "Öffentliche " : "Alle "}Dokumente</h3>
 
     <table class="table table-bordered table-hover table-sm shadow h-100" id="libraryTable">
         <thead class="table-light">
@@ -44,7 +44,7 @@
     </table>
 
     @if (ctxt == null || !ctxt.isAuthenticated())
-        <p class="text-muted small mt-3">Für angemeldete Mitglieder gibt es moeglicherweise weitere Bibliotheken.</p>
+        <p class="text-muted small mt-3">Für angemeldete Mitglieder gibt es möglicherweise weitere Dokumente.</p>
     @endif
 
     @template.components.display-statusmessage(successMessage, errorMessage)
