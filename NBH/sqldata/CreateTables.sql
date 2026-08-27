@@ -63,10 +63,17 @@ ALTER TABLE REGISTRATION_CODES ALTER COLUMN created_by_id DROP NOT NULL;
 
 
 
+/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+/****************************** MODEL UPDATES BELOW ONLY ********************************/
+/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
+
+
+
 
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-08-19 16:35:51
+ * Generated at 2026-08-27 08:32:51
  * ModelDescription: NBH Entity Model
  */
 
@@ -306,14 +313,15 @@ create table if not exists TRANSACTIONS (
 
 
 /* Foto- oder Bildergalerie */
-create table if not exists GALLERYS (
+create table if not exists GALLERIES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     gallery_date DATE /* use it only for images from one specific date, eg. Flohmarkt */,
     show_gallery_from DATE /* Starting Date for displaying Gallery to Public - if null, do not display */,
     show_gallery_to DATE /* if set, do not show after this date */,
     description VARCHAR(250) not null,
-    remark VARCHAR(250) /* Anmerkung für Editor, wird in der Gallery-Ansicht nicht angezeigt */,
+    remark VARCHAR(250) /* Anmerkung bzw. Beschreibung, wird in der Galerie-Ansicht angezeigt */,
     is_public BOOLEAN not null DEFAULT FALSE /* wenn nicht public dann nur für angemeldete Mitglieder sichtbar */,
+    from_member_id BIGINT /* FK id from MEMBERS(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
@@ -334,7 +342,7 @@ create table if not exists IMAGES (
     content_type VARCHAR(20) not null /* image/jpeg, image/png ... */,
     description VARCHAR(250),
     is_gallery_cover BOOLEAN not null DEFAULT FALSE /* Das repräsentative Bild für die Galerie das in der Galerieübersicht angezeigt wird */,
-    gallery_id BIGINT /* FK id from GALLERYS(id) */,
+    gallery_id BIGINT /* FK id from GALLERIES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
@@ -344,13 +352,14 @@ create table if not exists IMAGES (
 
 
 /* Sammlung von Dokumenten */
-create table if not exists LIBRARYS (
+create table if not exists LIBRARIES (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     show_library_from DATE /* Starting Date for displaying Library to Public - if null, do not display */,
     show_library_to DATE /* if set, do not show after this date */,
     description VARCHAR(250) not null,
-    remark VARCHAR(250) /* Anmerkung für Editor, wird in der Library-Ansicht nicht angezeigt */,
+    remark VARCHAR(250) /* Anmerkung bzw. Beschreibung, wird in der Library-Ansicht angezeigt */,
     is_public BOOLEAN not null DEFAULT FALSE /* public zugänglich oder nur für Mitglieder */,
+    from_member_id BIGINT /* FK id from MEMBERS(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
@@ -367,7 +376,7 @@ create table if not exists DOCUMENTS (
     document_data BYTEA not null,
     content_type VARCHAR(20) not null /* application/pdf */,
     description VARCHAR(250),
-    lobrary_id BIGINT /* FK id from LIBRARYS(id) */,
+    library_id BIGINT /* FK id from LIBRARIES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
@@ -415,13 +424,23 @@ alter table TRANSACTIONS
 ;
 
 
+alter table GALLERIES
+    add constraint fk_GALLERIES_from_member_id foreign key (from_member_id) references MEMBERS(id)
+;
+
+
 alter table IMAGES
-    add constraint fk_IMAGES_gallery_id foreign key (gallery_id) references GALLERYS(id)
+    add constraint fk_IMAGES_gallery_id foreign key (gallery_id) references GALLERIES(id)
+;
+
+
+alter table LIBRARIES
+    add constraint fk_LIBRARIES_from_member_id foreign key (from_member_id) references MEMBERS(id)
 ;
 
 
 alter table DOCUMENTS
-    add constraint fk_DOCUMENTS_lobrary_id foreign key (lobrary_id) references LIBRARYS(id)
+    add constraint fk_DOCUMENTS_library_id foreign key (library_id) references LIBRARIES(id)
 ;
 
 
@@ -496,14 +515,13 @@ drop table if exists ACCOUNTING_ENTRIES cascade;
 
 drop table if exists TRANSACTIONS cascade;
 
-drop table if exists GALLERYS cascade;
+drop table if exists GALLERIES cascade;
 
 drop table if exists IMAGES cascade;
 
-drop table if exists LIBRARYS cascade;
+drop table if exists LIBRARIES cascade;
 
 drop table if exists DOCUMENTS cascade;
 
 
 /* end of generated file */
-
