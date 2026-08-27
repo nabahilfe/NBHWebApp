@@ -216,7 +216,13 @@ public class LibraryController {
     }
 
     @GetMapping("/{libraryId}/document/{documentId}")
-    public ResponseEntity<byte[]> getDocument(@PathVariable Long libraryId, @PathVariable Long documentId) {
+    public ResponseEntity<byte[]> getDocument(
+            @PathVariable Long libraryId,
+            @PathVariable Long documentId,
+            Authentication authentication) {
+        // Enforce visibility for anonymous users to prevent URL guessing on private libraries.
+        libraryService.findVisibleByIdForUsers(libraryId, isAuthenticated(authentication));
+
         Document document = documentLibraryService.findDocumentForDownload(libraryId, documentId);
 
         ContentDisposition disposition = ContentDisposition.inline()
