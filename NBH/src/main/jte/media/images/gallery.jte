@@ -39,7 +39,7 @@
             <div>
                 <h3 class="mb-1">${gallery.getDescription()}</h3>
                 @if(gallery.getGalleryDate() != null)<div>${dateReverseDE(gallery.getGalleryDate())}</div>@endif
-                @if(gallery.getRemark() != null)<div><strong>${gallery.getRemark()}</strong></div>@endif
+                @if(gallery.getRemark() != null)<div><i>${gallery.getRemark()}</i></div>@endif
                 <div>
                     ${images.size()} Bilder
                 </div>
