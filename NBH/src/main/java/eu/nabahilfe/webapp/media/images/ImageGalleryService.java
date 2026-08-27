@@ -11,6 +11,9 @@ import java.util.List;
 @Service
 public class ImageGalleryService {
 
+    private static final int MAX_IMAGES_PER_UPLOAD = 10;
+    private static final int MAX_IMAGES_PER_GALLERY = 50;
+
     private final GalleryRepository galleryRepository;
     private final GalleryImageRepository galleryImageRepository;
     private final ImageProcessingService imageProcessingService;
@@ -33,14 +36,24 @@ public class ImageGalleryService {
     	    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bitte mindestens ein Bild auswählen.");
     	}
 
-    	if (files.size() > 10) {
-    	    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Es können maximal 10 Bilder gleichzeitig hochgeladen werden.");
+        if (files.size() > MAX_IMAGES_PER_UPLOAD) {
+        	throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                  "Es können maximal " + MAX_IMAGES_PER_UPLOAD + " Bilder gleichzeitig hochgeladen werden.");
     	}
 
         Gallery gallery = galleryRepository.findById(galleryId).orElseThrow(() ->
                                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Galerie nicht gefunden"));
 
-        boolean needsCoverImage = galleryImageRepository.countByGallery_Id(galleryId) == 0;
+        long existingImageCount = galleryImageRepository.countByGallery_Id(galleryId);
+        long resultingImageCount = existingImageCount + files.size();
+        if (resultingImageCount > MAX_IMAGES_PER_GALLERY) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "In einer Galerie sind maximal " + MAX_IMAGES_PER_GALLERY
+                            + " Bilder erlaubt. Aktuell sind " + existingImageCount
+                            + " Bilder vorhanden.");
+        }
+
+        boolean needsCoverImage = existingImageCount == 0;
 
         for (MultipartFile file : files) {
 

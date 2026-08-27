@@ -47,7 +47,7 @@
                     data-max-files="10">
 
                 <div class="form-text">
-                    Du kannst bis zu 10 Bilder gleichzeitig auswählen.  Die Bilder werden automatisch optimiert und als WebP gespeichert.
+                    Du kannst bis zu 10 Bilder gleichzeitig auswählen. Insgesamt sind maximal 50 Bilder pro Galerie erlaubt.
                 </div>
 
             </div>
