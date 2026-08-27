@@ -212,6 +212,12 @@
                                                     class="d-block gallery-lightbox-image"
                                                     alt="Bild">
 
+                                                @if (images.get(imageIndex).description() != null && !images.get(imageIndex).description().isBlank())
+                                                    <div class="gallery-lightbox-description">
+                                                        ${images.get(imageIndex).description()}
+                                                    </div>
+                                                @endif
+
                                                 @if (images.size() > 1)
                                                     <button class="carousel-control-prev gallery-carousel-control gallery-carousel-control-prev"
                                                             type="button"
@@ -290,13 +296,28 @@
                     object-fit: contain;
                 }
 
+                #galleryLightboxModal .gallery-lightbox-description {
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 10;
+                    padding: 0.6rem 0.85rem;
+                    color: #fff;
+                    background-color: rgba(108, 117, 125, 0.75);
+                    font-size: 0.95rem;
+                    line-height: 1.35;
+                    text-align: center;
+                    pointer-events: none;
+                }
+
                 #galleryLightboxModal .gallery-lightbox-close {
                     --bs-btn-close-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
                     position: absolute;
                     top: 0.6rem;
                     right: 0.6rem;
                     z-index: 30;
-                    background-color: rgba(90, 90, 90, 0.9);
+                    background-color: rgba(108, 117, 125, 0.75);
                     border-radius: 999px;
                     padding: 0.4rem;
                     opacity: 1;
@@ -305,7 +326,7 @@
 
                 #galleryLightboxModal .gallery-carousel-control .carousel-control-prev-icon,
                 #galleryLightboxModal .gallery-carousel-control .carousel-control-next-icon {
-                    background-color: rgba(90, 90, 90, 0.9);
+                    background-color: rgba(108, 117, 125, 0.75);
                     border-radius: 0.6rem;
                     padding: 1.2rem;
                     background-size: 60% 60%;
