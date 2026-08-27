@@ -104,6 +104,14 @@
 
                         </a>
 
+                        @if (Boolean.TRUE.equals(readOnly)
+                                && images.get(imageIndex).description() != null
+                                && !images.get(imageIndex).description().isBlank())
+                            <div class="mt-2 small text-center text-muted">
+                                ${truncateWithEllipsis(images.get(imageIndex).description(), 40)}
+                            </div>
+                        @endif
+
                         @if (!Boolean.TRUE.equals(readOnly))
                             <div class="mt-2 d-flex justify-content-center gap-1 flex-wrap">
                                 <button type="button"
