@@ -7,6 +7,7 @@
 @import eu.nabahilfe.webapp.media.images.Gallery
 @import eu.nabahilfe.webapp.media.images.GalleryImageInfo
 @import static eu.nabahilfe.webapp.DateFormatter.*
+@import static eu.nabahilfe.webapp.jte.TemplateHelpers.*
 
 @import java.util.List
 
@@ -104,7 +105,7 @@
                         </a>
 
                         @if (!Boolean.TRUE.equals(readOnly))
-                            <div class="mt-2 text-center">
+                            <div class="mt-2 d-flex justify-content-center gap-1 flex-wrap">
                                 <button type="button"
                                         class="btn btn-outline-danger btn-sm"
                                         data-bs-toggle="modal"
@@ -112,6 +113,20 @@
                                         data-image-id="${images.get(imageIndex).id()}">
                                     Löschen
                                 </button>
+
+                                <button type="button"
+                                        class="btn ${images.get(imageIndex).description() != null && !images.get(imageIndex).description().isBlank() ? "btn-outline-success" : "btn-outline-primary"} btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editImageDescriptionModal"
+                                        data-image-id="${images.get(imageIndex).id()}">
+                                    ${images.get(imageIndex).description() != null && !images.get(imageIndex).description().isBlank()
+                                        ? truncateWithEllipsis(images.get(imageIndex).description(), 20)
+                                        : "Beschreibung erfassen"}
+                                </button>
+
+                                <input type="hidden"
+                                       id="imageDescription_${images.get(imageIndex).id()}"
+                                       value="${images.get(imageIndex).description() != null ? images.get(imageIndex).description() : ""}">
                             </div>
                         @endif
 
@@ -142,8 +157,37 @@
                     </div>
                 </div>
 
+                <div class="modal fade" id="editImageDescriptionModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Bildbeschreibung bearbeiten</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="imageIdToEditDescription">
+                                <label for="imageDescriptionInput" class="form-label">Beschreibung</label>
+                                <textarea class="form-control"
+                                          id="imageDescriptionInput"
+                                          maxlength="250"
+                                          rows="4"
+                                          placeholder="Beschreibung für dieses Bild"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                                <button type="button" class="btn btn-primary" id="confirmImageDescriptionBtn">Speichern</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <form id="deleteImageForm" method="post" style="display:none;">
                     ${csrfHiddenInput}
+                </form>
+
+                <form id="imageDescriptionForm" method="post" style="display:none;">
+                    ${csrfHiddenInput}
+                    <input type="hidden" name="description" id="imageDescriptionFormValue">
                 </form>
             @endif
 
@@ -330,6 +374,12 @@
                     const deleteForm = document.getElementById("deleteImageForm");
                     const confirmDeleteBtn = document.getElementById("confirmDeleteImageBtn");
                     const imageIdInput = document.getElementById("imageIdToDelete");
+                    const descriptionModal = document.getElementById("editImageDescriptionModal");
+                    const descriptionForm = document.getElementById("imageDescriptionForm");
+                    const confirmDescriptionBtn = document.getElementById("confirmImageDescriptionBtn");
+                    const imageIdToEditDescription = document.getElementById("imageIdToEditDescription");
+                    const imageDescriptionInput = document.getElementById("imageDescriptionInput");
+                    const imageDescriptionFormValue = document.getElementById("imageDescriptionFormValue");
 
                     if (deleteModal && deleteForm && confirmDeleteBtn && imageIdInput) {
                         deleteModal.addEventListener("show.bs.modal", event => {
@@ -345,6 +395,29 @@
                             }
                             deleteForm.action = "/gallery/${gallery.getId()}/image/" + imageId + "/delete";
                             deleteForm.submit();
+                        });
+                    }
+
+                    if (descriptionModal && descriptionForm && confirmDescriptionBtn
+                            && imageIdToEditDescription && imageDescriptionInput && imageDescriptionFormValue) {
+                        descriptionModal.addEventListener("show.bs.modal", event => {
+                            const trigger = event.relatedTarget;
+                            const imageId = trigger ? trigger.getAttribute("data-image-id") : null;
+                            imageIdToEditDescription.value = imageId || "";
+
+                            const descriptionHolder = imageId ? document.getElementById("imageDescription_" + imageId) : null;
+                            imageDescriptionInput.value = descriptionHolder ? descriptionHolder.value : "";
+                        });
+
+                        confirmDescriptionBtn.addEventListener("click", () => {
+                            const imageId = imageIdToEditDescription.value;
+                            if (!imageId) {
+                                return;
+                            }
+
+                            imageDescriptionFormValue.value = imageDescriptionInput.value;
+                            descriptionForm.action = "/gallery/${gallery.getId()}/image/" + imageId + "/description";
+                            descriptionForm.submit();
                         });
                     }
                 });

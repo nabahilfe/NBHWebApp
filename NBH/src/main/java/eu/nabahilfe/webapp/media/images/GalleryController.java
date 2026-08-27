@@ -237,6 +237,30 @@ public class GalleryController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
+    @PostMapping("/{galleryId}/image/{imageId}/description")
+    public String updateImageDescription(
+            @PathVariable Long galleryId,
+            @PathVariable Long imageId,
+            @RequestParam(required = false) String description,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            galleryImageService.updateImageDescription(galleryId, imageId, description);
+            redirectAttributes.addFlashAttribute("successMessage", "Bildbeschreibung wurde gespeichert.");
+        }
+        catch (ResponseStatusException ex) {
+            String message = ex.getReason() != null ? ex.getReason() : "Bildbeschreibung konnte nicht gespeichert werden.";
+            redirectAttributes.addFlashAttribute("errorMessage", message);
+        }
+        catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Beim Speichern der Bildbeschreibung ist ein unerwarteter Fehler aufgetreten.");
+        }
+
+        return "redirect:/gallery/" + galleryId;
+    }
+
+
     /**
      * Thumbnail ausliefern
      */

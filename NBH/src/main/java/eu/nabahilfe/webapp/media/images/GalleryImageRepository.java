@@ -23,7 +23,8 @@ public interface GalleryImageRepository
         select new eu.nabahilfe.webapp.media.images.GalleryImageInfo(
             i.id,
             i.imageWidth,
-            i.imageHeight
+            i.imageHeight,
+            i.description
         )
         from Image i
         where i.gallery.id = :galleryId

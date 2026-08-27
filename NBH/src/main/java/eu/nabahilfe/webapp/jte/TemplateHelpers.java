@@ -39,4 +39,22 @@ public class TemplateHelpers {
         };
     }
 
+
+    static public String truncateWithEllipsis(String text, int maxLength) {
+        if (text == null) {
+            return null;
+        }
+
+        if (maxLength <= 0) {
+            return "";
+        }
+
+        String normalizedText = text.trim();
+        if (normalizedText.length() <= maxLength) {
+            return normalizedText;
+        }
+
+        return normalizedText.substring(0, maxLength) + "...";
+    }
+
 }

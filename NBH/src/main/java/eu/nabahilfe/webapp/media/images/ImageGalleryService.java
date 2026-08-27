@@ -129,4 +129,23 @@ public class ImageGalleryService {
                     });
         }
     }
+
+
+    @Transactional
+    public void updateImageDescription(Long galleryId, Long imageId, String description) {
+        Image image = galleryImageRepository.findByIdAndGallery_Id(imageId, galleryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Bild nicht gefunden."));
+
+        String normalizedDescription = description == null ? null : description.trim();
+        if (normalizedDescription != null && normalizedDescription.isBlank()) {
+            normalizedDescription = null;
+        }
+
+        if (normalizedDescription != null && normalizedDescription.length() > 250) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Die Bildbeschreibung darf maximal 250 Zeichen enthalten.");
+        }
+
+        image.setDescription(normalizedDescription);
+        galleryImageRepository.save(image);
+    }
 }
