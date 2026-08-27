@@ -1,6 +1,7 @@
 package eu.nabahilfe.webapp.media.documents;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
@@ -44,7 +45,7 @@ public class Document  {
     private Integer documentSize;
 
     @Column(nullable = false)
-    private byte[] documentDData;
+    private byte[] documentData;
 
     @Size(max = 20)
     @NotEmpty
@@ -78,16 +79,131 @@ public class Document  {
     @Column(nullable = false)
     private Integer version;
 
+	public Long getId() {
+		return id;
+	}
 
-    // -------------------------------------------------
-    // generate setter/getter methodes with Eclipse here
-    // -------------------------------------------------
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public Integer getDocumentSize() {
+		return documentSize;
+	}
+
+	public void setDocumentSize(Integer documentSize) {
+		this.documentSize = documentSize;
+	}
+
+	public byte[] getDocumentData() {
+		return documentData;
+	}
+
+	public void setDocumentData(byte[] documentData) {
+		this.documentData = documentData;
+	}
+
+	public String getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Library getLibrary() {
+		return library;
+	}
+
+	public void setLibrary(Library library) {
+		this.library = library;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Member getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Member createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public Member getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(Member updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Document other = (Document) obj;
+		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public String toString() {
+		return "Document [id=" + id + ", fileName=" + fileName + ", documentSize=" + documentSize + ", contentType="
+				+ contentType + ", description=" + description + ", createdAt=" + createdAt + ", createdBy=" + createdBy
+				+ ", updatedAt=" + updatedAt + ", version=" + version + "]";
+	}
 
 
 
-    // ------------------------------------------------------------------------
-    // generate equals/hashCode methodes with Eclipse here - use ONLY id field!
-    // ------------------------------------------------------------------------
+
+
 
 
 
