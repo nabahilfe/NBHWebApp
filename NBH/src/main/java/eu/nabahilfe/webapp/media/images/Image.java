@@ -1,6 +1,7 @@
 package eu.nabahilfe.webapp.media.images;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -96,6 +97,9 @@ public class Image  {
     @Version
     @Column(nullable = false)
     private Integer version;
+
+
+
 
 	public Long getId() {
 		return id;
@@ -226,22 +230,31 @@ public class Image  {
 	}
 
 
-    // -------------------------------------------------
-    // generate setter/getter methodes with Eclipse here
-    // -------------------------------------------------
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Image other = (Image) obj;
+		return Objects.equals(id, other.id);
+	}
 
-
-    // ------------------------------------------------------------------------
-    // generate equals/hashCode methodes with Eclipse here - use ONLY id field!
-    // ------------------------------------------------------------------------
-
-
-
-    // -----------------------------------------------
-    // Don't forget to generate toString() for logging
-    // -----------------------------------------------
-
+	@Override
+	public String toString() {
+		return "Image [id=" + id + ", fileName=" + fileName + ", imageWidth=" + imageWidth + ", imageHeight="
+				+ imageHeight + ", imageSize=" + imageSize + ", contentType=" + contentType + ", description="
+				+ description + ", isGalleryCover=" + isGalleryCover + ", gallery=" + gallery + ", createdAt="
+				+ createdAt + ", createdBy=" + createdBy + ", updatedAt=" + updatedAt + ", updatedBy=" + updatedBy
+				+ ", version=" + version + "]";
+	}
 
 
     // ------------------------------

@@ -1,6 +1,7 @@
 package eu.nabahilfe.webapp.media.images;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.time.LocalDate;
 
 import org.hibernate.annotations.UpdateTimestamp;
@@ -52,10 +53,14 @@ public class Gallery  {
     private String description;
 
     @Size(max = 250)
-    private String remark;    // Anmerkung bzw. Beschreibung, wird in der Gallery-Ansicht angezeigt
+    private String remark;    // Anmerkung bzw. Beschreibung, wird in der Galerie-Ansicht angezeigt
 
     @Column(nullable = false)
     private Boolean isPublic;    // wenn nicht public dann nur für angemeldete Mitglieder sichtbar
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "from_member_id")
+    private Member fromMember;    // Bildergalerie eines Mitglieds - das Mitglied kann so eine Galerie anlegen und bearbeiten
 
     // Creation timestamp, value is set by Postgres (see Table definition)
     @Column(insertable = false, updatable = false)
@@ -114,16 +119,16 @@ public class Gallery  {
 		return description;
 	}
 
-	public void setDescription(String galleryDescription) {
-		this.description = galleryDescription;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getRemark() {
 		return remark;
 	}
 
-	public void setRemark(String galleryRemark) {
-		this.remark = galleryRemark;
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	public Boolean getIsPublic() {
@@ -132,6 +137,14 @@ public class Gallery  {
 
 	public void setIsPublic(Boolean isPublic) {
 		this.isPublic = isPublic;
+	}
+
+	public Member getFromMember() {
+		return fromMember;
+	}
+
+	public void setFromMember(Member fromMember) {
+		this.fromMember = fromMember;
 	}
 
 	public LocalDateTime getCreatedAt() {
@@ -175,22 +188,30 @@ public class Gallery  {
 	}
 
 
-    // -------------------------------------------------
-    // generate setter/getter methodes with Eclipse here
-    // -------------------------------------------------
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Gallery other = (Gallery) obj;
+		return Objects.equals(id, other.id);
+	}
 
-
-
-    // ------------------------------------------------------------------------
-    // generate equals/hashCode methodes with Eclipse here - use ONLY id field!
-    // ------------------------------------------------------------------------
-
-
-
-    // -----------------------------------------------
-    // Don't forget to generate toString() for logging
-    // -----------------------------------------------
+	@Override
+	public String toString() {
+		return "Gallery [id=" + id + ", galleryDate=" + galleryDate + ", showGalleryFrom=" + showGalleryFrom
+				+ ", showGalleryTo=" + showGalleryTo + ", description=" + description + ", remark=" + remark
+				+ ", isPublic=" + isPublic + ", fromMember=" + fromMember + ", createdAt=" + createdAt + ", createdBy="
+				+ createdBy + ", updatedAt=" + updatedAt + ", updatedBy=" + updatedBy + ", version=" + version + "]";
+	}
 
 
 
@@ -201,3 +222,4 @@ public class Gallery  {
 
 
 }
+
