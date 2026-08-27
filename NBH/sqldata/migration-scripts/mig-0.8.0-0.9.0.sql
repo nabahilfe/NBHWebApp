@@ -52,7 +52,7 @@ alter table DOCUMENTS
 
 
 
-ALTER TABLE GALLERYS
+ALTER TABLE GALLERIES
     ADD COLUMN from_member_id BIGINT;
 
 
