@@ -86,7 +86,7 @@ public class GalleryController {
             RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
-            model.addAttribute("errorMessage", "Bitte die Pflichtfelder korrekt ausfuellen.");
+            model.addAttribute("errorMessage", "Bitte die Pflichtfelder korrekt ausfüllen.");
             return "media/images/detail-gallery";
         }
 
@@ -112,7 +112,7 @@ public class GalleryController {
             RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
-            model.addAttribute("errorMessage", "Bitte die Pflichtfelder korrekt ausfuellen.");
+            model.addAttribute("errorMessage", "Bitte die Pflichtfelder korrekt ausfüllen.");
             model.addAttribute("galleryId", galleryId);
             return "media/images/detail-gallery";
         }
@@ -135,14 +135,14 @@ public class GalleryController {
     public String deleteGallery(@PathVariable Long galleryId, RedirectAttributes redirectAttributes) {
         try {
             galleryService.deleteGallery(galleryId);
-            redirectAttributes.addFlashAttribute("successMessage", "Galerie wurde geloescht.");
+            redirectAttributes.addFlashAttribute("successMessage", "Galerie wurde gelöscht.");
         }
         catch (ResponseStatusException ex) {
-            String message = ex.getReason() != null ? ex.getReason() : "Galerie konnte nicht geloescht werden.";
+            String message = ex.getReason() != null ? ex.getReason() : "Galerie konnte nicht gelöscht werden.";
             redirectAttributes.addFlashAttribute("errorMessage", message);
         }
         catch (Exception ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Beim Loeschen ist ein unerwarteter Fehler aufgetreten.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Beim Löschen ist ein unerwarteter Fehler aufgetreten.");
         }
 
         return "redirect:/gallery/list";

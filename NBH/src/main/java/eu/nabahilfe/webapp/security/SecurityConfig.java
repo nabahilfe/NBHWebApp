@@ -50,6 +50,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/gallery/user/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/gallery/*/image/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/gallery/*/image/*/thumbnail").permitAll()
+                .requestMatchers(HttpMethod.GET, "/library/user-list").permitAll()
+                .requestMatchers(HttpMethod.GET, "/library/user/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/library/*/document/*").permitAll()
 
                 .anyRequest().authenticated()
             )

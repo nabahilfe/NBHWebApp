@@ -163,7 +163,7 @@ create table if not exists EVENTS (
 create table if not exists TEXT_CONTENTS (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     content_code VARCHAR(20) /* Aus ENUM - Für welches Element gilt der Text */,
-    md_text TEXT /* Text mit Markdoen formatiert */,
+    md_text TEXT /* Text mit Markdown formatiert */,
     html_text TEXT /* Aus dem Markdown Text generierter HTML Text */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT NOT NULL,

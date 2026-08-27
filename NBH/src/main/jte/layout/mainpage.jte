@@ -216,7 +216,7 @@
                         @endif
 
 
-            			      <!-- Öffentliche Fotos und Dokumente -->
+            			<!-- Öffentliche Fotos und Dokumente -->
                         <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle btn btn-link"
                                     type="button"
@@ -227,8 +227,8 @@
 
                             <ul class="dropdown-menu">
                                 <!-- Foto-Galerien -->
-                                <li><a class="dropdown-item" href="/gallery/user-list">Foto-Galerien</a></li>
-								                <!-- FIXME: Add Dokumente -->
+                                <li><a class="dropdown-item" href="/gallery/user-list">Fotos</a></li>
+                                <li><a class="dropdown-item" href="/library/user-list">Dokumente</a></li>
                             </ul>
                         </li>
 
@@ -279,19 +279,8 @@
 	                                    </li>
 	                                @endif
 
-                                    <li><a class="dropdown-item" href="/gallery/list">Foto-Galerien</a></li>
-
-
-                                    <!-- FIXME: enable this Dokumente menu once we have a proper document management system in place
-                                    <li class="dropdown-submenu">
-                                        <a class="dropdown-item dropdown-toggle" href="#">
-                                            Dokumente
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="/documents">Alle Dokumente</a></li>
-                                        </ul>
-                                    </li>
-                                    -->
+                                    <li><a class="dropdown-item" href="/gallery/list">Fotos</a></li>
+                                    <li><a class="dropdown-item" href="/library/list">Dokumente</a></li>
 
                                 </ul>
                             </li>
