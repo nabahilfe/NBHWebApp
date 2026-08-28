@@ -3,6 +3,9 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
+
+<!-- FIXME: Wozu ist das hier? Wo wird das verwendet? Wozu ist das da? Löschen!!! -->
+
 @import eu.nabahilfe.webapp.GlobalModelAttributes
 @import eu.nabahilfe.webapp.media.images.Gallery
 @import eu.nabahilfe.webapp.media.images.GalleryImageInfo
