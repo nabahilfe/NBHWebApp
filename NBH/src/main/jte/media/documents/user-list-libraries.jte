@@ -21,7 +21,7 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>${(ctxt == null || !ctxt.isAuthenticated()) ? "Öffentliche " : "Alle "}Dokumente</h3>
+    <h3>${(ctxt == null || !ctxt.isAuthenticated()) ? "Öffentliche " : "Alle "}Dokument-Bibliotheken</h3>
 
     <table class="table table-bordered table-hover table-sm shadow h-100" id="libraryTable">
         <thead class="table-light">
