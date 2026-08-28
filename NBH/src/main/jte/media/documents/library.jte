@@ -6,6 +6,7 @@
 @import eu.nabahilfe.webapp.GlobalModelAttributes
 @import eu.nabahilfe.webapp.media.documents.Library
 @import eu.nabahilfe.webapp.media.documents.LibraryDocumentInfo
+@import static eu.nabahilfe.webapp.jte.TemplateHelpers.*
 
 @import java.util.List
 
@@ -62,6 +63,9 @@
                         <tr>
                             <th scope="col">Dateiname</th>
                             <th scope="col">Beschreibung</th>
+                            @if (!Boolean.TRUE.equals(readOnly))
+                                <th scope="col" class="text-center">Edit</th>
+                            @endif
                             <th scope="col" class="text-end">Größe</th>
                             @if (!Boolean.TRUE.equals(readOnly))
                                 <th scope="col" class="text-center">Löschen</th>
@@ -77,6 +81,22 @@
                                     </a>
                                 </td>
                                 <td>${document.description() != null ? document.description() : ""}</td>
+                                @if (!Boolean.TRUE.equals(readOnly))
+                                    <td class="text-center">
+                                        <button type="button"
+                                                class="btn ${document.description() != null && !document.description().isBlank() ? "btn-outline-success" : "btn-outline-primary"} btn-sm"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editDocumentDescriptionModal"
+                                                data-document-id="${document.id()}"
+                                                title="Beschreibung bearbeiten"
+                                                aria-label="Beschreibung bearbeiten">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <input type="hidden"
+                                               id="documentDescription_${document.id()}"
+                                               value="${document.description() != null ? document.description() : ""}">
+                                    </td>
+                                @endif
                                 <td class="text-end">${document.documentSize()} Bytes</td>
                                 @if (!Boolean.TRUE.equals(readOnly))
                                     <td class="text-center">
@@ -90,6 +110,37 @@
                         @endfor
                     </tbody>
                 </table>
+
+                @if (!Boolean.TRUE.equals(readOnly))
+                    <div class="modal fade" id="editDocumentDescriptionModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Dokumentbeschreibung bearbeiten</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" id="documentIdToEditDescription">
+                                    <label for="documentDescriptionInput" class="form-label">Beschreibung</label>
+                                    <textarea class="form-control"
+                                              id="documentDescriptionInput"
+                                              maxlength="250"
+                                              rows="4"
+                                              placeholder="Beschreibung für dieses Dokument"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                                    <button type="button" class="btn btn-primary" id="confirmDocumentDescriptionBtn">Speichern</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="documentDescriptionForm" method="post" style="display:none;">
+                        ${csrfHiddenInput}
+                        <input type="hidden" name="description" id="documentDescriptionFormValue">
+                    </form>
+                @endif
         @endif
 
         @if (Boolean.TRUE.equals(readOnly))
@@ -97,6 +148,44 @@
                 successMessage,
                 errorMessage
             )
+        @endif
+
+        @if (!Boolean.TRUE.equals(readOnly))
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    const descriptionModal = document.getElementById("editDocumentDescriptionModal");
+                    const descriptionForm = document.getElementById("documentDescriptionForm");
+                    const confirmDescriptionBtn = document.getElementById("confirmDocumentDescriptionBtn");
+                    const documentIdToEditDescription = document.getElementById("documentIdToEditDescription");
+                    const documentDescriptionInput = document.getElementById("documentDescriptionInput");
+                    const documentDescriptionFormValue = document.getElementById("documentDescriptionFormValue");
+
+                    if (!descriptionModal || !descriptionForm || !confirmDescriptionBtn
+                            || !documentIdToEditDescription || !documentDescriptionInput || !documentDescriptionFormValue) {
+                        return;
+                    }
+
+                    descriptionModal.addEventListener("show.bs.modal", event => {
+                        const trigger = event.relatedTarget;
+                        const documentId = trigger ? trigger.getAttribute("data-document-id") : null;
+                        documentIdToEditDescription.value = documentId || "";
+
+                        const descriptionHolder = documentId ? document.getElementById("documentDescription_" + documentId) : null;
+                        documentDescriptionInput.value = descriptionHolder ? descriptionHolder.value : "";
+                    });
+
+                    confirmDescriptionBtn.addEventListener("click", () => {
+                        const documentId = documentIdToEditDescription.value;
+                        if (!documentId) {
+                            return;
+                        }
+
+                        documentDescriptionFormValue.value = documentDescriptionInput.value;
+                        descriptionForm.action = "/library/${library.getId()}/document/" + documentId + "/description";
+                        descriptionForm.submit();
+                    });
+                });
+            </script>
         @endif
 
     </div>

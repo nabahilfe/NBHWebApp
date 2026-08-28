@@ -107,4 +107,23 @@ public class DocumentLibraryService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Dokument nicht gefunden."));
         documentRepository.delete(document);
     }
+
+    @Transactional
+    public void updateDocumentDescription(Long libraryId, Long documentId, String description) {
+        Document document = documentRepository.findByIdAndLibrary_Id(documentId, libraryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Dokument nicht gefunden."));
+
+        String normalizedDescription = description == null ? null : description.trim();
+        if (normalizedDescription != null && normalizedDescription.isBlank()) {
+            normalizedDescription = null;
+        }
+
+        if (normalizedDescription != null && normalizedDescription.length() > 250) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Die Dokumentbeschreibung darf maximal 250 Zeichen enthalten.");
+        }
+
+        document.setDescription(normalizedDescription);
+        documentRepository.save(document);
+    }
 }

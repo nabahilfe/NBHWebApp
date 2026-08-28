@@ -215,6 +215,29 @@ public class LibraryController {
         return "redirect:/library/" + libraryId;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
+    @PostMapping("/{libraryId}/document/{documentId}/description")
+    public String updateDocumentDescription(
+            @PathVariable Long libraryId,
+            @PathVariable Long documentId,
+            @RequestParam(required = false) String description,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            documentLibraryService.updateDocumentDescription(libraryId, documentId, description);
+            redirectAttributes.addFlashAttribute("successMessage", "Dokumentbeschreibung wurde gespeichert.");
+        }
+        catch (ResponseStatusException ex) {
+            String message = ex.getReason() != null ? ex.getReason() : "Dokumentbeschreibung konnte nicht gespeichert werden.";
+            redirectAttributes.addFlashAttribute("errorMessage", message);
+        }
+        catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Beim Speichern der Dokumentbeschreibung ist ein unerwarteter Fehler aufgetreten.");
+        }
+
+        return "redirect:/library/" + libraryId;
+    }
+
     @GetMapping("/{libraryId}/document/{documentId}")
     public ResponseEntity<byte[]> getDocument(
             @PathVariable Long libraryId,
