@@ -1,3 +1,11 @@
+# Quick Deployment Guide
+
+## check version information
+
+- in pom.xml check version information of nbh-app
+
+
+
 ## Build Docker File
 
 - start Docker Desktop Application
@@ -5,7 +13,6 @@
 ./build-docker.sh
 
 - this builds docker image and copies docker image to server
-
 
 
 
