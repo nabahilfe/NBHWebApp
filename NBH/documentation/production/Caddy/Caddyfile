@@ -1,0 +1,50 @@
+ma.nabahilfe.eu {
+
+    @maintenance file {
+        root /srv/maintenance
+        try_files /.enabled
+    }
+
+    handle @maintenance {
+        root * /srv/maintenance
+        rewrite * /index.html
+        header Retry-After "3600"
+        file_server
+    }
+
+    handle {
+        reverse_proxy nbh-app:8080
+    }
+}
+
+
+www.nabahilfe.eu {
+
+    @maintenance file {
+        root /srv/maintenance
+        try_files /.enabled
+    }
+
+    handle @maintenance {
+        root * /srv/maintenance
+        rewrite * /index.html
+        header Retry-After "3600"
+        file_server
+    }
+
+    handle {
+        reverse_proxy nbh-app:8080
+    }
+}
+
+
+acceptance-test.nabahilfe.eu {
+
+	reverse_proxy nbh-app:8080
+}
+
+
+monitor.nabahilfe.eu {
+
+    reverse_proxy uptime-kuma:3001
+}
