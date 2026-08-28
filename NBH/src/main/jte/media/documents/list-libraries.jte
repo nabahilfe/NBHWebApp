@@ -26,11 +26,11 @@
     <table class="table table-bordered table-hover table-sm shadow h-100" id="libraryTable">
         <thead class="table-light">
             <tr>
-                <th scope="col" data-sort-key="title">Titel <span class="sort-indicator" aria-hidden="true">↕</span></th>
+                <th scope="col" data-sort-key="title">Titel <span class="sort-indicator" >↕</span></th>
                 <th scope="col" class="text-center">Edit</th>
-                <th scope="col" data-sort-key="showFrom">Anzeigen von <span class="sort-indicator" aria-hidden="true">↕</span></th>
-                <th scope="col" data-sort-key="showTo">Anzeigen bis <span class="sort-indicator" aria-hidden="true">↕</span></th>
-                <th scope="col" data-sort-key="isPublic">Sichtbarkeit <span class="sort-indicator" aria-hidden="true">↕</span></th>
+                <th scope="col" data-sort-key="showFrom">Anzeigen von <span class="sort-indicator" >↕</span></th>
+                <th scope="col" data-sort-key="showTo">Anzeigen bis <span class="sort-indicator" >↕</span></th>
+                <th scope="col" data-sort-key="isPublic">Sichtbarkeit <span class="sort-indicator" >↕</span></th>
                 <th scope="col">Beschreibung</th>
                 <th scope="col" class="text-center">Löschen</th>
             </tr>
@@ -72,7 +72,7 @@
         </tbody>
     </table>
 
-    <div class="modal fade" id="confirmDeleteLibraryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="confirmDeleteLibraryModal" tabindex="-1" >
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

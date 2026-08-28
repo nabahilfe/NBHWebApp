@@ -51,7 +51,7 @@
                         <button type="button" class="btn btn-outline-danger bi bi-box-arrow-left w-75" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">&nbsp; Abmelden</button>
 
                         <!-- Logout Confirm Modal -->
-                        <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-labelledby="logoutConfirmModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-labelledby="logoutConfirmModalLabel" >
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">

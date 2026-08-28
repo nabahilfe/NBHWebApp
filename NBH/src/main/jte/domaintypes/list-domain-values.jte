@@ -84,7 +84,7 @@
                                 </form>
 
                                 <div class="modal fade" id="confirmDeleteDomainValueModal-${adv.getId()}" tabindex="-1"
-                                     aria-labelledby="confirmDeleteDomainValueModalLabel-${adv.getId()}" aria-hidden="true">
+                                     aria-labelledby="confirmDeleteDomainValueModalLabel-${adv.getId()}" >
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">

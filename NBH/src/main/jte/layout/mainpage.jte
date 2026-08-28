@@ -16,7 +16,7 @@
 
 
 <!doctype html>
-<html lang="en" data-bs-theme="auto">
+<html lang="de" data-bs-theme="auto">
     <head>
 
         <meta name="description" content="NBH - Startseite der Nachbarschaftshilfe Maria Anzbach.">
@@ -110,7 +110,7 @@
                             <!-- Dropdown User -->
                             <li class="nav-item dropdown">
                                 @if (ctxt != null && ctxt.isAuthenticated())
-                                    <button class="nav-link dropdown-toggle bi-person-square" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                    <button class="nav-link dropdown-toggle bi-person-square" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                                         ${ctxt.getFirstNameLastName()}
                                     </button>
                                     <ul class="dropdown-menu">
@@ -142,7 +142,7 @@
                         <!-- Dropdown Mitglied -->
                         @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER"))
                             <li class="nav-item dropdown">
-                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                                     Mitglieder
                                 </button>
                                 <ul class="dropdown-menu">
@@ -160,7 +160,7 @@
                         <!-- Dropdown Zeitschecks -->
                         @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "TIME_KEEPER", "EXECUTIVE_MEMBER"))
                             <li class="nav-item dropdown">
-                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                                     Zeitschecks
                                 </button>
                                 <ul class="dropdown-menu">
@@ -290,7 +290,7 @@
                         <!-- Dropdown Domain Values -->
                         @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER", "TREASURER"))
                             <li class="nav-item dropdown">
-                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                                     Einstellungen
                                 </button>
                                 <ul class="dropdown-menu">
@@ -314,7 +314,7 @@
                         <!-- Dropdown Auswertung -->
                         @if (ctxt != null && ctxt.hasAnyRole("ADMIN", "EXECUTIVE_MEMBER", "BOARD_MEMBER"))
                             <li class="nav-item dropdown">
-                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
+                                <button class="nav-link dropdown-toggle btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                                     Auswertungen
                                 </button>
                                 <ul class="dropdown-menu">
@@ -348,9 +348,9 @@
         </nav>
 
         <!-- Haupt-Content -->
-        <div class="container-fluid px-2 px-sm-3 px-lg-5 pb-4">
+        <main class="container-fluid px-2 px-sm-3 px-lg-5 pb-4">
             ${content}
-        </div>
+        </main>
 
 
         <footer class="text-center text-muted small py-3 mt-2 border-top">
@@ -366,7 +366,7 @@
         </footer>
 
         <!-- Release Notes Modal -->
-        <div class="modal fade" id="releaseNotesModal" tabindex="-1" aria-labelledby="releaseNotesModalLabel" aria-hidden="true">
+        <div class="modal fade" id="releaseNotesModal" tabindex="-1" aria-labelledby="releaseNotesModalLabel" >
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                 <div class="modal-content border-success-subtle">
                     <div class="modal-header" style="background-color: #77DD77;">

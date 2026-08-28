@@ -98,8 +98,7 @@
                                 <img
                                     src="/gallery/${gallery.getId()}/image/${images.get(imageIndex).id()}/thumbnail"
                                     class="gallery-thumb-square-image"
-                                    loading="lazy"
-                                    alt="Bild">
+                                    loading="lazy">
                             </div>
 
                         </a>
@@ -108,7 +107,7 @@
                                 && images.get(imageIndex).description() != null
                                 && !images.get(imageIndex).description().isBlank())
                             <div class="mt-2 small text-center text-muted">
-                                ${truncateWithEllipsis(images.get(imageIndex).description(), 40)}
+                                ${images.get(imageIndex).description()}
                             </div>
                         @endif
 
@@ -146,7 +145,7 @@
 
 
             @if (!Boolean.TRUE.equals(readOnly))
-                <div class="modal fade" id="confirmDeleteImageModal" tabindex="-1" aria-hidden="true">
+                <div class="modal fade" id="confirmDeleteImageModal" tabindex="-1" >
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -165,7 +164,7 @@
                     </div>
                 </div>
 
-                <div class="modal fade" id="editImageDescriptionModal" tabindex="-1" aria-hidden="true">
+                <div class="modal fade" id="editImageDescriptionModal" tabindex="-1" >
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -200,7 +199,7 @@
             @endif
 
 
-            <div class="modal fade" id="galleryLightboxModal" tabindex="-1" aria-hidden="true">
+            <div class="modal fade" id="galleryLightboxModal" tabindex="-1" >
                 <div class="modal-dialog modal-dialog-centered modal-xl gallery-lightbox-dialog">
                     <div class="modal-content border-0 bg-transparent shadow-none">
                         <div class="modal-body p-0 position-relative">
@@ -231,14 +230,14 @@
                                                             type="button"
                                                             data-bs-target="#galleryLightboxCarousel"
                                                             data-bs-slide="prev">
-                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                        <span class="carousel-control-prev-icon" ></span>
                                                         <span class="visually-hidden">Previous</span>
                                                     </button>
                                                     <button class="carousel-control-next gallery-carousel-control gallery-carousel-control-next"
                                                             type="button"
                                                             data-bs-target="#galleryLightboxCarousel"
                                                             data-bs-slide="next">
-                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                        <span class="carousel-control-next-icon" ></span>
                                                         <span class="visually-hidden">Next</span>
                                                     </button>
                                                 @endif
