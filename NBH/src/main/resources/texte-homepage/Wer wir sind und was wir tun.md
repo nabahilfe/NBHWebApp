@@ -1,25 +1,17 @@
-**Die Nachbarschaftshilfe Maria Anzbach ist ein gemeinnütziger Verein, dessen Mitglieder Unterstützung und Hilfe auf Stunden-Tausch-Basis anbieten.**  
+**Wir sind die Nachbarschaftshilfe Maria Anzbach – ein Verein, bei dem Menschen einander einfach helfen!**
 
-Auf einem Stundenkonto werden die erworbenen Zeitguthaben verbucht und Sie können sich wiederum von anderen helfen lassen.
-Damit möchten wir dazu beitragen, dass Sie möglichst lange in Ihrer vertrauten Umgebung Ihre Lebensqualität genießen können. 
-Wir haben aber auch Angebote für junge Familien, wie z.B. Leih-Oma und Leih-Opa.
+Das Prinzip ist einfach: Du hilfst jemandem und sammelst dafür Stunden. Die kommen auf dein persönliches Zeitkonto. Wenn Du  selbst Unterstützung brauchst, holst Du dir genau diese Stunden wieder zurück.
 
+Unser Ziel: Dass alle möglichst lange gerne dort leben, wo sie zuhause sind – in unserer Gemeinde, mit den Menschen, die sie kennen. Und nein, wir sind kein „nur für Senioren“-Verein. Auch junge Familien sind willkommen – Stichwort: Leih-Oma und Leih-Opa.
 
-#### Angebote der Nachbarschaftshilfe Maria Anzbach
+#### Was wir tun
 
-- Erfahrungsaustausch und Gespräche
-- Alltägliche Hilfsdienste
-- Initiieren und Organisieren von Freizeitaktivitäten
-- Unterstützung bei Formularen sowie Behördenkontakten
-- Transport und Fahrtendienste
-- Leih-Oma / Leih-Opa
-- Kleinere Außen- oder Reparaturarbeiten
-- Hilfe beim Bedienen technischer Geräte und Computer
-- Sonstige Hilfestellungen
+***Miteinander reden und Erfahrungen austauschen &bull; Praktische Alltagshilfe wie Einkaufen und Besorgungen &bull; Gemeinsam Freizeit planen und etwas unternehmen &bull; Unterstützung bei Papierkram, Formularen, Behörden &bull; Fahrdienste und Transporte  &bull; Leih-Oma und Leih-Opa für Familien mit Kindern &bull; Kleinere Reparaturen oder Arbeiten draußen &bull; Hilfe bei Handy, Computer und Co. &bull; Und vieles, was sonst noch anfällt – frag einfach nach!***  
+*[Schau dir Fotos an um einen Eindruck zu bekommen!](https://ma.nabahilfe.eu/gallery/user/9)*
 
-#### EEG - Erneuerbare Energie Gemeinschaft
+#### Erneuerbare Energie Gemeinschaft - EEG
 
-Seit Beginn 2026 steht den Mitgliedern der Nachbarschaftshilfe die kostenfreie Teilnahme an der vereinseigenen Erneuerbaren-Energie-Gemeinschaft zu den jeweils geltenden Nutzungsbedingungen offen. Es besteht damit die Möglichkeit lokal erzeugten Sonnenstrom günstig zu beziehen und einen Teil der Netzkosten einzusparen.
+Seit Anfang 2026 können Mitglieder der Nachbarschaftshilfe kostenfrei an der vereinseigenen Energiegemeinschaft teilnehmen. So lässt sich lokal erzeugter Sonnenstrom kostengünstig beziehen und auch ein Teil der Netzkosten einsparen. Es gelten die jeweiligen Nutzungsbedingungen.
 
 **Ansprechperson für weitere Fragen/Informationen zur EEG**  
 &nbsp; Clemens Csürös  
