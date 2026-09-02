@@ -136,6 +136,32 @@
                 </p>
             </div>
 
+
+<!-- FIXME - Soll diese Idee weiter verfogt werden???
+
+            <button type="button" class="btn btn-danger d-block mx-auto mb-3" data-bs-toggle="modal" data-bs-target="#moreInfoModal">
+                Ich will mehr wissen!
+            </button>
+
+            <div class="modal fade" id="moreInfoModal" tabindex="-1" aria-labelledby="moreInfoModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                    <div class="modal-content border-success-subtle">
+                        <div class="modal-header" style="background-color: #77DD77;">
+                            <h5 class="modal-title fw-semibold" id="moreInfoModalLabel">Mehr Infos</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                        </div>
+                        <div class="modal-body px-4 py-3">
+                            Wird noch erweitert
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Schließen</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+-->
+
             <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4"
                     style="background-color: #ECFEFF;">
                 <h2>Termine und Veranstaltungen</h2>
