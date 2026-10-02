@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.accountings.AccountingEntry;
 import eu.nabahilfe.webapp.accountings.AccountingRepository;
 import eu.nabahilfe.webapp.accountings.TransactionType;
@@ -42,6 +41,7 @@ import eu.nabahilfe.webapp.domaintypes.AmountDomainValue;
 import eu.nabahilfe.webapp.domaintypes.AmountDomainValueRepository;
 import eu.nabahilfe.webapp.osm.NominatimService;
 import eu.nabahilfe.webapp.security.SecurityUtils;
+import eu.nabahilfe.webapp.system.NbhConst;
 import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
 import eu.nabahilfe.webapp.timetransfers.TimeTransferRepository;
 import jakarta.transaction.Transactional;
@@ -82,7 +82,6 @@ public class MemberController {
         this.accountingRepository = accountingRepository;
     }
 
-
     @PreAuthorize("hasRole('USER')")
     @ModelAttribute("joiningDateMin")
     public String joiningDateMin() {
@@ -99,9 +98,10 @@ public class MemberController {
     @PreAuthorize("hasRole('USER')")
     @ModelAttribute("member")
     public Member findMember(@PathVariable(required = false) Long id) {
-        return id == null ? new Member() : memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id
-                        + ". Please ensure the ID is correct and the member exists in the database."));
+        return id == null ? new Member()
+                : memberRepository.findById(id)
+                        .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id
+                                + ". Please ensure the ID is correct and the member exists in the database."));
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -113,7 +113,6 @@ public class MemberController {
                 .collect(java.util.stream.Collectors.toList());
     }
 
-
     @PreAuthorize("hasRole('USER')")
     @ModelAttribute("numberOfTimecheques")
     public Integer getNumberOfTimecheques(@ModelAttribute Member member) {
@@ -122,7 +121,6 @@ public class MemberController {
         else
             return 0;
     }
-
 
     // ----------------------
     // SEARCH, LIST & DETAIL
@@ -133,10 +131,10 @@ public class MemberController {
     String listUnaccountedMembershipFees(final Model model) {
         log.debug("Listing unaccounted MembershipFees");
         model.addAttribute("membershipFees", membershipFeeRepository.findByAccountedByIsNullAndDoNotChargeFalse());
-        log.debug("Found {} unaccounted MembershipFees", ((java.util.List<?>) model.getAttribute("membershipFees")).size());
+        log.debug("Found {} unaccounted MembershipFees",
+                ((java.util.List<?>) model.getAttribute("membershipFees")).size());
         return "members/list-unaccounted-membershipfees";
     }
-
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @GetMapping("/open-membership-fees")
@@ -152,7 +150,6 @@ public class MemberController {
         return "members/list-open-membership-fees";
     }
 
-
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/search")
     public String searchMembers(@RequestParam String searchTerm, Model model, RedirectAttributes redirectAttributes) {
@@ -162,19 +159,16 @@ public class MemberController {
         return "redirect:/members";
     }
 
-
     @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @GetMapping("/resigned")
     public String listResignedMembers(Model model, RedirectAttributes redirectAttributes,
-                                      jakarta.servlet.http.HttpSession session) {
+            jakarta.servlet.http.HttpSession session) {
         // remove searchTerm from session so all resigned members are shown unfiltered
         session.removeAttribute("searchTerm");
         model.addAttribute("searchTerm", "");
         redirectAttributes.addFlashAttribute("resignedOnly", Boolean.TRUE);
         return "redirect:/members";
     }
-
-
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'EXECUTIVE_MEMBER')")
     @GetMapping
@@ -184,8 +178,9 @@ public class MemberController {
             @RequestParam Optional<Integer> page, @RequestParam Optional<Integer> size,
             RedirectAttributes redirectAttributes) {
 
-        String searchTerm = (model.getAttribute("searchTerm") != null ?
-                model.getAttribute("searchTerm").toString().trim() : "");
+        String searchTerm = (model.getAttribute("searchTerm") != null
+                ? model.getAttribute("searchTerm").toString().trim()
+                : "");
 
         int currentPage = page.orElse(0);
         int pageSize = size.orElse(NbhConst.PAGINATION_PAGE_SIZE);
@@ -198,7 +193,8 @@ public class MemberController {
 
         PageRequest pageRequest = PageRequest.of(currentPage, pageSize, sort);
 
-        Boolean resignedOnly = (model.getAttribute("resignedOnly") != null && (Boolean) model.getAttribute("resignedOnly") ? Boolean.TRUE : Boolean.FALSE);
+        Boolean resignedOnly = (model.getAttribute("resignedOnly") != null
+                && (Boolean) model.getAttribute("resignedOnly") ? Boolean.TRUE : Boolean.FALSE);
 
         Page<Member> memberPage = null;
         if (searchTerm.length() <= 0) {
@@ -212,16 +208,17 @@ public class MemberController {
             if (searchTerm.matches("\\d+")) {
                 try {
                     memberNmbr = Integer.parseInt(searchTerm);
-                }
-                catch (NumberFormatException e) {
-                    log.warn("Failed to parse searchTerm '{}' as member number, ignoring numeric search term", searchTerm);
+                } catch (NumberFormatException e) {
+                    log.warn("Failed to parse searchTerm '{}' as member number, ignoring numeric search term",
+                            searchTerm);
                 }
             }
             if (resignedOnly) {
                 memberPage = memberRepository.findAllInactive(pageRequest);
             } else {
-                memberPage = memberRepository.findAllActiveByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
-                        searchTerm, searchTerm, memberNmbr, pageRequest);
+                memberPage = memberRepository
+                        .findAllActiveByLastNameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrMemberNmbr(
+                                searchTerm, searchTerm, memberNmbr, pageRequest);
             }
         }
 
@@ -233,7 +230,8 @@ public class MemberController {
         redirectAttributes.addFlashAttribute("orderBy", orderBy);
         redirectAttributes.addFlashAttribute("order", order);
 
-        log.debug("\nFound {} members matching serchTerm='{}' and sort='{}'", memberPage.getTotalElements(), searchTerm, sort);
+        log.debug("\nFound {} members matching serchTerm='{}' and sort='{}'", memberPage.getTotalElements(), searchTerm,
+                sort);
 
         int totalPages = memberPage.getTotalPages();
         if (totalPages > 0) {
@@ -247,12 +245,11 @@ public class MemberController {
             return "members/list-members";
     }
 
-
     @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @GetMapping("/{id}")
     String editMember(final Model model, @PathVariable Long id, RedirectAttributes redirectAttributes,
-                      @RequestParam(required = false) Integer year,
-                      jakarta.servlet.http.HttpSession session) {
+            @RequestParam(required = false) Integer year,
+            jakarta.servlet.http.HttpSession session) {
         Optional<Member> member = memberRepository.findById(id);
 
         if (member.isPresent() && isSystemAdmin(member.get())) {
@@ -274,12 +271,14 @@ public class MemberController {
         }
 
         model.addAttribute("selectedYear", resolvedYear);
-        model.addAttribute("receivedTimeTransfers", timeTransferRepository.findAllByToMember_IdAndYearOrderByDateOfServiceDesc(id, resolvedYear));
-        model.addAttribute("givenTimeTransfers", timeTransferRepository.findAllByFromMember_IdAndYearOrderByDateOfServiceDesc(id, resolvedYear));
-        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdAndYearOrderByTransactionDateDesc(id, resolvedYear));
+        model.addAttribute("receivedTimeTransfers",
+                timeTransferRepository.findAllByToMember_IdAndYearOrderByDateOfServiceDesc(id, resolvedYear));
+        model.addAttribute("givenTimeTransfers",
+                timeTransferRepository.findAllByFromMember_IdAndYearOrderByDateOfServiceDesc(id, resolvedYear));
+        model.addAttribute("purchasedTimeCheques",
+                timeCheckRepository.findAllByAssignedTo_IdAndYearOrderByTransactionDateDesc(id, resolvedYear));
         return "members/detail-member";
     }
-
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/statistics")
@@ -303,7 +302,6 @@ public class MemberController {
         return "members/member-statistics";
     }
 
-
     private long[] extracted() {
         return new long[2];
     }
@@ -326,12 +324,11 @@ public class MemberController {
         return "members/birthdays";
     }
 
-
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/mydata/{id}")
     String myData(final Model model, @PathVariable Long id,
-                  @RequestParam(required = false) Integer year,
-                  jakarta.servlet.http.HttpSession session) {
+            @RequestParam(required = false) Integer year,
+            jakarta.servlet.http.HttpSession session) {
         log.debug("Showing /users/mydata/{}", id);
         // Ensure that the member has only access to his own data
         // get current authenticated user from security context
@@ -350,9 +347,11 @@ public class MemberController {
         }
 
         // now safe to load the member record
-        Member member = memberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id));
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id));
 
-        // remember selected year in session; fall back to session value, then current year
+        // remember selected year in session; fall back to session value, then current
+        // year
         String sessionKey = "selectedYear_" + id;
         int resolvedYear;
         if (year != null) {
@@ -365,17 +364,18 @@ public class MemberController {
 
         model.addAttribute("selectedYear", resolvedYear);
         model.addAttribute("roleNames", member.getRole() != null ? member.getRole().getRoleName() : "Mitglied");
-        model.addAttribute("receivedTimeTransfers", timeTransferRepository.findAllByToMember_IdAndYearOrderByDateOfServiceDesc(id, resolvedYear));
-        model.addAttribute("givenTimeTransfers", timeTransferRepository.findAllByFromMember_IdAndYearOrderByDateOfServiceDesc(id, resolvedYear));
-        model.addAttribute("purchasedTimeCheques", timeCheckRepository.findAllByAssignedTo_IdAndYearOrderByTransactionDateDesc(id, resolvedYear));
+        model.addAttribute("receivedTimeTransfers",
+                timeTransferRepository.findAllByToMember_IdAndYearOrderByDateOfServiceDesc(id, resolvedYear));
+        model.addAttribute("givenTimeTransfers",
+                timeTransferRepository.findAllByFromMember_IdAndYearOrderByDateOfServiceDesc(id, resolvedYear));
+        model.addAttribute("purchasedTimeCheques",
+                timeCheckRepository.findAllByAssignedTo_IdAndYearOrderByTransactionDateDesc(id, resolvedYear));
         return "members/view-member-data";
-     }
+    }
 
     // --------------------
     // CREATE NEW, UPDATE
     // --------------------
-
-
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @GetMapping("/new")
@@ -384,12 +384,11 @@ public class MemberController {
         return "members/detail-member";
     }
 
-
     @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @Transactional(rollbackOn = Exception.class)
     @PostMapping
     public String saveMember(Model model, @ModelAttribute @Valid Member member,
-                BindingResult result, RedirectAttributes redirectAttributes) {
+            BindingResult result, RedirectAttributes redirectAttributes) {
 
         log.debug("Will Save Member afer Validation: {}", member);
 
@@ -401,7 +400,8 @@ public class MemberController {
         }
         if (member.getEmail() != null && member.getEmail().toLowerCase().startsWith(NbhConst.ADMIN_EMAIL_PREFIX)) {
             redirectAttributes.addFlashAttribute("errorMessage",
-                    "Die E-Mail-Adresse '" + NbhConst.ADMIN_EMAIL_PREFIX + "' ist für den System-Administrator reserviert.");
+                    "Die E-Mail-Adresse '" + NbhConst.ADMIN_EMAIL_PREFIX
+                            + "' ist für den System-Administrator reserviert.");
             return "redirect:/members";
         }
 
@@ -440,7 +440,6 @@ public class MemberController {
             member.setIsImportedMember(false);
         }
 
-
         log.debug("Saving Member: {}", member);
 
         member = trimAddressData(member);
@@ -455,13 +454,13 @@ public class MemberController {
         }
 
         redirectAttributes.addFlashAttribute("numberOfTimecheques", timeCheckRepository.countByAssignedTo(member));
-        redirectAttributes.addFlashAttribute("successMessage", "Daten für " + member.getName() + " wurden gespeichert.");
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Daten für " + member.getName() + " wurden gespeichert.");
 
         log.debug("Member saved: {}", member);
 
         return "redirect:/members/" + member.getId();
     }
-
 
     private @Valid Member trimAddressData(@Valid Member member) {
         if (member.getStreet() != null) {
@@ -480,27 +479,28 @@ public class MemberController {
         return member;
     }
 
-
     private String validateOnlyOneSozialkonto(@Valid Member member) {
-        if (member.isSozialkonto() && memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME, NbhConst.SOZIALKONTO_LAST_NAME).size() > 0) {
+        if (member.isSozialkonto()
+                && memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME,
+                        NbhConst.SOZIALKONTO_LAST_NAME).size() > 0) {
             return "Es gibt bereits ein Sozialkonto, es kann kein weiteres Sozialkonto angelegt werden!";
         }
 
         return null;
     }
 
-
     private String validateOnlyOneSysAdmin(@Valid Member member) {
-        if (member.isSystemAdmin() && memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME, NbhConst.ADMIN_ACCOUNT_LAST_NAME).size() > 0) {
+        if (member.isSystemAdmin()
+                && memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME,
+                        NbhConst.ADMIN_ACCOUNT_LAST_NAME).size() > 0) {
             return "Es gibt bereits einen System-Administrator, es kann kein weiterer System-Administrator angelegt werden!";
         }
 
         return null;
     }
 
-
     private Integer getNextMemberNumber() {
-        Integer nmbr =  memberRepository.findTopByOrderByMemberNmbrDesc()
+        Integer nmbr = memberRepository.findTopByOrderByMemberNmbrDesc()
                 .map(m -> m.getMemberNmbr() + 1)
                 .orElse(NbhConst.START_MEMBER_NUMBER);
 
@@ -511,7 +511,6 @@ public class MemberController {
         return nmbr;
     }
 
-
     @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @PostMapping("/{id}")
     public String updateMember(Model model, @ModelAttribute @Valid Member member,
@@ -520,7 +519,6 @@ public class MemberController {
         log.debug("Update Member with id {}: {}", id, member);
         return saveMember(model, member, result, redirectAttributes);
     }
-
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER')")
     @Transactional(rollbackOn = Exception.class)
@@ -534,13 +532,13 @@ public class MemberController {
 
         if (memberIds != null) {
 
-            Optional<AmountDomainValue> value = amountDomainValueRepository.findByCodeAndDate(AmountDomainType.MEMBERSHIP_FEE.name(), LocalDate.now());
+            Optional<AmountDomainValue> value = amountDomainValueRepository
+                    .findByCodeAndDate(AmountDomainType.MEMBERSHIP_FEE.name(), LocalDate.now());
             if (value.isEmpty()) {
                 redirectAttributes.addFlashAttribute("errorMessage",
                         "Es konnte kein gültiger Mitgliedsbeitrag gefunden werden. Die Konfiguration der Mitgliedsbeiträge prüfen!");
                 return "redirect:/members/open-membership-fees";
             }
-
 
             for (int i = 0; i < memberIds.size(); i++) {
 
@@ -549,7 +547,8 @@ public class MemberController {
                 log.info("-> memberId: {}, doNotCharge: {}", memberId, doNotCharge);
 
                 MembershipFee fee = new MembershipFee();
-                fee.setMember(memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + memberId)));
+                fee.setMember(memberRepository.findById(memberId)
+                        .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + memberId)));
                 fee.setForYear(Year.now());
                 fee.setDoNotCharge(doNotCharge);
                 fee.setTransactionDate(LocalDate.now());
@@ -558,7 +557,8 @@ public class MemberController {
                     fee.setAmount(BigDecimal.ZERO);
                     membershipFeeRepository.save(fee);
 
-                    // create dummy accounting entry to mark this fee as accounted without actual financial transaction
+                    // create dummy accounting entry to mark this fee as accounted without actual
+                    // financial transaction
                     AccountingEntry entry = new AccountingEntry();
                     entry.setAccountingDate(LocalDate.now());
                     entry.setAccountableName(fee.getAccountableName());
@@ -569,8 +569,7 @@ public class MemberController {
                     entry.setAccountableMember(fee.getMember());
                     entry.setDescription("Keinen Beitrag einheben für " + fee.getForYear());
                     accountingRepository.save(entry);
-                }
-                else {
+                } else {
                     fee.setAmount(value.get().getAmount());
                     membershipFeeRepository.save(fee);
                 }
@@ -584,7 +583,6 @@ public class MemberController {
         return "redirect:/members/open-membership-fees";
     }
 
-
     // --------------------
     // LÖSCHEN
     // --------------------
@@ -596,7 +594,8 @@ public class MemberController {
         Optional<Member> member = memberRepository.findById(id);
         if (member.isPresent() && isSystemAdmin(member.get())) {
             redirectAttributes.addFlashAttribute("resignedOnly", Boolean.TRUE);
-            redirectAttributes.addFlashAttribute("errorMessage", "Das Mitglied 'System Administrator' kann nicht gelöscht werden.");
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Das Mitglied 'System Administrator' kann nicht gelöscht werden.");
             return "redirect:/members";
         }
         if (member.isPresent() && isSozialkonto(member.get())) {
@@ -624,7 +623,6 @@ public class MemberController {
         return "redirect:/members";
     }
 
-
     private void anonymizeMemberData(Member member) {
         member.setSalutation(null);
         member.setTitle(null);
@@ -641,18 +639,21 @@ public class MemberController {
         member.setCity("*");
         member.setAccumulatedHours(null);
         member.setDirectDebitAuthorization(false);
-        // do not overwrite memberNmbr, joiningDate and resignationDate to preserve historical data and referential integrity
+        // do not overwrite memberNmbr, joiningDate and resignationDate to preserve
+        // historical data and referential integrity
         memberRepository.save(member);
         return;
     }
-
 
     private String transferTimeChequesToSozialkonto(Member member) {
         if (member.getAccumulatedHours() == null || member.getAccumulatedHours().intValue() <= 0) {
             return null; // No time cheques to transfer
         }
 
-        Member sozialkonto = memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME, NbhConst.SOZIALKONTO_LAST_NAME).stream().findFirst().orElse(null);
+        Member sozialkonto = memberRepository
+                .findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME,
+                        NbhConst.SOZIALKONTO_LAST_NAME)
+                .stream().findFirst().orElse(null);
         if (sozialkonto == null) {
             log.error("Sozialkonto not found. Cannot transfer time cheques.");
             return "Kein Sozialkonto gefunden. Zeitgutscheine konnten nicht übertragen werden, löschen abgebrochen.";
@@ -670,7 +671,6 @@ public class MemberController {
         return null;
     }
 
-
     // ------------------
     // validating member data
     // ------------------
@@ -682,13 +682,16 @@ public class MemberController {
         if (Period.between(member.getBirthdate(), currentDate).getYears() < NbhConst.MIN_MEMBER_AGE)
             return "Die Person ist noch nicht " + NbhConst.MIN_MEMBER_AGE + " Jahre alt!";
 
-        // joiningDate rules (only for new members — existing members have a locked joiningDate)
+        // joiningDate rules (only for new members — existing members have a locked
+        // joiningDate)
         if (member.getId() == null && member.getJoiningDate() != null) {
             LocalDate joiningDate = member.getJoiningDate();
-            // must not be more than 2 months in the past (starting from the 1st of that month)
+            // must not be more than 2 months in the past (starting from the 1st of that
+            // month)
             LocalDate earliestJoining = currentDate.minusMonths(2).withDayOfMonth(1);
             if (joiningDate.isBefore(earliestJoining))
-                return "Das Beitrittsdatum darf nicht mehr als 2 Monate in der Vergangenheit liegen (frühestens: " + earliestJoining + ").";
+                return "Das Beitrittsdatum darf nicht mehr als 2 Monate in der Vergangenheit liegen (frühestens: "
+                        + earliestJoining + ").";
         }
 
         // resignationDate rules
@@ -701,7 +704,8 @@ public class MemberController {
             LocalDate latestResignation = currentDate.plusMonths(2);
             latestResignation = latestResignation.withDayOfMonth(latestResignation.lengthOfMonth());
             if (resignationDate.isAfter(latestResignation))
-                return "Das Austrittsdatum darf nicht mehr als 2 Monate in der Zukunft liegen (spätestens: " + latestResignation + ").";
+                return "Das Austrittsdatum darf nicht mehr als 2 Monate in der Zukunft liegen (spätestens: "
+                        + latestResignation + ").";
         }
 
         // phoneNumber rules
@@ -713,18 +717,19 @@ public class MemberController {
 
         // do not allow sysadmin in email
         if (member.getEmail() != null && member.getEmail().toLowerCase().startsWith(NbhConst.ADMIN_EMAIL_PREFIX))
-            return "Die E-Mail-Adresse '" + NbhConst.ADMIN_EMAIL_PREFIX + "' ist für den System-Administrator reserviert und kann nicht verwendet werden!";
+            return "Die E-Mail-Adresse '" + NbhConst.ADMIN_EMAIL_PREFIX
+                    + "' ist für den System-Administrator reserviert und kann nicht verwendet werden!";
 
         return null;
     }
-
 
     // ------------------
     // System-Konto protection
     // ------------------
 
     private boolean isSystemAdmin(Member member) {
-        if (member.getEmail() == null) return false;
+        if (member.getEmail() == null)
+            return false;
         return member.getEmail().toLowerCase().startsWith(NbhConst.ADMIN_EMAIL_PREFIX);
     }
 
@@ -737,7 +742,6 @@ public class MemberController {
     private boolean isSozialkonto(Member member) {
         return member.isSozialkonto();
     }
-
 
     // ------------------
     // Address validation
@@ -768,6 +772,5 @@ public class MemberController {
         log.debug("Starting address validation stream (all active members)");
         return addressValidationService.validateAllAddresses();
     }
-
 
 }

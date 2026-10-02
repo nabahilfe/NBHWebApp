@@ -3,7 +3,7 @@
  * Licensed under the MIT License (see LICENSE file).
  */
 
-package eu.nabahilfe.webapp;
+package eu.nabahilfe.webapp.system;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,7 +23,8 @@ import eu.nabahilfe.webapp.org.OfferRepository;
 import jakarta.transaction.Transactional;
 
 /**
- * Ensures the built-in System-Administrator role and member exist at application startup.
+ * Ensures the built-in System-Administrator role and member exist at
+ * application startup.
  */
 @Component
 @Order(1)
@@ -35,13 +36,12 @@ public class DefaultDataInitializer implements CommandLineRunner {
     private final MemberRepository memberRepository;
     private final OfferRepository offerRepository;
 
-
-    public DefaultDataInitializer(RoleRepository roleRepository, MemberRepository memberRepository, OfferRepository offerRepository) {
+    public DefaultDataInitializer(RoleRepository roleRepository, MemberRepository memberRepository,
+            OfferRepository offerRepository) {
         this.roleRepository = roleRepository;
         this.memberRepository = memberRepository;
         this.offerRepository = offerRepository;
     }
-
 
     @Override
     @Transactional(rollbackOn = Exception.class)
@@ -50,13 +50,18 @@ public class DefaultDataInitializer implements CommandLineRunner {
         log.info("Running DefaultDataInitializer to ensure default roles, admin member and offers exist");
         Member admin = null;
         try {
-            // System Administrator member must exist, otherwise we cannot create the default roles and offers
-            admin = memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME, NbhConst.ADMIN_ACCOUNT_LAST_NAME)
-                    .stream().findFirst().orElseThrow(() -> new IllegalStateException("System Administrator member not found, must be created manually with insert to database!"));
+            // System Administrator member must exist, otherwise we cannot create the
+            // default roles and offers
+            admin = memberRepository
+                    .findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.ADMIN_ACCOUNT_FIRST_NAME,
+                            NbhConst.ADMIN_ACCOUNT_LAST_NAME)
+                    .stream().findFirst().orElseThrow(() -> new IllegalStateException(
+                            "System Administrator member not found, must be created manually with insert to database!"));
         } catch (Exception e) {
             e.printStackTrace();
             log.error("System Administrator member not found, must be created manually with insert to database!", e);
-            throw new IllegalStateException("Application startup failed, no System Administrator member found, initial Data not created!", e);
+            throw new IllegalStateException(
+                    "Application startup failed, no System Administrator member found, initial Data not created!", e);
         }
         try {
             Role adminRole = ensureAdminRoleExists(admin);
@@ -87,7 +92,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
 
-
         // '200','Alltägliche Hilfsdienste'
         offer = new Offer();
         offer.setCode("200");
@@ -95,7 +99,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         offer.setCreatedBy(admin);
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
-
 
         // '300','Initiieren und Organisieren von Freizeitaktivitäten'
         offer = new Offer();
@@ -105,7 +108,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
 
-
         // '400','Unterstützung bei Formularen sowie Behördenkontakten'
         offer = new Offer();
         offer.setCode("400");
@@ -113,7 +115,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         offer.setCreatedBy(admin);
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
-
 
         // '500','Transport und Fahrtendienste'
         offer = new Offer();
@@ -123,7 +124,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
 
-
         // '600','Leih-Oma / Leih-Opa'
         offer = new Offer();
         offer.setCode("600");
@@ -131,7 +131,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         offer.setCreatedBy(admin);
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
-
 
         // '700','Kleinere Außen- oder Reparaturarbeiten'
         offer = new Offer();
@@ -141,7 +140,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
 
-
         // '800','Hilfe beim Bedienen technischer Geräte und Computer'
         offer = new Offer();
         offer.setCode("800");
@@ -149,7 +147,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         offer.setCreatedBy(admin);
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
-
 
         // '900','Sonstiges - bitte Beschreibung angeben!'
         offer = new Offer();
@@ -159,7 +156,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
 
-
         // '950','Spende von Stunden'
         offer = new Offer();
         offer.setCode("950");
@@ -167,7 +163,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         offer.setCreatedBy(admin);
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
-
 
         // '999','Korrekturbuchung'
         offer = new Offer();
@@ -177,7 +172,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         saved = offerRepository.save(offer);
         log.info("Offer {} - {} created at startup", saved.getCode(), saved.getDescription());
     }
-
 
     private void ensureDefaultRolesExists(Member admin) {
         Role existing = roleRepository.findByRoleNameIgnoreCase("Obmann").orElse(null);
@@ -220,8 +214,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
 
-
-
         // Obmann
         role = new Role();
         role.setRoleName("Obmann");
@@ -249,8 +241,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         role.setCreatedBy(admin);
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
-
-
 
         // Kassier
         role = new Role();
@@ -280,8 +270,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
 
-
-
         // Rechnungsprüfer
         role = new Role();
         role.setRoleName("Rechnungsprüfer");
@@ -309,8 +297,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         role.setCreatedBy(admin);
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
-
-
 
         // Schriftführer
         role = new Role();
@@ -340,7 +326,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
 
-
         // Ehrenmitglied
         role = new Role();
         role.setRoleName("Ehrenmitglied");
@@ -354,7 +339,6 @@ public class DefaultDataInitializer implements CommandLineRunner {
         role.setCreatedBy(admin);
         saved = roleRepository.save(role);
         log.info("role {} created at startup", saved.getRoleName());
-
 
     }
 
@@ -380,13 +364,13 @@ public class DefaultDataInitializer implements CommandLineRunner {
         admin.setRole(adminRole);
         admin.setUpdatedBy(admin);
         memberRepository.save(admin);
-        log.info("System Administrator member created at startup with email={} and memberNmbr={}", admin.getEmail(), admin.getMemberNmbr());
+        log.info("System Administrator member created at startup with email={} and memberNmbr={}", admin.getEmail(),
+                admin.getMemberNmbr());
     }
 
-
-
     private void ensureSozialkontoExists(Member admin) {
-        List<Member> existing = memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(NbhConst.SOZIALKONTO_FIRST_NAME, NbhConst.SOZIALKONTO_LAST_NAME);
+        List<Member> existing = memberRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(
+                NbhConst.SOZIALKONTO_FIRST_NAME, NbhConst.SOZIALKONTO_LAST_NAME);
         if (!existing.isEmpty()) {
             log.info("Sozialkonto already present with id={}", existing.get(0).getId());
             return;
@@ -412,9 +396,9 @@ public class DefaultDataInitializer implements CommandLineRunner {
         log.info("Sozialkonto created at startup with memberNmbr={}", sozialkonto.getMemberNmbr());
     }
 
-
     public String getTenantName() {
-        // FIXME: for now we just return "ma" as tenant name, but in the future we should determine this dynamically based on the url subdomain
+        // FIXME: for now we just return "ma" as tenant name, but in the future we
+        // should determine this dynamically based on the url subdomain
         return "ma";
     }
 

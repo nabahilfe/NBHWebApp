@@ -24,10 +24,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.members.MemberRepository;
 import eu.nabahilfe.webapp.members.MembershipFee;
 import eu.nabahilfe.webapp.members.MembershipFeeRepository;
+import eu.nabahilfe.webapp.system.NbhConst;
 import eu.nabahilfe.webapp.timecheques.TimeCheque;
 import eu.nabahilfe.webapp.timecheques.TimeChequeRepository;
 import jakarta.transaction.Transactional;
@@ -56,12 +56,10 @@ public class AccountingController {
         this.transactionRepository = transactionRepository;
     }
 
-
     @ModelAttribute("formRowData")
     public AccountableRowSelectionForm formRowData() {
         return new AccountableRowSelectionForm();
     }
-
 
     // --------------------
     // INCOME FORM
@@ -116,7 +114,6 @@ public class AccountingController {
         return "redirect:/accountings/view-transaction/" + tx.getId();
     }
 
-
     // --------------------
     // EXPENSE FORM
     // --------------------
@@ -169,7 +166,6 @@ public class AccountingController {
         redirectAttributes.addFlashAttribute("successMessage", "Ausgabe wurde gespeichert.");
         return "redirect:/accountings/view-transaction/" + tx.getId();
     }
-
 
     // --------------------
     // MISC UNACCOUNTED TRANSACTIONS
@@ -229,7 +225,8 @@ public class AccountingController {
             return "accountings/book-transaction";
         }
 
-        // Ensure the booking date is ON OR AFTER the transaction date (Buchungsdatum >= Transaktionsdatum)
+        // Ensure the booking date is ON OR AFTER the transaction date (Buchungsdatum >=
+        // Transaktionsdatum)
         if (parsedAccountingDate.isBefore(tx.getTransactionDate())) {
             model.addAttribute("errorMessage", "Das Buchungsdatum darf nicht vor dem Transaktionsdatum liegen.");
             model.addAttribute("transaction", tx);
@@ -256,25 +253,22 @@ public class AccountingController {
         return "redirect:/accountings/view-accounting/" + entry.getId();
     }
 
-
     // --------------------
     // VIEW
     // --------------------
-
 
     @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER', 'EXECUTIVE_MEMBER')")
     @GetMapping("/view-accounting/{id}")
     public String viewAccountingEntry(final Model model, @PathVariable Long id) {
 
         AccountingEntry accountingEntry = accountingRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Accounting entry not found with id: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Accounting entry not found with id: " + id));
 
         log.debug("Viewing AccountingEntry: " + accountingEntry.toString());
 
         model.addAttribute("accountingEntry", accountingEntry);
         return "accountings/view-accounting";
     }
-
 
     @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER', 'EXECUTIVE_MEMBER')")
     @GetMapping("/view-transaction/{id}")
@@ -289,7 +283,6 @@ public class AccountingController {
         return "accountings/view-transaction";
     }
 
-
     @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER', 'EXECUTIVE_MEMBER', 'AUDITOR')")
     @GetMapping("/show-accountings")
     public String showAccountings(
@@ -302,9 +295,11 @@ public class AccountingController {
         int selectedYear = (year != null) ? year : LocalDate.now().getYear();
         int selectedMonth = (month != null && month >= 1 && month <= 12) ? month : 0; // 0 = all
         String selectedTransactionType = (transactionType != null && !transactionType.isBlank())
-                ? transactionType : TransactionType.INCOME.name();
+                ? transactionType
+                : TransactionType.INCOME.name();
         String selectedAccountableClass = (accountableName != null && !accountableName.isBlank())
-                ? accountableName : "";
+                ? accountableName
+                : "";
 
         List<AccountingEntry> entries;
         boolean hasClass = !selectedAccountableClass.isEmpty();
@@ -332,7 +327,8 @@ public class AccountingController {
         // Year range: current year down 7 years
         int currentYear = LocalDate.now().getYear();
         List<Integer> years = new java.util.ArrayList<>();
-        for (int y = currentYear; y >= currentYear - 7; y--) years.add(y);
+        for (int y = currentYear; y >= currentYear - 7; y--)
+            years.add(y);
 
         model.addAttribute("entries", entries);
         model.addAttribute("total", total);
@@ -346,11 +342,9 @@ public class AccountingController {
         return "accountings/list-accountingentries";
     }
 
-
     // --------------------
     // CREATE NEW, UPDATE
     // --------------------
-
 
     @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER')")
     @PostMapping("/new-accountable")
@@ -362,13 +356,13 @@ public class AccountingController {
 
         accountingEntry.setAccountableName(formRowData.getAccountableName());
         accountingEntry.setAccountableId(formRowData.getAccountableId());
-        accountingEntry.setAccountableMember(formRowData.getAccountableMemberId() != null ?
-                memberRepository.findById(formRowData.getAccountableMemberId()).orElse(null) : null);
+        accountingEntry.setAccountableMember(formRowData.getAccountableMemberId() != null
+                ? memberRepository.findById(formRowData.getAccountableMemberId()).orElse(null)
+                : null);
         accountingEntry.setTransactionType(formRowData.getTransactionType());
         accountingEntry.setTransactionDate(formRowData.getTransactionDate());
         accountingEntry.setTransactionAmount(formRowData.getTransactionAmount());
         accountingEntry.setLiableMemberName(formRowData.getLiableMemberName());
-
 
         log.debug("AccountingEntry prepared for booking: " + accountingEntry.toString());
 
@@ -376,7 +370,6 @@ public class AccountingController {
 
         return "accountings/detail-accountable";
     }
-
 
     @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER')")
     @Transactional(rollbackOn = Exception.class)
@@ -393,7 +386,8 @@ public class AccountingController {
             return "accountings/detail-accountable";
         }
 
-        // Ensure the booking date is ON OR AFTER the transaction date (Buchungsdatum >= Transaktionsdatum)
+        // Ensure the booking date is ON OR AFTER the transaction date (Buchungsdatum >=
+        // Transaktionsdatum)
         if (accountingEntry.getAccountingDate() != null && accountingEntry.getTransactionDate() != null
                 && accountingEntry.getAccountingDate().isBefore(accountingEntry.getTransactionDate())) {
             log.debug("Buchungsdatum {} liegt vor Transaktionsdatum {}", accountingEntry.getAccountingDate(),
@@ -407,25 +401,24 @@ public class AccountingController {
 
         if (NbhConst.TIMECHEQUE_ACCOUNTING_NAME.equals(accountingEntry.getAccountableName())) {
             TimeCheque tc = timeChequeRepository.findById(accountingEntry.getAccountableId())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid TimeCheque ID: " + accountingEntry.getAccountableId()));
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Invalid TimeCheque ID: " + accountingEntry.getAccountableId()));
             tc.setAccountedBy(accountingEntry);
-        }
-        else if (NbhConst.MEMBERSHIPFEE_ACCOUNTING_NAME.equals(accountingEntry.getAccountableName())) {
+        } else if (NbhConst.MEMBERSHIPFEE_ACCOUNTING_NAME.equals(accountingEntry.getAccountableName())) {
             MembershipFee mf = membershipFeeRepository.findById(accountingEntry.getAccountableId())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid MembershipFee ID: " + accountingEntry.getAccountableId()));
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Invalid MembershipFee ID: " + accountingEntry.getAccountableId()));
             mf.setAccountedBy(accountingEntry);
-        }
-        else if ("SOME_OTHER_CLASS".equals(accountingEntry.getAccountableName())) {
+        } else if ("SOME_OTHER_CLASS".equals(accountingEntry.getAccountableName())) {
             // TODO: Handle other accountable classes as needed
         }
-
 
         log.debug("AccountingEntry saved with ID: " + accountingEntry.getId());
 
         redirectAttributes.addFlashAttribute("accountingEntry", accountingEntry);
-        redirectAttributes.addFlashAttribute("successMessage", "Buchung für " + accountingEntry.getAccountableName() + " wurde gespeichert.");
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Buchung für " + accountingEntry.getAccountableName() + " wurde gespeichert.");
         return "redirect:/accountings/view-accounting/" + accountingEntry.getId();
     }
-
 
 }

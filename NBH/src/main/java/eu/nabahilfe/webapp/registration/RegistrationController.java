@@ -23,13 +23,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.email.EmailComposer;
 import eu.nabahilfe.webapp.email.EmailDetails;
 import eu.nabahilfe.webapp.email.EmailService;
 import eu.nabahilfe.webapp.members.Member;
 import eu.nabahilfe.webapp.members.MemberRepository;
-
+import eu.nabahilfe.webapp.system.NbhConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -48,7 +47,6 @@ public class RegistrationController {
 
     private static final Logger log = LoggerFactory.getLogger(RegistrationController.class);
 
-
     @ModelAttribute("registrationSession")
     public RegistrationSession registrationSession() {
         return new RegistrationSession();
@@ -58,19 +56,17 @@ public class RegistrationController {
     public RegisterConfirmForm registerConfirmForm(@ModelAttribute("registrationSession") RegistrationSession session) {
         if (session.getEmail() == null || session.isExpired()) {
             return new RegisterConfirmForm(); // leeres Formular, da kein gültiger Session-Status vorhanden
-        }
-        else if (session.getStep() != RegistrationStep.EMAIL_VERIFIED) {
+        } else if (session.getStep() != RegistrationStep.EMAIL_VERIFIED) {
             return new RegisterConfirmForm(); // leeres Formular, da Session-Status nicht passend
-        }
-        else {
+        } else {
             RegisterConfirmForm form = new RegisterConfirmForm();
             form.setUsername(session.getEmail());
             return form; // Formular mit vorausgefüllter E-Mail, da gültiger Session-Status vorhanden
         }
     }
 
-
-    public RegistrationController(MemberRepository memberRepository, RegistrationCodeRepository registrationCodeRepository,
+    public RegistrationController(MemberRepository memberRepository,
+            RegistrationCodeRepository registrationCodeRepository,
             PasswordEncoder passwordEncoder, EmailService emailService, EmailComposer emailComposer,
             EmailRateLimiter emailRateLimiter) {
         this.memberRepository = memberRepository;
@@ -81,15 +77,12 @@ public class RegistrationController {
         this.emailRateLimiter = emailRateLimiter;
     }
 
-
     @GetMapping("/email")
     public String showEmailForm(@Valid @ModelAttribute String email, BindingResult binding,
             @ModelAttribute("registrationSession") RegistrationSession session, HttpServletRequest request) {
 
         return "registration/email";
     }
-
-
 
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/email")
@@ -114,7 +107,7 @@ public class RegistrationController {
             if (emailRateLimiter.isBlocked(clientIp)) {
                 model.addAttribute("errorMessage",
                         "Zu viele Fehlversuche. Bitte "
-                        + emailRateLimiter.blockedMinutesRemaining(clientIp) + " Minute(n) warten.");
+                                + emailRateLimiter.blockedMinutesRemaining(clientIp) + " Minute(n) warten.");
             } else {
                 model.addAttribute("errorMessage", "Falls die Adresse existiert, wurde ein Code versendet");
             }
@@ -127,7 +120,9 @@ public class RegistrationController {
         RegistrationCode registrationCode = new RegistrationCode();
         registrationCode.setEmail(email);
         registrationCode.setCode(code);
-        registrationCode.setExpiresAt(LocalDateTime.now().plusMinutes(NbhConst.REGISTRATION_CODE_TTL)); // Code ist 15 Minuten gültig
+        registrationCode.setExpiresAt(LocalDateTime.now().plusMinutes(NbhConst.REGISTRATION_CODE_TTL)); // Code ist 15
+                                                                                                        // Minuten
+                                                                                                        // gültig
 
         registrationCodeRepository.save(registrationCode);
 
@@ -135,7 +130,6 @@ public class RegistrationController {
 
         return "redirect:/registration/confirm";
     }
-
 
     @GetMapping("/confirm")
     public String showConfirmForm(@ModelAttribute("registrationSession") RegistrationSession session, Model model) {
@@ -155,11 +149,10 @@ public class RegistrationController {
         return "registration/confirm";
     }
 
-
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/confirm")
     public String processConfirm(Model model, @Valid @ModelAttribute RegisterConfirmForm form, BindingResult binding,
-            @ModelAttribute("registrationSession") RegistrationSession session, SessionStatus sessionStatus ) {
+            @ModelAttribute("registrationSession") RegistrationSession session, SessionStatus sessionStatus) {
 
         if (session.isExpired() || session.getStep() != RegistrationStep.EMAIL_VERIFIED) {
             sessionStatus.setComplete();
@@ -216,13 +209,11 @@ public class RegistrationController {
         return "redirect:/registration/success";
     }
 
-
     @GetMapping("/success")
     public String success() {
 
         return "registration/success";
     }
-
 
     @GetMapping("/login")
     public String showLoginForm(@RequestParam(required = false) String error,
@@ -237,7 +228,8 @@ public class RegistrationController {
                     session.removeAttribute("LOGIN_BLOCK_MINUTES");
                     if (minutes != null) {
                         model.addAttribute("errorMessage",
-                            "Zu viele Fehlversuche. Bitte " + minutes + " Minute(n) warten und dann erneut versuchen.");
+                                "Zu viele Fehlversuche. Bitte " + minutes
+                                        + " Minute(n) warten und dann erneut versuchen.");
                     } else {
                         model.addAttribute("errorMessage", "Zu viele Fehlversuche. Bitte kurz warten.");
                     }
@@ -269,10 +261,7 @@ public class RegistrationController {
         return "registration/login";
     }
 
-
-
     // Helper methods
-
 
     private boolean verifyCode(String email, String code) {
 
@@ -297,20 +286,17 @@ public class RegistrationController {
         return true;
     }
 
-
-
     private void sendCode(@Valid String recipient, String name, String randomCode) {
         EmailDetails email = emailComposer.composeConfirmationCodeEmail(recipient, name, randomCode);
         emailService.sendEmailHtml(email);
     }
-
 
     final int min = 100000;
     final int max = 999999;
     final int range = max - min + 1;
 
     private String randomCode() {
-    	SecureRandom r = new SecureRandom();
+        SecureRandom r = new SecureRandom();
         return String.valueOf(r.nextInt(range) + min);
     }
 

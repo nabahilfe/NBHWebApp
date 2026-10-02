@@ -3,10 +3,10 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import org.springframework.data.domain.Page
 
-@import eu.nabahilfe.webapp.NbhConst
+@import eu.nabahilfe.webapp.system.NbhConst
 @import eu.nabahilfe.webapp.members.Role
 @import eu.nabahilfe.webapp.members.Member
 

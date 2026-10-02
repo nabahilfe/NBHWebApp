@@ -16,9 +16,8 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import eu.nabahilfe.webapp.LiableMemberListener;
 import eu.nabahilfe.webapp.members.Member;
-
+import eu.nabahilfe.webapp.system.LiableMemberListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -33,49 +32,50 @@ import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
-
 /**
  * Buchungsdatensatz zu Zeitscheck-Kauf, Mitgliedschaft, Weihnachtsessen, usw.
  */
 @Entity
-@EntityListeners({AuditingEntityListener.class, LiableMemberListener.class})
+@EntityListeners({ AuditingEntityListener.class, LiableMemberListener.class })
 @Table(name = "ACCOUNTING_ENTRIES")
-public class AccountingEntry  {
+public class AccountingEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Size(max = 80)
-    private String accountableName;    // MemberFee, TimeCheque, Transaction, ...
+    private String accountableName; // MemberFee, TimeCheque, Transaction, ...
 
-    private Long accountableId;    // id zur Klasse bzw. Tabelle
+    private Long accountableId; // id zur Klasse bzw. Tabelle
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "accountable_member_id")
-    private Member accountableMember;    // id zum Mitglied, optional, nur bei Zeitscheck-Kauf, Mitgliedsbeitrag
+    private Member accountableMember; // id zum Mitglied, optional, nur bei Zeitscheck-Kauf, Mitgliedsbeitrag
 
     @Size(max = 10)
     @NotEmpty
-    private String transactionType;    // INCOME oder EXPENSE - muss aus Enum TransactionType kommen
+    private String transactionType; // INCOME oder EXPENSE - muss aus Enum TransactionType kommen
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
-    private LocalDate transactionDate;    // Transaktionsdatum, z.B. Kaufdatum, Datum der Mitgliedschaftsverlängerung, ...
+    private LocalDate transactionDate; // Transaktionsdatum, z.B. Kaufdatum, Datum der Mitgliedschaftsverlängerung, ...
 
     @Column(nullable = false)
-    private BigDecimal transactionAmount;    // Betrag
+    private BigDecimal transactionAmount; // Betrag
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
-    private LocalDate accountingDate;    // Buchungsdatum, wann wurde es im Konto vom Kassier verbucht
+    private LocalDate accountingDate; // Buchungsdatum, wann wurde es im Konto vom Kassier verbucht
 
     @Size(max = 250)
-    private String description;    // Verpflichtend wenn kein fix definierter Name wie 'Zeitscheck', 'Mitgliedsgebühr' verwendet wird, sondern 'Sonstiges'
+    private String description; // Verpflichtend wenn kein fix definierter Name wie 'Zeitscheck',
+                                // 'Mitgliedsgebühr' verwendet wird, sondern 'Sonstiges'
 
     // FIXME: Das muss auch in das Modell hinein!!!
     @Size(max = 80)
-    private String liableMemberName;    // Name des Mitglieds, das für die Erstellung Buchung verantwortlich ist, z.B. bei Zeitscheck-Kauf, Mitgliedsbeitrag, ...
+    private String liableMemberName; // Name des Mitglieds, das für die Erstellung Buchung verantwortlich ist, z.B.
+                                     // bei Zeitscheck-Kauf, Mitgliedsbeitrag, ...
 
     // Creation timestamp, value is set by Postgres (see Table definition)
     @Column(insertable = false, updatable = false)
@@ -97,8 +97,6 @@ public class AccountingEntry  {
     @Version
     @Column(nullable = false)
     private Integer version;
-
-
 
     public Long getId() {
         return id;
@@ -222,16 +220,15 @@ public class AccountingEntry  {
         this.accountableMember = accountableMember;
     }
 
-
     public String getLiableMemberName() {
-		return liableMemberName;
-	}
+        return liableMemberName;
+    }
 
-	public void setLiableMemberName(String liableMemberName) {
-		this.liableMemberName = liableMemberName;
-	}
+    public void setLiableMemberName(String liableMemberName) {
+        this.liableMemberName = liableMemberName;
+    }
 
-	@Override
+    @Override
     public int hashCode() {
         return Objects.hash(id);
     }
@@ -258,10 +255,8 @@ public class AccountingEntry  {
                 + version + "]";
     }
 
-
     // ------------------------------
     // add your business methods here
     // ------------------------------
-
 
 }

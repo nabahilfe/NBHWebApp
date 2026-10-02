@@ -3,9 +3,9 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import eu.nabahilfe.webapp.media.images.Gallery
-@import static eu.nabahilfe.webapp.DateFormatter.*
+@import static eu.nabahilfe.webapp.system.DateFormatter.*
 
 @param java.util.List<Gallery> galleries
 

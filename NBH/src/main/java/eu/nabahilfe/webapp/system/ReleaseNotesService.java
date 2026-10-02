@@ -3,7 +3,7 @@
  * Licensed under the MIT License (see LICENSE file).
  */
 
-package eu.nabahilfe.webapp;
+package eu.nabahilfe.webapp.system;
 
 import java.io.IOException;
 import java.io.InputStream;

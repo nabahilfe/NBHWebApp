@@ -3,7 +3,7 @@
  * Licensed under the MIT License (see LICENSE file).
  */
 
-package eu.nabahilfe.webapp;
+package eu.nabahilfe.webapp.system;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
             RedirectAttributes redirectAttributes) {
 
         redirectAttributes.addFlashAttribute("errorMessage",
-            "A transaction error occurred. Please try again.");
+                "A transaction error occurred. Please try again.");
         redirectAttributes.addFlashAttribute("errorType", "danger");
 
         return new ModelAndView("redirect:" + getRedirectUrl(request));
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
             RedirectAttributes redirectAttributes) {
 
         redirectAttributes.addFlashAttribute("errorMessage",
-            "The operation was rolled back. Please try again.");
+                "The operation was rolled back. Please try again.");
         redirectAttributes.addFlashAttribute("errorType", "warning");
 
         return new ModelAndView("redirect:" + getRedirectUrl(request));
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
             RedirectAttributes redirectAttributes) {
 
         redirectAttributes.addFlashAttribute("errorMessage",
-            "The data was modified by another user. Please refresh and try again.");
+                "The data was modified by another user. Please refresh and try again.");
         redirectAttributes.addFlashAttribute("errorType", "warning");
 
         return new ModelAndView("redirect:" + getRedirectUrl(request));
@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
             RedirectAttributes redirectAttributes) {
 
         redirectAttributes.addFlashAttribute("errorMessage",
-            "A database error occurred. Please contact support if this persists.");
+                "A database error occurred. Please contact support if this persists.");
         redirectAttributes.addFlashAttribute("errorType", "danger");
 
         return new ModelAndView("redirect:" + getRedirectUrl(request));
@@ -79,12 +79,11 @@ public class GlobalExceptionHandler {
             RedirectAttributes redirectAttributes) {
 
         redirectAttributes.addFlashAttribute("errorMessage",
-            "Resource is currently locked. Please try again in a moment.");
+                "Resource is currently locked. Please try again in a moment.");
         redirectAttributes.addFlashAttribute("errorType", "warning");
 
         return new ModelAndView("redirect:" + getRedirectUrl(request));
     }
-
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ModelAndView handleDataIntegrityException(
@@ -93,11 +92,10 @@ public class GlobalExceptionHandler {
             RedirectAttributes redirectAttributes) {
 
         redirectAttributes.addFlashAttribute("errorMessage",
-        "Data integrity violation " + ex.getMostSpecificCause().getMessage());
+                "Data integrity violation " + ex.getMostSpecificCause().getMessage());
 
         return new ModelAndView("redirect:" + getRedirectUrl(request));
     }
-
 
     // Helper method to determine redirect URL
     private String getRedirectUrl(WebRequest request) {

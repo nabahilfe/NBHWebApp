@@ -3,7 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.util.List
 @import eu.nabahilfe.webapp.members.MemberBirthdayForm
 

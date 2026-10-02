@@ -12,9 +12,9 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import eu.nabahilfe.webapp.LiableMemberListener;
-import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.members.Member;
+import eu.nabahilfe.webapp.system.LiableMemberListener;
+import eu.nabahilfe.webapp.system.NbhConst;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -33,7 +33,7 @@ import jakarta.validation.constraints.Size;
  * Allgemeine Einnahme oder Ausgabe
  */
 @Entity
-@EntityListeners({AuditingEntityListener.class, LiableMemberListener.class})
+@EntityListeners({ AuditingEntityListener.class, LiableMemberListener.class })
 @Table(name = "TRANSACTIONS")
 public class Transaction implements Accountable {
 
@@ -43,7 +43,7 @@ public class Transaction implements Accountable {
 
     @Size(max = 10)
     @NotEmpty
-    private String transactionType;    // INCOME oder EXPENSE - muss aus Enum TransactionType kommen
+    private String transactionType; // INCOME oder EXPENSE - muss aus Enum TransactionType kommen
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
@@ -54,7 +54,7 @@ public class Transaction implements Accountable {
 
     @Size(max = 80)
     @NotEmpty
-    private String liableMemberName;    // Wer hat das veranlasst oder angeordnet -> Name von cretaedBy Member
+    private String liableMemberName; // Wer hat das veranlasst oder angeordnet -> Name von cretaedBy Member
 
     @Size(max = 250)
     @NotEmpty
@@ -62,7 +62,7 @@ public class Transaction implements Accountable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "accounted_by_id")
-    private AccountingEntry accountedBy;    // Abrechnung dokumentiert mit AccountingEntry
+    private AccountingEntry accountedBy; // Abrechnung dokumentiert mit AccountingEntry
 
     // Creation timestamp, value is set by Postgres (see Table definition)
     @Column(insertable = false, updatable = false)
@@ -160,7 +160,6 @@ public class Transaction implements Accountable {
         this.createdAt = createdAt;
     }
 
-
     @Override
     public String getLiableMemberName() {
         return liableMemberName;
@@ -236,12 +235,8 @@ public class Transaction implements Accountable {
                 + updatedBy + ", version=" + version + "]";
     }
 
-
-
     // ------------------------------
     // add your business methods here
     // ------------------------------
-
-
 
 }

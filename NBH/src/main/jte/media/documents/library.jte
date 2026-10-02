@@ -3,7 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import eu.nabahilfe.webapp.media.documents.Library
 @import eu.nabahilfe.webapp.media.documents.LibraryDocumentInfo
 @import static eu.nabahilfe.webapp.jte.TemplateHelpers.*

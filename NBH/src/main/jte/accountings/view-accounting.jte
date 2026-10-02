@@ -4,13 +4,13 @@
 -->
 
 @import eu.nabahilfe.webapp.accountings.TransactionType
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.time.LocalDate
 
-@import static eu.nabahilfe.webapp.DateFormatter.*
-@import static eu.nabahilfe.webapp.NumberFormatter.*
+@import static eu.nabahilfe.webapp.system.DateFormatter.*
+@import static eu.nabahilfe.webapp.system.NumberFormatter.*
 @import eu.nabahilfe.webapp.accountings.AccountingEntry
-@import eu.nabahilfe.webapp.NbhConst
+@import eu.nabahilfe.webapp.system.NbhConst
 
 @param AccountingEntry accountingEntry
 

@@ -3,15 +3,15 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.util.List
 @import java.time.LocalDate
 
-@import static eu.nabahilfe.webapp.DateFormatter.*
-@import static eu.nabahilfe.webapp.NumberFormatter.*
+@import static eu.nabahilfe.webapp.system.DateFormatter.*
+@import static eu.nabahilfe.webapp.system.NumberFormatter.*
 @import static eu.nabahilfe.webapp.jte.TemplateHelpers.*
 
-@import eu.nabahilfe.webapp.NbhConst
+@import eu.nabahilfe.webapp.system.NbhConst
 @import eu.nabahilfe.webapp.members.Member
 @import eu.nabahilfe.webapp.timecheques.TimeCheque
 

@@ -3,12 +3,12 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.util.List
 @import java.time.LocalDate
 
 @import eu.nabahilfe.webapp.members.MemberBirthdayForm
-@import static eu.nabahilfe.webapp.DateFormatter.*
+@import static eu.nabahilfe.webapp.system.DateFormatter.*
 
 
 @param List<MemberBirthdayForm> currentMonth

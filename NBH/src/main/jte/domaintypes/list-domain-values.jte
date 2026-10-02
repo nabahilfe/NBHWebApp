@@ -3,12 +3,12 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.util.List
 @import java.util.Set
 
-@import static eu.nabahilfe.webapp.DateFormatter.*
-@import static eu.nabahilfe.webapp.NumberFormatter.*
+@import static eu.nabahilfe.webapp.system.DateFormatter.*
+@import static eu.nabahilfe.webapp.system.NumberFormatter.*
 
 @import eu.nabahilfe.webapp.domaintypes.AmountDomainValue
 @import eu.nabahilfe.webapp.domaintypes.AmountDomainType
@@ -24,7 +24,7 @@
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
-@param eu.nabahilfe.webapp.GlobalModelAttributes globalModelAttributes
+@param eu.nabahilfe.webapp.system.GlobalModelAttributes globalModelAttributes
 
 
 @template.layout.mainpage(

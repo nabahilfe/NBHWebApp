@@ -12,11 +12,11 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import eu.nabahilfe.webapp.LiableMemberListener;
-import eu.nabahilfe.webapp.NbhConst;
 import eu.nabahilfe.webapp.accountings.Accountable;
 import eu.nabahilfe.webapp.accountings.AccountingEntry;
 import eu.nabahilfe.webapp.accountings.TransactionType;
+import eu.nabahilfe.webapp.system.LiableMemberListener;
+import eu.nabahilfe.webapp.system.NbhConst;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -32,10 +32,11 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 /**
- * Dokumentation des jährlichen Mitgliedsbeitrag. TransactionType ist immer INCOME
+ * Dokumentation des jährlichen Mitgliedsbeitrag. TransactionType ist immer
+ * INCOME
  */
 @Entity
-@EntityListeners({AuditingEntityListener.class, LiableMemberListener.class})
+@EntityListeners({ AuditingEntityListener.class, LiableMemberListener.class })
 @Table(name = "MEMBERSHIP_FEES")
 public class MembershipFee implements Accountable {
 
@@ -47,7 +48,7 @@ public class MembershipFee implements Accountable {
     private Year forYear;
 
     @Column(nullable = false)
-    private Boolean doNotCharge;    // z.B. für Ehrenmitglieder
+    private Boolean doNotCharge; // z.B. für Ehrenmitglieder
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
@@ -58,7 +59,7 @@ public class MembershipFee implements Accountable {
 
     @Size(max = 80)
     @NotEmpty
-    private String liableMemberName;    // Wer hat das veranlasst oder angeordnet -> Name von cretaedBy Member
+    private String liableMemberName; // Wer hat das veranlasst oder angeordnet -> Name von cretaedBy Member
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -66,7 +67,7 @@ public class MembershipFee implements Accountable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "accounted_by_id")
-    private AccountingEntry accountedBy;    // Abrechnung dokumentiert mit AccountingEntry
+    private AccountingEntry accountedBy; // Abrechnung dokumentiert mit AccountingEntry
 
     // Creation timestamp, value is set by Postgres (see Table definition)
     @Column(insertable = false, updatable = false)
@@ -108,7 +109,6 @@ public class MembershipFee implements Accountable {
     public String getTransactionType() {
         return TransactionType.INCOME.name();
     }
-
 
     @Override
     public BigDecimal getTransactionAmount() {
@@ -223,7 +223,7 @@ public class MembershipFee implements Accountable {
     }
 
     public void setLiableMemberName(String name) {
-         liableMemberName = name;
+        liableMemberName = name;
     }
 
     @Override
@@ -251,11 +251,8 @@ public class MembershipFee implements Accountable {
                 + ", updatedAt=" + updatedAt + ", updatedBy=" + updatedBy + ", version=" + version + "]";
     }
 
-
     // ------------------------------
     // add your business methods here
     // ------------------------------
-
-
 
 }

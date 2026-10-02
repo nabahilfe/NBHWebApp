@@ -3,7 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @param String fullUsername = null
 @param String username = null
 @param Boolean isAuthenticated = false

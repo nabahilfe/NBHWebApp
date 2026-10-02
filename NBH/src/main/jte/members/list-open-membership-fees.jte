@@ -3,11 +3,11 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.util.List
 
 @import eu.nabahilfe.webapp.members.MembershipFeeOpenForm
-@import static eu.nabahilfe.webapp.DateFormatter.*
+@import static eu.nabahilfe.webapp.system.DateFormatter.*
 
 @param MembershipFeeOpenForm formRowData
 @param List<MembershipFeeOpenForm> membershipFeesOpen

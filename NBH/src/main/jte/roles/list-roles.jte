@@ -3,9 +3,9 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import eu.nabahilfe.webapp.members.Role
-@import eu.nabahilfe.webapp.NbhConst
+@import eu.nabahilfe.webapp.system.NbhConst
 
 @param java.util.List<Role> roles
 

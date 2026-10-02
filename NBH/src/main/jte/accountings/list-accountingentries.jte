@@ -3,12 +3,12 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.util.List
 @import java.math.BigDecimal
 
-@import static eu.nabahilfe.webapp.DateFormatter.*
-@import static eu.nabahilfe.webapp.NumberFormatter.*
+@import static eu.nabahilfe.webapp.system.DateFormatter.*
+@import static eu.nabahilfe.webapp.system.NumberFormatter.*
 @import eu.nabahilfe.webapp.accountings.AccountingEntry
 @import eu.nabahilfe.webapp.accountings.TransactionType
 

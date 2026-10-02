@@ -1,0 +1,28 @@
+{
+  "files.readonlyInclude": {
+    "**/generated-sources/**": true
+  }
+,
+  "search.exclude": {
+    "**/generated-sources": true
+  }
+,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.jj": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/generated-sources": true,
+    "**/target": true,
+    "**/.*": true,
+    "**/.vscode": true,
+    "**/.gitignore": true,
+    "**/.env": true
+},
+"dotfileToggle.hideDotfiles": true,
+"java.debug.settings.onBuildFailureProceed": true
+
+}
+

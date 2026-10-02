@@ -3,7 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @param long unvalidatedCount = 0
 @param long totalActiveCount = 0
 

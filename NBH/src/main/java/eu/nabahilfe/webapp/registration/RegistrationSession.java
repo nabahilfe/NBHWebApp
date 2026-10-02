@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-import eu.nabahilfe.webapp.NbhConst;
+import eu.nabahilfe.webapp.system.NbhConst;
 
 public class RegistrationSession implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -28,7 +28,7 @@ public class RegistrationSession implements Serializable {
 
     public boolean isExpired() {
         return createdAt != null &&
-            createdAt.isBefore(Instant.now().minus(NbhConst.REGISTRATION_CODE_TTL, ChronoUnit.MINUTES));
+                createdAt.isBefore(Instant.now().minus(NbhConst.REGISTRATION_CODE_TTL, ChronoUnit.MINUTES));
     }
 
     public void start(String email) {

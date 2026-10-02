@@ -3,7 +3,7 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.util.TreeMap
 
 @param TreeMap<Integer, long[]> memberStats

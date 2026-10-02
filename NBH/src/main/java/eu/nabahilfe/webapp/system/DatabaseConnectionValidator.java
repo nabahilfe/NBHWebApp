@@ -3,8 +3,7 @@
  * Licensed under the MIT License (see LICENSE file).
  */
 
-package eu.nabahilfe.webapp;
-
+package eu.nabahilfe.webapp.system;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +14,12 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 
-@Configuration  public class DatabaseConnectionValidator {
+@Configuration
+public class DatabaseConnectionValidator {
 
     private static final Logger log = LoggerFactory.getLogger(DatabaseConnectionValidator.class);
 
-    //    @Profile("dev")
+    // @Profile("dev")
     @Bean
     CommandLineRunner validateConnection(DataSource dataSource) {
         return _ -> {

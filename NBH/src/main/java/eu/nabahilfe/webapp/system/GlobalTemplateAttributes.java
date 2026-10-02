@@ -3,7 +3,7 @@
  * Licensed under the MIT License (see LICENSE file).
  */
 
-package eu.nabahilfe.webapp;
+package eu.nabahilfe.webapp.system;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -15,16 +15,13 @@ import eu.nabahilfe.webapp.security.CustomUserDetails;
 import eu.nabahilfe.webapp.security.ViewContext;
 import jakarta.servlet.http.HttpServletRequest;
 
-
 @ControllerAdvice
 public class GlobalTemplateAttributes {
-
 
     @ModelAttribute("ctxt")
     public ViewContext viewContext(@AuthenticationPrincipal CustomUserDetails cud) {
         return new ViewContext(cud != null ? cud : null);
     }
-
 
     @ModelAttribute("csrf")
     public CsrfToken csrfToken(HttpServletRequest request) {

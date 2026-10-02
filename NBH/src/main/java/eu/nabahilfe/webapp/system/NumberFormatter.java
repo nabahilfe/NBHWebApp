@@ -3,11 +3,10 @@
  * Licensed under the MIT License (see LICENSE file).
  */
 
-package eu.nabahilfe.webapp;
+package eu.nabahilfe.webapp.system;
 
 import java.text.NumberFormat;
 import java.util.Locale;
-
 
 /**
  * Quick and dirty hack to display correct € format

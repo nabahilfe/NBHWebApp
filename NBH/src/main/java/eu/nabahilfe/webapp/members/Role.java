@@ -16,7 +16,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import eu.nabahilfe.webapp.NbhConst;
+import eu.nabahilfe.webapp.system.NbhConst;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -46,30 +46,35 @@ public class Role implements Serializable {
     private Long id;
 
     @Column(nullable = false)
-    private Boolean isExecutiveMember;  // VEREINSROLLE: Vorstand - kann Mitglieder verwalten, Kassaführung einsehen und Content bearbeiten.
+    private Boolean isExecutiveMember; // VEREINSROLLE: Vorstand - kann Mitglieder verwalten, Kassaführung einsehen und
+                                       // Content bearbeiten.
 
     @Column(nullable = false)
-    private Boolean isAdmin;    		// ZUSATZ-ROLLE: Hat alle Rechte - es gibt immer einen sysadmin Account
+    private Boolean isAdmin; // ZUSATZ-ROLLE: Hat alle Rechte - es gibt immer einen sysadmin Account
 
     @Column(nullable = false)
-    private Boolean isTreasurer;    	// VEREINSROLLE: Kassier - dokumentiert alle bezahlten Buchungen
+    private Boolean isTreasurer; // VEREINSROLLE: Kassier - dokumentiert alle bezahlten Buchungen
 
     @Column(nullable = false)
-    private Boolean isSecretary;    	// VEREINSROLLE: Schriftführer - kann Text-Content verwalten, z.B. News, Veranstaltungen, ...
+    private Boolean isSecretary; // VEREINSROLLE: Schriftführer - kann Text-Content verwalten, z.B. News,
+                                 // Veranstaltungen, ...
 
     @Column(nullable = false)
-    private Boolean isAuditor;    		// VEREINSROLLE: Rechnungsprüfer, muss unabhängig vom Vorstand sein, darf also kein Board Meber sein oder sonstige Rollen haben
+    private Boolean isAuditor; // VEREINSROLLE: Rechnungsprüfer, muss unabhängig vom Vorstand sein, darf also
+                               // kein Board Meber sein oder sonstige Rollen haben
 
     @Column(nullable = false)
-    private Boolean isTimeKeeper;    	// ZUSATZ-ROLLE: Kann Zeit-Schescks vergeben / verkaufe und Zeiteschecks verbuchen - zusatzbereschtigung zb. auch für Vorstand
+    private Boolean isTimeKeeper; // ZUSATZ-ROLLE: Kann Zeit-Schescks vergeben / verkaufe und Zeiteschecks
+                                  // verbuchen - zusatzbereschtigung zb. auch für Vorstand
 
     @Column(nullable = false)
-    private Boolean isMiscellaneous;    // SPEZIAL_ROLLE: Sonstiges, z.B. Ehrenmitglied
+    private Boolean isMiscellaneous; // SPEZIAL_ROLLE: Sonstiges, z.B. Ehrenmitglied
 
     @Size(max = 80)
     @NotEmpty
     @NotBlank(message = "Rollen-Name darf nicht leer sein!")
-    private String roleName;    // Mitglied, Vorstand, stv. Vorstand, Kassier, stv. Kassier, Rechnungsprüfer, Schriftführer, ....
+    private String roleName; // Mitglied, Vorstand, stv. Vorstand, Kassier, stv. Kassier, Rechnungsprüfer,
+                             // Schriftführer, ....
 
     // Creation timestamp, value is set by Postgres (see Table definition)
     @Column(insertable = false, updatable = false)
@@ -91,7 +96,6 @@ public class Role implements Serializable {
     @Version
     @Column(nullable = false)
     private Integer version;
-
 
     // -------------------------------------------------
     // generate setter/getter methodes with Eclipse here
@@ -238,8 +242,6 @@ public class Role implements Serializable {
                 + version + "]";
     }
 
-
-
     // -------------------------------
     // add your business methodes here
     // -------------------------------
@@ -260,32 +262,35 @@ public class Role implements Serializable {
 
         Set<String> auths = new HashSet<>();
 
-        auths.add("ROLE_USER");   					// Alle Rollen haben die Rolle USER
+        auths.add("ROLE_USER"); // Alle Rollen haben die Rolle USER
 
         if (Boolean.TRUE.equals(isAdmin)) {
             auths.add("ROLE_ADMIN");
         }
 
-        if (Boolean.TRUE.equals(isExecutiveMember)) {	// Vorstand (Obmann, Obfrau und Stellvertreter) - kann Mitglieder verwalten, Kassaführung einsehen und Content bearbeiten.
+        if (Boolean.TRUE.equals(isExecutiveMember)) { // Vorstand (Obmann, Obfrau und Stellvertreter) - kann Mitglieder
+                                                      // verwalten, Kassaführung einsehen und Content bearbeiten.
             auths.add("ROLE_EXECUTIVE_MEMBER");
             auths.add("ROLE_BOARD_MEMBER");
         }
 
-        if (Boolean.TRUE.equals(isTreasurer)) {		// Kassier - kann Geld-Buchungen verwalten und ist im Vorstand
+        if (Boolean.TRUE.equals(isTreasurer)) { // Kassier - kann Geld-Buchungen verwalten und ist im Vorstand
             auths.add("ROLE_TREASURER");
             auths.add("ROLE_BOARD_MEMBER");
         }
 
-        if (Boolean.TRUE.equals(isSecretary)) {		// Schriftführer kann Text-Content verwalten, z.B. News, Veranstaltungen, ... und ist im Vorstand
+        if (Boolean.TRUE.equals(isSecretary)) { // Schriftführer kann Text-Content verwalten, z.B. News,
+                                                // Veranstaltungen, ... und ist im Vorstand
             auths.add("ROLE_SECRETARY");
             auths.add("ROLE_BOARD_MEMBER");
         }
 
-        if (Boolean.TRUE.equals(isAuditor)) {		// Rechnungsprüfer, muss unabhängig vom Vorstand sein, darf also kein Board Meber sein oder sonstige rollen haben
+        if (Boolean.TRUE.equals(isAuditor)) { // Rechnungsprüfer, muss unabhängig vom Vorstand sein, darf also kein
+                                              // Board Meber sein oder sonstige rollen haben
             auths.add("ROLE_AUDITOR");
         }
 
-        if (Boolean.TRUE.equals(isTimeKeeper)) {	// Kann Zeitschecks vergeben / verkaufen und Zeitschecks verbuchen
+        if (Boolean.TRUE.equals(isTimeKeeper)) { // Kann Zeitschecks vergeben / verkaufen und Zeitschecks verbuchen
             auths.add("ROLE_TIME_KEEPER");
         }
 

@@ -3,10 +3,10 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.time.LocalDate
 
-@import static eu.nabahilfe.webapp.DateFormatter.*
+@import static eu.nabahilfe.webapp.system.DateFormatter.*
 @import eu.nabahilfe.webapp.accountings.AccountingEntry
 
 @param AccountingEntry accountingEntry

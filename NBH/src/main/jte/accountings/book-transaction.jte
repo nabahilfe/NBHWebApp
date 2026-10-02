@@ -3,9 +3,9 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
-@import static eu.nabahilfe.webapp.DateFormatter.*
-@import static eu.nabahilfe.webapp.NumberFormatter.*
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
+@import static eu.nabahilfe.webapp.system.DateFormatter.*
+@import static eu.nabahilfe.webapp.system.NumberFormatter.*
 @import eu.nabahilfe.webapp.accountings.Transaction
 @import eu.nabahilfe.webapp.accountings.TransactionType
 

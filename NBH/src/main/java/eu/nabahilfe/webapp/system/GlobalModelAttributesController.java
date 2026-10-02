@@ -1,4 +1,4 @@
-package eu.nabahilfe.webapp;
+package eu.nabahilfe.webapp.system;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,10 +21,9 @@ public class GlobalModelAttributesController {
     public void addGlobalAttributes(Model model) {
         if (globalModelAttributes == null) {
             globalModelAttributes = new GlobalModelAttributes(
-                versionService.getVersion(),
-                versionService.getBuildTime(),
-                releaseNotesService.getReleaseNotesHtml()
-            );
+                    versionService.getVersion(),
+                    versionService.getBuildTime(),
+                    releaseNotesService.getReleaseNotesHtml());
         }
         model.addAttribute("globalModelAttributes", globalModelAttributes);
     }

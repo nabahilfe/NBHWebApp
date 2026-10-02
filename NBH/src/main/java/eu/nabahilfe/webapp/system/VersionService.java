@@ -1,6 +1,6 @@
-package eu.nabahilfe.webapp;
+package eu.nabahilfe.webapp.system;
 
-import static eu.nabahilfe.webapp.DateFormatter.dateTimeDE;
+import static eu.nabahilfe.webapp.system.DateFormatter.dateTimeDE;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

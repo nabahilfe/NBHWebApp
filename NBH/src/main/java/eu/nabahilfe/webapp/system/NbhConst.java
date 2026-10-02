@@ -3,8 +3,7 @@
  * Licensed under the MIT License (see LICENSE file).
  */
 
-package eu.nabahilfe.webapp;
-
+package eu.nabahilfe.webapp.system;
 
 /**
  * Contains constant definitions for NBH
@@ -17,7 +16,6 @@ public final class NbhConst {
 
     public static final int FIRST_TIME_CHEQUE_HOURS = 5;
     public static final int REGULAR_TIME_CHEQUE_HOURS = 10;
-
 
     public static final int MAX_LEN_CODE = 10;
     public static final int MAX_LEN_LONG_CODE = 20;
@@ -35,13 +33,14 @@ public final class NbhConst {
     public static final String SOZIALKONTO_LAST_NAME = "Nachbarschaftshilfe";
 
     public static final String ADMIN_ROLE_NAME = "System-Administrator";
-    public static final String ADMIN_EMAIL_PREFIX = "sysadmin.";	// this is follwoed by the tenant name, e.g. "sysadmin.ma" for tenant "ma"
+    public static final String ADMIN_EMAIL_PREFIX = "sysadmin."; // this is follwoed by the tenant name, e.g.
+                                                                 // "sysadmin.ma" for tenant "ma"
     public static final String ADMIN_EMAIL_SUFFIX = "@nabahilfe.eu";
     public static final String ADMIN_ACCOUNT_FIRST_NAME = "Administrator";
     public static final String ADMIN_ACCOUNT_LAST_NAME = "System";
 
-
-    // this names may not be longer than 80 characters, because they are used in the accounting table as "accountableName"
+    // this names may not be longer than 80 characters, because they are used in the
+    // accounting table as "accountableName"
     public static final String TIMECHEQUE_ACCOUNTING_NAME = "Zeitscheck";
     public static final String MEMBERSHIPFEE_ACCOUNTING_NAME = "Mitgliedsbeitrag";
     public static final String MISC_ACCOUNTING_NAME = "Sonstiges";

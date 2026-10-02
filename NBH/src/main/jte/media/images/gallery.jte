@@ -3,10 +3,10 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.GlobalModelAttributes
+@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import eu.nabahilfe.webapp.media.images.Gallery
 @import eu.nabahilfe.webapp.media.images.GalleryImageInfo
-@import static eu.nabahilfe.webapp.DateFormatter.*
+@import static eu.nabahilfe.webapp.system.DateFormatter.*
 @import static eu.nabahilfe.webapp.jte.TemplateHelpers.*
 
 @import java.util.List
