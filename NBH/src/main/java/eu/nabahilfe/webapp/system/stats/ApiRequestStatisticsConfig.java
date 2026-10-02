@@ -1,4 +1,4 @@
-package eu.nabahilfe.webapp.system;
+package eu.nabahilfe.webapp.system.stats;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

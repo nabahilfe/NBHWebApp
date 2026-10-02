@@ -1,4 +1,4 @@
-package eu.nabahilfe.webapp.system;
+package eu.nabahilfe.webapp.system.stats;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

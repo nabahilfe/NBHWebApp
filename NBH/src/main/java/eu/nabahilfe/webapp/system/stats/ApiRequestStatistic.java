@@ -1,4 +1,4 @@
-package eu.nabahilfe.webapp.system;
+package eu.nabahilfe.webapp.system.stats;
 
 import java.time.LocalDateTime;
 import java.time.LocalDate;

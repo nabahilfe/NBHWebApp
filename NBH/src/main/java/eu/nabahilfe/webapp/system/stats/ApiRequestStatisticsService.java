@@ -1,4 +1,4 @@
-package eu.nabahilfe.webapp.system;
+package eu.nabahilfe.webapp.system.stats;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
