@@ -73,7 +73,7 @@ ALTER TABLE REGISTRATION_CODES ALTER COLUMN created_by_id DROP NOT NULL;
 
 /*
  * Generated with Xtext EntityModeller from file "nbh.emodel"
- * Generated at 2026-08-27 08:32:51
+ * Generated at 2026-10-02 09:59:24
  * ModelDescription: NBH Entity Model
  */
 
@@ -363,7 +363,6 @@ create table if not exists LIBRARIES (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT NOT NULL,
     updated_at TIMESTAMPTZ,
-    updated_by_id BIGINT,
     version INTEGER NOT NULL
 );
 
@@ -379,6 +378,21 @@ create table if not exists DOCUMENTS (
     library_id BIGINT /* FK id from LIBRARIES(id) */,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_by_id BIGINT NOT NULL,
+    updated_at TIMESTAMPTZ,
+    updated_by_id BIGINT,
+    version INTEGER NOT NULL
+);
+
+
+/* URL / API Aufrufstatistik - WICHTIG - Member Referenz aus Entity und Tabelle löschen!!! Wird derzeit automatisch vom Generator hinzugefügt - ERLEDIGT */
+create table if not exists API_REQUEST_STATISTICS (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    request_date DATE /* Datum des Aufrufs */,
+    http_methode VARCHAR(10),
+    url_pattern TEXT,
+    status_code INTEGER,
+    request_count NUMERIC,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ,
     updated_by_id BIGINT,
     version INTEGER NOT NULL
@@ -476,6 +490,11 @@ alter table ACCOUNTING_ENTRIES
 ;
 
 
+alter table API_REQUEST_STATISTICS
+    add constraint uc_data_api_request_statistics unique (request_date, http_methode, url_pattern, status_code)
+;
+
+
 
 
 /*
@@ -522,6 +541,8 @@ drop table if exists IMAGES cascade;
 drop table if exists LIBRARIES cascade;
 
 drop table if exists DOCUMENTS cascade;
+
+drop table if exists API_REQUEST_STATISTICS cascade;
 
 
 /* end of generated file */

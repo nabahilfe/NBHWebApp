@@ -19,7 +19,6 @@ public class NbhApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(NbhApplication.class, args);
-
         log.info("\nNBH Application wurde gestartet!");
     }
 
