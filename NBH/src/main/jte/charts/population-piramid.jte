@@ -17,7 +17,7 @@
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 @param GlobalModelAttributes globalModelAttributes
 
-<!-- Die Liste chartData muss genau 9 Records enthalten. 
+<!-- Die Liste chartData muss genau 10 Records enthalten.
  Jeder Record enthält die Anzahl der Männer und Frauen in dem jeweiligen Jahrzehnt. -->
 @param List<AgeDecadeData> chartData
 
@@ -50,7 +50,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             const chartElement = document.getElementById('agePyramidChart');
             const ctx = chartElement.getContext('2d');
-            const decades = ['80+', '70-79', '60-69', '50-59', '40-49', '30-39', '20-29', '10-19', '0-9'];
+            const decades = ['90+', '80-89', '70-79', '60-69', '50-59', '40-49', '30-39', '20-29', '10-19', '0-9'];
 
             // Daten aus den Attributen laden. Männer-Werte werden für die linke Chart-Seite negativ gesetzt.
             const rawMale = JSON.parse(chartElement.getAttribute('data-male'));

@@ -17,7 +17,7 @@ import eu.nabahilfe.webapp.members.Salutation;
 @Service
 public class PopulationPyramidService {
 
-    private static final int DECADES = 9;
+    private static final int DECADES = 10;
 
     private final PopulationPyramidRepository populationPyramidRepository;
 
@@ -25,7 +25,7 @@ public class PopulationPyramidService {
         this.populationPyramidRepository = populationPyramidRepository;
     }
 
-    /** Member counts by salutation and decade, index 0 = 80+, index 8 = 0-9. */
+    /** Member counts by salutation and decade, index 0 = 90+, index 9 = 0-9. */
     public List<AgeDecadeData> ageDistribution() {
         LocalDate today = LocalDate.now();
         int[] maleCounts = new int[DECADES];
