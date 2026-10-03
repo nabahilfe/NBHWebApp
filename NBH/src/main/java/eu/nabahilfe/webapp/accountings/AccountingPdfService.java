@@ -29,9 +29,6 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
-import com.itextpdf.kernel.pdf.event.AbstractPdfDocumentEvent;
-import com.itextpdf.kernel.pdf.event.AbstractPdfDocumentEventHandler;
-import com.itextpdf.kernel.pdf.event.PdfDocumentEvent;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Cell;
@@ -66,22 +63,25 @@ public class AccountingPdfService {
             String transactionType, String accountableClass) {
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try (Document document = new Document(new PdfDocument(new PdfWriter(out)), PageSize.A4.rotate())) {
+        // immediateFlush=false keeps pages open so headers can show the total page count
+        try (Document document = new Document(new PdfDocument(new PdfWriter(out)), PageSize.A4.rotate(), false)) {
             PdfDocument pdfDoc = document.getPdfDocument();
 
             // Standard fonts are bound to a single PdfDocument and cannot be cached statically
             PdfFont regular = PdfFontFactory.createFont(StandardFonts.HELVETICA);
             PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
 
-            String title = year + " " + transactionTypeLabel(transactionType) + " NBH Maria Anzbach";
-            String filterInfo = "Monat: " + monthLabel(month) + "   Umsatz Art: "
-                    + (accountableClass == null || accountableClass.isBlank() ? "Alle" : accountableClass);
-
-            pdfDoc.addEventHandler(PdfDocumentEvent.END_PAGE, new HeaderHandler(title, filterInfo, regular, bold));
-
             document.setMargins(TOP_MARGIN, MARGIN, MARGIN, MARGIN);
             document.setFont(regular).setFontSize(FONT_SIZE);
             document.add(buildTable(entries, total, bold));
+
+            String title = year + " " + transactionTypeLabel(transactionType) + " NBH Maria Anzbach";
+            String classLabel = accountableClass == null || accountableClass.isBlank() ? "Alle" : accountableClass;
+            int totalPages = pdfDoc.getNumberOfPages();
+            for (int i = 1; i <= totalPages; i++) {
+                drawHeader(pdfDoc, pdfDoc.getPage(i), i, totalPages, title, monthLabel(month), classLabel,
+                        regular, bold);
+            }
         } catch (IOException e) {
             throw new UncheckedIOException("PDF creation failed", e);
         }
@@ -131,42 +131,26 @@ public class AccountingPdfService {
         return new Cell().add(new Paragraph(value != null ? value : ""));
     }
 
-    private static final class HeaderHandler extends AbstractPdfDocumentEventHandler {
+    private static void drawHeader(PdfDocument pdfDoc, PdfPage page, int pageNumber, int totalPages, String title,
+            String monthLabel, String classLabel, PdfFont regular, PdfFont bold) {
+        Rectangle pageSize = page.getPageSize();
+        float width = pageSize.getWidth() - 2 * MARGIN;
+        Rectangle area = new Rectangle(MARGIN, pageSize.getTop() - TOP_MARGIN + 10, width, TOP_MARGIN - 30);
 
-        private final String title;
-        private final String filterInfo;
-        private final PdfFont regular;
-        private final PdfFont bold;
+        Paragraph header = new Paragraph()
+                .addTabStops(new TabStop(width, TabAlignment.RIGHT))
+                .add(new Text(title).setFont(bold).setFontSize(16))
+                .add(new Text("   Monat: ").setFont(regular).setFontSize(FONT_SIZE))
+                .add(new Text(monthLabel).setFont(bold).setFontSize(FONT_SIZE))
+                .add(new Text("   Umsatz Art: ").setFont(regular).setFontSize(FONT_SIZE))
+                .add(new Text(classLabel).setFont(bold).setFontSize(FONT_SIZE))
+                .add(new Tab())
+                .add(new Text("Seite " + pageNumber + " von " + totalPages).setFont(regular).setFontSize(FONT_SIZE));
 
-        HeaderHandler(String title, String filterInfo, PdfFont regular, PdfFont bold) {
-            this.title = title;
-            this.filterInfo = filterInfo;
-            this.regular = regular;
-            this.bold = bold;
+        PdfCanvas pdfCanvas = new PdfCanvas(page.newContentStreamAfter(), page.getResources(), pdfDoc);
+        try (Canvas canvas = new Canvas(pdfCanvas, area)) {
+            canvas.add(header);
         }
-
-        @Override
-        protected void onAcceptedEvent(AbstractPdfDocumentEvent event) {
-            PdfDocumentEvent docEvent = (PdfDocumentEvent) event;
-            PdfDocument pdfDoc = docEvent.getDocument();
-            PdfPage page = docEvent.getPage();
-            Rectangle pageSize = page.getPageSize();
-
-            float width = pageSize.getWidth() - 2 * MARGIN;
-            Rectangle area = new Rectangle(MARGIN, pageSize.getTop() - TOP_MARGIN + 10, width, TOP_MARGIN - 30);
-
-            Paragraph header = new Paragraph()
-                    .addTabStops(new TabStop(width, TabAlignment.RIGHT))
-                    .add(new Text(title).setFont(bold).setFontSize(16))
-                    .add(new Text("   " + filterInfo).setFont(regular).setFontSize(FONT_SIZE))
-                    .add(new Tab())
-                    .add(new Text("Seite " + pdfDoc.getPageNumber(page)).setFont(regular).setFontSize(FONT_SIZE));
-
-            PdfCanvas pdfCanvas = new PdfCanvas(page.newContentStreamAfter(), page.getResources(), pdfDoc);
-            try (Canvas canvas = new Canvas(pdfCanvas, area)) {
-                canvas.add(header);
-            }
-            pdfCanvas.release();
-        }
+        pdfCanvas.release();
     }
 }

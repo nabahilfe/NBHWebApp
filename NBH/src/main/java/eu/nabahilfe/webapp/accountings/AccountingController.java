@@ -334,9 +334,10 @@ public class AccountingController {
         byte[] pdf = accountingPdfService.createPdf(result.entries(), result.total(), result.year(),
                 result.month(), result.transactionType(), result.accountableClass());
 
-        String fileName = "Umsaetze-" + accountingPdfService.transactionTypeLabel(result.transactionType())
+        String fileName = "Umsätze-" + accountingPdfService.transactionTypeLabel(result.transactionType())
                 + "-" + result.year()
-                + (result.month() > 0 ? "-%02d".formatted(result.month()) : "") + ".pdf";
+                + (result.month() > 0 ? "-%02d".formatted(result.month()) : "")
+                + (result.accountableClass().isEmpty() ? "" : "-" + result.accountableClass()) + ".pdf";
 
         ContentDisposition disposition = ContentDisposition.attachment()
                 .filename(fileName, StandardCharsets.UTF_8)
