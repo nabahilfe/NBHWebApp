@@ -9,7 +9,7 @@
     csrfHiddenInput = csrfHiddenInput,
     ctxt = ctxt,
     content = @`
-    <h3>Systemanfragen</h3>
+    <h3>API Systemanfragen</h3>
     <p class="text-body-secondary">Letzte 30 Tage (einschlie&#223;lich heute)</p>
 
     <div class="table-responsive">
