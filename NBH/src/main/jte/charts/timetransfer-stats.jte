@@ -12,6 +12,7 @@
 @param int selectedYear
 @param String chartDataJson
 @param String monthlyHoursJson
+@param long totalHours
 @param boolean hasData
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
@@ -42,19 +43,26 @@
     </form>
 
     @if(hasData)
-        <div class="row" style="margin-top: 20px;">
+        <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4"
+                style="background-color: #ECFEFF;">
+            <h4>Stunden nach Angebot</h4>
             <div style="width: 100%; max-width: 700px; margin: auto;">
-                <h4>Stunden nach Angebot</h4>
                 <canvas id="timeTransferStatsChart" data-chart="${chartDataJson}"></canvas>
             </div>
+            <p class="text-end fw-semibold mb-0">Gesamt: ${totalHours} Stunden</p>
         </div>
     @else
-        <p class="text-muted">Für ${selectedYear} sind keine Zeitschecks vorhanden.</p>
+        <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4"
+                style="background-color: #ECFEFF;">
+            <h4>Stunden nach Angebot</h4>
+            <p class="text-muted mb-0">Für ${selectedYear} sind keine Zeitschecks vorhanden.</p>
+        </div>
     @endif
 
-    <div class="row" style="margin-top: 20px;">
+    <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4"
+            style="background-color: #ECFEFF;">
+        <h4>Geleistete Stunden pro Monat</h4>
         <div style="width: 100%; max-width: 900px; margin: auto;">
-            <h4>Geleistete Stunden pro Monat</h4>
             <canvas id="monthlyHoursChart" data-chart="${monthlyHoursJson}"></canvas>
         </div>
     </div>
@@ -81,6 +89,9 @@
                     options: {
                         responsive: true,
                         plugins: {
+                            legend: {
+                                onClick: function() {}
+                            },
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
@@ -109,6 +120,7 @@
                 },
                 options: {
                     responsive: true,
+                    aspectRatio: 1.54,
                     scales: {
                         y: {
                             beginAtZero: true,
