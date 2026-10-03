@@ -5,7 +5,6 @@
 
 package eu.nabahilfe.webapp.charts;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
@@ -15,10 +14,10 @@ import eu.nabahilfe.webapp.members.Member;
 
 public interface PopulationPyramidRepository extends Repository<Member, Long> {
 
-    /** Birthdates of all active, non-system members that have a birthdate. */
-    @Query("SELECT m.birthdate FROM Member m " +
-           "WHERE m.birthdate IS NOT NULL " +
+        /** Birthdates and salutations of active, non-system members that have a birthdate. */
+        @Query("SELECT new eu.nabahilfe.webapp.charts.MemberBirthdateSalutation(m.birthdate, m.salutation) FROM Member m " +
+            "WHERE m.birthdate IS NOT NULL " +
            "AND (m.resignationDate IS NULL OR m.resignationDate > CURRENT_DATE) " +
            "AND (m.isSystemAccount = false OR m.isSystemAccount IS NULL)")
-    List<LocalDate> findActiveMemberBirthdates();
+        List<MemberBirthdateSalutation> findActiveMemberBirthdates();
 }

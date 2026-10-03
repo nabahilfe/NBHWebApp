@@ -7,10 +7,12 @@ package eu.nabahilfe.webapp.charts;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+
+import eu.nabahilfe.webapp.members.Salutation;
 
 @Service
 public class PopulationPyramidService {
@@ -23,20 +25,29 @@ public class PopulationPyramidService {
         this.populationPyramidRepository = populationPyramidRepository;
     }
 
-    /** Member counts per decade, index 0 = 80+, index 8 = 0-9 (order expected by the chart template). */
-    public List<Integer> ageDistribution() {
+    /** Member counts by salutation and decade, index 0 = 80+, index 8 = 0-9. */
+    public List<AgeDecadeData> ageDistribution() {
         LocalDate today = LocalDate.now();
-        int[] counts = new int[DECADES];
+        int[] maleCounts = new int[DECADES];
+        int[] femaleCounts = new int[DECADES];
 
-        for (LocalDate birthdate : populationPyramidRepository.findActiveMemberBirthdates()) {
-            int age = Period.between(birthdate, today).getYears();
+        for (MemberBirthdateSalutation member : populationPyramidRepository.findActiveMemberBirthdates()) {
+            int age = Period.between(member.birthdate(), today).getYears();
             if (age < 0) {
                 continue;
             }
-            int decade = Math.min(age / 10, DECADES - 1);
-            counts[DECADES - 1 - decade]++;
+            int index = DECADES - 1 - Math.min(age / 10, DECADES - 1);
+            if (Salutation.Herr.name().equals(member.salutation())) {
+                maleCounts[index]++;
+            } else if (Salutation.Frau.name().equals(member.salutation())) {
+                femaleCounts[index]++;
+            }
         }
 
-        return Arrays.stream(counts).boxed().toList();
+        List<AgeDecadeData> result = new ArrayList<>(DECADES);
+        for (int i = 0; i < DECADES; i++) {
+            result.add(new AgeDecadeData(maleCounts[i], femaleCounts[i]));
+        }
+        return List.copyOf(result);
     }
 }

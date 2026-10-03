@@ -5,6 +5,8 @@
 
 @import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.time.LocalDate
+@import java.util.List
+@import eu.nabahilfe.webapp.charts.AgeDecadeData
 
 @import static eu.nabahilfe.webapp.system.DateFormatter.*
 
@@ -14,8 +16,10 @@
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
 @param GlobalModelAttributes globalModelAttributes
-<!-- Die Liste chartData muss genau 9 Zahlen enthalten. Jede Zahl steht für die Gesamtzahl der Personen in dem jeweiligen Jahrzehnt. -->
-@param java.util.List<Integer> chartData 
+
+<!-- Die Liste chartData muss genau 9 Records enthalten. 
+ Jeder Record enthält die Anzahl der Männer und Frauen in dem jeweiligen Jahrzehnt. -->
+@param List<AgeDecadeData> chartData
 
 @template.layout.mainpage(
     globalModelAttributes = globalModelAttributes,
@@ -30,9 +34,12 @@
     </div>
 
     <div class="row" style="margin-top: 20px;">
-        <div style="width: 100%; max-width: 600px; margin: auto;">
-            <!-- Das data-Attribut transportiert die Java-Liste sicher als Text-String zum Client -->
-            <canvas id="christmasTreeChart" data-chart="${chartData != null ? chartData.toString() : "[]"}"></canvas>
+        <div style="width: 100%; max-width: 650px; margin: auto;">
+            <!-- Daten werden getrennt und sicher als JSON-Arrays in die Attribute geschrieben -->
+            <canvas id="agePyramidChart" 
+                    data-male="${chartData != null ? chartData.stream().map(d -> String.valueOf(d.male())).toList().toString() : "[]"}"
+                    data-female="${chartData != null ? chartData.stream().map(d -> String.valueOf(d.female())).toList().toString() : "[]"}">
+            </canvas>
         </div>
     </div>
 
@@ -41,52 +48,79 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const chartElement = document.getElementById('christmasTreeChart');
+            const chartElement = document.getElementById('agePyramidChart');
             const ctx = chartElement.getContext('2d');
             const decades = ['80+', '70-79', '60-69', '50-59', '40-49', '30-39', '20-29', '10-19', '0-9'];
 
-            // Holt die Daten standardkonform aus dem HTML-Attribut und parst sie als JS-Array
-            const realData = JSON.parse(chartElement.getAttribute('data-chart'));
-            const centeredData = realData.map(value => [-value / 2, value / 2]);
+            // Daten aus den Attributen laden. Männer-Werte werden für die linke Chart-Seite negativ gesetzt.
+            const rawMale = JSON.parse(chartElement.getAttribute('data-male'));
+            const maleData = rawMale.map(value => -value);
+            const femaleData = JSON.parse(chartElement.getAttribute('data-female'));
 
             new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: decades,
-                    datasets: [{
-                        label: 'Personen gesamt',
-                        data: centeredData,
-                        backgroundColor: 'rgba(40, 167, 69, 0.85)',
-                        borderColor: 'rgba(30, 126, 52, 1)',
-                        borderWidth: 1,
-                        barPercentage: 0.85,
-                        categoryPercentage: 0.9
-                    }]
+                    datasets: [
+                        {
+                            label: 'Männer',
+                            data: maleData,
+                            backgroundColor: 'rgba(54, 162, 235, 0.85)', // Blau
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            barPercentage: 0.85,
+                            categoryPercentage: 0.9
+                        },
+                        {
+                            label: 'Frauen',
+                            data: femaleData,
+                            backgroundColor: 'rgba(255, 99, 132, 0.85)', // Rosa/Rot
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1,
+                            barPercentage: 0.85,
+                            categoryPercentage: 0.9
+                        }
+                    ]
                 },
                 options: {
-                    indexAxis: 'y',
+                    indexAxis: 'y', // Horizontale Balken
                     responsive: true,
                     scales: {
                         x: {
+                            stacked: true, // Stapelt die Datensätze gespiegelt auf der Nulllinie
                             ticks: {
                                 callback: function(value) {
-                                    return Math.abs(value * 2);
+                                    return Math.abs(value); // Minuszeichen auf der linken Achsenseite ausblenden
                                 }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Anzahl der Personen'
                             }
                         },
                         y: {
-                            position: 'center',
+                            stacked: true,
+                            position: 'center', // Y-Achse (Stamm) bleibt exakt in der Mitte
                             grid: {
                                 drawOnChartArea: false
                             }
                         }
                     },
                     plugins: {
-                        legend: { display: false },
+                        legend: {
+                            display: true, // Legende oben anzeigen, da wir nun 2 Farben haben
+                            position: 'top'
+                        },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return ' Personen gesamt: ' + realData[context.dataIndex];
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    // Zeigt im Tooltip beim Hovern den echten positiven Wert an
+                                    label += Math.abs(context.parsed.x);
+                                    return label;
                                 }
                             }
                         }
