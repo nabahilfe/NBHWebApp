@@ -26,6 +26,7 @@
     content = @`
 
     <h3>Statistik Zeitschecks</h3>
+    <p>Hier sind die Statistiken der verbuchten Zeitschecks nach Kategorie und Monat zu sehen.</p>
 
     <div class="row">
         @template.components.display-statusmessage(successMessage, errorMessage)
@@ -45,7 +46,7 @@
     @if(hasData)
         <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4"
                 style="background-color: #ECFEFF;">
-            <h4>Stunden nach Angebot</h4>
+            <h4>Stunden nach Kategorie</h4>
             <div style="width: 100%; max-width: 700px; margin: auto;">
                 <canvas id="timeTransferStatsChart" data-chart="${chartDataJson}"></canvas>
             </div>
@@ -54,7 +55,7 @@
     @else
         <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4"
                 style="background-color: #ECFEFF;">
-            <h4>Stunden nach Angebot</h4>
+            <h4>Stunden nach Kategorie</h4>
             <p class="text-muted mb-0">Für ${selectedYear} sind keine Zeitschecks vorhanden.</p>
         </div>
     @endif
