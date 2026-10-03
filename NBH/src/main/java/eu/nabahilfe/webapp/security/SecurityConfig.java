@@ -46,6 +46,8 @@ public class SecurityConfig {
                 .requestMatchers("/registration/**").permitAll()
                 .requestMatchers("/statuscode/**").permitAll()
                 .requestMatchers("/home", "/home/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/webjars/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/charts/timecheques/distribution").permitAll()
                 .requestMatchers(HttpMethod.GET, "/gallery/user-list").permitAll()
                 .requestMatchers(HttpMethod.GET, "/gallery/user/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/gallery/*/image/*").permitAll()

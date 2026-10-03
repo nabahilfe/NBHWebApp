@@ -11,6 +11,7 @@
 @param List<Integer> years
 @param int selectedYear
 @param String chartDataJson
+@param String monthlyHoursJson
 @param boolean hasData
 
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
@@ -43,6 +44,7 @@
     @if(hasData)
         <div class="row" style="margin-top: 20px;">
             <div style="width: 100%; max-width: 700px; margin: auto;">
+                <h4>Stunden nach Angebot</h4>
                 <canvas id="timeTransferStatsChart" data-chart="${chartDataJson}"></canvas>
             </div>
         </div>
@@ -50,11 +52,18 @@
         <p class="text-muted">Für ${selectedYear} sind keine Zeitschecks vorhanden.</p>
     @endif
 
+    <div class="row" style="margin-top: 20px;">
+        <div style="width: 100%; max-width: 900px; margin: auto;">
+            <h4>Geleistete Stunden pro Monat</h4>
+            <canvas id="monthlyHoursChart" data-chart="${monthlyHoursJson}"></canvas>
+        </div>
+    </div>
+
     <script src="/webjars/chart.js/4.4.1/dist/chart.umd.js"></script>
-    @if(hasData)
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                const chartElement = document.getElementById('timeTransferStatsChart');
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const chartElement = document.getElementById('timeTransferStatsChart');
+            if (chartElement) {
                 const chartData = JSON.parse(chartElement.getAttribute('data-chart'));
                 const colors = chartData.map((entry, index) => 'hsl(' + ((index * 137.508) % 360) + ' 62% 58%)');
 
@@ -82,7 +91,50 @@
                         }
                     }
                 });
+            }
+
+            const monthlyChartElement = document.getElementById('monthlyHoursChart');
+            const monthlyHours = JSON.parse(monthlyChartElement.getAttribute('data-chart'));
+            new Chart(monthlyChartElement.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Jänner', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+                    datasets: [{
+                        label: 'Geleistete Stunden',
+                        data: monthlyHours,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(35, 115, 175, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Stunden'
+                            },
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + ' Stunden';
+                                }
+                            }
+                        }
+                    }
+                }
             });
-        </script>
-    @endif
+        });
+    </script>
 `)

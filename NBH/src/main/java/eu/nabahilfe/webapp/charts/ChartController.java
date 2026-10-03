@@ -51,8 +51,10 @@ public class ChartController {
         }
 
         List<TimeTransferOfferStats> chartData = timeTransferStatsService.offerDistribution(selectedYear);
+        List<Long> monthlyHours = timeTransferStatsService.monthlyHours(selectedYear);
         try {
             model.addAttribute("chartDataJson", objectMapper.writeValueAsString(chartData));
+            model.addAttribute("monthlyHoursJson", objectMapper.writeValueAsString(monthlyHours));
         } catch (JacksonException e) {
             throw new IllegalStateException("Could not serialize time transfer chart data", e);
         }

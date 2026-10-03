@@ -5,6 +5,8 @@
 
 package eu.nabahilfe.webapp.charts;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -26,5 +28,14 @@ public class TimeTransferStatsService {
                         row[0] + " - " + row[1],
                         row[2] == null ? 0L : ((Number) row[2]).longValue()))
                 .toList();
+    }
+
+    public List<Long> monthlyHours(int year) {
+        List<Long> totals = new ArrayList<>(Collections.nCopies(12, 0L));
+        for (Object[] row : timeTransferRepository.findMonthlyHoursByYear(year)) {
+            int monthIndex = ((Number) row[0]).intValue() - 1;
+            totals.set(monthIndex, row[1] == null ? 0L : ((Number) row[1]).longValue());
+        }
+        return List.copyOf(totals);
     }
 }

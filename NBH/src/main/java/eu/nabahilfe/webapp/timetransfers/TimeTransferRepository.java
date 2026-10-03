@@ -87,6 +87,16 @@ public interface TimeTransferRepository extends ListCrudRepository<TimeTransfer,
             """)
     List<Object[]> findStatsByOfferAndYear(int year);
 
+    /** Returns [serviceMonth, totalHours] for the given year. */
+    @Query("""
+            SELECT MONTH(t.dateOfService), SUM(t.hours)
+            FROM TimeTransfer t
+            WHERE YEAR(t.dateOfService) = :year
+            GROUP BY MONTH(t.dateOfService)
+            ORDER BY MONTH(t.dateOfService)
+            """)
+    List<Object[]> findMonthlyHoursByYear(int year);
+
     /** Returns [offerCode, offerDescription, totalHours, transferCount] grouped by offer category for all years, sorted by total hours desc */
     @Query("""
             SELECT COALESCE(o.code, '---'), COALESCE(o.description, '(keine Kategorie)'), SUM(t.hours), COUNT(t)
