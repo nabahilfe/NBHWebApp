@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.time.Month;
+import java.time.YearMonth;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
@@ -31,6 +32,8 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Tab;
@@ -48,6 +51,7 @@ public class AccountingPdfService {
     private static final float MARGIN = 36f;
     private static final float TOP_MARGIN = 70f;
     private static final float FONT_SIZE = 9f;
+    private static final Border MONTH_SEPARATOR = new SolidBorder(2f);
 
     public String monthLabel(int month) {
         return month >= 1 && month <= 12
@@ -106,16 +110,25 @@ public class AccountingPdfService {
             table.addCell(new Cell(1, 8).add(new Paragraph("Keine Einträge gefunden."))
                     .setTextAlignment(TextAlignment.CENTER));
         } else {
+            YearMonth previousMonth = null;
             for (AccountingEntry e : entries) {
-                table.addCell(textCell(dateReverseDE(e.getAccountingDate())));
-                table.addCell(textCell(e.getCreatedBy() != null ? e.getCreatedBy().getName() : ""));
-                table.addCell(textCell(e.getAccountableName()));
-                table.addCell(textCell(e.getAccountableMember() != null ? e.getAccountableMember().getName() : ""));
-                table.addCell(textCell(e.getDescription()));
-                table.addCell(textCell(dateReverseDE(e.getTransactionDate())));
-                table.addCell(textCell(e.getLiableMemberName()));
-                table.addCell(textCell("€ " + numberDE(e.getTransactionAmount()))
-                        .setTextAlignment(TextAlignment.RIGHT));
+                List<Cell> row = List.of(
+                        textCell(dateReverseDE(e.getAccountingDate())),
+                        textCell(e.getCreatedBy() != null ? e.getCreatedBy().getName() : ""),
+                        textCell(e.getAccountableName()),
+                        textCell(e.getAccountableMember() != null ? e.getAccountableMember().getName() : ""),
+                        textCell(e.getDescription()),
+                        textCell(dateReverseDE(e.getTransactionDate())),
+                        textCell(e.getLiableMemberName()),
+                        textCell("€ " + numberDE(e.getTransactionAmount())).setTextAlignment(TextAlignment.RIGHT));
+
+                YearMonth currentMonth = e.getAccountingDate() != null ? YearMonth.from(e.getAccountingDate()) : null;
+                if (previousMonth != null && currentMonth != null && !currentMonth.equals(previousMonth)) {
+                    row.forEach(cell -> cell.setBorderTop(MONTH_SEPARATOR));
+                }
+                previousMonth = currentMonth;
+
+                row.forEach(table::addCell);
             }
         }
 

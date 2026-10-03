@@ -8,6 +8,7 @@ package eu.nabahilfe.webapp.accountings;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -331,10 +332,16 @@ public class AccountingController {
 
         AccountingFilterResult result = findFilteredEntries(year, month, accountableName, transactionType);
 
-        byte[] pdf = accountingPdfService.createPdf(result.entries(), result.total(), result.year(),
+        List<AccountingEntry> sortedEntries = result.entries().stream()
+                .sorted(Comparator.comparing(AccountingEntry::getAccountingDate,
+                        Comparator.nullsLast(Comparator.naturalOrder()))
+                        .thenComparing(AccountingEntry::getId, Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
+
+        byte[] pdf = accountingPdfService.createPdf(sortedEntries, result.total(), result.year(),
                 result.month(), result.transactionType(), result.accountableClass());
 
-        String fileName = "Umsätze-" + accountingPdfService.transactionTypeLabel(result.transactionType())
+        String fileName = "NBH-Umsätze-" + accountingPdfService.transactionTypeLabel(result.transactionType())
                 + "-" + result.year()
                 + (result.month() > 0 ? "-%02d".formatted(result.month()) : "")
                 + (result.accountableClass().isEmpty() ? "" : "-" + result.accountableClass()) + ".pdf";
