@@ -87,7 +87,7 @@
         </div>
 
         <div class="col-auto ms-auto">
-            <button type="submit" formaction="/accountings/show-accountings/pdf" class="btn btn-sm btn-outline-primary">PDF erstellen</button>
+            <button type="submit" formaction="/accountings/show-accountings/pdf" class="btn btn-sm btn-outline-primary" disabled="${entries.isEmpty()}">PDF erstellen</button>
         </div>
 
     </form>
