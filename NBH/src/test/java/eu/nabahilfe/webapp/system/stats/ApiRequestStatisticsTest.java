@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.ui.ExtendedModelMap;
 
+import tools.jackson.databind.ObjectMapper;
+
 class ApiRequestStatisticsTest {
 
     @Test
@@ -41,11 +43,49 @@ class ApiRequestStatisticsTest {
     void suppliesStatisticsToTheMenuTargetTemplate() {
         ApiRequestStatisticsService service = mock(ApiRequestStatisticsService.class);
         List<ApiRequestStatistic> statistics = List.of();
+        List<ApiRequestDailyTotal> dailyTotals = List.of(new ApiRequestDailyTotal(LocalDate.now(), 0L));
         when(service.findLast30Days()).thenReturn(statistics);
+        when(service.dailyTotals(statistics)).thenReturn(dailyTotals);
+        ObjectMapper objectMapper = new ObjectMapper();
         ExtendedModelMap model = new ExtendedModelMap();
 
-        assertEquals("system/stats/api-requests", new ApiRequestStatisticsController(service).showApiRequests(model));
+        assertEquals("system/stats/api-requests", new ApiRequestStatisticsController(service, objectMapper).showApiRequests(model));
         assertSame(statistics, model.getAttribute("statistics"));
+        assertEquals(objectMapper.writeValueAsString(dailyTotals), model.getAttribute("dailyTotalsJson"));
         verify(service).findLast30Days();
+        verify(service).dailyTotals(statistics);
+    }
+
+    @Test
+    void sumsAllMethodsUrlsAndStatusesPerDayAndFillsMissingDays() {
+        ApiRequestStatisticsService service = new ApiRequestStatisticsService(
+                mock(ApiRequestStatisticRepository.class), mock(ApiRequestCounter.class));
+        LocalDate today = LocalDate.now();
+        List<ApiRequestStatistic> statistics = List.of(
+                new ApiRequestStatistic(today, "GET", "/home", 200, 42L),
+                new ApiRequestStatistic(today, "POST", "/members", 500, 8L),
+                new ApiRequestStatistic(today.minusDays(29), "GET", "/home", 200, 12L),
+                new ApiRequestStatistic(today.minusDays(30), "GET", "/home", 200, 100L),
+                new ApiRequestStatistic(today.plusDays(1), "GET", "/home", 200, 100L));
+
+        List<ApiRequestDailyTotal> totals = service.dailyTotals(statistics);
+
+        assertEquals(30, totals.size());
+        assertEquals(new ApiRequestDailyTotal(today.minusDays(29), 12L), totals.getFirst());
+        assertEquals(new ApiRequestDailyTotal(today, 50L), totals.getLast());
+        for (int index = 1; index < 29; index++) {
+            assertEquals(new ApiRequestDailyTotal(today.minusDays(29 - index), 0L), totals.get(index));
+        }
+    }
+
+    @Test
+    void returns30ZeroTotalsWhenThereAreNoRequests() {
+        ApiRequestStatisticsService service = new ApiRequestStatisticsService(
+                mock(ApiRequestStatisticRepository.class), mock(ApiRequestCounter.class));
+
+        List<ApiRequestDailyTotal> totals = service.dailyTotals(List.of());
+
+        assertEquals(30, totals.size());
+        assertEquals(0L, totals.stream().mapToLong(ApiRequestDailyTotal::requestCount).sum());
     }
 }

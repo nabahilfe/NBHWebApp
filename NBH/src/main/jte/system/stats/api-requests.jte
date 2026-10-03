@@ -1,5 +1,6 @@
 <!-- src/main/jte/system/stats/api-requests.jte -->
 @param java.util.List<eu.nabahilfe.webapp.system.stats.ApiRequestStatistic> statistics
+@param java.lang.String dailyTotalsJson
 @param eu.nabahilfe.webapp.system.GlobalModelAttributes globalModelAttributes
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
@@ -12,6 +13,13 @@
     <h3>API Systemanfragen</h3>
     <p class="text-body-secondary">Letzte 30 Tage (einschlie&#223;lich heute)</p>
 
+    <h4>Requests pro Tag</h4>
+    <div class="position-relative mb-4" style="height: 416px; width: 100%;">
+        <canvas id="daily-api-requests-chart" data-chart="${dailyTotalsJson}"
+                role="img" aria-label="Summierte Systemanfragen pro Tag in den letzten 30 Tagen"></canvas>
+    </div>
+
+    <h4>Requests per URL Pattern</h4>
     <div class="table-responsive">
         <table id="api-request-statistics" class="table table-bordered table-hover table-sm shadow h-100">
             <thead class="table-light">
@@ -61,6 +69,51 @@
         </table>
     </div>
 
+    <script src="/webjars/chart.js/4.4.1/dist/chart.umd.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chartElement = document.getElementById('daily-api-requests-chart');
+            const dailyTotals = JSON.parse(chartElement.dataset.chart);
+            new Chart(chartElement.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: dailyTotals.map(entry => entry.requestDate),
+                    datasets: [{
+                        label: 'Requests',
+                        data: dailyTotals.map(entry => entry.requestCount),
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(35, 115, 175, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Datum' },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 0,
+                                callback: function (value) {
+                                    const date = this.getLabelForValue(value);
+                                    return date.slice(8, 10) + '.' + date.slice(5, 7) + '.';
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Requests' },
+                            ticks: { precision: 0 }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const table = document.getElementById('api-request-statistics');

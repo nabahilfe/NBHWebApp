@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,17 @@ public class ApiRequestStatisticsService {
     public List<ApiRequestStatistic> findLast30Days() {
         LocalDate today = LocalDate.now();
         return repository.findByRequestDateBetweenOrderByRequestCountDesc(today.minusDays(29), today);
+    }
+
+    public List<ApiRequestDailyTotal> dailyTotals(List<ApiRequestStatistic> statistics) {
+        LocalDate today = LocalDate.now();
+        Map<LocalDate, Long> totals = new HashMap<>();
+        for (ApiRequestStatistic statistic : statistics) {
+            totals.merge(statistic.getRequestDate(), statistic.getRequestCount(), Long::sum);
+        }
+        return today.minusDays(29).datesUntil(today.plusDays(1))
+                .map(date -> new ApiRequestDailyTotal(date, totals.getOrDefault(date, 0L)))
+                .toList();
     }
 
     @Transactional
