@@ -6,11 +6,16 @@
 package eu.nabahilfe.webapp.accountings;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,13 +48,15 @@ public class AccountingController {
     private final TimeChequeRepository timeChequeRepository;
     private final MembershipFeeRepository membershipFeeRepository;
     private final TransactionRepository transactionRepository;
+    private final AccountingPdfService accountingPdfService;
 
     private static final Logger log = LoggerFactory.getLogger(AccountingController.class);
 
     public AccountingController(AccountingRepository accountingRepository, MemberRepository memberRepository,
             TimeChequeRepository timeChequeRepository, MembershipFeeRepository membershipFeeRepository,
-            TransactionRepository transactionRepository) {
+            TransactionRepository transactionRepository, AccountingPdfService accountingPdfService) {
         this.accountingRepository = accountingRepository;
+        this.accountingPdfService = accountingPdfService;
         this.memberRepository = memberRepository;
         this.timeChequeRepository = timeChequeRepository;
         this.membershipFeeRepository = membershipFeeRepository;
@@ -292,6 +299,62 @@ public class AccountingController {
             @RequestParam(required = false) String transactionType,
             final Model model) {
 
+        AccountingFilterResult result = findFilteredEntries(year, month, accountableName, transactionType);
+
+        List<String> distinctClasses = accountingRepository.findDistinctAccountableClasses();
+
+        // Year range: current year down 7 years
+        int currentYear = LocalDate.now().getYear();
+        List<Integer> years = new java.util.ArrayList<>();
+        for (int y = currentYear; y >= currentYear - 7; y--)
+            years.add(y);
+
+        model.addAttribute("entries", result.entries());
+        model.addAttribute("total", result.total());
+        model.addAttribute("distinctAccountableClasses", distinctClasses);
+        model.addAttribute("years", years);
+        model.addAttribute("selectedYear", result.year());
+        model.addAttribute("selectedMonth", result.month());
+        model.addAttribute("selectedTransactionType", result.transactionType());
+        model.addAttribute("selectedAccountableClass", result.accountableClass());
+
+        return "accountings/list-accountingentries";
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER', 'EXECUTIVE_MEMBER', 'AUDITOR')")
+    @GetMapping("/show-accountings/pdf")
+    public ResponseEntity<byte[]> showAccountingsPdf(
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) Integer month,
+            @RequestParam(required = false) String accountableName,
+            @RequestParam(required = false) String transactionType) {
+
+        AccountingFilterResult result = findFilteredEntries(year, month, accountableName, transactionType);
+
+        byte[] pdf = accountingPdfService.createPdf(result.entries(), result.total(), result.year(),
+                result.month(), result.transactionType(), result.accountableClass());
+
+        String fileName = "Umsaetze-" + accountingPdfService.transactionTypeLabel(result.transactionType())
+                + "-" + result.year()
+                + (result.month() > 0 ? "-%02d".formatted(result.month()) : "") + ".pdf";
+
+        ContentDisposition disposition = ContentDisposition.attachment()
+                .filename(fileName, StandardCharsets.UTF_8)
+                .build();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
+                .body(pdf);
+    }
+
+    private record AccountingFilterResult(int year, int month, String transactionType, String accountableClass,
+            List<AccountingEntry> entries, BigDecimal total) {
+    }
+
+    private AccountingFilterResult findFilteredEntries(Integer year, Integer month, String accountableName,
+            String transactionType) {
+
         int selectedYear = (year != null) ? year : LocalDate.now().getYear();
         int selectedMonth = (month != null && month >= 1 && month <= 12) ? month : 0; // 0 = all
         String selectedTransactionType = (transactionType != null && !transactionType.isBlank())
@@ -322,24 +385,8 @@ public class AccountingController {
                 .map(AccountingEntry::getTransactionAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        List<String> distinctClasses = accountingRepository.findDistinctAccountableClasses();
-
-        // Year range: current year down 7 years
-        int currentYear = LocalDate.now().getYear();
-        List<Integer> years = new java.util.ArrayList<>();
-        for (int y = currentYear; y >= currentYear - 7; y--)
-            years.add(y);
-
-        model.addAttribute("entries", entries);
-        model.addAttribute("total", total);
-        model.addAttribute("distinctAccountableClasses", distinctClasses);
-        model.addAttribute("years", years);
-        model.addAttribute("selectedYear", selectedYear);
-        model.addAttribute("selectedMonth", selectedMonth);
-        model.addAttribute("selectedTransactionType", selectedTransactionType);
-        model.addAttribute("selectedAccountableClass", selectedAccountableClass);
-
-        return "accountings/list-accountingentries";
+        return new AccountingFilterResult(selectedYear, selectedMonth, selectedTransactionType,
+                selectedAccountableClass, entries, total);
     }
 
     // --------------------

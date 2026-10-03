@@ -12,17 +12,14 @@
     "**/.svn": true,
     "**/.hg": true,
     "**/.jj": true,
-    "**/.DS_Store": true,
     "**/Thumbs.db": true,
     "**/generated-sources": true,
     "**/target": true,
-    "**/.*": true,
-    "**/.vscode": true,
-    "**/.gitignore": true,
-    "**/.env": true
-},
-"dotfileToggle.hideDotfiles": true,
-"java.debug.settings.onBuildFailureProceed": true
-
+    "**/jte-classes": true
+  },
+  
+  "dotfileToggle.hideDotfiles": false,
+  "java.debug.settings.onBuildFailureProceed": true,
+  "java.configuration.updateBuildConfiguration": "interactive",
 }
 

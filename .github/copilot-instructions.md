@@ -34,6 +34,7 @@
 ## 📝 Code Style & Guardrails
 - **Security First:** Guard against SQL injection, CSRF (via Spring Security), and XSS.
 - **No Placeholders:** Avoid generating unhelpful `// TODO: implement method` blocks. Always provide a logical, structural implementation.
+- **Commenting Language:** Use clear and concise English language for comments. Avoid ambiguous terms and ensure that comments accurately describe the intent and functionality of the code.
 - **Conciseness:** Keep comments focused on "why" instead of "what". Eliminate redundant boilerplate.
 - **Consistency:** Maintain consistent naming conventions, code structure, and formatting throughout the project to enhance readability and maintainability. Use 4 spaces for block indentation for java, jte, html, and other relevant files.
 

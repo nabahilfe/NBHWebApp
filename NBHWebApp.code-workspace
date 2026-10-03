@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"name": "NBHWebApp",
+			"path": "."
+		}
+	],
+	"settings": {
+		"dotfileToggle.hideDotfiles": false,
+		"files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/.jj": true,
+			"**/Thumbs.db": true
+		},
+		"java.compile.nullAnalysis.mode": "automatic",
+		"better-todo-tree.tree.scanMode": "workspace only"
+	}
+}
