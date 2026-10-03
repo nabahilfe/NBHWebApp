@@ -65,7 +65,7 @@
                         {
                             label: 'Männer',
                             data: maleData,
-                            backgroundColor: 'rgba(54, 162, 235, 0.85)', // Blau
+                            backgroundColor: 'rgba(54, 162, 235, 0.45)', // Blau
                             borderColor: 'rgba(54, 162, 235, 1)',
                             borderWidth: 1,
                             barPercentage: 0.85,
@@ -74,7 +74,7 @@
                         {
                             label: 'Frauen',
                             data: femaleData,
-                            backgroundColor: 'rgba(255, 99, 132, 0.85)', // Rosa/Rot
+                            backgroundColor: 'rgba(255, 99, 132, 0.45)', // Rosa/Rot
                             borderColor: 'rgba(255, 99, 132, 1)',
                             borderWidth: 1,
                             barPercentage: 0.85,
@@ -89,6 +89,7 @@
                         x: {
                             stacked: true, // Stapelt die Datensätze gespiegelt auf der Nulllinie
                             ticks: {
+                                color: '#111111',
                                 callback: function(value) {
                                     return Math.abs(value); // Minuszeichen auf der linken Achsenseite ausblenden
                                 }
@@ -101,6 +102,9 @@
                         y: {
                             stacked: true,
                             position: 'center', // Y-Achse (Stamm) bleibt exakt in der Mitte
+                            ticks: {
+                                color: '#111111'
+                            },
                             grid: {
                                 drawOnChartArea: false
                             }
