@@ -27,7 +27,7 @@
     ctxt = ctxt,
     content = @`
 
-    <h3>Alterspyramide</h3>
+    <h3>Alterspyramide unserer Mitglieder</h3>
 
     <div class="row">
         @template.components.display-statusmessage(successMessage, errorMessage)
