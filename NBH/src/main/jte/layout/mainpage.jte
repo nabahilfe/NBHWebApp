@@ -331,6 +331,7 @@
                                     <li><a class="dropdown-item" href="/charts/population-piramid/age-distribution">Alterspyramide</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/members/registered">Registrierte Mitglieder</a></li>
+                                    <li><a class="dropdown-item" href="/system/stats/api-requests">Systemanfragen</a></li>
                                 </ul>
                             </li>
                         @endif

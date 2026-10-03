@@ -1,8 +1,11 @@
+// src/main/java/eu/nabahilfe/webapp/system/stats/ApiRequestStatisticsService.java
 package eu.nabahilfe.webapp.system.stats;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -16,6 +19,12 @@ public class ApiRequestStatisticsService {
             ApiRequestCounter counter) {
         this.repository = repository;
         this.counter = counter;
+    }
+
+    @Transactional(readOnly = true)
+    public List<ApiRequestStatistic> findLast30Days() {
+        LocalDate today = LocalDate.now();
+        return repository.findByRequestDateBetweenOrderByRequestCountDesc(today.minusDays(29), today);
     }
 
     @Transactional
