@@ -222,13 +222,14 @@
                                     type="button"
                                     data-bs-toggle="dropdown"
                                     data-bs-display="static">
-                                Fotos & Dokumente
+                                Medien & Statistiken
                             </button>
 
                             <ul class="dropdown-menu">
-                                <!-- Foto-Galerien -->
+                                <!-- Foto- und Dokumenten-Galerien -->
                                 <li><a class="dropdown-item" href="/gallery/user-list">Fotos</a></li>
                                 <li><a class="dropdown-item" href="/library/user-list">Dokumente</a></li>
+                                <li><a class="dropdown-item" href="/charts/timecheques/distribution">Statistik Zeitschecks</a></li>
                             </ul>
                         </li>
 
