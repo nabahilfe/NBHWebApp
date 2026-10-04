@@ -1,3 +1,18 @@
+## WICHTIG WICHTIG WICHTIG
+## Im file application.yaml unbedingt die development settings deaktivieren und die deployment settings aktivieren!
+## für development dann wieder umkehren!
+
+gg:
+    jte:
+        ## development settings
+        # development-mode: true
+        # use-precompiled-templates: false
+        
+        ## deployment settings
+        development-mode: false
+        use-precompiled-templates: true
+
+
 ## Build Docker File
 
 - start Docker Desktop Application
@@ -6,6 +21,11 @@
 
 - this builds docker image and copies docker image to server
 
+## Display Maintenance Page
+
+- log in to server: ssh nbh
+- set caddy proxy to display maintenence page, run: sudo maintenance.sh on
+-- use url https://acceptance-test.nabahilfe.eu to still access nbh app
 
 
 ## DB-Migration

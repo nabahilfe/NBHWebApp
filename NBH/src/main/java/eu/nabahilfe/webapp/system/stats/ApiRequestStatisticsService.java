@@ -28,6 +28,7 @@ public class ApiRequestStatisticsService {
         return repository.findByRequestDateBetweenOrderByRequestCountDesc(today.minusDays(29), today);
     }
 
+    @SuppressWarnings("null")
     public List<ApiRequestDailyTotal> dailyTotals(List<ApiRequestStatistic> statistics) {
         LocalDate today = LocalDate.now();
         Map<LocalDate, Long> totals = new HashMap<>();

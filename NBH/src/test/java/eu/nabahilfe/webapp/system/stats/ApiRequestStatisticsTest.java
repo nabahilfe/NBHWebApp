@@ -78,6 +78,7 @@ class ApiRequestStatisticsTest {
         }
     }
 
+    @SuppressWarnings("null")
     @Test
     void returns30ZeroTotalsWhenThereAreNoRequests() {
         ApiRequestStatisticsService service = new ApiRequestStatisticsService(

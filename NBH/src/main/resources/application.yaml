@@ -1,8 +1,12 @@
 gg:
     jte:
-        # development-mode: true
-        development-mode: false
-        use-precompiled-templates: true
+        ## development settings
+        development-mode: true
+        use-precompiled-templates: false
+        
+        ## deployment settings
+        # development-mode: false
+        # use-precompiled-templates: true
 
 spring:
     config:
@@ -55,6 +59,9 @@ spring:
                         trust: mail.your-server.de
                     # debug: true
                     debug: false
+    devtools:
+        restart:
+            enabled: false
 
 logging:
     level:

@@ -322,6 +322,7 @@ public class AccountingController {
         return "accountings/list-accountingentries";
     }
 
+    @SuppressWarnings("null")
     @PreAuthorize("hasAnyRole('ADMIN', 'TREASURER', 'EXECUTIVE_MEMBER', 'AUDITOR')")
     @GetMapping("/show-accountings/pdf")
     public ResponseEntity<byte[]> showAccountingsPdf(
@@ -360,6 +361,7 @@ public class AccountingController {
             List<AccountingEntry> entries, BigDecimal total) {
     }
 
+    @SuppressWarnings("null")
     private AccountingFilterResult findFilteredEntries(Integer year, Integer month, String accountableName,
             String transactionType) {
 

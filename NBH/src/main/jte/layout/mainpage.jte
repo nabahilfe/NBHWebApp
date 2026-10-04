@@ -328,10 +328,10 @@
                                     <li><a class="dropdown-item" href="/timecheques/category-statistics">Zeitschecks pro Kategorie</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/members/statistics">Mitgliederentwicklung</a></li>
-                                    <li><a class="dropdown-item" href="/charts/population-piramid/age-distribution">Alterspyramide</a></li>
+                                    <li><a class="dropdown-item" href="/charts/population-piramid/age-distribution">Altersstatistik Mitglieder</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/members/registered">Registrierte Mitglieder</a></li>
-                                    <li><a class="dropdown-item" href="/system/stats/api-requests">API Systemanfragen</a></li>
+                                    <li><a class="dropdown-item" href="/system/stats/api-requests">API Aufrufe</a></li>
                                 </ul>
                             </li>
                         @endif

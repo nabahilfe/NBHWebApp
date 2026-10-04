@@ -104,6 +104,7 @@ public class MemberController {
                                 + ". Please ensure the ID is correct and the member exists in the database."));
     }
 
+    @SuppressWarnings("null")
     @PreAuthorize("hasRole('USER')")
     @ModelAttribute("roles")
     public List<Role> getAllRoles() {

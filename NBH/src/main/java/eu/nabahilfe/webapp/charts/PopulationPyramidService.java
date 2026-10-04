@@ -50,4 +50,28 @@ public class PopulationPyramidService {
         }
         return List.copyOf(result);
     }
+
+    public MemberAgeStatistics ageStatistics() {
+        LocalDate today = LocalDate.now();
+        List<Integer> ages = populationPyramidRepository.findActiveMemberBirthdates().stream()
+                .map(member -> Period.between(member.birthdate(), today).getYears())
+                .filter(age -> age >= 0)
+                .sorted()
+                .toList();
+
+        if (ages.isEmpty()) {
+            return new MemberAgeStatistics(null, null);
+        }
+
+        long totalAge = 0;
+        for (int age : ages) {
+            totalAge += age;
+        }
+        double averageAge = (double) totalAge / ages.size();
+        int middle = ages.size() / 2;
+        double medianAge = ages.size() % 2 == 0
+                ? (ages.get(middle - 1) + ages.get(middle)) / 2.0
+                : ages.get(middle);
+        return new MemberAgeStatistics(averageAge, medianAge);
+    }
 }

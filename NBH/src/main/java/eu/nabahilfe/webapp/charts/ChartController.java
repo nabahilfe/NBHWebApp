@@ -38,9 +38,13 @@ public class ChartController {
     @GetMapping("/population-piramid/age-distribution")
     public String showAgeDistribution(final Model model) {
         model.addAttribute("chartData", populationPyramidService.ageDistribution());
+        MemberAgeStatistics ageStatistics = populationPyramidService.ageStatistics();
+        model.addAttribute("averageAge", ageStatistics.averageAge());
+        model.addAttribute("medianAge", ageStatistics.medianAge());
         return "charts/population-piramid";
     }
 
+    @SuppressWarnings("null")
     @GetMapping("/timecheques/distribution")
     public String showTimeTransferDistribution(@RequestParam(required = false) Integer year, final Model model) {
         int currentYear = LocalDate.now().getYear();

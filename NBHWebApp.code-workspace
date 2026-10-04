@@ -6,13 +6,18 @@
 		}
 	],
 	"settings": {
-		"dotfileToggle.hideDotfiles": false,
+		"dotfileToggle.hideDotfiles": true,
 		"files.exclude": {
 			"**/.git": true,
 			"**/.svn": true,
 			"**/.hg": true,
 			"**/.jj": true,
-			"**/Thumbs.db": true
+			"**/.DS_Store": true,
+			"**/Thumbs.db": true,
+			"**/.*": true,
+			"**/.vscode": true,
+			"**/.gitignore": true,
+			"**/.env": true
 		},
 		"java.compile.nullAnalysis.mode": "automatic",
 		"better-todo-tree.tree.scanMode": "workspace only"
