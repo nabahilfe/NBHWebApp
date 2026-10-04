@@ -5,7 +5,6 @@
 
 @import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.util.List
-@import java.time.LocalDate
 
 @import eu.nabahilfe.webapp.members.MemberBirthdayForm
 @import static eu.nabahilfe.webapp.system.DateFormatter.*

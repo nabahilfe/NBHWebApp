@@ -5,14 +5,10 @@
 
 @import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.util.List
-@import java.time.LocalDate
 
 @import static eu.nabahilfe.webapp.system.DateFormatter.*
-@import static eu.nabahilfe.webapp.system.NumberFormatter.*
-@import static eu.nabahilfe.webapp.jte.TemplateHelpers.*
 
 @import eu.nabahilfe.webapp.system.NbhConst
-@import eu.nabahilfe.webapp.members.Member
 @import eu.nabahilfe.webapp.timecheques.TimeCheque
 
 @param TimeCheque timeCheque
@@ -155,14 +151,14 @@
 
 
     <script>
-        const pricePerHour = ${pricePerHour};
+        const price_per_hour = ${pricePerHour};
         const selectedHours = document.getElementById('hoursSelected');
 
         function calculatePrice() {
             const hours = parseInt(document.getElementById('hoursSelected').value);
             const priceSpan = document.getElementById('calculatedPrice');
             if (priceSpan) {
-                priceSpan.textContent = (hours * pricePerHour).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                priceSpan.textContent = (hours * price_per_hour).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
         }
         document.addEventListener('DOMContentLoaded', calculatePrice);

@@ -5,10 +5,6 @@
 
 @import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.util.List
-@import java.time.LocalDate
-
-@import static eu.nabahilfe.webapp.system.DateFormatter.*
-@import static eu.nabahilfe.webapp.system.NumberFormatter.*
 
 @import eu.nabahilfe.webapp.members.Member
 @import eu.nabahilfe.webapp.timecheques.TimeCheque

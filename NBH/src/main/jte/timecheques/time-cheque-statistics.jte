@@ -5,8 +5,7 @@
 
 @import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.util.List
-@import java.math.BigDecimal
-@import java.time.LocalDate
+@import java.time.LocalDate 
 
 @param int selectedYear
 @param List<Object[]> stats

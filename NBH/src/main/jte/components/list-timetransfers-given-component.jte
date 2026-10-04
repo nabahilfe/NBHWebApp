@@ -15,7 +15,6 @@
 -->
 
 @import java.util.List
-@import java.time.LocalDate
 
 @import static eu.nabahilfe.webapp.system.DateFormatter.*
 @import static eu.nabahilfe.webapp.jte.TemplateHelpers.*

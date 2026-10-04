@@ -5,7 +5,6 @@
 
 @import eu.nabahilfe.webapp.accountings.TransactionType
 @import eu.nabahilfe.webapp.system.GlobalModelAttributes
-@import java.time.LocalDate
 
 @import static eu.nabahilfe.webapp.system.DateFormatter.*
 @import static eu.nabahilfe.webapp.system.NumberFormatter.*

@@ -7,7 +7,6 @@
 @import org.springframework.data.domain.Page
 
 @import eu.nabahilfe.webapp.system.NbhConst
-@import eu.nabahilfe.webapp.members.Role
 @import eu.nabahilfe.webapp.members.Member
 
 @param Page<Member> memberPage

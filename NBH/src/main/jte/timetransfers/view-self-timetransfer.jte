@@ -4,13 +4,9 @@
 -->
 
 @import eu.nabahilfe.webapp.system.GlobalModelAttributes
-@import java.util.List
 
 @import static eu.nabahilfe.webapp.system.DateFormatter.*
-
 @import eu.nabahilfe.webapp.timetransfers.TimeTransfer
-@import eu.nabahilfe.webapp.members.Member
-@import eu.nabahilfe.webapp.org.Offer
 
 @param TimeTransfer tt = null
 

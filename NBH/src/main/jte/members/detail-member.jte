@@ -8,7 +8,6 @@
 @import java.time.LocalDate
 
 @import static eu.nabahilfe.webapp.system.DateFormatter.*
-@import eu.nabahilfe.webapp.system.NbhConst
 
 @import eu.nabahilfe.webapp.members.Salutation
 @import eu.nabahilfe.webapp.members.Member

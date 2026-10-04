@@ -4,11 +4,8 @@
 -->
 
 @import eu.nabahilfe.webapp.system.GlobalModelAttributes
-@import java.time.LocalDate
 @import java.util.List
 @import eu.nabahilfe.webapp.charts.AgeDecadeData
-
-@import static eu.nabahilfe.webapp.system.DateFormatter.*
 
 @param java.lang.String successMessage = null
 @param java.lang.String errorMessage = null

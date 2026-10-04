@@ -6,7 +6,6 @@
 @import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import eu.nabahilfe.webapp.media.documents.Library
 @import eu.nabahilfe.webapp.media.documents.LibraryDocumentInfo
-@import static eu.nabahilfe.webapp.jte.TemplateHelpers.*
 
 @import java.util.List
 

@@ -4,7 +4,6 @@
 -->
 
 @import eu.nabahilfe.webapp.system.GlobalModelAttributes
-@import eu.nabahilfe.webapp.members.Role
 
 @param eu.nabahilfe.webapp.members.Role role
 
