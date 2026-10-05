@@ -36,9 +36,16 @@ public class ChartController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/population-piramid/age-distribution")
-    public String showAgeDistribution(final Model model) {
-        model.addAttribute("chartData", populationPyramidService.ageDistribution());
-        MemberAgeStatistics ageStatistics = populationPyramidService.ageStatistics();
+    public String showAgeDistribution(@RequestParam(required = false) Integer joiningYear, final Model model) {
+        List<Integer> joiningYears = populationPyramidService.availableJoiningYears();
+        int selectedJoiningYear = joiningYear != null && joiningYears.contains(joiningYear)
+                ? joiningYear
+                : joiningYears.isEmpty() ? LocalDate.now().getYear() : joiningYears.getFirst();
+
+        model.addAttribute("joiningYears", joiningYears);
+        model.addAttribute("selectedJoiningYear", selectedJoiningYear);
+        model.addAttribute("chartData", populationPyramidService.ageDistribution(selectedJoiningYear));
+        MemberAgeStatistics ageStatistics = populationPyramidService.ageStatistics(selectedJoiningYear);
         model.addAttribute("averageAge", ageStatistics.averageAge());
         model.addAttribute("medianAge", ageStatistics.medianAge());
         return "charts/population-piramid";

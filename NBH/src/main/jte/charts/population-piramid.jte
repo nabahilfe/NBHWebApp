@@ -17,6 +17,8 @@
 <!-- Die Liste chartData muss genau 10 Records enthalten.
  Jeder Record enthält die Anzahl der Männer und Frauen in dem jeweiligen Jahrzehnt. -->
 @param List<AgeDecadeData> chartData
+@param List<Integer> joiningYears
+@param int selectedJoiningYear
 @param java.lang.Double averageAge = null
 @param java.lang.Double medianAge = null
 
@@ -30,6 +32,25 @@
     <p>Die <strong>Alterspyramide</strong> zeigt die Verteilung der Mitglieder nach Alter und Geschlecht.<br>
         Außerdem wird hier das Durchschnittsalter und der Median des Alters angezeigt.</p>
 
+    <form method="get" action="/charts/population-piramid/age-distribution" class="row g-3 align-items-center mb-3">
+        <div class="col-auto">
+            <label for="joiningYear" class="col-form-label">Beitritte bis einschließlich:</label>
+        </div>
+        <div class="col-auto">
+            @if(joiningYears.isEmpty())
+                <select id="joiningYear" class="form-select" disabled>
+                    <option selected>Keine Beitritte erfasst</option>
+                </select>
+            @else
+                <select id="joiningYear" name="joiningYear" class="form-select" onchange="this.form.submit()">
+                    @for(Integer year : joiningYears)
+                        <option value="${year}" selected="${year == selectedJoiningYear}">${year}</option>
+                    @endfor
+                </select>
+            @endif
+        </div>
+    </form>
+
     <div class="row">
         <div class="col-12 text-start">&bull; <strong>Durchschnittsalter</strong> der Mitglieder: <strong>${averageAge != null ? String.format(java.util.Locale.GERMANY, "%.1f", averageAge) + " Jahre" : "Keine Daten"}</strong></div>
         <div class="col-12 text-start">&bull; <strong>Median des Alters</strong> der Mitglieder: <strong>${medianAge != null ? String.format(java.util.Locale.GERMANY, "%.1f", medianAge) + " Jahre" : "Keine Daten"}</strong></div>
@@ -41,11 +62,13 @@
 
     <div class="row" style="margin-top: 20px;">
         <div class="shadow p-3 bg-white" style="width: 100%; max-width: 1000px; margin: auto;">
+            <div style="position: relative; width: 100%; aspect-ratio: 2;">
             <!-- Daten werden getrennt und sicher als JSON-Arrays in die Attribute geschrieben -->
-            <canvas id="agePyramidChart" 
-                    data-male="${chartData != null ? chartData.stream().map(d -> String.valueOf(d.male())).toList().toString() : "[]"}"
-                    data-female="${chartData != null ? chartData.stream().map(d -> String.valueOf(d.female())).toList().toString() : "[]"}">
+            <canvas id="agePyramidChart"
+                data-male="${chartData != null ? chartData.stream().map(d -> String.valueOf(d.male())).toList().toString() : "[]"}"
+                data-female="${chartData != null ? chartData.stream().map(d -> String.valueOf(d.female())).toList().toString() : "[]"}">
             </canvas>
+            </div>
         </div>
     </div>
 
@@ -91,6 +114,7 @@
                 options: {
                     indexAxis: 'y', // Horizontale Balken
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         x: {
                             stacked: true, // Stapelt die Datensätze gespiegelt auf der Nulllinie

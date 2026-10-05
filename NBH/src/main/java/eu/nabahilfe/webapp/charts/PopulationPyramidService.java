@@ -26,12 +26,16 @@ public class PopulationPyramidService {
     }
 
     /** Member counts by salutation and decade, index 0 = 90+, index 9 = 0-9. */
-    public List<AgeDecadeData> ageDistribution() {
+    public List<Integer> availableJoiningYears() {
+        return populationPyramidRepository.findDistinctJoiningYears();
+    }
+
+    public List<AgeDecadeData> ageDistribution(int joiningYear) {
         LocalDate today = LocalDate.now();
         int[] maleCounts = new int[DECADES];
         int[] femaleCounts = new int[DECADES];
 
-        for (MemberBirthdateSalutation member : populationPyramidRepository.findActiveMemberBirthdates()) {
+        for (MemberBirthdateSalutation member : populationPyramidRepository.findActiveMemberBirthdates(joiningYear)) {
             int age = Period.between(member.birthdate(), today).getYears();
             if (age < 0) {
                 continue;
@@ -51,9 +55,9 @@ public class PopulationPyramidService {
         return List.copyOf(result);
     }
 
-    public MemberAgeStatistics ageStatistics() {
+    public MemberAgeStatistics ageStatistics(int joiningYear) {
         LocalDate today = LocalDate.now();
-        List<Integer> ages = populationPyramidRepository.findActiveMemberBirthdates().stream()
+        List<Integer> ages = populationPyramidRepository.findActiveMemberBirthdates(joiningYear).stream()
                 .map(member -> Period.between(member.birthdate(), today).getYears())
                 .filter(age -> age >= 0)
                 .sorted()
