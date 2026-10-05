@@ -41,7 +41,8 @@ public class PopulationPyramidService {
                 continue;
             }
             int index = DECADES - 1 - Math.min(age / 10, DECADES - 1);
-            if (Salutation.Herr.name().equals(member.salutation())) {
+                if (Salutation.Herr.name().equals(member.salutation())
+                    || Salutation.Divers.name().equals(member.salutation())) {
                 maleCounts[index]++;
             } else if (Salutation.Frau.name().equals(member.salutation())) {
                 femaleCounts[index]++;

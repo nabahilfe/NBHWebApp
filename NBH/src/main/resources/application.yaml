@@ -5,8 +5,8 @@ gg:
         use-precompiled-templates: false
         
         ## deployment settings
-        # development-mode: false
-        # use-precompiled-templates: true
+        #development-mode: false
+        #use-precompiled-templates: true
 
 spring:
     config:

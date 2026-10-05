@@ -21,6 +21,7 @@
 @param int selectedJoiningYear
 @param java.lang.Double averageAge = null
 @param java.lang.Double medianAge = null
+@param long memberCount
 
 @template.layout.mainpage(
     globalModelAttributes = globalModelAttributes,
@@ -54,6 +55,7 @@
     <div class="row">
         <div class="col-12 text-start">&bull; <strong>Durchschnittsalter</strong> der Mitglieder: <strong>${averageAge != null ? String.format(java.util.Locale.GERMANY, "%.1f", averageAge) + " Jahre" : "Keine Daten"}</strong></div>
         <div class="col-12 text-start">&bull; <strong>Median des Alters</strong> der Mitglieder: <strong>${medianAge != null ? String.format(java.util.Locale.GERMANY, "%.1f", medianAge) + " Jahre" : "Keine Daten"}</strong></div>
+        <div class="col-12 text-start">&bull; <strong>Anzahl</strong> der Mitglieder: <strong>${memberCount}</strong></div>
     </div>
 
     <div class="row">

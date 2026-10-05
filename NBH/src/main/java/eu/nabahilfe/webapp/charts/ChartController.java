@@ -44,7 +44,10 @@ public class ChartController {
 
         model.addAttribute("joiningYears", joiningYears);
         model.addAttribute("selectedJoiningYear", selectedJoiningYear);
-        model.addAttribute("chartData", populationPyramidService.ageDistribution(selectedJoiningYear));
+        List<AgeDecadeData> chartData = populationPyramidService.ageDistribution(selectedJoiningYear);
+        model.addAttribute("chartData", chartData);
+        long memberCount = chartData.stream().mapToLong(data -> (long) data.male() + data.female()).sum();
+        model.addAttribute("memberCount", memberCount);
         MemberAgeStatistics ageStatistics = populationPyramidService.ageStatistics(selectedJoiningYear);
         model.addAttribute("averageAge", ageStatistics.averageAge());
         model.addAttribute("medianAge", ageStatistics.medianAge());
