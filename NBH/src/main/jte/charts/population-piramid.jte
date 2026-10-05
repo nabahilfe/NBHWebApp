@@ -34,7 +34,7 @@
 
     <form method="get" action="/charts/population-piramid/age-distribution" class="row g-3 align-items-center mb-3">
         <div class="col-auto">
-            <label for="joiningYear" class="col-form-label">Beitritte bis einschließlich:</label>
+            <label for="joiningYear" class="col-form-label">Beitritte bis:</label>
         </div>
         <div class="col-auto">
             @if(joiningYears.isEmpty())
@@ -62,7 +62,7 @@
 
     <div class="row" style="margin-top: 20px;">
         <div class="shadow p-3 bg-white" style="width: 100%; max-width: 1000px; margin: auto;">
-            <div style="position: relative; width: 100%; aspect-ratio: 2;">
+            <div style="position: relative; width: 100%; aspect-ratio: 1.5;">
             <!-- Daten werden getrennt und sicher als JSON-Arrays in die Attribute geschrieben -->
             <canvas id="agePyramidChart"
                 data-male="${chartData != null ? chartData.stream().map(d -> String.valueOf(d.male())).toList().toString() : "[]"}"

@@ -24,7 +24,8 @@ gg:
 ## Display Maintenance Page
 
 - log in to server: ssh nbh
-- set caddy proxy to display maintenence page, run: sudo maintenance.sh on
+- set caddy proxy to display maintenence page, run: 
+sudo maintenance.sh on
 -- use url https://acceptance-test.nabahilfe.eu to still access nbh app
 
 
