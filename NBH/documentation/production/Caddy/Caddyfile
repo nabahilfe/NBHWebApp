@@ -1,50 +1,80 @@
-ma.nabahilfe.eu {
+# Snippet für Bot-Block & Rate-Limit
+# Rate-Limit muss noch ergänzt werden, braucht angepasstes Dockerfile
+(protection) {
+    # RATENBEGRENZUNG (Schutz vor schnellen Scannern)
+    # Erlaubt maximal 30 Anfragen pro 10 Sekunden pro IP-Adresse.
+    #rate_limit {
+    #    zone global_limit {
+    #        key {http.request.remote.host}
+    #        events 30
+    #        window 10s
+    #    }
+    #}
 
+    # USER-AGENT BLOCK (Schutz vor bekannten Bots)
+    @badbots {
+        header User-Agent *(Baiduspider|YandexBot|python|nikto|dirbuster|sqlmap|NetSystemsResearch|AhrefsBot|ClaudeBot|GPTBot)*
+    }
+    
+    # Verbindung sofort abbrechen, wenn ein Bad Bot erkannt wird
+    handle @badbots {
+        abort
+    }
+}
+
+# Snippet für Wartungsmodus
+(maintenance_check) {
+    # Prüft, ob die Datei /.enabled im Wartungsordner existiert
     @maintenance file {
         root /srv/maintenance
         try_files /.enabled
     }
 
+    # Wenn aktiv, wird die index.html mit HTTP 503 (Service Unavailable) ausgeliefert
     handle @maintenance {
         root * /srv/maintenance
         rewrite * /index.html
         header Retry-After "3600"
         file_server
     }
+}
+
+ma.nabahilfe.eu {
+    # Rate Limit und Boot Protection, bricht ab falls erkannt
+    import protection
+    # Wartung prüfen, liefert Wartungsseite aus falls aktiv
+    import maintenance_check
 
     handle {
         reverse_proxy nbh-app:8080
     }
 }
-
 
 www.nabahilfe.eu {
-
-    @maintenance file {
-        root /srv/maintenance
-        try_files /.enabled
-    }
-
-    handle @maintenance {
-        root * /srv/maintenance
-        rewrite * /index.html
-        header Retry-After "3600"
-        file_server
-    }
+    # Rate Limit und Boot Protection, bricht ab falls erkannt
+    import protection
+    # Wartung prüfen, liefert Wartungsseite aus falls aktiv
+    import maintenance_check
 
     handle {
         reverse_proxy nbh-app:8080
     }
 }
 
-
 acceptance-test.nabahilfe.eu {
+    # Rate Limit und Boot Protection, bricht ab falls erkannt
+    import protection
 
-	reverse_proxy nbh-app:8080
+    handle {
+	    reverse_proxy nbh-app:8080
+    }
 }
 
-
 monitor.nabahilfe.eu {
+    # Rate Limit und Boot Protection, bricht ab falls erkannt
+    import protection
 
-    reverse_proxy uptime-kuma:3001
+    handle {
+        reverse_proxy uptime-kuma:3001
+    }
 }
