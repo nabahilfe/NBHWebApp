@@ -15,7 +15,7 @@
 
 <div class="row g-3">
     <div class="col-12 col-lg-6">
-        <div class="card h-100">
+        <div class="card">
             <div class="card-header bg-info bg-opacity-10">
                 <strong>Geburtstage diesen Monat</strong>
             </div>
@@ -49,7 +49,7 @@
     </div>
 
     <div class="col-12 col-lg-6">
-        <div class="card h-100">
+        <div class="card">
             <div class="card-header bg-info bg-opacity-10">
                 <strong>Geburtstage nächsten Monat</strong>
             </div>
