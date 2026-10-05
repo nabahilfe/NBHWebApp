@@ -66,9 +66,9 @@
 
                                 <div class="row g-2 mb-1">
                                     <div class="col-6">
-                                        <label for="salutation" class="form-label">Anrede<span class="text-danger">*</span></label>
-                                        <select class="form-select" name="salutation" id="salutation" required>
-                                            <option value="" disabled selected="${member.getSalutation() == null || member.getSalutation().isBlank()}">Auswählen</option>
+                                        <label for="salutation" class="form-label">Anrede</label>
+                                        <select class="form-select" name="salutation" id="salutation">
+                                            <option value="" selected="${member.getSalutation() == null || member.getSalutation().isBlank()}">Keine Anrede, ist Institution</option>
                                             @for(Salutation sal : Salutation.values())
                                                 <option value="${sal.name()}" selected="${member.getSalutation() != null && member.getSalutation().equals(sal.name())}">
                                                     ${sal.name()}

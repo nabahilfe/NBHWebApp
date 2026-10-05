@@ -679,8 +679,10 @@ public class MemberController {
     private String validateData(Member member) {
         LocalDate currentDate = LocalDate.now();
 
-        if (member.getSalutation() == null || member.getSalutation().isBlank())
-            return "Bitte eine Anrede auswählen.";
+        boolean hasSalutation = member.getSalutation() != null && !member.getSalutation().isBlank();
+        boolean hasInstitution = member.getInstitution() != null && !member.getInstitution().isBlank();
+        if (hasSalutation == hasInstitution)
+            return "Bitte geben Sie entweder eine Anrede oder eine Institution an.";
 
         // check age
         if (Period.between(member.getBirthdate(), currentDate).getYears() < NbhConst.MIN_MEMBER_AGE)
