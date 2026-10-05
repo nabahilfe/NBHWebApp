@@ -4,11 +4,11 @@
 
 gg:
     jte:
-        ## development settings
+        ## development settings for local development
         # development-mode: true
         # use-precompiled-templates: false
         
-        ## deployment settings
+        ## deployment settings for production
         development-mode: false
         use-precompiled-templates: true
 

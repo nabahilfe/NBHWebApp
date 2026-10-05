@@ -1,12 +1,12 @@
 gg:
     jte:
-        ## development settings
-        development-mode: true
-        use-precompiled-templates: false
+        ## development settings for local development
+        #development-mode: true
+        #use-precompiled-templates: false
         
-        ## deployment settings
-        #development-mode: false
-        #use-precompiled-templates: true
+        ## deployment settings for production
+        development-mode: false
+        use-precompiled-templates: true
 
 spring:
     config:
