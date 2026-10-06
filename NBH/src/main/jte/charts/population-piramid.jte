@@ -31,7 +31,12 @@
 
     <h3>Altersstatistik unserer Mitglieder</h3>
     <p>Die <strong>Alterspyramide</strong> zeigt die Verteilung der Mitglieder nach Alter und Geschlecht.<br>
-        Außerdem wird hier das Durchschnittsalter und der Median des Alters angezeigt.</p>
+        Außerdem wird hier das Durchschnittsalter und der Median des Alters angezeigt.
+    </p>
+    <p>
+        Über die <strong>Beitrittsjahre</strong> kann die Altersverteilung gefiltert werden und damit gezielt analysiert werden,<br>
+        wie sich das Alter der Mitglieder im Laufe der Zeit verändert hat.
+    </p>
 
     <form method="get" action="/charts/population-piramid/age-distribution" class="row g-3 align-items-center mb-3">
         <div class="col-auto">

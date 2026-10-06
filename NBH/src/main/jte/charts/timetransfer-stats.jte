@@ -26,7 +26,7 @@
     content = @`
 
     <h3>Statistik Zeitschecks</h3>
-    <p>Hier sind die Statistiken der verbuchten Zeitschecks nach Kategorie und Monat zu sehen.</p>
+    <p>Auswertung der verbuchten Zeitschecks nach Kategorie und Monat.</p>
 
     <div class="row">
         @template.components.display-statusmessage(successMessage, errorMessage)
@@ -42,29 +42,35 @@
             </select>
         </div>
     </form>
+    <p class="fw-semibold mb-3">Insgesamt geleistete Stunden: ${totalHours}</p>
 
-    @if(hasData)
-        <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4"
-                style="background-color: #ECFEFF;">
-            <h4>Stunden nach Kategorie</h4>
-            <div style="width: 100%; max-width: 700px; margin: auto;">
-                <canvas id="timeTransferStatsChart" data-chart="${chartDataJson}"></canvas>
+    <div class="row g-4">
+        <div class="col-12 ${hasData ? "col-lg-6" : ""}">
+            @if(hasData)
+                <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow h-100"
+                        style="background-color: #ECFEFF;">
+                    <h4>Stunden nach Kategorie</h4>
+                    <div style="position: relative; width: 100%; max-width: 700px; height: clamp(336px, 42vw, 480px); margin: auto;">
+                        <canvas id="timeTransferStatsChart" data-chart="${chartDataJson}"></canvas>
+                    </div>
+                </div>
+            @else
+                <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow"
+                        style="background-color: #ECFEFF;">
+                    <h4>Stunden nach Kategorie</h4>
+                    <p class="text-muted mb-0">Für ${selectedYear} sind keine Zeitschecks vorhanden.</p>
+                </div>
+            @endif
+        </div>
+
+        <div class="col-12 ${hasData ? "col-lg-6" : ""}">
+            <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow h-100"
+                    style="background-color: #ECFEFF;">
+                <h4>Geleistete Stunden pro Monat</h4>
+                <div style="position: relative; width: 100%; max-width: 900px; height: clamp(336px, 42vw, 480px); margin: auto;">
+                    <canvas id="monthlyHoursChart" data-chart="${monthlyHoursJson}"></canvas>
+                </div>
             </div>
-            <p class="text-end fw-semibold mb-0">Gesamt: ${totalHours} Stunden</p>
-        </div>
-    @else
-        <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4"
-                style="background-color: #ECFEFF;">
-            <h4>Stunden nach Kategorie</h4>
-            <p class="text-muted mb-0">Für ${selectedYear} sind keine Zeitschecks vorhanden.</p>
-        </div>
-    @endif
-
-    <div class="p-3 text-success-emphasis border border-success-subtle rounded-3 shadow mb-4"
-            style="background-color: #ECFEFF;">
-        <h4>Geleistete Stunden pro Monat</h4>
-        <div style="width: 100%; max-width: 900px; margin: auto;">
-            <canvas id="monthlyHoursChart" data-chart="${monthlyHoursJson}"></canvas>
         </div>
     </div>
 
@@ -89,6 +95,7 @@
                     },
                     options: {
                         responsive: true,
+                        maintainAspectRatio: false,
                         plugins: {
                             legend: {
                                 onClick: function() {}
@@ -121,7 +128,7 @@
                 },
                 options: {
                     responsive: true,
-                    aspectRatio: 1.54,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             beginAtZero: true,

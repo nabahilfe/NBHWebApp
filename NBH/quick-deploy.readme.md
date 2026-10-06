@@ -13,10 +13,20 @@ gg:
         use-precompiled-templates: true
 
 
+## Lokal bauen un testen
+
+- open terminal at NBH directory and run command
+
+./mvnw clean package
+
+- start spring app an test
+
+
 ## Build Docker File
 
 - start Docker Desktop Application
 - open terminal at NBH directory and run command
+
 ./build-docker.sh
 
 - this builds docker image and copies docker image to server
