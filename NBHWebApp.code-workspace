@@ -20,9 +20,11 @@
 			"**/.env": true
 		},
 		"java.compile.nullAnalysis.mode": "automatic",
+		"java.settings.url": "java-compiler.prefs",
 		"better-todo-tree.tree.scanMode": "workspace only",
 		"chat.tools.terminal.autoApprove": {
 			"./mvnw": true
-		}
+		},
+		"java.configuration.updateBuildConfiguration": "interactive"
 	}
 }
