@@ -40,12 +40,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    !{long cumulative = 0;}
                     @for(java.util.Map.Entry<Integer, long[]> entry : memberStats.entrySet())
                         !{long joined = entry.getValue()[0];}
                         !{long resigned = entry.getValue()[1];}
                         !{long saldo = joined - resigned;}
-                        !{cumulative += saldo;}
                         <tr>
                             <td>${entry.getKey()}</td>
                             <td class="text-end text-success">${joined}</td>

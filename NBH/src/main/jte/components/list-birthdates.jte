@@ -3,7 +3,6 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.util.List
 
 @import eu.nabahilfe.webapp.members.MemberBirthdayForm
@@ -11,7 +10,7 @@
 
 
 @param List<MemberBirthdayForm> currentMonth
-@param List<MemberBirthdayForm> nexttMonth
+@param List<MemberBirthdayForm> nextMonth
 
 <div class="row g-3">
     <div class="col-12 col-lg-6">
@@ -54,7 +53,7 @@
                 <strong>Geburtstage nächsten Monat</strong>
             </div>
             <div class="card-body p-0">
-                @if(nexttMonth == null || nexttMonth.isEmpty())
+                @if(nextMonth == null || nextMonth.isEmpty())
                     <div class="p-3 text-muted">Keine Geburtstage.</div>
                 @else
                     <div class="table-responsive">
@@ -67,7 +66,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @for(MemberBirthdayForm m : nexttMonth)
+                                @for(MemberBirthdayForm m : nextMonth)
                                     <tr>
                                         <td>${m.getName()}</td>
                                         <td class="text-center">${dateReverseDE(m.getBirthdate())}</td>

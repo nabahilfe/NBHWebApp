@@ -8,7 +8,7 @@
 @import eu.nabahilfe.webapp.members.MemberBirthdayForm
 
 @param List<MemberBirthdayForm> currentMonth
-@param List<MemberBirthdayForm> nexttMonth
+@param List<MemberBirthdayForm> nextMonth
 
 @param String fullUsername = null
 @param String username = null
@@ -28,6 +28,6 @@
     <h3>Geburtstage</h3>
     <p class="text-muted">Aktueller und nächster Monat</p>
 
-    @template.components.list-birthdates(currentMonth = currentMonth, nexttMonth = nexttMonth)
+    @template.components.list-birthdates(currentMonth = currentMonth, nextMonth = nextMonth)
 
 `)

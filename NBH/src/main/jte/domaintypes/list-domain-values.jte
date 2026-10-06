@@ -3,7 +3,6 @@
   Licensed under the MIT License (see LICENSE file).
 -->
 
-@import eu.nabahilfe.webapp.system.GlobalModelAttributes
 @import java.util.List
 @import java.util.Set
 
