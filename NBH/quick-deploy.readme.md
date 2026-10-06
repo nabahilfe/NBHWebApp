@@ -71,7 +71,7 @@ sudo reboot
 docker ps -a
 docker logs -f nbh-app
 
-- container neu starten
+- container neu starten (nor erforderlich wenn sich an der jaml Datei was geändert hat)
 docker compose up -d
 
 
