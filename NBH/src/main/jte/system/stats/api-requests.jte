@@ -11,9 +11,9 @@
     ctxt = ctxt,
     content = @`
     <h3>API Aufrufe</h3>
-    <p class="text-body-secondary">Letzte 30 Tage (einschlie&#223;lich heute)</p>
 
     <h4>Requests pro Tag</h4>
+    <p class="text-body-secondary">Letzte 30 Tage (einschlie&#223;lich heute)</p>
     <div class="position-relative mb-4" style="height: 416px; width: 100%;">
         <canvas id="daily-api-requests-chart" data-chart="${dailyTotalsJson}"
                 role="img" aria-label="Summierte Systemanfragen pro Tag in den letzten 30 Tagen"></canvas>
