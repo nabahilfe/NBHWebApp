@@ -25,8 +25,10 @@ gg:
 
 - log in to server: ssh nbh
 - set caddy proxy to display maintenence page, run: 
-sudo maintenance.sh on
--- use url https://acceptance-test.nabahilfe.eu to still access nbh app
+
+sudo ./maintenance.sh on
+
+- use url https://acceptance-test.nabahilfe.eu to still access nbh app
 
 
 ## DB-Migration
@@ -61,6 +63,10 @@ docker logs -f nbh-app
 
 - container neu starten
 docker compose up -d
+
+
+## Disable Maintenance Page
+sudo ./maintenance.sh off
 
 
 ## Backup prüfen
