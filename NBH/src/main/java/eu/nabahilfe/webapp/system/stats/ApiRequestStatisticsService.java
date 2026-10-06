@@ -23,6 +23,12 @@ public class ApiRequestStatisticsService {
     }
 
     @Transactional(readOnly = true)
+    public List<ApiRequestStatistic> findLast7Days() {
+        LocalDate today = LocalDate.now();
+        return repository.findByRequestDateBetweenOrderByRequestCountDesc(today.minusDays(6), today);
+    }
+
+    @Transactional(readOnly = true)
     public List<ApiRequestStatistic> findLast30Days() {
         LocalDate today = LocalDate.now();
         return repository.findByRequestDateBetweenOrderByRequestCountDesc(today.minusDays(29), today);

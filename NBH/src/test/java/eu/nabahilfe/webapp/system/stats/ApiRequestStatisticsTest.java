@@ -20,6 +20,26 @@ import tools.jackson.databind.ObjectMapper;
 class ApiRequestStatisticsTest {
 
     @Test
+    void queriesExactly7CalendarDaysIncludingToday() {
+        ApiRequestStatisticRepository repository = mock(ApiRequestStatisticRepository.class);
+        ApiRequestStatisticsService service = new ApiRequestStatisticsService(repository, mock(ApiRequestCounter.class));
+        List<ApiRequestStatistic> statistics = List.of(
+                new ApiRequestStatistic(LocalDate.now(), "GET", "/home", 200, 42L));
+        when(repository.findByRequestDateBetweenOrderByRequestCountDesc(any(), any())).thenReturn(statistics);
+
+        LocalDate before = LocalDate.now();
+        assertSame(statistics, service.findLast7Days());
+        LocalDate after = LocalDate.now();
+
+        ArgumentCaptor<LocalDate> fromDate = ArgumentCaptor.forClass(LocalDate.class);
+        ArgumentCaptor<LocalDate> toDate = ArgumentCaptor.forClass(LocalDate.class);
+        verify(repository).findByRequestDateBetweenOrderByRequestCountDesc(fromDate.capture(), toDate.capture());
+        org.junit.jupiter.api.Assertions.assertTrue(
+                !toDate.getValue().isBefore(before) && !toDate.getValue().isAfter(after));
+        assertEquals(toDate.getValue().minusDays(6), fromDate.getValue());
+    }
+
+    @Test
     void queriesExactly30CalendarDaysIncludingToday() {
         ApiRequestStatisticRepository repository = mock(ApiRequestStatisticRepository.class);
         ApiRequestStatisticsService service = new ApiRequestStatisticsService(repository, mock(ApiRequestCounter.class));
@@ -43,17 +63,21 @@ class ApiRequestStatisticsTest {
     void suppliesStatisticsToTheMenuTargetTemplate() {
         ApiRequestStatisticsService service = mock(ApiRequestStatisticsService.class);
         List<ApiRequestStatistic> statistics = List.of();
+        List<ApiRequestStatistic> chartStatistics = List.of(
+            new ApiRequestStatistic(LocalDate.now().minusDays(29), "GET", "/home", 200, 42L));
         List<ApiRequestDailyTotal> dailyTotals = List.of(new ApiRequestDailyTotal(LocalDate.now(), 0L));
-        when(service.findLast30Days()).thenReturn(statistics);
-        when(service.dailyTotals(statistics)).thenReturn(dailyTotals);
+        when(service.findLast7Days()).thenReturn(statistics);
+        when(service.findLast30Days()).thenReturn(chartStatistics);
+        when(service.dailyTotals(chartStatistics)).thenReturn(dailyTotals);
         ObjectMapper objectMapper = new ObjectMapper();
         ExtendedModelMap model = new ExtendedModelMap();
 
         assertEquals("system/stats/api-requests", new ApiRequestStatisticsController(service, objectMapper).showApiRequests(model));
         assertSame(statistics, model.getAttribute("statistics"));
         assertEquals(objectMapper.writeValueAsString(dailyTotals), model.getAttribute("dailyTotalsJson"));
+        verify(service).findLast7Days();
         verify(service).findLast30Days();
-        verify(service).dailyTotals(statistics);
+        verify(service).dailyTotals(chartStatistics);
     }
 
     @Test

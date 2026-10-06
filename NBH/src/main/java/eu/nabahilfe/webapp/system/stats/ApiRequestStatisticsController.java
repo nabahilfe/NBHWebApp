@@ -27,10 +27,11 @@ public class ApiRequestStatisticsController {
     @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
     @GetMapping("/api-requests")
     public String showApiRequests(Model model) {
-        List<ApiRequestStatistic> statistics = statisticsService.findLast30Days();
+        List<ApiRequestStatistic> statistics = statisticsService.findLast7Days();
         model.addAttribute("statistics", statistics);
         try {
-            model.addAttribute("dailyTotalsJson", objectMapper.writeValueAsString(statisticsService.dailyTotals(statistics)));
+            model.addAttribute("dailyTotalsJson", objectMapper.writeValueAsString(
+                    statisticsService.dailyTotals(statisticsService.findLast30Days())));
         } catch (JacksonException exception) {
             throw new IllegalStateException("Could not serialize daily API request statistics", exception);
         }

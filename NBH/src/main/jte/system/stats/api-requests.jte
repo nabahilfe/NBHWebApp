@@ -20,6 +20,7 @@
     </div>
 
     <h4>Requests per URL Pattern</h4>
+    <p class="text-body-secondary">Letzte 7 Tage (einschlie&#223;lich heute)</p>
     <div class="table-responsive">
         <table id="api-request-statistics" class="table table-bordered table-hover table-sm shadow h-100">
             <thead class="table-light">
@@ -53,7 +54,7 @@
             </thead>
             <tbody>
                 @if(statistics.isEmpty())
-                    <tr><td colspan="5" class="text-center text-body-secondary">Keine Systemanfragen in den letzten 30 Tagen vorhanden.</td></tr>
+                    <tr><td colspan="5" class="text-center text-body-secondary">Keine Systemanfragen in den letzten 7 Tagen vorhanden.</td></tr>
                 @else
                     @for(var statistic : statistics)
                         <tr data-statistic>
