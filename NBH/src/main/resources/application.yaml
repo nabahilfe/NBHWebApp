@@ -1,12 +1,12 @@
 gg:
   jte:
     ## development settings for local development
-    development-mode: true
-    use-precompiled-templates: false
+    #development-mode: true
+    #use-precompiled-templates: false
 
     ## deployment settings for production
-    #development-mode: false
-    #use-precompiled-templates: true
+    development-mode: false
+    use-precompiled-templates: true
 
 spring:
   config:
@@ -66,11 +66,11 @@ spring:
 
 logging:
   level:
-    "[org.springframework.boot.devtools]": DEBUG
-    "[org.springframework.jdc]": DEBUG
+    "[org.springframework.boot.devtools]": WARN
+    "[org.springframework.jdc]": WARN
     "[eu.nabahilfe]": INFO
     "[org.springframework.web.servlet]": WARN
-    "[org.eclipse.angus.mail]": DEBUG
+    "[org.eclipse.angus.mail]": WARN
 
 server:
   port: ${APP_PORT:8080}
