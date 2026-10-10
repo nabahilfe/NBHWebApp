@@ -25,6 +25,6 @@
     "chat.tools.terminal.autoApprove": {
       "./mvnw": true,
     },
-    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.configuration.updateBuildConfiguration": "automatic",
   },
 }
