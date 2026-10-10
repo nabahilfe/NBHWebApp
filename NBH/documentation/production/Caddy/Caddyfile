@@ -22,6 +22,13 @@
     }
 }
 
+# Robots.txt direkt durch Caddy beantworten
+(robots) {
+    handle /robots.txt {
+        respond "User-agent: *\nDisallow: /" 200
+    }
+}
+
 # Snippet für Wartungsmodus
 (maintenance_check) {
     # Prüft, ob die Datei /.enabled im Wartungsordner existiert
@@ -39,10 +46,17 @@
     }
 }
 
+nabahilfe.eu {
+    import robots
+
+    handle {
+        respond "Verwende deine Sub-Domain, z.B.: ma.nabahilfe.eu" 200
+    }
+}
+
 ma.nabahilfe.eu {
-    # Rate Limit und Boot Protection, bricht ab falls erkannt
     import protection
-    # Wartung prüfen, liefert Wartungsseite aus falls aktiv
+    import robots
     import maintenance_check
 
     handle {
@@ -51,9 +65,8 @@ ma.nabahilfe.eu {
 }
 
 www.nabahilfe.eu {
-    # Rate Limit und Boot Protection, bricht ab falls erkannt
     import protection
-    # Wartung prüfen, liefert Wartungsseite aus falls aktiv
+    import robots
     import maintenance_check
 
     handle {
@@ -62,8 +75,8 @@ www.nabahilfe.eu {
 }
 
 acceptance-test.nabahilfe.eu {
-    # Rate Limit und Boot Protection, bricht ab falls erkannt
     import protection
+    import robots
 
     handle {
 	    reverse_proxy nbh-app:8080
@@ -71,10 +84,11 @@ acceptance-test.nabahilfe.eu {
 }
 
 monitor.nabahilfe.eu {
-    # Rate Limit und Boot Protection, bricht ab falls erkannt
     import protection
+    import robots
 
     handle {
         reverse_proxy uptime-kuma:3001
     }
 }
+
