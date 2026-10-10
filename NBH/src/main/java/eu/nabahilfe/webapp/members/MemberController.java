@@ -6,6 +6,7 @@
 package eu.nabahilfe.webapp.members;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.Year;
@@ -19,6 +20,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,6 +65,7 @@ public class MemberController {
     private final MembershipFeeRepository membershipFeeRepository;
     private final AmountDomainValueRepository amountDomainValueRepository;
     private final AccountingRepository accountingRepository;
+    private final MemberBirthdayPdfService memberBirthdayPdfService;
     private final NominatimService nominatimService;
     private final AddressValidationService addressValidationService;
 
@@ -69,7 +75,8 @@ public class MemberController {
             TimeTransferRepository timeTransferRepository, TimeChequeRepository timeCheckRepository,
             SecurityUtils securityUtils, MembershipFeeRepository membershipFeeRepository,
             AmountDomainValueRepository amountDomainValueRepository, AccountingRepository accountingRepository,
-            NominatimService nominatimService, AddressValidationService addressValidationService) {
+            MemberBirthdayPdfService memberBirthdayPdfService, NominatimService nominatimService,
+            AddressValidationService addressValidationService) {
         this.memberRepository = memberRepository;
         this.roleRepository = roleRepository;
         this.timeTransferRepository = timeTransferRepository;
@@ -80,6 +87,7 @@ public class MemberController {
         this.amountDomainValueRepository = amountDomainValueRepository;
         this.membershipFeeRepository = membershipFeeRepository;
         this.accountingRepository = accountingRepository;
+        this.memberBirthdayPdfService = memberBirthdayPdfService;
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -323,6 +331,25 @@ public class MemberController {
         model.addAttribute("currentMonth", memberRepository.findBirthdaysByMonthOffset(0));
         model.addAttribute("nextMonth", memberRepository.findBirthdaysByMonthOffset(1));
         return "members/birthdays";
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'EXECUTIVE_MEMBER', 'BOARD_MEMBER')")
+    @GetMapping("/birthdays/pdf")
+    public ResponseEntity<byte[]> listBirthdaysPdf(@RequestParam(defaultValue = "0") int monthOffset) {
+        LocalDate targetMonth = LocalDate.now().plusMonths(monthOffset);
+        byte[] pdf = memberBirthdayPdfService.createPdf(
+                memberRepository.findBirthdaysByMonthOffset(monthOffset), targetMonth.getYear(),
+                targetMonth.getMonthValue());
+        String fileName = "NBH-Geburtstagsliste-%d-%02d.pdf".formatted(targetMonth.getYear(),
+                targetMonth.getMonthValue());
+        ContentDisposition disposition = ContentDisposition.attachment()
+                .filename(fileName, StandardCharsets.UTF_8)
+                .build();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
+                .body(pdf);
     }
 
     @PreAuthorize("hasRole('USER')")

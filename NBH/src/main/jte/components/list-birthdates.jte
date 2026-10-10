@@ -15,8 +15,13 @@
 <div class="row g-3">
     <div class="col-12 col-lg-6">
         <div class="card">
-            <div class="card-header bg-info bg-opacity-10">
+            <div class="card-header bg-info bg-opacity-10 d-flex justify-content-between align-items-center">
                 <strong>Geburtstage diesen Monat</strong>
+                @if(currentMonth.isEmpty())
+                    <button type="button" class="btn btn-sm btn-outline-primary" disabled>PDF erstellen</button>
+                @else
+                    <a href="/members/birthdays/pdf" class="btn btn-sm btn-outline-primary">PDF erstellen</a>
+                @endif
             </div>
             <div class="card-body p-0">
                 @if(currentMonth == null || currentMonth.isEmpty())
@@ -49,8 +54,13 @@
 
     <div class="col-12 col-lg-6">
         <div class="card">
-            <div class="card-header bg-info bg-opacity-10">
+            <div class="card-header bg-info bg-opacity-10 d-flex justify-content-between align-items-center">
                 <strong>Geburtstage nächsten Monat</strong>
+                @if(nextMonth == null || nextMonth.isEmpty())
+                    <button type="button" class="btn btn-sm btn-outline-primary" disabled>PDF erstellen</button>
+                @else
+                    <a href="/members/birthdays/pdf?monthOffset=1" class="btn btn-sm btn-outline-primary">PDF erstellen</a>
+                @endif
             </div>
             <div class="card-body p-0">
                 @if(nextMonth == null || nextMonth.isEmpty())
