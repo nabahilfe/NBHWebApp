@@ -1,6 +1,7 @@
 <!-- src/main/jte/system/stats/api-requests.jte -->
 @param java.util.List<eu.nabahilfe.webapp.system.stats.ApiRequestStatistic> statistics
 @param java.lang.String dailyTotalsJson
+@param java.lang.String filteredDailyTotalsJson
 @param eu.nabahilfe.webapp.system.GlobalModelAttributes globalModelAttributes
 @param eu.nabahilfe.webapp.security.CsrfHiddenInput csrfHiddenInput
 @param eu.nabahilfe.webapp.security.ViewContext ctxt
@@ -11,15 +12,21 @@
     ctxt = ctxt,
     content = @`
     <h3>API Aufrufe</h3>
+    <button type="button" id="toggle-root-requests" class="btn btn-success active btn-sm mb-2"
+            aria-pressed="true">
+        Aufrufe ohne Pfad sind ausgeblendet
+    </button>
 
     <h4>Requests pro Tag</h4>
     <p class="text-body-secondary">Letzte 30 Tage (einschlie&#223;lich heute)</p>
     <div class="position-relative mb-4" style="height: 416px; width: 100%;">
         <canvas id="daily-api-requests-chart" data-chart="${dailyTotalsJson}"
+            data-filtered-chart="${filteredDailyTotalsJson}"
                 role="img" aria-label="Summierte Systemanfragen pro Tag in den letzten 30 Tagen"></canvas>
     </div>
 
-    <h4>Requests per URL Pattern</h4>
+    <h4>Requests per URL Pattern</h4> 
+    
     <p class="text-body-secondary">Letzte 7 Tage (einschlie&#223;lich heute)</p>
     <div class="table-responsive">
         <table id="api-request-statistics" class="table table-bordered table-hover table-sm shadow h-100">
@@ -75,13 +82,14 @@
         document.addEventListener('DOMContentLoaded', function () {
             const chartElement = document.getElementById('daily-api-requests-chart');
             const dailyTotals = JSON.parse(chartElement.dataset.chart);
-            new Chart(chartElement.getContext('2d'), {
+            const filteredDailyTotals = JSON.parse(chartElement.dataset.filteredChart);
+            const chart = new Chart(chartElement.getContext('2d'), {
                 type: 'bar',
                 data: {
                     labels: dailyTotals.map(entry => entry.requestDate),
                     datasets: [{
                         label: 'Requests',
-                        data: dailyTotals.map(entry => entry.requestCount),
+                        data: filteredDailyTotals.map(entry => entry.requestCount),
                         backgroundColor: 'rgba(54, 162, 235, 0.6)',
                         borderColor: 'rgba(35, 115, 175, 1)',
                         borderWidth: 1
@@ -113,16 +121,36 @@
                     }
                 }
             });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
             const table = document.getElementById('api-request-statistics');
             const tbody = table.querySelector('tbody');
+            const rootRequestToggle = document.getElementById('toggle-root-requests');
             const headers = table.querySelectorAll('thead th');
             const collator = new Intl.Collator('de', { numeric: true });
             let sortedColumn = 4;
             let ascending = false;
+
+            function applyRootRequestFilter() {
+                const hideRootRequests = rootRequestToggle.getAttribute('aria-pressed') === 'true';
+                rootRequestToggle.textContent = hideRootRequests
+                    ? 'Aufrufe ohne Pfad sind ausgeblendet'
+                    : 'Aufrufe ohne Pfad werden angezeigt';
+                rootRequestToggle.classList.toggle('btn-success', hideRootRequests);
+                rootRequestToggle.classList.toggle('btn-primary', !hideRootRequests);
+                rootRequestToggle.classList.toggle('active', hideRootRequests);
+                tbody.querySelectorAll('tr[data-statistic]').forEach(function (row) {
+                    row.hidden = hideRootRequests && row.cells[2].textContent.trim() === '/';
+                });
+                const displayedTotals = hideRootRequests ? filteredDailyTotals : dailyTotals;
+                chart.data.datasets[0].data = displayedTotals.map(entry => entry.requestCount);
+                chart.update();
+            }
+
+            applyRootRequestFilter();
+            rootRequestToggle.addEventListener('click', function () {
+                const isPressed = rootRequestToggle.getAttribute('aria-pressed') === 'true';
+                rootRequestToggle.setAttribute('aria-pressed', String(!isPressed));
+                applyRootRequestFilter();
+            });
 
             table.querySelectorAll('button[data-column]').forEach(function (button) {
                 button.addEventListener('click', function () {

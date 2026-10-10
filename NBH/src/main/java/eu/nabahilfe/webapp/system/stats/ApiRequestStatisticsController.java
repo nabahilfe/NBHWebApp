@@ -29,9 +29,15 @@ public class ApiRequestStatisticsController {
     public String showApiRequests(Model model) {
         List<ApiRequestStatistic> statistics = statisticsService.findLast7Days();
         model.addAttribute("statistics", statistics);
+        List<ApiRequestStatistic> chartStatistics = statisticsService.findLast30Days();
+        List<ApiRequestStatistic> filteredChartStatistics = chartStatistics.stream()
+            .filter(statistic -> !"/".equals(statistic.getUrlPattern()))
+            .toList();
         try {
             model.addAttribute("dailyTotalsJson", objectMapper.writeValueAsString(
-                    statisticsService.dailyTotals(statisticsService.findLast30Days())));
+                statisticsService.dailyTotals(chartStatistics)));
+            model.addAttribute("filteredDailyTotalsJson", objectMapper.writeValueAsString(
+                statisticsService.dailyTotals(filteredChartStatistics)));
         } catch (JacksonException exception) {
             throw new IllegalStateException("Could not serialize daily API request statistics", exception);
         }

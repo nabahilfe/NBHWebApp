@@ -63,21 +63,36 @@ class ApiRequestStatisticsTest {
     void suppliesStatisticsToTheMenuTargetTemplate() {
         ApiRequestStatisticsService service = mock(ApiRequestStatisticsService.class);
         List<ApiRequestStatistic> statistics = List.of();
+        LocalDate today = LocalDate.now();
+        ApiRequestStatistic nonRootStatistic = new ApiRequestStatistic(today.minusDays(29), "GET", "/home", 200, 42L);
         List<ApiRequestStatistic> chartStatistics = List.of(
-            new ApiRequestStatistic(LocalDate.now().minusDays(29), "GET", "/home", 200, 42L));
-        List<ApiRequestDailyTotal> dailyTotals = List.of(new ApiRequestDailyTotal(LocalDate.now(), 0L));
+            nonRootStatistic,
+            new ApiRequestStatistic(today, "GET", "/", 200, 100L),
+            new ApiRequestStatistic(today, "POST", "/", 500, 10L));
+        ApiRequestStatisticsService aggregationService = new ApiRequestStatisticsService(
+            mock(ApiRequestStatisticRepository.class), mock(ApiRequestCounter.class));
+        List<ApiRequestDailyTotal> dailyTotals = aggregationService.dailyTotals(chartStatistics);
+        List<ApiRequestStatistic> filteredChartStatistics = List.of(nonRootStatistic);
+        List<ApiRequestDailyTotal> filteredDailyTotals = aggregationService.dailyTotals(filteredChartStatistics);
         when(service.findLast7Days()).thenReturn(statistics);
         when(service.findLast30Days()).thenReturn(chartStatistics);
         when(service.dailyTotals(chartStatistics)).thenReturn(dailyTotals);
+        when(service.dailyTotals(filteredChartStatistics)).thenReturn(filteredDailyTotals);
         ObjectMapper objectMapper = new ObjectMapper();
         ExtendedModelMap model = new ExtendedModelMap();
 
         assertEquals("system/stats/api-requests", new ApiRequestStatisticsController(service, objectMapper).showApiRequests(model));
         assertSame(statistics, model.getAttribute("statistics"));
         assertEquals(objectMapper.writeValueAsString(dailyTotals), model.getAttribute("dailyTotalsJson"));
+        assertEquals(objectMapper.writeValueAsString(filteredDailyTotals), model.getAttribute("filteredDailyTotalsJson"));
+        assertEquals(30, filteredDailyTotals.size());
+        assertEquals(new ApiRequestDailyTotal(today.minusDays(29), 42L), filteredDailyTotals.getFirst());
+        assertEquals(new ApiRequestDailyTotal(today, 110L), dailyTotals.getLast());
+        assertEquals(new ApiRequestDailyTotal(today, 0L), filteredDailyTotals.getLast());
         verify(service).findLast7Days();
         verify(service).findLast30Days();
         verify(service).dailyTotals(chartStatistics);
+        verify(service).dailyTotals(filteredChartStatistics);
     }
 
     @Test
