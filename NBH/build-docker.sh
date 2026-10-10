@@ -28,9 +28,27 @@ docker save \
     "${IMAGE_NAME}:latest"
 
 echo
+
+
 echo "Kopiere Docker-Image auf den Server..."
 
-scp "${IMAGE_FILE}" nbh:${DEST_DIR}
+BACKUP_DATE=$(date +%F)
+REMOTE_IMAGE="${DEST_DIR%/}/${IMAGE_FILE}"
+REMOTE_BACKUP="${REMOTE_IMAGE}-${BACKUP_DATE}"
+
+ssh nbh "set -e
+if [ -e '${REMOTE_IMAGE}' ]; then
+    if [ -e '${REMOTE_BACKUP}' ]; then
+        echo 'FEHLER: Backup existiert bereits: ${REMOTE_BACKUP}'
+        exit 1
+    fi
+    mv -- '${REMOTE_IMAGE}' '${REMOTE_BACKUP}'
+    echo 'Vorhandenes Image umbenannt: ${REMOTE_IMAGE} -> ${REMOTE_BACKUP}'
+else
+    echo 'Kein bestehendes Image am Ziel gefunden: ${REMOTE_IMAGE}'
+fi"
+
+scp "${IMAGE_FILE}" "nbh:${DEST_DIR}"
 
 echo
 echo "========================================"
