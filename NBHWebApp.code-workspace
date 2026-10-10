@@ -1,30 +1,30 @@
 {
-	"folders": [
-		{
-			"name": "NBHWebApp",
-			"path": "."
-		}
-	],
-	"settings": {
-		"dotfileToggle.hideDotfiles": true,
-		"files.exclude": {
-			"**/.git": true,
-			"**/.svn": true,
-			"**/.hg": true,
-			"**/.jj": true,
-			"**/.DS_Store": true,
-			"**/Thumbs.db": true,
-			"**/.*": true,
-			"**/.vscode": true,
-			"**/.gitignore": true,
-			"**/.env": true
-		},
-		"java.compile.nullAnalysis.mode": "automatic",
-		"java.settings.url": "java-compiler.prefs",
-		"better-todo-tree.tree.scanMode": "workspace only",
-		"chat.tools.terminal.autoApprove": {
-			"./mvnw": true
-		},
-		"java.configuration.updateBuildConfiguration": "interactive"
-	}
+  "folders": [
+    {
+      "name": "NBHWebApp",
+      "path": ".",
+    },
+  ],
+  "settings": {
+    "dotfileToggle.hideDotfiles": true,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.jj": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/.*": true,
+        "**/.vscode": true,
+        "**/.gitignore": true,
+        "**/.env": true
+    },
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.settings.url": "java-compiler.prefs",
+    "better-todo-tree.tree.scanMode": "workspace only",
+    "chat.tools.terminal.autoApprove": {
+      "./mvnw": true,
+    },
+    "java.configuration.updateBuildConfiguration": "interactive",
+  },
 }
