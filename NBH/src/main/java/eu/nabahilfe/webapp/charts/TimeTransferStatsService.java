@@ -25,7 +25,8 @@ public class TimeTransferStatsService {
     public List<TimeTransferOfferStats> offerDistribution(int year) {
         return timeTransferRepository.findStatsByOfferAndYear(year).stream()
                 .map(row -> new TimeTransferOfferStats(
-                        String.valueOf(row[1]),
+                        String.valueOf(row[1]).replaceFirst("(Sonstiges).*", "$1")
+                                .replaceAll("\\bund\\b", "&"),
                         row[2] == null ? 0L : ((Number) row[2]).longValue()))
                 .toList();
     }
