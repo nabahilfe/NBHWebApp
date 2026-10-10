@@ -1,89 +1,90 @@
 gg:
-    jte:
-        ## development settings for local development
-        #development-mode: true
-        #use-precompiled-templates: false
-        
-        ## deployment settings for production
-        development-mode: false
-        use-precompiled-templates: true
+  jte:
+    ## development settings for local development
+    development-mode: true
+    use-precompiled-templates: false
+
+    ## deployment settings for production
+    #development-mode: false
+    #use-precompiled-templates: true
 
 spring:
-    config:
-        import: optional:file:.env[.properties]
-    application:
-        name: NBH
+  config:
+    import: optional:file:.env[.properties]
+  application:
+    name: NBH
 
-    mvc:
-        hiddenmethod:
-            filter:
-                enabled: true
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
 
-    servlet:
-        multipart:
-            max-file-size: 20MB
-            max-request-size: 210MB
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 210MB
 
-    datasource:
-        url: jdbc:postgresql://${POSTGRES_URL}
-        username: ${POSTGRES_USER}
-        password: ${POSTGRES_PASSWORD}
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
 
-    jpa:
-        show-sql: false
-        open-in-view: true
-        properties:
-            hibernate:
-                '[format_sql]': false
-                '[order_by]':
-                    '[default_null_ordering]': last
-                transaction:
-                    jta:
-                        platform: enabled
+  jpa:
+    show-sql: false
+    open-in-view: true
+    properties:
+      hibernate:
+        "[format_sql]": false
+        "[order_by]":
+          "[default_null_ordering]": last
+        transaction:
+          jta:
+            platform: enabled
 
-    mail:
-        host: ${MAIL_HOST}
-        port: ${MAIL_PORT}
-        username: ${MAIL_USERNAME}
-        password: ${MAIL_PASSWORD}
-        protocol: smtp
-        default-encoding: UTF-8
-        properties:
-            mail:
-                smtp:
-                    auth: true
-                    starttls:
-                        enable: true
-                        required: true
-                    ssl:
-                        trust: mail.your-server.de
-                    # debug: true
-                    debug: false
-    devtools:
-        restart:
-            enabled: false
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: mail.your-server.de
+          # debug: true
+          debug: false
+  devtools:
+    restart:
+      enabled: true
+      additional-exclude: "gg/jte/generated/**"
 
 logging:
-    level:
-        '[org.springframework.jdc]': DEBUG
-        '[eu.nabahilfe]': INFO
-        '[org.springframework.web.servlet]': WARN
-        '[org.eclipse.angus.mail]': DEBUG
+  level:
+    "[org.springframework.boot.devtools]": DEBUG
+    "[org.springframework.jdc]": DEBUG
+    "[eu.nabahilfe]": INFO
+    "[org.springframework.web.servlet]": WARN
+    "[org.eclipse.angus.mail]": DEBUG
 
 server:
-    port: ${APP_PORT:8080}
-    forward-headers-strategy: framework
-    servlet:
-        session:
-            timeout: 30m
-            cookie:
-                # for development
-                secure: false
-                # for production
-                # secure: true
-                http-only: true
-                same-site: lax
+  port: ${APP_PORT:8080}
+  forward-headers-strategy: framework
+  servlet:
+    session:
+      timeout: 30m
+      cookie:
+        # for development
+        secure: false
+        # for production
+        # secure: true
+        http-only: true
+        same-site: lax
 
 app:
-    base-url: ${APP_BASE_URL}
-
+  base-url: ${APP_BASE_URL}
