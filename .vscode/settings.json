@@ -12,13 +12,18 @@
     "**/.svn": true,
     "**/.hg": true,
     "**/.jj": true,
+    "**/.DS_Store": true,
     "**/Thumbs.db": true,
     "**/generated-sources": true,
     "**/target": true,
-    "**/jte-classes": true
+    "**/jte-classes": true,
+    "**/.*": true,
+    "**/.vscode": true,
+    "**/.gitignore": true,
+    "**/.env": true
   },
   
-  "dotfileToggle.hideDotfiles": false,
+  "dotfileToggle.hideDotfiles": true,
   "java.debug.settings.onBuildFailureProceed": true,
   "java.configuration.updateBuildConfiguration": "interactive",
   "java.settings.url": "${workspaceFolder}/.vscode/settings.prefs"
